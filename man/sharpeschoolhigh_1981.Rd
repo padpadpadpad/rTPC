@@ -15,7 +15,7 @@ sharpeschoolhigh_1981(temp_k, rtref, e, eh, th, tref)
 
 \item{th}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures}
 
-\item{tref}{standardisation temperature (in degrees centigrade, arbitrary)}
+\item{tref}{standardisation temperature in degrees centigrade}
 
 \item{r_tref}{rate at the standardised temperature, tref}
 }
