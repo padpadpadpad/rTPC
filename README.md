@@ -3,7 +3,7 @@
 
 # rTPC
 
-The aim of rTPC is to help fit thermal performance in R
+The aim of rTPC is to help fit thermal performance curves in R
 
 ## Installation
 
