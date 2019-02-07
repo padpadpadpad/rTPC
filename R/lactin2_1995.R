@@ -11,7 +11,7 @@
 #' @export lactin2_1995
 
 lactin2_1995 <- function(temp, p, c, tmax, tref){
-  est <- exp(p*temp) - exp(p*tmax - ((tmax - temp) / delta_t)) + c
+  est <- exp(p*temp) - exp(p*tmax - ((tmax - temp) / tref)) + c
   return(est)
 }
 
