@@ -34,14 +34,6 @@ We can now load in the data and the packages to fit the TPCs
 # load in packages
 library(purrr)
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 library(tidyr)
 library(ggplot2)
 library(nls.multstart)
@@ -55,6 +47,11 @@ label_facets <- function(string){
   return(string)
 }
 
+# write function to convert label text size to points
+pts <- function(x){
+  as.numeric(grid::convertX(grid::unit(x, 'points'), 'mm'))
+}
+
 # load in data
 data("Chlorella_TRC")
 
@@ -66,10 +63,11 @@ d_1 <- filter(d, curve_id == 1)
 
 # plot
 ggplot(d_1, aes(temp, rate)) +
-  geom_point()
+  geom_point() +
+  theme_bw(base_size = 16)
 ```
 
-<img src="man/figures/README-quicklook-1.png" width="100%" />
+<img src="man/figures/README-quicklook-1.png" width="50%" style="display: block; margin: auto;" />
 
 We can now run nls.multstart for each function
 
@@ -91,7 +89,8 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                                      supp_errors = 'Y')))
 ```
 
-We can now make predictions of each model and plot them.
+We can now make predictions of each model and plot them. In addition, we
+can estimate optimum temperature for each model using `get_topt()`.
 
 ``` r
 # stack models
@@ -104,15 +103,24 @@ d_preds <- d_stack %>%
   unnest(., output %>% map(augment, newdata = newdata)) %>%
   mutate(., temp = ifelse(model == 'sharpeschoolhigh', K - 273.15, temp))
 
+# estimate topt
+topt <- d_stack %>%
+  mutate(., topt = purrr::map_dbl(output, get_topt)) %>%
+  select(., -c(data, output)) %>%
+  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt))
+
 # plot
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
+  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC')),  hjust = -0.1, vjust = 2.5, topt, size = pts(12)) +
   geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets)) +
-  theme_bw() +
+  theme_bw(base_size = 16) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
-        strip.background = element_blank())
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate')
 ```
 
 <img src="man/figures/README-plot predictions-1.png" width="100%" />
