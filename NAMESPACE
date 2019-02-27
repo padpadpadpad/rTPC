@@ -3,3 +3,4 @@
 export(get_topt)
 export(lactin2_1995)
 export(sharpeschoolhigh_1981)
+export(thomas_2012)

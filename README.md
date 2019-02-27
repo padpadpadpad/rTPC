@@ -81,12 +81,18 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                        start_lower = c(p = 0, c = -2, tmax = 35, tref = 0),
                        start_upper = c(p = 3, c = 0, tmax = 55, tref = 15),
                        supp_errors = 'Y')),
-                       sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, b_tref, e, eh, th, tref = 15),
+            sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, b_tref, e, eh, th, tref = 15),
                                                      data = .x,
                                                      iter = 500,
                                                      start_lower = c(c = 0.01, e = 0, eh = 0, th = 270),
                                                      start_upper = c(c = 2, e = 3, eh = 10, th = 330),
-                                                     supp_errors = 'Y')))
+                                                     supp_errors = 'Y')),
+            thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = -10, b = -10, c = -10, topt = 0),
+                                           start_upper = c(a = 10, b = 10, c = 10, topt = 40),
+                                           supp_errors = 'Y')))
 ```
 
 We can now make predictions of each model and plot them. In addition, we
@@ -120,7 +126,8 @@ ggplot(d_preds, aes(temp, rate)) +
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
   xlab('Temperature (ºC)') +
-  ylab('rate')
+  ylab('rate') +
+  geom_hline(aes(yintercept = 0), linetype = 2)
 ```
 
 <img src="man/figures/README-plot predictions-1.png" width="100%" />
