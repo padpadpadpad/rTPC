@@ -12,10 +12,10 @@
 #'
 #' @export sharpeschoolhigh_1981
 
-sharpeschoolhigh_1981 <- function(temp_k, rtref, e, eh, th, tref){
+sharpeschoolhigh_1981 <- function(temp_k, r_tref, e, eh, th, tref){
   tref <- 273.15 + tref
   k <- 8.62e-05
-  boltzmann.term <- rtref*exp(e/k * (1/tref - 1/temp_k))
+  boltzmann.term <- r_tref*exp(e/k * (1/tref - 1/temp_k))
   inactivation.term <- 1/(1 + exp(eh/k * (1/th - 1/temp_k)))
   return(boltzmann.term * inactivation.term)
 }
