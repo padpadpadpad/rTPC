@@ -106,6 +106,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(a = -1, b = -1, c = -1, r0 = -1),
                                            start_upper = c(a = 1, b = 1, c = 1, r0 = 1),
+                                           supp_errors = 'Y')),
+            ratkowsky = map(data, ~nls_multstart(rate ~ ratkowsky_1983(temp = temp, tmin, tmax, a, b),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
+                                           start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
                                            supp_errors = 'Y')))
 ```
 
