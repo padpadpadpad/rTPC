@@ -33,7 +33,9 @@ We can now load in the data and the packages to fit the TPCs
 ``` r
 # load in packages
 library(purrr)
+#> Warning: package 'purrr' was built under R version 3.5.2
 library(dplyr)
+#> Warning: package 'dplyr' was built under R version 3.5.2
 library(tidyr)
 library(ggplot2)
 library(nls.multstart)
@@ -98,6 +100,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
                                            start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           supp_errors = 'Y')),
+            spain = map(data, ~nls_multstart(rate ~ spain_1982(temp = temp, a, b, c, r0),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = -1, b = -1, c = -1, r0 = -1),
+                                           start_upper = c(a = 1, b = 1, c = 1, r0 = 1),
                                            supp_errors = 'Y')))
 ```
 
@@ -116,8 +124,12 @@ d_preds <- d_stack %>%
   mutate(., temp = ifelse(model == 'sharpeschoolhigh', K - 273.15, temp))
 
 # estimate topt
+
+# return NA if the model has not fitted
+get_topt <- possibly(get_topt, NA)
+
 topt <- d_stack %>%
-  mutate(., topt = purrr::map_dbl(output, get_topt)) %>%
+  mutate(., topt = map_dbl(output, get_topt)) %>%
   select(., -c(data, output)) %>%
   mutate(., topt = ifelse(topt > 200, topt - 273.15, topt))
 
