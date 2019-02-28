@@ -25,7 +25,7 @@ get_rmax <- function(model){
 
   # predict over a whole wide range of data
   newdata$preds <- stats::predict(model, newdata = newdata)
-  rmax = newdata[newdata$preds == max(newdata$preds),preds]
+  rmax = newdata[newdata$preds == max(newdata$preds),'preds']
   return(rmax)
 }
 

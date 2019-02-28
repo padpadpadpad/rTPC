@@ -104,7 +104,9 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
                                            start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
-                                           supp_errors = 'Y')),
+                                           supp_errors = 'Y',
+                                           lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
+                                           upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
             spain = map(data, ~nls_multstart(rate ~ spain_1982(temp = temp, a, b, c, r0),
                                            data = .x,
                                            iter = 500,
@@ -133,20 +135,22 @@ d_preds <- d_stack %>%
   unnest(., output %>% map(augment, newdata = newdata)) %>%
   mutate(., temp = ifelse(model == 'sharpeschoolhigh', K - 273.15, temp))
 
-# estimate topt
+# estimate extra parameters
 
 # return NA if the model has not fitted
 get_topt <- possibly(get_topt, NA)
 
 topt <- d_stack %>%
-  mutate(., topt = map_dbl(output, get_topt)) %>%
+  mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
-  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt))
+  unnest(., est) %>%
+  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
+         rmax = round(rmax, 2))
 
 # plot
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
-  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC')),  hjust = -0.1, vjust = 2.5, topt, size = pts(12)) +
+  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, topt, size = pts(12)) +
   geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets)) +
   theme_bw(base_size = 16) +
