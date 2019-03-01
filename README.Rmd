@@ -139,10 +139,17 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            supp_errors = 'Y')),
             oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
                                            data = .x,
-                                           iter = 5000,
+                                           iter = 500,
                                            start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
                                            start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
-                                           supp_errors = 'Y')))
+                                           supp_errors = 'Y')),
+            joehnk = map(data, ~nls_multstart(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
+                                           start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
+                                           supp_errors = 'Y',
+                                           lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))))
 
 ```
 
