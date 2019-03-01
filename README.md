@@ -26,6 +26,7 @@ install.packages('tidyr')
 install.packages('ggplot2')
 install.packages('nls.multstart')
 install.packages('broom')
+install.packages('MuMIn')
 ```
 
 We can now load in the data and the packages to fit the TPCs
@@ -33,14 +34,13 @@ We can now load in the data and the packages to fit the TPCs
 ``` r
 # load in packages
 library(purrr)
-#> Warning: package 'purrr' was built under R version 3.5.2
 library(dplyr)
-#> Warning: package 'dplyr' was built under R version 3.5.2
 library(tidyr)
 library(ggplot2)
 library(nls.multstart)
 library(broom)
 library(rTPC)
+library(MuMIn)
 
 # write function to label ggplot2 panels
 label_facets_num <- function(string){
@@ -145,7 +145,13 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
                                            start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
                                            supp_errors = 'Y',
-                                           lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))))
+                                           lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))),
+            kamykowski = map(data, ~nls_multstart(rate ~ kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(tmin = 0, tmax = 10, a = -3, b = -1, c = -1),
+                                           start_upper = c(tmin = 20, tmax = 50, a = 3, b = 1, c =1),
+                                           supp_errors = 'Y')))
 ```
 
 We can now make predictions of each model and plot them. In addition, we
@@ -186,3 +192,24 @@ ggplot(d_preds, aes(temp, rate)) +
 ```
 
 <img src="man/figures/README-plot_predictions-1.png" width="100%" />
+From these fits, we can also take advantage of model selection methods
+such as the *AICc* score. We can then take model weights of these to see
+which model is most supported.
+
+``` r
+
+# calculate AICc score and weight models
+d_stack <- mutate(d_stack, aic = map_dbl(output, MuMIn::AICc),
+                  weight = MuMIn::Weights(aic))
+
+# plot weights
+ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, fill = model)) +
+  geom_col() +
+  theme_bw(base_size = 16) +
+  xlab('model') +
+  theme(legend.position = 'element_blank',
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(c(0,1)) 
+```
+
+<img src="man/figures/README-model_selection-1.png" width="50%" />
