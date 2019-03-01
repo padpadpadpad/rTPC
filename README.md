@@ -213,3 +213,30 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, f
 ```
 
 <img src="man/figures/README-model_selection-1.png" width="50%" />
+
+We can calculate model weighted predictions of best overall model fit
+easily enough if desired.
+
+``` r
+# calculate average prediction
+ave_preds <- merge(d_preds, select(d_stack, model, weight), by = 'model') %>%
+  mutate(., temp = round(temp, 2)) %>%
+  group_by(temp) %>%
+  summarise(., ave_pred = sum(.fitted*weight)) %>%
+  ungroup()
+
+# plot these
+ggplot() +
+  geom_point(aes(temp, rate), d_1) +
+  geom_line(aes(temp, .fitted, group = model), alpha = 0.1, d_preds) +
+  geom_line(aes(temp, ave_pred), ave_preds, size = 1) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  geom_hline(aes(yintercept = 0), linetype = 2)
+```
+
+<img src="man/figures/README-model_average-1.png" width="50%" />
