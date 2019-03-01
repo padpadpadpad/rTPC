@@ -3,6 +3,8 @@
 export(boatman_2017)
 export(briere2_1999)
 export(est_params)
+export(flinn_1991)
+export(gaussian_1987)
 export(get_rmax)
 export(get_topt)
 export(lactin2_1995)

@@ -41,9 +41,9 @@ library(broom)
 library(rTPC)
 
 # write function to label ggplot2 panels
-label_facets <- function(string){
+label_facets_num <- function(string){
   len <- length(string)
-  string = paste('(', letters[1:len], ') ', string, sep = '')
+  string = paste('(', 1:len, ') ', string, sep = '')
   return(string)
 }
 
@@ -116,8 +116,20 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
             boatman = map(data, ~nls_multstart(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, tmin = 0, tmax = 20, a = -1, b = -1),
-                                           start_upper = c(rmax = 2, tmin = 20, tmax = 50, a = 1, b = 1),
+                                           start_lower = c(rmax = 0, tmin = 0, tmax = 35, a = -1, b = -1),
+                                           start_upper = c(rmax = 2, tmin = 10, tmax = 50, a = 1, b = 1),
+                                           supp_errors = 'Y')),
+            flinn = map(data, ~nls_multstart(rate ~ flinn_1991(temp = temp, a, b, c),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = 0, b = -2, c = -1),
+                                           start_upper = c(a = 30, b = 2, c = 1),
+                                           supp_errors = 'Y')),
+            gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(rmax = 0, topt = 20, a = 0),
+                                           start_upper = c(rmax = 2, topt = 40, a = 30),
                                            supp_errors = 'Y')))
 ```
 
@@ -148,7 +160,7 @@ ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
   geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, extra_params, size = pts(12)) +
   geom_line(aes(temp, .fitted, col = model)) +
-  facet_wrap(~model, labeller = labeller(model = label_facets)) +
+  facet_wrap(~model, labeller = labeller(model = label_facets_num)) +
   theme_bw(base_size = 16) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
