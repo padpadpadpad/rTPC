@@ -136,6 +136,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(rmax = 0, topt = 20, a = 0),
                                            start_upper = c(rmax = 2, topt = 40, a = 30),
+                                           supp_errors = 'Y')),
+            oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
+                                           data = .x,
+                                           iter = 5000,
+                                           start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
+                                           start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
                                            supp_errors = 'Y')))
 
 ```
@@ -164,7 +170,7 @@ extra_params <- d_stack %>%
 # plot
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
-  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, extra_params, size = pts(12)) +
+  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, extra_params, size = pts(10)) +
   geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets_num)) +
   theme_bw(base_size = 16) +
