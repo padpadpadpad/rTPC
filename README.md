@@ -33,9 +33,7 @@ We can now load in the data and the packages to fit the TPCs
 ``` r
 # load in packages
 library(purrr)
-#> Warning: package 'purrr' was built under R version 3.5.2
 library(dplyr)
-#> Warning: package 'dplyr' was built under R version 3.5.2
 library(tidyr)
 library(ggplot2)
 library(nls.multstart)
@@ -114,6 +112,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
                                            start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           supp_errors = 'Y')),
+            boatman = map(data, ~nls_multstart(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(rmax = 0, tmin = 0, tmax = 20, a = -1, b = -1),
+                                           start_upper = c(rmax = 2, tmin = 20, tmax = 50, a = 1, b = 1),
                                            supp_errors = 'Y')))
 ```
 
