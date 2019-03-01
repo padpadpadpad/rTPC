@@ -18,4 +18,5 @@ Suggests:
     grid,
     dplyr,
     tidyr,
-    nls.multstart
+    nls.multstart,
+    MuMIn
