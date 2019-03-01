@@ -11,7 +11,7 @@ joehnk_2008(temp, rmax, topt, a, b, c)
 
 \item{rmax}{the rate at optimum temperature}
 
-\item{topt}{optimum temperatutr}
+\item{topt}{optimum temperatute}
 
 \item{a}{parameter with no biological meaning}
 

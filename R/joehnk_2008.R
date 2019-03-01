@@ -2,7 +2,7 @@
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax the rate at optimum temperature
-#' @param topt optimum temperatutr
+#' @param topt optimum temperatute
 #' @param a parameter with no biological meaning
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
