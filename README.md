@@ -158,6 +158,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(a = 0, b = -2, c = -1),
                                            start_upper = c(a = 30, b = 2, c = 1),
+                                           supp_errors = 'Y')),
+            hinshelwood = map(data, ~nls_multstart(rate ~ hinshelwood_1947(temp = temp, a, e, c, eh),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = 1e9, e = 5, c = 1e9, eh = 0),
+                                           start_upper = c(a = 1e11, e = 20, c = 1e11, eh = 20),
                                            supp_errors = 'Y')))
 ```
 
@@ -206,8 +212,9 @@ which model is most supported.
 ``` r
 
 # calculate AICc score and weight models
-d_stack <- mutate(d_stack, aic = map_dbl(output, MuMIn::AICc),
-                  weight = MuMIn::Weights(aic))
+d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+  filter(., !is.na(aic)) %>%
+  mutate(., weight = MuMIn::Weights(aic))
 
 # plot weights
 ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, fill = model)) +
