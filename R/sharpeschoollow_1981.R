@@ -12,7 +12,7 @@
 #'
 #' @export sharpeschoollow_1981
 
-sharpeschoollow_1981 <- function(temp_k, r_tref, e, el, tl, eh, th, tref){
+sharpeschoollow_1981 <- function(temp_k, r_tref, e, el, tl, tref){
   tref <- 273.15 + tref
   k <- 8.62e-05
   boltzmann.term <- r_tref*exp(e/k * (1/tref - 1/temp_k))

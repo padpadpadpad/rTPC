@@ -4,7 +4,7 @@
 \alias{sharpeschoollow_1981}
 \title{Sharpe Schoolfield Model for low temperature inactivation}
 \usage{
-sharpeschoollow_1981(temp_k, r_tref, e, el, tl, eh, th, tref)
+sharpeschoollow_1981(temp_k, r_tref, e, el, tl, tref)
 }
 \arguments{
 \item{temp_k}{temperature in degrees Kelvin}
