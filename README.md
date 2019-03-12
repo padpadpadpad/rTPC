@@ -170,6 +170,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                                      iter = 500,
                                                      start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
                                                      start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
+                                                     supp_errors = 'Y')),
+            sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp_k = K, r_tref, e, el, tl, tref = 15),
+                                                     data = .x,
+                                                     iter = 500,
+                                                     start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
+                                                     start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
                                                      supp_errors = 'Y')))
 ```
 
@@ -367,6 +373,12 @@ d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
                                                      iter = 500,
                                                      start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
                                                      start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
+                                                     supp_errors = 'Y')),
+          sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp_k = K, r_tref, e, el, tl, tref = 15),
+                                                     data = .x,
+                                                     iter = 500,
+                                                     start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
+                                                     start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
                                                      supp_errors = 'Y')))
 
 # stack models
@@ -427,6 +439,7 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(c(0,1)) 
+#> Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
 <img src="man/figures/README-plot_weights_many-1.png" width="60%" />

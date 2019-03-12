@@ -39,4 +39,14 @@ get_start_vals <- function(x, y, model_name) {
     th = mean(d[d$x >= d[d$y == max(d$y, na.rm = TRUE),'x'], 'x'])
     return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
   }
+
+  if(model_name == 'sharpeschoollow_1981'){
+    r_tref = mean(d$y, na.rm = TRUE)
+    pre_topt$x2 <- 1/(8.62e-05*pre_topt$x)
+    post_topt$x2 <- 1/(8.62e-05*post_topt$x)
+    e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
+    el <- stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1
+    tl <- pre_topt$x[2]
+    return(c(r_tref = r_tref, e = e, el = el, tl = tl))
+  }
 }
