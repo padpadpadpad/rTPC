@@ -180,7 +180,7 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
 ```
 
 We can now make predictions of each model and plot them. In addition, we
-can estimate optimum temperature for each model using `get_topt()`.
+can estimate extra parameters for each model using `est_params()`.
 
 ``` r
 # stack models
@@ -199,12 +199,13 @@ extra_params <- d_stack %>%
   select(., -c(data, output)) %>%
   unnest(., est) %>%
   mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
+         ctmin =ifelse(ctmin > 150, ctmin - 273.15, ctmin),
          rmax = round(rmax, 2))
 
 # plot
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
-  geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, extra_params, size = pts(10)) +
+  geom_text(aes(-Inf, Inf, label = paste('Topt =', round(topt, 1), 'ºC\n', 'rmax = ', rmax, '\nctmin =', round(ctmin, 1), 'ºC', sep = '')),  hjust = -0.1, vjust = 1.15, extra_params, size = pts(10)) +
   geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets_num)) +
   theme_bw(base_size = 16) +
@@ -439,7 +440,6 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(c(0,1)) 
-#> Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
 <img src="man/figures/README-plot_weights_many-1.png" width="60%" />
