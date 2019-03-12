@@ -170,7 +170,13 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(a = 1e9, e = 5, c = 1e9, eh = 0),
                                            start_upper = c(a = 1e11, e = 20, c = 1e11, eh = 20),
-                                           supp_errors = 'Y')))
+                                           supp_errors = 'Y')),
+            sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
+                                                     data = .x,
+                                                     iter = 500,
+                                                     start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
+                                                     start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
+                                                     supp_errors = 'Y')))
 
 ```
 
@@ -351,7 +357,13 @@ d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(a = 1e9, e = 5, c = 1e9, eh = 0),
                                            start_upper = c(a = 1e11, e = 20, c = 1e11, eh = 20),
-                                           supp_errors = 'Y')))
+                                           supp_errors = 'Y')),
+         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
+                                                     data = .x,
+                                                     iter = 500,
+                                                     start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
+                                                     start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
+                                                     supp_errors = 'Y')))
 
 # stack models
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
