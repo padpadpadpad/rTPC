@@ -11,6 +11,7 @@ est_params <- function(model){
   t <- data.frame(rmax = tryCatch(rTPC::get_rmax(model), error = function(err) NA),
                   topt = tryCatch(rTPC::get_topt(model), error = function(err) NA),
                   ctmin = tryCatch(rTPC::get_ctmin(model), error = function(err) NA),
+                  ctmax = tryCatch(rTPC::get_ctmax(model), error = function(err) NA),
                   stringsAsFactors = FALSE)
   return(t)
 }
