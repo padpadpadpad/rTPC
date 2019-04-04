@@ -71,10 +71,10 @@ extra_params <- d_stack %>%
          rmax = round(rmax, 2))
 
 # plot
-ggplot(d_preds, aes(temp, log(rate))) +
-  geom_point(aes(temp, log(rate)), d_1) +
+ggplot(d_preds, aes(temp, rate)) +
+  geom_point(aes(temp, rate), d_1) +
   geom_text(aes(-Inf, Inf, label = paste('Topt =', topt, 'ºC\n', 'rmax = ', rmax)),  hjust = -0.1, vjust = 1.5, extra_params, size = pts(10)) +
-  geom_line(aes(temp, log(.fitted), col = model)) +
+  geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets_num)) +
   theme_bw(base_size = 16) +
   theme(legend.position = 'none',
