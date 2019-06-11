@@ -49,4 +49,21 @@ get_start_vals <- function(x, y, model_name) {
     tl <- pre_topt$x[2]
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
+
+  if(model_name == 'briere2_1999'){
+    tmin = min(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE)
+    b = 2
+    a = 1 * 10^-4
+    return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
+  if(model_name == 'thomas_2012'){
+    c = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+    b = 0
+    topt = d$x[d$y==max(d$y, na.rm = TRUE)]
+    a = max(d$y)/max(exp(b*d$x)*(1-((d$x-topt)/(c/2))^2))
+    return(c(a = a, b = b, c = c, topt = topt))
+  }
+
 }

@@ -36,6 +36,9 @@ ggplot(d_1, aes(temp, rate)) +
 
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolfull_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'briere2_1999')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'thomas_2012')
+
 
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
@@ -53,14 +56,30 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                                      start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
                                                      supp_errors = 'Y',
                                                      lower = c(r_tref = 0, e = 0, el = 0, tl = 0, eh = 0, th = 0),
-                                                     upper = c(r_tref = 10, e = 10, el = 10, tl = 293.15, eh = 10, th = 400))))
+                                                     upper = c(r_tref = 10, e = 10, el = 10, tl = 293.15, eh = 10, th = 400))),
+         briere2 = map(data, ~nls_multstart(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
+                                            data = .x,
+                                            iter = 500,
+                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') - 1,
+                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') + 2,
+                                            supp_errors = 'Y',
+                                            lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
+                                            upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
+         thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') + 1,
+                                           supp_errors = 'Y',
+                                           lower = c(a= 0, b = -10, c = 0, topt = 0))))
 
-d_stack <- gather(d_models, 'model', 'output', starts_with('sharpe'))
+d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
 newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata)) %>%
+  mutate(., pred = map(output, augment, newdata = newdata)) %>%
+  unnest(., pred) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
 extra_params <- d_stack %>%
