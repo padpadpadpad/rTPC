@@ -36,9 +36,13 @@ ggplot(d_1, aes(temp, rate)) +
 
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolfull_1981')
+get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'briere2_1999')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'thomas_2012')
-
+get_start_vals(d_1$temp, d_1$rate, model_name = 'lactin2_1995')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'quadratic_2008')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'ratkowsky_1983')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
 
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
@@ -82,12 +86,20 @@ d_preds <- d_stack %>%
   unnest(., pred) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
 extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(., est) %>%
   mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
          rmax = round(rmax, 2))
+
+
+ggplot(filter(d_preds))
 
 # plot
 ggplot(d_preds, aes(temp, rate)) +

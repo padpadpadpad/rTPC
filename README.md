@@ -80,11 +80,11 @@ We can now run `nls.multstart::nls_multstart()` for each function.
 # run in purrr - going to be a huge long command this one
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%
-  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, tref),
+  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
                        iter = 500,
-                       start_lower = c(p = 0, c = -2, tmax = 35, tref = 0),
-                       start_upper = c(p = 3, c = 0, tmax = 55, tref = 15),
+                       start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
+                       start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
                        supp_errors = 'Y')),
             sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
                                            data = .x,
@@ -287,11 +287,11 @@ d_15 <- filter(d, curve_id <= 15)
 # run in purrr - going to be a huge long command this one
 d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
   nest() %>%
-  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, tref),
+  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
                        iter = 500,
-                       start_lower = c(p = 0, c = -2, tmax = 35, tref = 0),
-                       start_upper = c(p = 3, c = 0, tmax = 55, tref = 15),
+                       start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
+                       start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
                        supp_errors = 'Y')),
             sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
                        data = .x,

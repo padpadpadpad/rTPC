@@ -66,4 +66,37 @@ get_start_vals <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c, topt = topt))
   }
 
+  if(model_name == 'ratkowsky_1983'){
+    tmin = min(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE)
+    a = 1
+    b = 0.1
+    return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
+  if(model_name == 'quadratic_2008'){
+    b = (-2*-0.005*max(d$y, na.rm = TRUE))
+    a = max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE)
+    c = -2
+    return(c(a = a, b = b, c = c))
+  }
+
+  if(model_name == 'lactin2_1995'){
+    tmax = max(d$x, na.rm = TRUE)
+    delta_t = tmax - d$x[d$y == max(d$y, na.rm = TRUE)]
+    p = 0.1
+    c = 0
+
+    return(c(p = p, c = c, tmax = tmax, delta_t = delta_t))
+  }
+
+
+  if(model_name == 'gaussian_1987'){
+    rmax = max(d$y, na.rm = TRUE)
+    topt = d$x[d$y == rmax]
+    a = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+
+    return(c(rmax = rmax, topt = topt, a = a))
+  }
+
 }
