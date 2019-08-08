@@ -92,6 +92,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = c(r_tref = 0.01, e = 0, eh = 0, th = 270),
                                            start_upper = c(r_tref = 2, e = 3, eh = 10, th = 330),
                                            supp_errors = 'Y')),
+            johnsonlewin = map(data, ~nls_multstart(rate ~ johnsonlewin_1946(temp_k = K, r0, e, eh, topt),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
+                                           start_upper = c(r0 = 1e11, e = 2, eh = 10, topt = 330),
+                                           supp_errors = 'Y')),
             thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
                                            iter = 500,
@@ -180,6 +186,1165 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
                                            start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
                                            supp_errors = 'Y')))
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
+
+#> Warning in log(e/(eh - e)): NaNs produced
 ```
 
 Using tools from the `tidyverse`, we can now easily estimate predictions
@@ -206,6 +1371,14 @@ extra_params <- d_stack %>%
          ctmin =ifelse(ctmin > 150, ctmin - 273.15, ctmin),
          ctmax =ifelse(ctmax > 200, ctmax - 273.15, ctmax),
          rmax = round(rmax, 2))
+#> Warning in max(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
+#> arguments to max; returning -Inf
+#> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
+#> arguments to min; returning Inf
+#> Warning in max(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
+#> arguments to max; returning -Inf
+#> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
+#> arguments to min; returning Inf
 
 # plot
 ggplot(d_preds, aes(temp, rate)) +

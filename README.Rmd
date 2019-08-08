@@ -80,7 +80,7 @@ ggplot(d_1, aes(temp, rate)) +
 
 We can now run `nls.multstart::nls_multstart()` for each function.
 
-```{r fit_models}
+```{r fit_models, warning=FALSE}
 # run in purrr - going to be a huge long command this one
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%
@@ -95,6 +95,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(r_tref = 0.01, e = 0, eh = 0, th = 270),
                                            start_upper = c(r_tref = 2, e = 3, eh = 10, th = 330),
+                                           supp_errors = 'Y')),
+            johnsonlewin = map(data, ~nls_multstart(rate ~ johnsonlewin_1946(temp_k = K, r0, e, eh, topt),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
+                                           start_upper = c(r0 = 1e11, e = 2, eh = 10, topt = 330),
                                            supp_errors = 'Y')),
             thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
@@ -272,7 +278,7 @@ ggplot() +
 
 The amazing thing about this method is that it can easily be implement on many different curves. For example we can fit this model ensemble to each of 15 curves from the dataset, calculate the *AICc* for each one and then plot the model averaged curve.
 
-```{r scale_up, warning=FALSE}
+```{r scale_up, warning=FALSE, cache=TRUE}
 # filter 15 curves
 d_15 <- filter(d, curve_id <= 15)
 
