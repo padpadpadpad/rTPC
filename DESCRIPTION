@@ -20,3 +20,5 @@ Suggests:
     tidyr,
     nls.multstart,
     MuMIn
+Imports: 
+    moments

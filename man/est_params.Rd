@@ -13,7 +13,7 @@ est_params(model)
 Estimates extra parameters that are commonly calculated from TPCs
 }
 \details{
-Currently calculates maximum rate (rmax), optimum temperature (topt), critical thermal maximum (ctmax) and minimum (ctmin), thermal tolerance and thermal safety margin. If it cannot be calculated will return NA
+Currently calculates maximum rate (rmax), optimum temperature (topt), critical thermal maximum (ctmax) and minimum (ctmin), thermal tolerance, thermal safety margin and the skewness of the curve. If any parameters cannot be calculated they will return NA.
 }
 \author{
 Daniel Padfield

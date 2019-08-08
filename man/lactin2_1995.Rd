@@ -4,7 +4,7 @@
 \alias{lactin2_1995}
 \title{Lactin2 function}
 \usage{
-lactin2_1995(temp, p, c, tmax, tref)
+lactin2_1995(temp, p, c, tmax, delta_t)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
@@ -15,7 +15,7 @@ lactin2_1995(temp, p, c, tmax, tref)
 
 \item{tmax}{changes the temperature at which the curve begins to decelerate beyond the optimum}
 
-\item{tref}{reference temperature in degrees centigrade}
+\item{delta_t}{thermal safety margin}
 }
 \description{
 Lactin2 function
