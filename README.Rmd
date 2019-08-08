@@ -189,6 +189,13 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
                                            start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
+                                           supp_errors = 'Y')),
+            weibull = map(data, ~nls_multstart(rate ~ weibull_1995(temp = temp, a, topt, b, c),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = 0, topt = 30, b = 100, c = 10),
+                                           start_upper = c(a = 3, topt = 50, b = 200, c = 50),
+                                           lower = c(a = 0, topt = 20, b = 0, c = 0),
                                            supp_errors = 'Y')))
 
 ```
