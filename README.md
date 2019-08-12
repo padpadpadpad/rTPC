@@ -25,7 +25,6 @@ install.packages('purrr')
 install.packages('dplyr')
 install.packages('tidyr')
 install.packages('ggplot2')
-install.packages('nls.multstart')
 install.packages('broom')
 install.packages('MuMIn')
 ```
@@ -267,7 +266,7 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, f
   xlab('model') +
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1)) 
+  ylim(c(0,1))
 ```
 
 <img src="man/figures/README-model_selection-1.png" width="50%" />
@@ -470,7 +469,7 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   xlab('model') +
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1)) 
+  ylim(c(0,1))
 #> Warning in sample.int(.Machine$integer.max, 1L): '.Random.seed[1]' is not a
 #> valid integer, so ignored
 ```
