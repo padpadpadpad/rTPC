@@ -34,6 +34,10 @@ ggplot(d_1, aes(temp, rate)) +
   geom_point() +
   theme_bw()
 
+temp = 20:50; a = 2; b = 100; c = 10;topt = 40
+y = weibull_1995(temp, a, topt, b, c)
+plot(y~temp)
+
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolfull_1981')
 get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
