@@ -99,4 +99,14 @@ get_start_vals <- function(x, y, model_name) {
     return(c(rmax = rmax, topt = topt, a = a))
   }
 
+
+  if(model_name == 'rezende_2019'){
+    b = d[d$x == d[d$y == max(d$y, na.rm = TRUE),'x'],]
+    q10 = 2.77
+    a = 0.0577
+    c = 0.003
+
+    return(c(a = a, q10 = q10, b = b, c = c))
+  }
+
 }

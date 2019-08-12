@@ -192,6 +192,12 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = c(a = 0, topt = 30, b = 100, c = 10),
                                            start_upper = c(a = 3, topt = 50, b = 200, c = 50),
                                            lower = c(a = 0, topt = 20, b = 0, c = 0),
+                                           supp_errors = 'Y')),
+            rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, a, q10, b, c),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = c(a = 0, q10 = 1, b = 10, c = 0),
+                                           start_upper = c(a = 1, q10 = 4, b = 50, c = 0.005),
                                            supp_errors = 'Y')))
 ```
 
@@ -219,6 +225,8 @@ extra_params <- d_stack %>%
          ctmin =ifelse(ctmin > 150, ctmin - 273.15, ctmin),
          ctmax =ifelse(ctmax > 200, ctmax - 273.15, ctmax),
          rmax = round(rmax, 2))
+#> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
+#> arguments to min; returning Inf
 #> Warning in max(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
 #> arguments to max; returning -Inf
 #> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
@@ -463,6 +471,8 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(c(0,1)) 
+#> Warning in sample.int(.Machine$integer.max, 1L): '.Random.seed[1]' is not a
+#> valid integer, so ignored
 ```
 
 <img src="man/figures/README-plot_weights_many-1.png" width="60%" />
