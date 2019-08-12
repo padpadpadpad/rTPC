@@ -47,7 +47,9 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'lactin2_1995')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'quadratic_2008')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'ratkowsky_1983')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
-
+get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
+get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
+get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%
@@ -79,7 +81,15 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') + 1,
                                            supp_errors = 'Y',
-                                           lower = c(a= 0, b = -10, c = 0, topt = 0))))
+                                           lower = c(a= 0, b = -10, c = 0, topt = 0))),
+         rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, q10, a, b, c),
+                                            data = .x,
+                                            iter = 500,
+                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') -1,
+                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') +1,
+                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
+                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
+                                            supp_errors = 'Y')))
 
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
@@ -90,10 +100,7 @@ d_preds <- d_stack %>%
   unnest(., pred) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
-Mode <- function(x) {
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
+
 
 extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
