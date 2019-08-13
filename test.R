@@ -50,6 +50,8 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
+get_lower_lims(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
+get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%

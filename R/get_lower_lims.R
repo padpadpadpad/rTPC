@@ -27,4 +27,30 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(q10 = q10, a = a, b = b, c = c))
   }
 
+  if(model_name == 'sharpeschoolhigh_1981'){
+    r_tref = 0
+    e = 0
+    eh = 0
+    th = 273.15
+    return(c(r_tref = r_tref, e = e, eh = eh, th = th))
+  }
+
+  if(model_name == 'sharpeschoolfull_1981'){
+    r_tref = 0
+    e = 0
+    eh = 0
+    th = min(d$x, na.rm = TRUE)
+    tl = min(d$x, na.rm = TRUE)
+    el = 0
+
+    return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
+  }
+
+  if(model_name == 'sharpeschoollow_1981'){
+    r_tref = 0
+    e = 0
+    tl = min(d$x, na.rm = TRUE)
+    el = 0
+    return(c(r_tref = r_tref, e = e, el = el, tl = tl))
+  }
 }
