@@ -3,8 +3,6 @@
 #' @description Estimates the activation energy of a given thermal performance curve
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @author Daniel Padfield
-#' @details
-#'
 #' @export get_e
 
 get_e <- function(model){
@@ -44,8 +42,8 @@ get_e <- function(model){
   newdata$K <- ifelse(newdata[,param_ind] < 150, newdata[,param_ind] + 273.15, newdata[,param_ind])
   newdata$Ktrans <- 1/8.62e-05/newdata$K
 
-  mod <- nls(preds ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), newdata, start = c(lnc = -1, e = 1), na.action = na.omit)
-  e = unname(coef(mod)[2])
+  mod <- stats::nls(preds ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), newdata, start = c(lnc = -1, e = 1), na.action = stats::na.omit)
+  e = unname(stats::coef(mod)[2])
 
   return(e)
 }

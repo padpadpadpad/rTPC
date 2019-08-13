@@ -12,9 +12,6 @@ get_e(model)
 \description{
 Estimates the activation energy of a given thermal performance curve
 }
-\details{
-
-}
 \author{
 Daniel Padfield
 }

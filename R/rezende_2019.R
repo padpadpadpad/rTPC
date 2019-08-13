@@ -1,6 +1,7 @@
 #' Rezende 2019 model
 #'
 #' @param temp temperature in degrees centigrade
+#' @param q10 defines the fold change in performance as a result of increasing the temperature by 10 ºC
 #' @param a parameter describing shifts in the vertical axis
 #' @param b parameter threshold temperature beyond which the downward curve starts
 #' @param c parameter controlling the rate of decline beyond the threshold temperature, b.

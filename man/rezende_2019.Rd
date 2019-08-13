@@ -9,6 +9,8 @@ rezende_2019(temp, q10, a, b, c)
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
+\item{q10}{defines the fold change in performance as a result of increasing the temperature by 10 ºC}
+
 \item{a}{parameter describing shifts in the vertical axis}
 
 \item{b}{parameter threshold temperature beyond which the downward curve starts}
