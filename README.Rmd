@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 
 The aim of rTPC is to help fit thermal performance in R. These functions act as wrappers that aid in the fitting of common functions for fitting thermal performance curves.
 
+<!-- badges: start -->
+[![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+<!-- badges: end -->
+
 ## Installation
 
 ```{r install, eval = FALSE}

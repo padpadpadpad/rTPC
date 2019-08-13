@@ -7,6 +7,12 @@ The aim of rTPC is to help fit thermal performance in R. These functions
 act as wrappers that aid in the fitting of common functions for fitting
 thermal performance curves.
 
+<!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+<!-- badges: end -->
+
 ## Installation
 
 ``` r
@@ -25,6 +31,7 @@ install.packages('purrr')
 install.packages('dplyr')
 install.packages('tidyr')
 install.packages('ggplot2')
+install.packages('nls.multstart')
 install.packages('broom')
 install.packages('MuMIn')
 ```
@@ -224,8 +231,13 @@ extra_params <- d_stack %>%
          ctmin =ifelse(ctmin > 150, ctmin - 273.15, ctmin),
          ctmax =ifelse(ctmax > 200, ctmax - 273.15, ctmax),
          rmax = round(rmax, 2))
-#> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
-#> arguments to min; returning Inf
+#> Warning in newdata_extrap[, param_ind] <= topt: longer object length is not
+#> a multiple of shorter object length
+#> Warning in newdata_extrap$preds <= 0.05 * rmax: longer object length is not
+#> a multiple of shorter object length
+
+#> Warning in newdata_extrap$preds <= 0.05 * rmax: longer object length is not
+#> a multiple of shorter object length
 #> Warning in max(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
 #> arguments to max; returning -Inf
 #> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
@@ -266,7 +278,7 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, f
   xlab('model') +
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1))
+  ylim(c(0,1)) 
 ```
 
 <img src="man/figures/README-model_selection-1.png" width="50%" />
@@ -469,9 +481,7 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   xlab('model') +
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1))
-#> Warning in sample.int(.Machine$integer.max, 1L): '.Random.seed[1]' is not a
-#> valid integer, so ignored
+  ylim(c(0,1)) 
 ```
 
 <img src="man/figures/README-plot_weights_many-1.png" width="60%" />
