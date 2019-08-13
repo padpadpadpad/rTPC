@@ -27,4 +27,31 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(q10 = q10, a = a, b = b, c = c))
   }
 
+  if(model_name == 'sharpeschoolhigh_1981'){
+    r_tref = max(d$y, na.rm = TRUE)
+    e = 10
+    eh = 20
+    th = max(d$x)
+    return(c(r_tref = r_tref, e = e, eh = eh, th = th))
+  }
+
+  if(model_name == 'sharpeschoolfull_1981'){
+    r_tref = max(d$y, na.rm = TRUE)
+    e = 10
+    eh = 20
+    th = max(d$x, na.rm = TRUE)
+    tl = d[d$y == max(d$y, na.rm = TRUE),]$x
+    el = 20
+
+    return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
+  }
+
+  if(model_name == 'sharpeschoollow_1981'){
+    r_tref = max(d$y, na.rm = TRUE)
+    e = 10
+    tl = d[d$y == max(d$y, na.rm = TRUE),]$x
+    el = 20
+    return(c(r_tref = r_tref, e = e, el = el, tl = tl))
+  }
+
 }
