@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rTPC
+# rTPC <img src="logos/hex_sticker.png" width="250" align="right" />
 
 The aim of rTPC is to help fit thermal performance in R. These functions
 act as wrappers that aid in the fitting of common functions for fitting
@@ -231,13 +231,6 @@ extra_params <- d_stack %>%
          ctmin =ifelse(ctmin > 150, ctmin - 273.15, ctmin),
          ctmax =ifelse(ctmax > 200, ctmax - 273.15, ctmax),
          rmax = round(rmax, 2))
-#> Warning in newdata_extrap[, param_ind] <= topt: longer object length is not
-#> a multiple of shorter object length
-#> Warning in newdata_extrap$preds <= 0.05 * rmax: longer object length is not
-#> a multiple of shorter object length
-
-#> Warning in newdata_extrap$preds <= 0.05 * rmax: longer object length is not
-#> a multiple of shorter object length
 #> Warning in max(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
 #> arguments to max; returning -Inf
 #> Warning in min(newdata_extrap[, param_ind], na.rm = TRUE): no non-missing
@@ -482,6 +475,9 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) 
   theme(legend.position = 'element_blank',
         axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(c(0,1)) 
+#> Warning in sample.int(.Machine$integer.max, 1L): '.Random.seed[1]' is not a
+#> valid integer, so ignored
+#> Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
 <img src="man/figures/README-plot_weights_many-1.png" width="60%" />

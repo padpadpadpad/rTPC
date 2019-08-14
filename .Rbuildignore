@@ -4,3 +4,4 @@
 ^test\.R$
 ^\.travis\.yml$
 ^README_cache/*$
+^/logos/*

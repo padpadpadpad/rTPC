@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# rTPC
+# rTPC <img src="logos/hex_sticker.png" width="250" align="right" />
 
 The aim of rTPC is to help fit thermal performance in R. These functions act as wrappers that aid in the fitting of common functions for fitting thermal performance curves.
 
