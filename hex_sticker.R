@@ -179,7 +179,7 @@ plot_1 <- ggplot() +
         axis.ticks = element_blank(),
         axis.title.x = element_text(margin=margin(-2,0,0,0)),
         axis.title.y = element_text(margin=margin(0,-2,0,0)),
-        panel.grid.major = element_line(size = 0.1, colour = 'dark grey')) +
+        panel.grid.major = element_line(size = 0.1, colour = 'grey')) +
   xlab('Temperature') +
   ylab('Rate') +
   scale_y_continuous(breaks = c(0, 0.25, 0.5))
