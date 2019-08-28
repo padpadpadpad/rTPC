@@ -14,6 +14,7 @@ est_params <- function(model){
                   ctmax = tryCatch(rTPC::get_ctmax(model), error = function(err) NA),
                   e = tryCatch(rTPC::get_e(model), error = function(err) NA),
                   eh = tryCatch(rTPC::get_eh(model), error = function(err) NA),
+                  q10 = tryCatch(rTPC::get_q10(model), error = function(err) NA),
                   stringsAsFactors = FALSE)
   t$thermal_safety_margin <- tryCatch(t$ctmax - t$topt, error = function(err) NA)
   t$tolerance_range <- tryCatch(t$ctmax - t$ctmin, error = function(err) NA)
