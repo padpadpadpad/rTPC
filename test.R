@@ -53,9 +53,17 @@ get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
 
+number_of_models <- 5
+
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
-  nest() %>%
-  mutate(., sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 20),
+  nest()
+
+# setup progress bar
+pb <- progress_estimated(nrow(d_models)*number_of_models)
+
+d_models <- d_models %>%
+  mutate(., sharpeschoolhigh = map(data, ~
+    nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 20),
                                                      data = .x,
                                                      iter = 500,
                                                      start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,

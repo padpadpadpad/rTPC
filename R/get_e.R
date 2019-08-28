@@ -15,34 +15,23 @@ get_e <- function(model){
   param_ind <- all.vars(formula[[3]])[! all.vars(formula[[3]]) %in%
                                         names(model$m$getPars())]
 
-  # extract the temperature values
-  vals <- x[[param_ind]]
+  # get the name of the rate values
+  params_dep <- all.vars(formula[[2]])
 
-  # new datasets - one for extrapolation and one without
-  newdata <- data.frame(x = seq(min(vals), max(vals), by = 0.001), stringsAsFactors = FALSE)
+  # extract the temperature and rate values
+  temp <- data.frame(x1 = x[[param_ind]], x2 = x[[params_dep]], stringsAsFactors = FALSE)
 
-  # rename to be the correct column name
-  names(newdata) <- param_ind
-  names(newdata_extrap) <- param_ind
+  # calculate topt
+  topt <- rTPC::get_topt(model)
 
-  # predict over a whole wide range of data - both extrap and non-extrap
-  newdata$preds <- stats::predict(model, newdata = newdata)
+  # keep just values below topt
+  temp <- temp[temp$x1 <= topt,]
 
-  # calc topt and rmax
-  topt = newdata[newdata$preds == max(newdata$preds, na.rm = TRUE), param_ind]
-  rmax = newdata[newdata$preds == max(newdata$preds),'preds']
-
-  # keep just temperatures lower than topt
-  newdata <- newdata[newdata[,param_ind] <= topt,]
-  newdata$preds[newdata$preds <= 0] <- NA
-
-  # log data
-  newdata$ln_preds <- log(newdata$preds)
   # create K column if needed
-  newdata$K <- ifelse(newdata[,param_ind] < 150, newdata[,param_ind] + 273.15, newdata[,param_ind])
-  newdata$Ktrans <- 1/8.62e-05/newdata$K
+  temp$K <- ifelse(temp$x1 < 150, temp$x1 + 273.15, temp$x1)
 
-  mod <- stats::nls(preds ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), newdata, start = c(lnc = -1, e = 1), na.action = stats::na.omit)
+  # run model
+  mod <- stats::nls(x2 ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), temp, start = c(lnc = stats::median(temp$x2), e = 1), na.action = stats::na.omit)
   e = unname(stats::coef(mod)[2])
 
   return(e)
