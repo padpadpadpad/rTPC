@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: yes
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -102,7 +103,7 @@ ggplot(d, aes(temp, rate, group = curve_id)) +
 
 First, we shall fit each model to just a single curve using __nls.multstart::nlsmultstart()__. To do this, we take advantage of some packages from the __tidyverse__, specifically __purrr__, __dplyr__, and __tidyr__. In short, we specify the grouping variables of the dataset (less applicable for a single curve) and then add a column for each different model fit. This results in a list column, where the actual fit is stored in the dataframe. This allows us increased flexibility compared to other methods such as extracting the parameters from the model and storing them in a list.
 
-__rTPC__ contains helper functions to aid in model fitting. First, __get_start_vals()__ estimates start values for the specified model. These start values are estimated from the data where possible, but otherwise represent averages of previously reported parameters from the literature. Second, __get_lower_lims()__ and __get_upper_lims()__ set wide lower and upper limits for the model specified. These are needed as some models have multiple solutions, which means that some estimated parameters are  meaningless even though they represent the best solution. These are currently not available for all model fits, but we aim to do so soon.
+__rTPC__ contains helper functions to aid in model fitting. First, __get_start_vals()__ estimates start values for the specified model. These start values are estimated from the data where possible, but otherwise represent averages of previously reported parameters from the literature. Second, __get_lower_lims()__ and __get_upper_lims()__ set wide lower and upper limits for the model specified. These are needed as some models have multiple solutions, which means that some estimated parameters are  meaningless even though they represent the best solution. These are currently not available for all models, but we aim to do so soon.
 
 ```{r fit_models, warning=FALSE}
 # filter data for just a single curve
@@ -235,9 +236,11 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
 
 ```
 
-The predictions of each model can be extracted using __broom::augment()__. We first stack the models into long format. __rTPC::est_params()__ allows us to calculate a bunch of extra parameters. This can easily be implemented for every model in the list column, giving us an estimate of, for example, optimum temperature for each model fitted to __the same__ data.
+The predictions of each model can be extracted using __broom::augment()__, after we stack all of our models into long format. To allow for a smooth curve, we produce a new temperature vector that has 100 points instead of our original data which just has 8. 
 
-We can then plot each model alongside a few of the derived parameters.
+We can also grab all the parameters of the model using __broom::tidy()__. This is useful if using just a single model, but as parameter meanings do not transfer well across models, using this to compare models is limited.
+
+Nevertheless, we can extract parameters and visualise our model fits.
 
 ```{r plot_predictions, fig.height = 8, fig.width = 12, fig.align='center', warning=FALSE, message=FALSE}
 # stack models
@@ -249,18 +252,15 @@ newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
 d_preds <- d_stack %>%
   unnest(., output %>% map(augment, newdata = newdata))
 
-# estimate extra parameters
-extra_params <- d_stack %>%
-  mutate(., est = map(output, est_params)) %>%
+# estimate parameters
+params <- d_stack %>%
+  mutate(., est = map(output, tidy)) %>%
   select(., -c(data, output)) %>%
-  unnest(., est) %>%
-  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
-         rmax = round(rmax, 2))
+  unnest(est)
 
-# plot
+# plot fit
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d_1) +
-  geom_text(aes(-Inf, Inf, label = paste('Topt =', round(topt, 1), 'ºC\n', 'rmax = ', rmax, sep = '')),  hjust = -0.1, vjust = 1.15, extra_params, size = pts(9)) +
   geom_line(aes(temp, .fitted, col = model)) +
   facet_wrap(~model, labeller = labeller(model = label_facets_num)) +
   theme_bw(base_size = 16) +
@@ -273,7 +273,33 @@ ggplot(d_preds, aes(temp, rate)) +
 
 ```
 
-From these fits, we can also take advantage of model selection methods such as the _AICc_ score. We can calculate model weights of these to see which model is most supported. 
+### Estimating traits of the TPC
+
+A common motivation for fitting a particular model is that a desired term (e.g. the optimum temperature $T_{opt}$) is specifically defined in the model. However, these parameters can also be derived from any given model fit, by estimating parameters from high resolution predictions of the model.
+
+__rTPC__ comes with a bunch of helper functions to estimate common traits that are extracted from TPCs, such as optimum temperature, __get_topt()__, maximal rate, __get_rmax()__, and activation energy, __get_e()__. These functions can all be called at once using __est_params()__.
+
+```{r use_est_params, warning=FALSE}
+
+# estimate extra parameters
+params_extra <- d_stack %>%
+  mutate(., est = map(output, est_params)) %>%
+  select(., -c(data, output)) %>%
+  unnest(est) %>%
+  select(model:ncol(.)) %>%
+  mutate_if(is.numeric, function(x)round(x, 2))
+
+col_names <- c('model', 'Rmax', 'Topt', 'CTmin', 'CTmax', 'E', 'Eh', 'Q10', 'thermal\nsafety\nmargin', 'tolerance\nrange', 'skewness')
+
+# show the table of extra parameters
+kableExtra::kable(head(params_extra, 6), col.names = col_names, align = 'c') %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+
+```
+
+## Model selection
+
+From these fits, we can also take advantage of model selection methods such as the __AICc__ score. We can calculate model weights of these to see which model is most supported. 
 
 ```{r model_selection, fig.height=5, fig.width = 6, out.width = '50%'}
 
@@ -292,6 +318,8 @@ ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, f
   ylim(c(0,1)) 
 
 ```
+
+## Model averaging
 
 We can then calculate model weighted predictions of best overall model fit easily enough if desired.
 
@@ -317,36 +345,61 @@ ggplot() +
   geom_hline(aes(yintercept = 0), linetype = 2)
 ```
 
+## Incorporating model weights
+
+## Bootstrapping models to better account for uncertainty
+
+## Fitting multiple models to multiple curves
+
 The amazing thing about this method is that it can easily be implement on many different curves. For example we can fit this model ensemble to each of 15 curves from the dataset, calculate the *AICc* for each one and then plot the model averaged curve.
 
-```{r scale_up, warning=FALSE, cache=TRUE}
+```{r scale_up, warning=FALSE, cache=TRUE, message=TRUE}
 # filter 15 curves
 d_15 <- filter(d, curve_id <= 15)
 
+# when scaling up our code to fit hundreds of models, its nice to have a progress bar
+# there are probably more elegant ways to do this
+nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
+                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
+                                   control, modelweights, ...){
+  if(!is.null(pb)){
+    pb$tick()$print()
+  }
+  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
+                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
+                control = control, modelweights = modelweights, ...)
+}
+
+# start progress bar and estimate time it will take
+number_of_models <- 11
+number_of_curves <- length(unique(d_15$curve_id))
+
+# setup progress bar
+pb <- progress_estimated(number_of_curves*number_of_models)
+
 # run each model on each curve
-# run in purrr - going to be a huge long command this one
 d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
   nest() %>%
-  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
+  mutate(., lactin2 = map(data, ~nls_multstart_progress(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
                        iter = 500,
                        start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
                        start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
                        supp_errors = 'Y')),
-            sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+            sharpeschoolhigh = map(data, ~nls_multstart_progress(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
                        data = .x,
                        iter = 500,
                        start_lower = c(r_tref = 0.01, e = 0, eh = 0, th = 270),
                        start_upper = c(r_tref = 2, e = 3, eh = 10, th = 330),
                        supp_errors = 'Y')),
-            thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
+            thomas = map(data, ~nls_multstart_progress(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                        data = .x,
                        iter = 500,
                        start_lower = c(a = -10, b = -10, c = -10, topt = 0),
                        start_upper = c(a = 10, b = 10, c = 10, topt = 40),
                        supp_errors = 'Y',
                        lower = c(a= 0, b = -10, c = 0, topt = 0))),
-            briere2 = map(data, ~nls_multstart(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
+            briere2 = map(data, ~nls_multstart_progress(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
                        data = .x,
                        iter = 500,
                        start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
@@ -354,80 +407,54 @@ d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
                        supp_errors = 'Y',
                        lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
                        upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
-            spain = map(data, ~nls_multstart(rate ~ spain_1982(temp = temp, a, b, c, r0),
-                       data = .x,
-                       iter = 500,
-                       start_lower = c(a = -1, b = -1, c = -1, r0 = -1),
-                       start_upper = c(a = 1, b = 1, c = 1, r0 = 1),
-                       supp_errors = 'Y')),
-            ratkowsky = map(data, ~nls_multstart(rate ~ ratkowsky_1983(temp = temp, tmin, tmax, a, b),
-                       data = .x,
-                       iter = 500,
-                       start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                       start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
-                       supp_errors = 'Y')),
-         boatman = map(data, ~nls_multstart(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
+         boatman = map(data, ~nls_multstart_progress(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 0, tmin = 0, tmax = 35, a = -1, b = -1),
                         start_upper = c(rmax = 2, tmin = 10, tmax = 50, a = 1, b = 1),
                         supp_errors = 'Y')),
-         flinn = map(data, ~nls_multstart(rate ~ flinn_1991(temp = temp, a, b, c),
+         flinn = map(data, ~nls_multstart_progress(rate ~ flinn_1991(temp = temp, a, b, c),
                         data = .x,
                         iter = 500,
                         start_lower = c(a = 0, b = -2, c = -1),
                         start_upper = c(a = 30, b = 2, c = 1),
                         supp_errors = 'Y')),
-         gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
+         gaussian = map(data, ~nls_multstart_progress(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 0, topt = 20, a = 0),
                         start_upper = c(rmax = 2, topt = 40, a = 30),
                         supp_errors = 'Y')),
-         oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
+         oneill = map(data, ~nls_multstart_progress(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
                         start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
                         supp_errors = 'Y')),
-         joehnk = map(data, ~nls_multstart(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
+         joehnk = map(data, ~nls_multstart_progress(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
                         start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
                         supp_errors = 'Y',
                         lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))),
-         kamykowski = map(data, ~nls_multstart(rate ~ kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(tmin = 0, tmax = 10, a = -3, b = -1, c = -1),
-                        start_upper = c(tmin = 20, tmax = 50, a = 3, b = 1, c =1),
-                        supp_errors = 'Y')),
-         quadratic = map(data, ~nls_multstart(rate ~ quadratic_2008(temp = temp, a, b, c),
+         quadratic = map(data, ~nls_multstart_progress(rate ~ quadratic_2008(temp = temp, a, b, c),
                         data = .x,
                         iter = 500,
                         start_lower = c(a = 0, b = -2, c = -1),
                         start_upper = c(a = 30, b = 2, c = 1),
                         supp_errors = 'Y')),
-         hinshelwood = map(data, ~nls_multstart(rate ~ hinshelwood_1947(temp = temp, a, e, c, eh),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(a = 1e9, e = 5, c = 1e9, eh = 0),
-                        start_upper = c(a = 1e11, e = 20, c = 1e11, eh = 20),
-                        supp_errors = 'Y')),
-         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
+         sharpeschoolfull = map(data, ~nls_multstart_progress(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
                         data = .x,
                         iter = 500,
                         start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
                         start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
-                        supp_errors = 'Y')),
-         sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp_k = K, r_tref, e, el, tl, tref = 15),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
-                        start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
                         supp_errors = 'Y')))
+```
 
+We can then run the same code as above but on multiple models.
+
+```{r scale_up_stack, warning=FALSE}
 # stack models
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 

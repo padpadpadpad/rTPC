@@ -61,6 +61,17 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
 # setup progress bar
 pb <- progress_estimated(nrow(d_models)*number_of_models)
 
+nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower,
+                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100,
+                                   control, modelweights, ...){
+  if(!is.null(pb)){
+    pb$tick()$print()
+  }
+  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower,
+                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count,
+                control = control, modelweights = modelweights, ...)
+}
+
 d_models <- d_models %>%
   mutate(., sharpeschoolhigh = map(data, ~
     nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 20),
