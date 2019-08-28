@@ -110,8 +110,6 @@ d_preds <- d_stack %>%
   unnest(., pred) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
-
-
 extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%

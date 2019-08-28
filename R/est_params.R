@@ -13,9 +13,10 @@ est_params <- function(model){
                   ctmin = tryCatch(rTPC::get_ctmin(model), error = function(err) NA),
                   ctmax = tryCatch(rTPC::get_ctmax(model), error = function(err) NA),
                   e = tryCatch(rTPC::get_e(model), error = function(err) NA),
+                  eh = tryCatch(rTPC::get_eh(model), error = function(err) NA),
                   stringsAsFactors = FALSE)
-  t$thermal_safety_margin <- t$ctmax - t$topt
-  t$tolerance_range <- t$ctmax - t$ctmin
+  t$thermal_safety_margin <- tryCatch(t$ctmax - t$topt, error = function(err) NA)
+  t$tolerance_range <- tryCatch(t$ctmax - t$ctmin, error = function(err) NA)
   t$skewness <- tryCatch(rTPC::get_skewness(model), error = function(err) NA)
 
   return(t)
