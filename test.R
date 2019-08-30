@@ -48,10 +48,20 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'quadratic_2008')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'ratkowsky_1983')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
+get_start_vals(d_1$K, d_1$rate, model_name = 'delong_2017')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
+
+mod <- nls.multstart::nls_multstart(rate ~ delong_2017(temp_K = K, c, eb, ef, tm, ehc),
+              data = d_1,
+              iter = 1000,
+              start_lower = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') -1,
+              start_upper = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') +1,
+              supp_errors = 'Y')
+
+preds <- augment(mod)
 
 number_of_models <- 5
 
