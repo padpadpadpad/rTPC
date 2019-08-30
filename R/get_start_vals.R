@@ -122,4 +122,13 @@ get_start_vals <- function(x, y, model_name) {
     return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
   }
 
+  if(model_name == 'thomas_2017'){
+    a = 1.174
+    b = 0.064
+    c = 1.119
+    d = 0.267
+    e = 0.103
+    return(c(a=a, b=b, c=c, d=d, e=e))
+  }
+
 }

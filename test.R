@@ -56,12 +56,26 @@ get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
 
 mod <- nls.multstart::nls_multstart(rate ~ delong_2017(temp_K = K, c, eb, ef, tm, ehc),
               data = d_1,
-              iter = 1000,
+              iter = 500,
               start_lower = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') -1,
               start_upper = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') +1,
               supp_errors = 'Y')
 
+mod <- nls.multstart::nls_multstart(rate ~ thomas_2017(temp = temp, a, b, c, d, e),
+                                    data = d_1,
+                                    iter = 500,
+                                    start_lower = get_start_vals(d_1$temp,d_1$rate, model_name = 'thomas_2017') -1,
+                                    start_upper = get_start_vals(d_1$temp,d_1$rate, model_name = 'thomas_2017') +1,
+                                    supp_errors = 'Y')
+
+y = thomas_2017(d_1$temp, a = 1.174, b = 0.64, c = 1.119, d = 0.267, e = 0.103)
+plot(y ~ d_1$temp)
+
 preds <- augment(mod)
+
+ggplot(preds) +
+  geom_point(aes(temp, rate)) +
+  geom_line(aes(temp, .fitted))
 
 number_of_models <- 5
 
