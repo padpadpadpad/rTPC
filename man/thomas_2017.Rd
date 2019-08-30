@@ -4,7 +4,7 @@
 \alias{thomas_2017}
 \title{Thomas 2017}
 \usage{
-thomas_2017(temp, a, b, c, d, ehc)
+thomas_2017(temp, a, b, c, d, e)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
