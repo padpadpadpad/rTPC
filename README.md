@@ -316,6 +316,8 @@ ggplot(d_preds, aes(temp, rate)) +
 
 <img src="man/figures/README-plot_predictions-1.png" width="100%" style="display: block; margin: auto;" />
 
+If a given model has not fit, they are not included in the panel plot.
+
 ### Estimating traits of the TPC
 
 A common motivation for fitting a particular model is that a desired
@@ -331,15 +333,15 @@ traits that are extracted from TPCs, such as optimum temperature,
 **est\_params()**.
 
 ``` r
-
 # estimate extra parameters
 params_extra <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(est) %>%
   select(model:ncol(.)) %>%
-  mutate_if(is.numeric, function(x)round(x, 2))
+  mutate_if(is.numeric, function(x) round(x, 2))
 
+# set column names for html table
 col_names <- c('model', 'Rmax', 'Topt', 'CTmin', 'CTmax', 'E', 'Eh', 'Q10', 'thermal\nsafety\nmargin', 'tolerance\nrange', 'skewness')
 
 # show the table of extra parameters
@@ -849,69 +851,24 @@ spain
 
 </table>
 
-From these fits, we can also take advantage of model selection methods
-such as the **AICc** score. We can calculate model weights of these to
-see which model is most supported.
-
-``` r
-
-# calculate AICc score and weight models
-d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
-  filter(., !is.na(aic)) %>%
-  mutate(., weight = MuMIn::Weights(aic))
-
-# plot weights
-ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, fill = model)) +
-  geom_col() +
-  theme_bw(base_size = 16) +
-  xlab('model') +
-  theme(legend.position = 'element_blank',
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1)) 
-```
-
-<img src="man/figures/README-model_selection-1.png" width="50%" />
-
-We can then calculate model weighted predictions of best overall model
-fit easily enough if desired.
-
-``` r
-# calculate average prediction
-ave_preds <- merge(d_preds, select(d_stack, model, weight), by = 'model') %>%
-  mutate(., temp = round(temp, 2)) %>%
-  group_by(temp) %>%
-  summarise(., ave_pred = sum(.fitted*weight)) %>%
-  ungroup()
-
-# plot these
-ggplot() +
-  geom_point(aes(temp, rate), d_1) +
-  geom_line(aes(temp, .fitted, group = model), alpha = 0.1, d_preds) +
-  geom_line(aes(temp, ave_pred), ave_preds, size = 1) +
-  theme_bw(base_size = 16) +
-  theme(legend.position = 'none',
-        strip.text = element_text(hjust = 0),
-        strip.background = element_blank()) +
-  xlab('Temperature (ºC)') +
-  ylab('rate') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
-```
-
-<img src="man/figures/README-model_average-1.png" width="50%" />
-
 ## Fitting multiple models to multiple curves
 
-The amazing thing about this method is that it can easily be implement
-on many different curves. For example we can fit this model ensemble to
-each of 15 curves from the dataset, calculate the *AICc* for each one
-and then plot the model averaged curve.
+One benefit of this pipeline using **purrr::map()** is its scalability
+to fitting single or multiple models to multiple thermal performance
+curves. To demonstrate this, we fitted a few select models (gaussian,
+the full Sharpe-Schoolfield model, the Sharpe-Schoolfield model for high
+temperature inactivation, the quadratic model, and the Lactin2 model) to
+the first 10 curves in the example dataset.
+
+In doing this, we alter the original code for **nls\_multstart()** to
+include a progress bar. We calculate the total number of models to be
+fitted as: \(n_{tot} = n_{models} \times n_{TPCs}\).
 
 ``` r
 # filter 15 curves
-d_15 <- filter(d, curve_id <= 15)
+d_10 <- filter(d, curve_id <= 10)
 
 # when scaling up our code to fit hundreds of models, its nice to have a progress bar
-# there are probably more elegant ways to do this
 nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
                                    start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
                                    control, modelweights, ...){
@@ -923,15 +880,16 @@ nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_l
                 control = control, modelweights = modelweights, ...)
 }
 
+
 # start progress bar and estimate time it will take
-number_of_models <- 11
-number_of_curves <- length(unique(d_15$curve_id))
+number_of_models <- 5
+number_of_curves <- length(unique(d_10$curve_id))
 
 # setup progress bar
 pb <- progress_estimated(number_of_curves*number_of_models)
 
 # run each model on each curve
-d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
+d_models <- group_by(d_10, curve_id, growth.temp, process, flux) %>%
   nest() %>%
   mutate(., lactin2 = map(data, ~nls_multstart_progress(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
@@ -942,55 +900,15 @@ d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
             sharpeschoolhigh = map(data, ~nls_multstart_progress(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
                        data = .x,
                        iter = 500,
-                       start_lower = c(r_tref = 0.01, e = 0, eh = 0, th = 270),
-                       start_upper = c(r_tref = 2, e = 3, eh = 10, th = 330),
+                       start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
+                       start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
                        supp_errors = 'Y')),
-            thomas = map(data, ~nls_multstart_progress(rate ~ thomas_2012(temp = temp, a, b, c, topt),
-                       data = .x,
-                       iter = 500,
-                       start_lower = c(a = -10, b = -10, c = -10, topt = 0),
-                       start_upper = c(a = 10, b = 10, c = 10, topt = 40),
-                       supp_errors = 'Y',
-                       lower = c(a= 0, b = -10, c = 0, topt = 0))),
-            briere2 = map(data, ~nls_multstart_progress(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
-                       data = .x,
-                       iter = 500,
-                       start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                       start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
-                       supp_errors = 'Y',
-                       lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
-                       upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
-         boatman = map(data, ~nls_multstart_progress(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(rmax = 0, tmin = 0, tmax = 35, a = -1, b = -1),
-                        start_upper = c(rmax = 2, tmin = 10, tmax = 50, a = 1, b = 1),
-                        supp_errors = 'Y')),
-         flinn = map(data, ~nls_multstart_progress(rate ~ flinn_1991(temp = temp, a, b, c),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(a = 0, b = -2, c = -1),
-                        start_upper = c(a = 30, b = 2, c = 1),
-                        supp_errors = 'Y')),
          gaussian = map(data, ~nls_multstart_progress(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 0, topt = 20, a = 0),
                         start_upper = c(rmax = 2, topt = 40, a = 30),
                         supp_errors = 'Y')),
-         oneill = map(data, ~nls_multstart_progress(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
-                        start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
-                        supp_errors = 'Y')),
-         joehnk = map(data, ~nls_multstart_progress(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
-                        data = .x,
-                        iter = 500,
-                        start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
-                        start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
-                        supp_errors = 'Y',
-                        lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))),
          quadratic = map(data, ~nls_multstart_progress(rate ~ quadratic_2008(temp = temp, a, b, c),
                         data = .x,
                         iter = 500,
@@ -1000,12 +918,12 @@ d_models <- group_by(d_15, curve_id, growth.temp, process, flux) %>%
          sharpeschoolfull = map(data, ~nls_multstart_progress(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
                         data = .x,
                         iter = 500,
-                        start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270, eh = 0, th = 270),
-                        start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330, eh = 10, th = 330),
+                        start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') - 5,
+                        start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 5,
                         supp_errors = 'Y')))
 ```
 
-We can then run the same code as above but on multiple models.
+We can easily then visualise the fit of each curve for each fit.
 
 ``` r
 # stack models
@@ -1014,59 +932,87 @@ d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 # preds
 newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
+
+# get preds
 d_preds <- d_stack %>%
   unnest(., output %>% map(augment, newdata = newdata)) %>%
-  mutate(., temp = ifelse(model == 'sharpeschoolhigh', K - 273.15, temp))
+  mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
-# calculate AICc score and weight models
-d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
-  filter(., !is.na(aic)) %>%
-  group_by(curve_id) %>%
-  mutate(., weight = MuMIn::Weights(aic))
-
-# calculate average predictions
-ave_preds <- merge(d_preds, select(d_stack, model, weight, curve_id), by = c('model', 'curve_id')) %>%
-  mutate(., temp = round(temp, 2)) %>%
-  group_by(temp, curve_id) %>%
-  summarise(., ave_pred = sum(.fitted*weight)) %>%
-  ungroup()
-```
-
-We can then make the exact plots as we made previously. Firstly of the
-predictions of each curve.
-
-``` r
-lines <- data.frame(val = 0, curve_id = 1:15)
+# plot preds
+lines <- data.frame(val = 0, curve_id = 1:10)
 
 ggplot() +
-  geom_point(aes(temp, rate), d_15) +
-  geom_line(aes(temp, .fitted, group = model), alpha = 0.1, filter(d_preds, .fitted > -0.5 & .fitted < 3)) +
-  geom_line(aes(temp, ave_pred), ave_preds, size = 1) +
-  facet_wrap(~ curve_id, scales = 'free_y') +
+  geom_point(aes(temp, rate), d_10) +
+  geom_line(aes(temp, .fitted, group = model), alpha = 0.4, d_preds) +
+  facet_wrap(~ curve_id, ncol = 5, labeller = labeller(curve_id = label_facets_num)) +
   theme_bw(base_size = 16) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
   xlab('Temperature (ºC)') +
   ylab('rate') +
-  geom_hline(aes(yintercept = val), linetype = 2, lines)
+  geom_hline(aes(yintercept = val), linetype = 2, lines) +
+  ylim(c(-0.5, 2.5))
 ```
 
-<img src="man/figures/README-plot_preds_many-1.png" width="100%" />
+<img src="man/figures/README-scale_up_preds-1.png" width="100%" style="display: block; margin: auto;" />
 
-We can also plot the distribution of the weights across all of the
-curves.
+And extract the parameters for each model for each curve. We can then
+plot these across each model for each TPC.
 
 ``` r
-ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight)) +
-  MicrobioUoE::geom_pretty_boxplot(aes(fill = model, col = model)) +
-  geom_point(shape = 21, fill = 'white', position = position_jitter(width = 0.2), size = 2) +
-  theme_bw(base_size = 16) +
-  xlab('model') +
-  theme(legend.position = 'element_blank',
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1)) 
-#> Warning: Removed 1 rows containing missing values (geom_point).
+# estimate extra parameters
+params_extra <- d_stack %>%
+  mutate(., est = map(output, est_params)) %>%
+  select(., -c(data, output)) %>%
+  unnest(est) %>%
+  mutate_if(is.numeric, function(x){ifelse(x > 200, x - 273.15, x)})
+
+params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params))
+
+# create jitter position with seeding
+pos <- position_dodge(0.4)
+
+ggplot(params_extra, aes(model, estimate, group = curve_id)) +
+  geom_line(position = pos, alpha = 0.5) +
+  geom_point(position = pos, shape = 21, fill = 'white') +
+  facet_wrap(~ term, scales = 'free_y', ncol = 5, labeller = labeller(term = label_facets_num)) +
+  theme_bw() +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-<img src="man/figures/README-plot_weights_many-1.png" width="60%" />
+<img src="man/figures/README-est_params_many-1.png" width="100%" style="display: block; margin: auto;" />
+
+We can see there is some systematic variation, the Sharpe-Schoolfield
+models always appear to overestimate \(r_{max}\) in this dataset, while
+the quadratic model returns some very extreme values for the activation
+energy, \(E\).
+
+## Model selection
+
+It is very easy to incorporate some model selection approaches into
+fitting these models to TPCs. **broom::glance()** returns summary
+information on each fit, inluding some information criterion such as
+**AIC** and **BIC**. However, TPCs are often data-poor, with not many
+more points than parameters. In such instances, **AICc** can penalise
+for small sample sizes and is implemented using **AICc**.
+
+When doing model selection across multiple curves, having a consistent
+rule for model selection on the whole analysis is useful. Here, I define
+the “best” model for the data as the model that has the lowest **AICc**
+score for the most curves.
+
+## Model averaging
+
+Using the model selection approaches above, we can then calculate model
+weighted predictions of best overall model fit. Using a cut-off of
+\(\triangle AICc \le 2\), we average the predictions using the weight
+given to each model. There will be a version of **est\_params()** that
+can work on a set of these predictions.
+
+## Incorporating model weights
+
+## Bootstrapping models to better account for uncertainty
