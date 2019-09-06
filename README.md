@@ -1,7 +1,19 @@
 
+  - [Installation](#installation)
+  - [Before you start modelling](#before-you-start-modelling)
+  - [Fitting multiple models to a single
+    curve](#fitting-multiple-models-to-a-single-curve)
+  - [Fitting multiple models to multiple
+    curves](#fitting-multiple-models-to-multiple-curves)
+  - [Model selection](#model-selection)
+  - [Model averaging](#model-averaging)
+  - [Incorporating model weights](#incorporating-model-weights)
+  - [Bootstrapping model fits](#bootstrapping-model-fits)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rTPC <img src="logos/hex_sticker.png" width="250" align="right" />
+<font size="30"> **rTPC** </font>
+<img src="logos/hex_sticker.png" width="250" align="right" />
 
 **rTPC** is an R package that helps fit thermal performance curves
 (TPCs) in R. It contains all the models previously used to fit TPCs and
@@ -806,7 +818,7 @@ spain
 
 <td style="text-align:center;">
 
-48.67
+48.68
 
 </td>
 
@@ -1536,8 +1548,7 @@ replicates for a given curve, calculating the standard deviation,
 \(\sigma\) for each mean rate value and fitting the Sharpe-Schoolfield
 model for high temperature inactivation to (a) only the average rate at
 each temperature and (b) the average rate and the standard deviation at
-each
-temperature.
+each temperature.
 
 ``` r
 d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
@@ -1597,4 +1608,4 @@ Here, the curve that incorporates model weights (in red) makes very
 little difference to the curve fit, but this will obviously depend on
 how much variation there is in your uncertainty across temperatures.
 
-## Bootstrapping models to better account for uncertainty
+## Bootstrapping model fits
