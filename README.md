@@ -1,13 +1,13 @@
 
-<font size="35"> __rTPC__ </font> <img src="logos/hex_sticker.png" width="250" align="right" />
+# __rTPC__ <img src="logos/hex_sticker.png" width="250" align="right" />
 
-  __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. It contains all the models previously used to fit TPCs and has helper functions to help in setting sensible start parameters, upper and lower parameter limits and estimating parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
+__rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. It contains all the models previously used to fit TPCs and has helper functions to help in setting sensible start parameters, upper and lower parameter limits and estimating parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
 <!-- badges: end -->
 
-## Jump to
+## Jump to:
 
   - [Installation](#installation)
   - [Before you start modelling](#before-you-start-modelling)
@@ -724,61 +724,61 @@ briere2
 
 <td style="text-align:center;">
 
-1.30
+1.36
 
 </td>
 
 <td style="text-align:center;">
 
-46.45
+37.49
 
 </td>
 
 <td style="text-align:center;">
 
-0.00
+20.00
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+48.78
 
 </td>
 
 <td style="text-align:center;">
 
-0.23
+0.72
 
 </td>
 
 <td style="text-align:center;">
 
-NA
+1.74
 
 </td>
 
 <td style="text-align:center;">
 
-1.31
+2.48
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+11.29
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+28.78
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.43
+\-0.21
 
 </td>
 
