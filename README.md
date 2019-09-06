@@ -1,4 +1,14 @@
 
+<font size="35"> __rTPC__ </font> <img src="logos/hex_sticker.png" width="250" align="right" />
+
+  __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. It contains all the models previously used to fit TPCs and has helper functions to help in setting sensible start parameters, upper and lower parameter limits and estimating parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
+
+<!-- badges: start -->
+  [![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+<!-- badges: end -->
+
+## Jump to
+
   - [Installation](#installation)
   - [Before you start modelling](#before-you-start-modelling)
   - [Fitting multiple models to a single
@@ -11,22 +21,6 @@
   - [Bootstrapping model fits](#bootstrapping-model-fits)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-<font size="30"> **rTPC** </font>
-<img src="logos/hex_sticker.png" width="250" align="right" />
-
-**rTPC** is an R package that helps fit thermal performance curves
-(TPCs) in R. It contains all the models previously used to fit TPCs and
-has helper functions to help in setting sensible start parameters, upper
-and lower parameter limits and estimating parameters useful in
-downstream analyses, such as cardinal temperatures, maximum rate and
-optimum temperature.
-
-<!-- badges: start -->
-
-[![Travis build
-status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
-<!-- badges: end -->
 
 ## Installation
 
@@ -730,61 +724,61 @@ briere2
 
 <td style="text-align:center;">
 
-1.33
+1.30
 
 </td>
 
 <td style="text-align:center;">
 
-37.12
+46.45
 
 </td>
 
 <td style="text-align:center;">
 
-16.75
+0.00
 
 </td>
 
 <td style="text-align:center;">
 
-48.88
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-0.72
+0.23
 
 </td>
 
 <td style="text-align:center;">
 
-1.74
+NA
 
 </td>
 
 <td style="text-align:center;">
 
-2.48
+1.31
 
 </td>
 
 <td style="text-align:center;">
 
-11.77
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-32.14
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.19
+\-0.43
 
 </td>
 
@@ -818,7 +812,7 @@ spain
 
 <td style="text-align:center;">
 
-48.68
+48.67
 
 </td>
 
