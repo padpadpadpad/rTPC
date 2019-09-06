@@ -294,8 +294,9 @@ params_extra <- d_stack %>%
 col_names <- c('model', 'Rmax', 'Topt', 'CTmin', 'CTmax', 'E', 'Eh', 'Q10', 'thermal\nsafety\nmargin', 'tolerance\nrange', 'skewness')
 
 # show the table of extra parameters
-kableExtra::kable(head(params_extra, 6), col.names = col_names, align = 'c') %>%
-  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+head(params_extra) %>%
+  kableExtra::kable(., col.names = col_names, align = 'c') %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
 
 ```
 
@@ -398,7 +399,7 @@ ggplot() +
 
 And extract the parameters for each model for each curve. We can then plot these across each model for each TPC.
 
-```{r est_params_many, warning=FALSE,fig.height = 5, fig.width = 9, fig.align='center'}
+```{r est_params_many, warning=FALSE, fig.height = 5, fig.width = 10, fig.align='center'}
 # estimate extra parameters
 params_extra <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
@@ -406,7 +407,7 @@ params_extra <- d_stack %>%
   unnest(est) %>%
   mutate_if(is.numeric, function(x){ifelse(x > 200, x - 273.15, x)})
 
-params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params))
+params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params_extra))
 
 # create jitter position with seeding
 pos <- position_dodge(0.4)
@@ -437,7 +438,7 @@ d_stack %>%
   select(curve_id, model, sigma, isConv, logLik, AIC, BIC, deviance, df.residual) %>%
   head(5) %>%
   kableExtra::kable(align = 'c', digits = 2) %>%
-  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
   
 ```
 
@@ -448,7 +449,7 @@ When doing model selection across multiple curves, it is important to have defin
 
 ```{r model_selection}
 # calculate AICc score and filter for the best model for each curve_id
-mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+table <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
   filter(., !is.na(aic)) %>%
   group_by(curve_id) %>%
   top_n(1, desc(aic)) %>%
@@ -457,9 +458,9 @@ mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
   full_join(., tibble(model = unique(d_stack$model))) %>%
   mutate(., n = replace_na(n, 0)) %>%
   kableExtra::kable(align = 'c', digits = 2) %>%
-  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
-  
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
 
+table
 ```
 
 So using this specific multi-model selection approach over multiple TPCs, in this instance I would favour using the gaussian model for the entire analysis.
@@ -509,11 +510,62 @@ Methods of fitting TPCs in the literature often fit models to averaged rate valu
 
 Instead, we can incorporate model uncertainty using the __weights__ argument within __nls_multstart()__. The optimal weights are $1/\sigma$, so can easily be included if you have any value of uncertainty for your rate values.
 
-I will demonstrate how it works by averaging across the 3 biological replicates for a given curve, calculating the standard deviation, $\sigma$ for each mean rate value and fitting the Sharpe-Schoolfield model for high temperature inactivation to both sets of curves.
+I will demonstrate how it works by averaging across the 3 biological replicates for a given curve, calculating the standard deviation, $\sigma$ for each mean rate value and fitting the Sharpe-Schoolfield model for high temperature inactivation to (a) only the average rate at each temperature and (b) the average rate and the standard deviation at each temperature.
 
-```{r example_model_weights}
+```{r example_model_weights, fig.height=5, fig.width = 6, out.width = '50%', fig.align='center'}
+d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
+  group_by(temp, K) %>%
+  summarise(., sd = sd(rate),
+            ave_rate = mean(rate)) %>%
+  ungroup()
+
+# run both models
+d_models <- nest(d_ave) %>%
+  mutate(., mod = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y')),
+         mod_weights = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y',
+                                           # include weights here!
+                                           modelweights = 1/sd)))
+
+# calculate predictions
+d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
+
+# preds
+newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
+                  K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
+d_preds <- d_stack %>%
+  unnest(., output %>% map(augment, newdata = newdata))
+
+# plot
+ggplot() +  
+  geom_line(aes(temp, .fitted, group = model, col = model), d_preds) +
+  geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
+  geom_point(aes(temp, ave_rate), d_ave, size = 3, shape = 21, fill = 'white') +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  scale_color_manual(values = c('black', 'red'))
 
 ```
+
+Here, the curve that incorporates model weights (in red) makes very little difference to the curve fit, but this will obviously depend on how much variation there is in your uncertainty across temperatures.
 
 ## Bootstrapping models to better account for uncertainty
 

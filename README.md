@@ -345,8 +345,9 @@ params_extra <- d_stack %>%
 col_names <- c('model', 'Rmax', 'Topt', 'CTmin', 'CTmax', 'E', 'Eh', 'Q10', 'thermal\nsafety\nmargin', 'tolerance\nrange', 'skewness')
 
 # show the table of extra parameters
-kableExtra::kable(head(params_extra, 6), col.names = col_names, align = 'c') %>%
-  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+head(params_extra) %>%
+  kableExtra::kable(., col.names = col_names, align = 'c') %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
 ```
 
 <table class="table table-striped table-hover table-condensed" style="font-size: 14px; margin-left: auto; margin-right: auto;">
@@ -968,7 +969,7 @@ params_extra <- d_stack %>%
   unnest(est) %>%
   mutate_if(is.numeric, function(x){ifelse(x > 200, x - 273.15, x)})
 
-params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params))
+params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params_extra))
 
 # create jitter position with seeding
 pos <- position_dodge(0.4)
@@ -986,33 +987,614 @@ ggplot(params_extra, aes(model, estimate, group = curve_id)) +
 
 <img src="man/figures/README-est_params_many-1.png" width="100%" style="display: block; margin: auto;" />
 
-We can see there is some systematic variation, the Sharpe-Schoolfield
-models always appear to overestimate \(r_{max}\) in this dataset, while
-the quadratic model returns some very extreme values for the activation
-energy, \(E\).
+We can see, somewhat unsurprisingly, that there is as much variation
+between models as there is between curves.
 
 ## Model selection
 
-It is very easy to incorporate some model selection approaches into
-fitting these models to TPCs. **broom::glance()** returns summary
-information on each fit, inluding some information criterion such as
-**AIC** and **BIC**. However, TPCs are often data-poor, with not many
-more points than parameters. In such instances, **AICc** can penalise
-for small sample sizes and is implemented using **AICc**.
+It is very easy to incorporate model selection approaches into fitting
+these models to TPCs. **broom::glance()** returns summary information on
+each fit, inluding some information criterion such as **AIC** and
+**BIC**. An example of this is shown below.
 
-When doing model selection across multiple curves, having a consistent
-rule for model selection on the whole analysis is useful. Here, I define
-the “best” model for the data as the model that has the lowest **AICc**
-score for the most curves.
+``` r
+d_stack %>%
+  mutate(., info = map(output, glance)) %>%
+  select(., curve_id, model, info) %>%
+  unnest(info) %>%
+  arrange(curve_id) %>%
+  select(curve_id, model, sigma, isConv, logLik, AIC, BIC, deviance, df.residual) %>%
+  head(5) %>%
+  kableExtra::kable(align = 'c', digits = 2) %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
+```
+
+<table class="table table-striped table-hover table-condensed" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+
+<thead>
+
+<tr>
+
+<th style="text-align:center;">
+
+curve\_id
+
+</th>
+
+<th style="text-align:center;">
+
+model
+
+</th>
+
+<th style="text-align:center;">
+
+sigma
+
+</th>
+
+<th style="text-align:center;">
+
+isConv
+
+</th>
+
+<th style="text-align:center;">
+
+logLik
+
+</th>
+
+<th style="text-align:center;">
+
+AIC
+
+</th>
+
+<th style="text-align:center;">
+
+BIC
+
+</th>
+
+<th style="text-align:center;">
+
+deviance
+
+</th>
+
+<th style="text-align:center;">
+
+df.residual
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:center;">
+
+1
+
+</td>
+
+<td style="text-align:center;">
+
+lactin2
+
+</td>
+
+<td style="text-align:center;">
+
+0.34
+
+</td>
+
+<td style="text-align:center;">
+
+TRUE
+
+</td>
+
+<td style="text-align:center;">
+
+\-1.57
+
+</td>
+
+<td style="text-align:center;">
+
+13.14
+
+</td>
+
+<td style="text-align:center;">
+
+15.56
+
+</td>
+
+<td style="text-align:center;">
+
+0.91
+
+</td>
+
+<td style="text-align:center;">
+
+8
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+1
+
+</td>
+
+<td style="text-align:center;">
+
+sharpeschoolhigh
+
+</td>
+
+<td style="text-align:center;">
+
+0.20
+
+</td>
+
+<td style="text-align:center;">
+
+TRUE
+
+</td>
+
+<td style="text-align:center;">
+
+4.83
+
+</td>
+
+<td style="text-align:center;">
+
+0.35
+
+</td>
+
+<td style="text-align:center;">
+
+2.77
+
+</td>
+
+<td style="text-align:center;">
+
+0.31
+
+</td>
+
+<td style="text-align:center;">
+
+8
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+1
+
+</td>
+
+<td style="text-align:center;">
+
+gaussian
+
+</td>
+
+<td style="text-align:center;">
+
+0.33
+
+</td>
+
+<td style="text-align:center;">
+
+TRUE
+
+</td>
+
+<td style="text-align:center;">
+
+\-1.88
+
+</td>
+
+<td style="text-align:center;">
+
+11.76
+
+</td>
+
+<td style="text-align:center;">
+
+13.70
+
+</td>
+
+<td style="text-align:center;">
+
+0.96
+
+</td>
+
+<td style="text-align:center;">
+
+9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+1
+
+</td>
+
+<td style="text-align:center;">
+
+quadratic
+
+</td>
+
+<td style="text-align:center;">
+
+0.41
+
+</td>
+
+<td style="text-align:center;">
+
+TRUE
+
+</td>
+
+<td style="text-align:center;">
+
+\-4.55
+
+</td>
+
+<td style="text-align:center;">
+
+17.09
+
+</td>
+
+<td style="text-align:center;">
+
+19.03
+
+</td>
+
+<td style="text-align:center;">
+
+1.50
+
+</td>
+
+<td style="text-align:center;">
+
+9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+1
+
+</td>
+
+<td style="text-align:center;">
+
+sharpeschoolfull
+
+</td>
+
+<td style="text-align:center;">
+
+0.18
+
+</td>
+
+<td style="text-align:center;">
+
+TRUE
+
+</td>
+
+<td style="text-align:center;">
+
+7.52
+
+</td>
+
+<td style="text-align:center;">
+
+\-1.03
+
+</td>
+
+<td style="text-align:center;">
+
+2.36
+
+</td>
+
+<td style="text-align:center;">
+
+0.20
+
+</td>
+
+<td style="text-align:center;">
+
+6
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+However, TPCs are often data-poor, with not many more points than
+parameters being fitted. In such instances, **AICc** is useful as it
+applies a correction for small sample sizes and is implemented using
+**MuMIn::AICc()**.
+
+When doing model selection across multiple curves, it is important to
+have defined and consistent rules at the beginning of the process. Here,
+I define the “best” model for the data overall as the model that has the
+lowest **AICc** score for the most individual TPCs.
+
+``` r
+# calculate AICc score and filter for the best model for each curve_id
+table <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+  filter(., !is.na(aic)) %>%
+  group_by(curve_id) %>%
+  top_n(1, desc(aic)) %>%
+  group_by(model) %>%
+  tally() %>%
+  full_join(., tibble(model = unique(d_stack$model))) %>%
+  mutate(., n = replace_na(n, 0)) %>%
+  kableExtra::kable(align = 'c', digits = 2) %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
+#> Joining, by = "model"
+
+table
+```
+
+<table class="table table-striped table-hover table-condensed" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+
+<thead>
+
+<tr>
+
+<th style="text-align:center;">
+
+model
+
+</th>
+
+<th style="text-align:center;">
+
+n
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:center;">
+
+gaussian
+
+</td>
+
+<td style="text-align:center;">
+
+6
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+sharpeschoolhigh
+
+</td>
+
+<td style="text-align:center;">
+
+4
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+lactin2
+
+</td>
+
+<td style="text-align:center;">
+
+0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+quadratic
+
+</td>
+
+<td style="text-align:center;">
+
+0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+sharpeschoolfull
+
+</td>
+
+<td style="text-align:center;">
+
+0
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+So using this specific multi-model selection approach over multiple
+TPCs, in this instance I would favour using the gaussian model for the
+entire analysis.
 
 ## Model averaging
 
-Using the model selection approaches above, we can then calculate model
-weighted predictions of best overall model fit. Using a cut-off of
-\(\triangle AICc \le 2\), we average the predictions using the weight
-given to each model. There will be a version of **est\_params()** that
-can work on a set of these predictions.
+In turn, perhaps we want to use information criterion to implement model
+averaging techniques. Using **AICc** scores, we can calculate model
+weighted predictions of best overall model fit. We average the
+predictions using the weight of every given model, but it is very easy
+to use a cut-off for model inclusion of \(\triangle AICc \le 2\) from
+the lowest **AICc** score if desired.
+
+There will be eventually be a version of **est\_params()** that can work
+on a set of these predictions.
 
 ## Incorporating model weights
+
+Methods of fitting TPCs in the literature often fit models to averaged
+rate values at each temperature. This fits a model on the mean rate
+value, but often the uncertainty around the mean value is ignored.
+
+Instead, we can incorporate model uncertainty using the **weights**
+argument within **nls\_multstart()**. The optimal weights are
+\(1/\sigma\), so can easily be included if you have any value of
+uncertainty for your rate values.
+
+I will demonstrate how it works by averaging across the 3 biological
+replicates for a given curve, calculating the standard deviation,
+\(\sigma\) for each mean rate value and fitting the Sharpe-Schoolfield
+model for high temperature inactivation to (a) only the average rate at
+each temperature and (b) the average rate and the standard deviation at
+each
+temperature.
+
+``` r
+d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
+  group_by(temp, K) %>%
+  summarise(., sd = sd(rate),
+            ave_rate = mean(rate)) %>%
+  ungroup()
+
+# run both models
+d_models <- nest(d_ave) %>%
+  mutate(., mod = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y')),
+         mod_weights = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y',
+                                           # include weights here!
+                                           modelweights = 1/sd)))
+
+# calculate predictions
+d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
+
+# preds
+newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
+                  K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
+d_preds <- d_stack %>%
+  unnest(., output %>% map(augment, newdata = newdata))
+
+# plot
+ggplot() +  
+  geom_line(aes(temp, .fitted, group = model, col = model), d_preds) +
+  geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
+  geom_point(aes(temp, ave_rate), d_ave, size = 3, shape = 21, fill = 'white') +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  scale_color_manual(values = c('black', 'red'))
+```
+
+<img src="man/figures/README-example_model_weights-1.png" width="50%" style="display: block; margin: auto;" />
+
+Here, the curve that incorporates model weights (in red) makes very
+little difference to the curve fit, but this will obviously depend on
+how much variation there is in your uncertainty across temperatures.
 
 ## Bootstrapping models to better account for uncertainty
