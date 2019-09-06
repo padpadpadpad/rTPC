@@ -422,59 +422,98 @@ ggplot(params_extra, aes(model, estimate, group = curve_id)) +
         axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-We can see there is some systematic variation, the Sharpe-Schoolfield models always appear to overestimate $r_{max}$ in this dataset, while the quadratic model returns some very extreme values for the activation energy, $E$.
+We can see, somewhat unsurprisingly, that there is as much variation between models as there is between curves.
 
 ## Model selection
 
-It is very easy to incorporate some model selection approaches into fitting these models to TPCs. __broom::glance()__ returns summary information on each fit, inluding some information criterion such as __AIC__ and __BIC__. However, TPCs are often data-poor, with not many more points than parameters. In such instances, __AICc__ can penalise for small sample sizes and is implemented using __AICc__. 
+It is very easy to incorporate model selection approaches into fitting these models to TPCs. __broom::glance()__ returns summary information on each fit, inluding some information criterion such as __AIC__ and __BIC__. An example of this is shown below.
 
-When doing model selection across multiple curves, having a consistent rule for model selection on the whole analysis is useful. Here, I define the "best" model for the data as the model that has the lowest __AICc__ score for the most curves. 
+```{r quicklook_glance}
+d_stack %>%
+  mutate(., info = map(output, glance)) %>%
+  select(., curve_id, model, info) %>%
+  unnest(info) %>%
+  arrange(curve_id) %>%
+  select(curve_id, model, sigma, isConv, logLik, AIC, BIC, deviance, df.residual) %>%
+  head(5) %>%
+  kableExtra::kable(align = 'c', digits = 2) %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+  
+```
 
-```{r model_selection, eval = FALSE, echo = FALSE, fig.height=5, fig.width = 6, out.width = '50%'}
 
-# calculate AICc score and weight models
-d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+However, TPCs are often data-poor, with not many more points than parameters being fitted. In such instances, __AICc__ is useful as it applies a correction for small sample sizes and is implemented using __MuMIn::AICc()__. 
+
+When doing model selection across multiple curves, it is important to have defined and consistent rules at the beginning of the process. Here, I define the "best" model for the data overall as the model that has the lowest __AICc__ score for the most individual TPCs.
+
+```{r model_selection}
+# calculate AICc score and filter for the best model for each curve_id
+mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
   filter(., !is.na(aic)) %>%
-  mutate(., weight = MuMIn::Weights(aic))
-
-# plot weights
-ggplot(d_stack, aes(forcats::fct_reorder(model, weight, .desc = TRUE), weight, fill = model)) +
-  geom_col() +
-  theme_bw(base_size = 16) +
-  xlab('model') +
-  theme(legend.position = 'element_blank',
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(c(0,1)) 
+  group_by(curve_id) %>%
+  top_n(1, desc(aic)) %>%
+  group_by(model) %>%
+  tally() %>%
+  full_join(., tibble(model = unique(d_stack$model))) %>%
+  mutate(., n = replace_na(n, 0)) %>%
+  kableExtra::kable(align = 'c', digits = 2) %>%
+  kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"))
+  
 
 ```
 
+So using this specific multi-model selection approach over multiple TPCs, in this instance I would favour using the gaussian model for the entire analysis.
+
 ## Model averaging
 
-Using the model selection approaches above, we can then calculate model weighted predictions of best overall model fit. Using a cut-off of $\triangle AICc \le 2$, we average the predictions using the weight given to each model. There will be a version of __est_params()__ that can work on a set of these predictions.
+In turn, perhaps we want to use information criterion to implement model averaging techniques. Using __AICc__ scores, we can calculate model weighted predictions of best overall model fit. We average the predictions using the weight of every given model, but it is very easy to use a cut-off for model inclusion of $\triangle AICc \le 2$ from the lowest __AICc__ score if desired. 
 
 ```{r model_average, eval=FALSE, echo=FALSE,fig.height=5, fig.width = 6, out.width = '50%'}
+# calculate AICc score and weight models
+d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+  filter(., !is.na(aic)) %>%
+  group_by(curve_id) %>%
+  # filter(., aic - min(aic) <= 2) %>%
+  mutate(., weight = MuMIn::Weights(aic)) %>%
+  ungroup()
+
 # calculate average prediction
-ave_preds <- merge(d_preds, select(d_stack, model, weight), by = 'model') %>%
+ave_preds <- merge(d_preds, select(d_stack, model, weight, curve_id), by = c('model', 'curve_id')) %>%
   mutate(., temp = round(temp, 2)) %>%
-  group_by(temp) %>%
+  group_by(temp, curve_id) %>%
   summarise(., ave_pred = sum(.fitted*weight)) %>%
   ungroup()
 
 # plot these
+lines <- data.frame(val = 0, curve_id = 1:10)
 ggplot() +
-  geom_point(aes(temp, rate), d_1) +
+  geom_point(aes(temp, rate), d_10) +
   geom_line(aes(temp, .fitted, group = model), alpha = 0.1, d_preds) +
   geom_line(aes(temp, ave_pred), ave_preds, size = 1) +
   theme_bw(base_size = 16) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
+  facet_wrap(~ curve_id, ncol = 5, labeller = labeller(curve_id = label_facets_num)) +
   xlab('Temperature (ºC)') +
   ylab('rate') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  ylim(c(-0.5, 2.5)) +
+  geom_hline(aes(yintercept = val), linetype = 2, lines)
 ```
 
+There will be eventually be a version of __est_params()__ that can work on a set of these predictions.
+
 ## Incorporating model weights
+
+Methods of fitting TPCs in the literature often fit models to averaged rate values at each temperature. This fits a model on the mean rate value, but often the uncertainty around the mean value is ignored.
+
+Instead, we can incorporate model uncertainty using the __weights__ argument within __nls_multstart()__. The optimal weights are $1/\sigma$, so can easily be included if you have any value of uncertainty for your rate values.
+
+I will demonstrate how it works by averaging across the 3 biological replicates for a given curve, calculating the standard deviation, $\sigma$ for each mean rate value and fitting the Sharpe-Schoolfield model for high temperature inactivation to both sets of curves.
+
+```{r example_model_weights}
+
+```
 
 ## Bootstrapping models to better account for uncertainty
 
