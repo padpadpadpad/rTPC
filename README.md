@@ -327,10 +327,11 @@ If a given model has not fit, they are not included in the panel plot.
 ### Estimating traits of the TPC
 
 A common motivation for fitting a particular model is that a desired
-term (e.g. the optimum temperature \(T_{opt}\)) is specifically defined
-in the model. However, these parameters can also be derived from any
-given model fit, by estimating parameters from high resolution
-predictions of the model.
+term (e.g. the optimum temperature
+![T\_{opt}](https://latex.codecogs.com/png.latex?T_%7Bopt%7D "T_{opt}"))
+is specifically defined in the model. However, these parameters can also
+be derived from any given model fit, by estimating parameters from high
+resolution predictions of the model.
 
 **rTPC** comes with a bunch of helper functions to estimate common
 traits that are extracted from TPCs, such as optimum temperature,
@@ -724,25 +725,25 @@ briere2
 
 <td style="text-align:center;">
 
-1.36
+1.33
 
 </td>
 
 <td style="text-align:center;">
 
-37.49
+37.12
 
 </td>
 
 <td style="text-align:center;">
 
-20.00
+16.75
 
 </td>
 
 <td style="text-align:center;">
 
-48.78
+48.88
 
 </td>
 
@@ -766,19 +767,19 @@ briere2
 
 <td style="text-align:center;">
 
-11.29
+11.77
 
 </td>
 
 <td style="text-align:center;">
 
-28.78
+32.14
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.21
+\-0.19
 
 </td>
 
@@ -869,7 +870,9 @@ the first 10 curves in the example dataset.
 
 In doing this, we alter the original code for **nls\_multstart()** to
 include a progress bar. We calculate the total number of models to be
-fitted as: \(n_{tot} = n_{models} \times n_{TPCs}\).
+fitted as: ![n\_{tot} = n\_{models} \\times
+n\_{TPCs}](https://latex.codecogs.com/png.latex?n_%7Btot%7D%20%3D%20n_%7Bmodels%7D%20%5Ctimes%20n_%7BTPCs%7D
+"n_{tot} = n_{models} \\times n_{TPCs}").
 
 ``` r
 # filter 15 curves
@@ -1520,8 +1523,10 @@ In turn, perhaps we want to use information criterion to implement model
 averaging techniques. Using **AICc** scores, we can calculate model
 weighted predictions of best overall model fit. We average the
 predictions using the weight of every given model, but it is very easy
-to use a cut-off for model inclusion of \(\triangle AICc \le 2\) from
-the lowest **AICc** score if desired.
+to use a cut-off for model inclusion of ![\\triangle \\\! AICc \\\! \\le
+\\\! 2](https://latex.codecogs.com/png.latex?%5Ctriangle%20%5C%21%20AICc%20%5C%21%20%5Cle%20%5C%21%202
+"\\triangle \\! AICc \\! \\le \\! 2") from the lowest **AICc** score if
+desired.
 
 There will be eventually be a version of **est\_params()** that can work
 on a set of these predictions.
@@ -1534,15 +1539,17 @@ value, but often the uncertainty around the mean value is ignored.
 
 Instead, we can incorporate model uncertainty using the **weights**
 argument within **nls\_multstart()**. The optimal weights are
-\(1/\sigma\), so can easily be included if you have any value of
+![1/\\sigma](https://latex.codecogs.com/png.latex?1%2F%5Csigma
+"1/\\sigma"), so can easily be included if you have any value of
 uncertainty for your rate values.
 
 I will demonstrate how it works by averaging across the 3 biological
 replicates for a given curve, calculating the standard deviation,
-\(\sigma\) for each mean rate value and fitting the Sharpe-Schoolfield
-model for high temperature inactivation to (a) only the average rate at
-each temperature and (b) the average rate and the standard deviation at
-each temperature.
+![\\sigma](https://latex.codecogs.com/png.latex?%5Csigma "\\sigma") for
+each mean rate value and fitting the Sharpe-Schoolfield model for high
+temperature inactivation to (a) only the average rate at each
+temperature and (b) the average rate and the standard deviation at each
+temperature.
 
 ``` r
 d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
