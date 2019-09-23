@@ -467,7 +467,7 @@ So using this specific multi-model selection approach over multiple TPCs, in thi
 
 In turn, perhaps we want to use information criterion to implement model averaging techniques. Using __AICc__ scores, we can calculate model weighted predictions of best overall model fit. We average the predictions using the weight of every given model, but it is very easy to use a cut-off for model inclusion of $\triangle \! AICc \! \le \! 2$ from the lowest __AICc__ score if desired. 
 
-```{r model_average, eval=FALSE, echo=FALSE,fig.height=5, fig.width = 6, out.width = '50%'}
+```{r model_average,fig.height=5, fig.width = 6, out.width = '50%'}
 # calculate AICc score and weight models
 d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
   filter(., !is.na(aic)) %>%
