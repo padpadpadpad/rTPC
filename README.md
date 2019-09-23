@@ -298,7 +298,8 @@ d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata))
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds)
 
 # estimate parameters
 params <- d_stack %>%
@@ -345,6 +346,7 @@ params_extra <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(est) %>%
+  ungroup() %>%
   select(model:ncol(.)) %>%
   mutate_if(is.numeric, function(x) round(x, 2))
 
@@ -725,25 +727,25 @@ briere2
 
 <td style="text-align:center;">
 
-1.33
+1.36
 
 </td>
 
 <td style="text-align:center;">
 
-37.12
+37.49
 
 </td>
 
 <td style="text-align:center;">
 
-16.75
+20.00
 
 </td>
 
 <td style="text-align:center;">
 
-48.88
+48.78
 
 </td>
 
@@ -767,19 +769,19 @@ briere2
 
 <td style="text-align:center;">
 
-11.77
+11.29
 
 </td>
 
 <td style="text-align:center;">
 
-32.14
+28.78
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.19
+\-0.21
 
 </td>
 
@@ -940,12 +942,13 @@ We can easily then visualise the fit of each curve for each fit.
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
 # preds
-newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
+new_data <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 
 # get preds
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata)) %>%
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
 # plot preds
@@ -1528,6 +1531,41 @@ to use a cut-off for model inclusion of ![\\triangle \\\! AICc \\\! \\le
 "\\triangle \\! AICc \\! \\le \\! 2") from the lowest **AICc** score if
 desired.
 
+``` r
+# calculate AICc score and weight models
+d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
+  filter(., !is.na(aic)) %>%
+  group_by(curve_id) %>%
+  # filter(., aic - min(aic) <= 2) %>%
+  mutate(., weight = MuMIn::Weights(aic)) %>%
+  ungroup()
+
+# calculate average prediction
+ave_preds <- merge(d_preds, select(d_stack, model, weight, curve_id), by = c('model', 'curve_id')) %>%
+  mutate(., temp = round(temp, 2)) %>%
+  group_by(temp, curve_id) %>%
+  summarise(., ave_pred = sum(.fitted*weight)) %>%
+  ungroup()
+
+# plot these
+lines <- data.frame(val = 0, curve_id = 1:10)
+ggplot() +
+  geom_point(aes(temp, rate), d_10) +
+  geom_line(aes(temp, .fitted, group = model), alpha = 0.1, d_preds) +
+  geom_line(aes(temp, ave_pred), ave_preds, size = 1) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  facet_wrap(~ curve_id, ncol = 5, labeller = labeller(curve_id = label_facets_num)) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  ylim(c(-0.5, 2.5)) +
+  geom_hline(aes(yintercept = val), linetype = 2, lines)
+```
+
+<img src="man/figures/README-model_average-1.png" width="100%" />
+
 There will be eventually be a version of **est\_params()** that can work
 on a set of these predictions.
 
@@ -1578,6 +1616,8 @@ d_models <- nest(d_ave) %>%
                                            supp_errors = 'Y',
                                            # include weights here!
                                            modelweights = 1/sd)))
+#> Warning: `...` must not be empty for ungrouped data frames.
+#> Did you want `data = everything()`?
 
 # calculate predictions
 d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
@@ -1586,7 +1626,8 @@ d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
 newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
                   K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata))
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds)
 
 # plot
 ggplot() +  

@@ -248,7 +248,8 @@ d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata))
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds)
 
 # estimate parameters
 params <- d_stack %>%
@@ -285,6 +286,7 @@ params_extra <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(est) %>%
+  ungroup() %>%
   select(model:ncol(.)) %>%
   mutate_if(is.numeric, function(x) round(x, 2))
 
@@ -370,12 +372,13 @@ We can easily then visualise the fit of each curve for each fit.
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
 # preds
-newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
+new_data <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 
 # get preds
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata)) %>%
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds) %>%
   mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
 
 # plot preds
@@ -467,7 +470,7 @@ So using this specific multi-model selection approach over multiple TPCs, in thi
 
 In turn, perhaps we want to use information criterion to implement model averaging techniques. Using __AICc__ scores, we can calculate model weighted predictions of best overall model fit. We average the predictions using the weight of every given model, but it is very easy to use a cut-off for model inclusion of $\triangle \! AICc \! \le \! 2$ from the lowest __AICc__ score if desired. 
 
-```{r model_average,fig.height=5, fig.width = 6, out.width = '50%'}
+```{r model_average,fig.height=5, fig.width = 10, message=FALSE, warning=FALSE}
 # calculate AICc score and weight models
 d_stack <- mutate(d_stack, aic = map_dbl(output, possibly(MuMIn::AICc, NA))) %>%
   filter(., !is.na(aic)) %>%
@@ -545,7 +548,8 @@ d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
 newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
                   K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
 d_preds <- d_stack %>%
-  unnest(., output %>% map(augment, newdata = newdata))
+  mutate(., preds = map(output, augment, newdata = newdata)) %>%
+  unnest(preds)
 
 # plot
 ggplot() +  
