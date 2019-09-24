@@ -20,6 +20,6 @@
 #' data("chlorella_tpc")
 #' library(ggplot2)
 #' ggplot(chlorella_tpc) +
-#'  geom_point(aes(temp, ln.rate, col = process)) +
-#'  facet_wrap(~ growth.temp + flux)
+#'  geom_point(aes(temp, rate, col = process)) +
+#'  facet_wrap(~ growth_temp + flux)
 "chlorella_tpc"
