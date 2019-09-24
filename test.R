@@ -34,13 +34,10 @@ ggplot(d_1, aes(temp, rate)) +
   geom_point() +
   theme_bw()
 
-temp = 20:50; a = 2; b = 100; c = 10;topt = 40
-y = weibull_1995(temp, a, topt, b, c)
-plot(y~temp)
 
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolfull_1981')
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolfull_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'briere2_1999')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'thomas_2012')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'lactin2_1995')
@@ -51,8 +48,8 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_start_vals(d_1$K, d_1$rate, model_name = 'delong_2017')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
-get_lower_lims(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
-get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
+get_lower_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
+get_upper_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
 
 mod <- nls.multstart::nls_multstart(rate ~ delong_2017(temp_K = K, c, eb, ef, tm, ehc),
               data = d_1,
@@ -80,35 +77,18 @@ ggplot(preds) +
 number_of_models <- 5
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
-  nest()
-
-# setup progress bar
-pb <- progress_estimated(nrow(d_models)*number_of_models)
-
-nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower,
-                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100,
-                                   control, modelweights, ...){
-  if(!is.null(pb)){
-    pb$tick()$print()
-  }
-  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower,
-                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count,
-                control = control, modelweights = modelweights, ...)
-}
-
-d_models <- d_models %>%
-  mutate(., sharpeschoolhigh = map(data, ~
-    nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 20),
+  nest() %>%
+  mutate(., sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
                                                      data = .x,
                                                      iter = 500,
-                                                     start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                                                     start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                                     start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                                     start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
                                                      supp_errors = 'Y')),
-         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 20),
+         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref = 20),
                                                      data = .x,
                                                      iter = 500,
-                                                     start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
-                                                     start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
+                                                     start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
+                                                     start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
                                                      supp_errors = 'Y',
                                                      lower = c(r_tref = 0, e = 0, el = 0, tl = 0, eh = 0, th = 0),
                                                      upper = c(r_tref = 10, e = 10, el = 10, tl = 293.15, eh = 10, th = 400))),
@@ -142,15 +122,13 @@ newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 d_preds <- d_stack %>%
   mutate(., pred = map(output, augment, newdata = newdata)) %>%
-  unnest(., pred) %>%
-  mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
+  unnest(., pred)
 
 extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(., est) %>%
-  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
-         rmax = round(rmax, 2))
+  mutate(., rmax = round(rmax, 2))
 
 
 ggplot(filter(d_preds))

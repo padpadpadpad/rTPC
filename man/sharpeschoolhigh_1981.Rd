@@ -4,11 +4,9 @@
 \alias{sharpeschoolhigh_1981}
 \title{Sharpe Schoolfield Model for high temperature inactivation}
 \usage{
-sharpeschoolhigh_1981(temp_k, r_tref, e, eh, th, tref)
+sharpeschoolhigh_1981(temp, r_tref, e, eh, th, tref)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
-
 \item{r_tref}{rate at the standardised temperature, tref}
 
 \item{e}{activation energy (eV)}
@@ -18,6 +16,8 @@ sharpeschoolhigh_1981(temp_k, r_tref, e, eh, th, tref)
 \item{th}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures}
 
 \item{tref}{standardisation temperature in degrees centigrade}
+
+\item{(temp}{+ 273.15) temperature in degrees centigrade}
 }
 \description{
 Sharpe Schoolfield Model for high temperature inactivation

@@ -31,7 +31,7 @@ get_lower_lims <- function(x, y, model_name) {
     r_tref = 0
     e = 0
     eh = 0
-    th = 273.15
+    th = min(d$x, na.rn = TRUE)
     return(c(r_tref = r_tref, e = e, eh = eh, th = th))
   }
 
