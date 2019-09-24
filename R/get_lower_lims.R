@@ -70,4 +70,13 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'thomas_2012'){
+    topt = min(d$x, na.rm = TRUE)
+    c = 0
+    a = -10
+    b = -10
+    return(c(a = a, b = b, c = c, topt = topt))
+  }
+
+
 }
