@@ -20,8 +20,8 @@ get_start_vals <- function(x, y, model_name) {
 
   if(model_name == 'sharpeschoolhigh_1981'){
     r_tref = mean(d$y, na.rm = TRUE)
-    pre_topt$x2 <- 1/(8.62e-05*pre_topt$x)
-    post_topt$x2 <- 1/(8.62e-05*post_topt$x)
+    pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+    post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
     e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
     eh = stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]]
     th = mean(d[d$x >= d[d$y == max(d$y, na.rm = TRUE),'x'], 'x'])
@@ -30,8 +30,8 @@ get_start_vals <- function(x, y, model_name) {
 
   if(model_name == 'sharpeschoolfull_1981'){
     r_tref = mean(d$y, na.rm = TRUE)
-    pre_topt$x2 <- 1/(8.62e-05*pre_topt$x)
-    post_topt$x2 <- 1/(8.62e-05*post_topt$x)
+    pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+    post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
     e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
     el <- stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1
     tl <- pre_topt$x[2]
@@ -42,8 +42,8 @@ get_start_vals <- function(x, y, model_name) {
 
   if(model_name == 'sharpeschoollow_1981'){
     r_tref = mean(d$y, na.rm = TRUE)
-    pre_topt$x2 <- 1/(8.62e-05*pre_topt$x)
-    post_topt$x2 <- 1/(8.62e-05*post_topt$x)
+    pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+    post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
     e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
     el <- stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1
     tl <- pre_topt$x[2]
