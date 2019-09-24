@@ -34,9 +34,9 @@ ggplot(d_1, aes(temp, rate)) +
   geom_point() +
   theme_bw()
 
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoolfull_1981')
-get_start_vals(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolfull_1981')
+get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'briere2_1999')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'thomas_2012')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'lactin2_1995')
@@ -46,22 +46,22 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
-get_lower_lims(d_1$K, d_1$rate, model_name = 'sharpeschoolhigh_1981')
-get_upper_lims(d_1$K, d_1$rate, model_name = 'sharpeschoollow_1981')
+get_lower_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
+get_upper_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%
-  mutate(., sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 20),
+  mutate(., sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
                                                      data = .x,
                                                      iter = 500,
-                                                     start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                                                     start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                                     start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                                     start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
                                                      supp_errors = 'Y')),
-         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 20),
+         sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref = 20),
                                                      data = .x,
                                                      iter = 500,
-                                                     start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
-                                                     start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
+                                                     start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
+                                                     start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
                                                      supp_errors = 'Y',
                                                      lower = c(r_tref = 0, e = 0, el = 0, tl = 0, eh = 0, th = 0),
                                                      upper = c(r_tref = 10, e = 10, el = 10, tl = 293.15, eh = 10, th = 400))),
@@ -95,8 +95,7 @@ newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
                   K = seq(min(d_1$K), max(d_1$K), length.out = 100))
 d_preds <- d_stack %>%
   mutate(., pred = map(output, augment, newdata = newdata)) %>%
-  unnest(., pred) %>%
-  mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
+  unnest(., pred)
 
 
 
@@ -104,8 +103,7 @@ extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
   unnest(., est) %>%
-  mutate(., topt = ifelse(topt > 200, topt - 273.15, topt),
-         rmax = round(rmax, 2))
+  mutate(., rmax = round(rmax, 2))
 
 
 ggplot(filter(d_preds))
