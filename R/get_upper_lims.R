@@ -54,4 +54,14 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
 
+  if(model_name == 'boatman_2017'){
+    rmax = max(d$y, na.rm = TRUE) * 10
+    tmin = max(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE) * 10
+    a = 10
+    b = 10
+    return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
+
 }

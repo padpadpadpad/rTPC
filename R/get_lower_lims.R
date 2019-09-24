@@ -53,4 +53,14 @@ get_lower_lims <- function(x, y, model_name) {
     el = 0
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
+
+  if(model_name == 'boatman_2017'){
+    rmax = min(d$y, na.rm = TRUE)
+    tmin = 0
+    tmax = min(d$x, na.rm = TRUE)
+    a = 0
+    b = 0
+    return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
 }

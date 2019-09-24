@@ -131,4 +131,13 @@ get_start_vals <- function(x, y, model_name) {
     return(c(a=a, b=b, c=c, d=d, e=e))
   }
 
+  if(model_name == 'boatman_2017'){
+    rmax = max(d$y, na.rm = TRUE)
+    tmin = min(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE)
+    a = 1.1
+    b = 0.4
+    return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
 }
