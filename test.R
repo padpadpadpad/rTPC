@@ -34,6 +34,7 @@ ggplot(d_1, aes(temp, rate)) +
   geom_point() +
   theme_bw()
 
+
 get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoolfull_1981')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
@@ -44,10 +45,36 @@ get_start_vals(d_1$temp, d_1$rate, model_name = 'quadratic_2008')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'ratkowsky_1983')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'gaussian_1987')
 get_start_vals(d_1$temp, d_1$rate, model_name = 'rezende_2019')
+get_start_vals(d_1$K, d_1$rate, model_name = 'delong_2017')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
+
+mod <- nls.multstart::nls_multstart(rate ~ delong_2017(temp_K = K, c, eb, ef, tm, ehc),
+              data = d_1,
+              iter = 500,
+              start_lower = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') -1,
+              start_upper = get_start_vals(d_1$K,d_1$rate, model_name = 'delong_2017') +1,
+              supp_errors = 'Y')
+
+mod <- nls.multstart::nls_multstart(rate ~ thomas_2017(temp = temp, a, b, c, d, e),
+                                    data = d_1,
+                                    iter = 500,
+                                    start_lower = get_start_vals(d_1$temp,d_1$rate, model_name = 'thomas_2017') -1,
+                                    start_upper = get_start_vals(d_1$temp,d_1$rate, model_name = 'thomas_2017') +1,
+                                    supp_errors = 'Y')
+
+y = thomas_2017(d_1$temp, a = 1.174, b = 0.64, c = 1.119, d = 0.267, e = 0.103)
+plot(y ~ d_1$temp)
+
+preds <- augment(mod)
+
+ggplot(preds) +
+  geom_point(aes(temp, rate)) +
+  geom_line(aes(temp, .fitted))
+
+number_of_models <- 5
 
 d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
   nest() %>%
@@ -96,8 +123,6 @@ newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
 d_preds <- d_stack %>%
   mutate(., pred = map(output, augment, newdata = newdata)) %>%
   unnest(., pred)
-
-
 
 extra_params <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%

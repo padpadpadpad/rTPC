@@ -2,3 +2,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^test\.R$
+^\.travis\.yml$
+^README_cache/*$
+^/logos/*
+^header\.md$

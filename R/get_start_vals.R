@@ -109,4 +109,26 @@ get_start_vals <- function(x, y, model_name) {
     return(c(q10 = q10, a = a, b = b, c = c))
   }
 
+  if(model_name == 'delong_2017'){
+    c =  14.45
+    eb = 0.58
+    ef = 2.215
+    fit <- stats::lm(log(y) ~ x+I(x^2), post_topt)
+    roots <- polyroot(stats::coef(fit))
+    tm = suppressWarnings(as.numeric(max(Re(roots))))
+    #tm = suppressWarnings(as.numeric(roots[which.min(abs(Re(roots) - max(post_topt$x)))]))
+    ehc = 0.085
+
+    return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+  }
+
+  if(model_name == 'thomas_2017'){
+    a = 1.174
+    b = 0.064
+    c = 1.119
+    d = 0.267
+    e = 0.103
+    return(c(a=a, b=b, c=c, d=d, e=e))
+  }
+
 }
