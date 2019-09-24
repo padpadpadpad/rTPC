@@ -59,8 +59,8 @@ get_start_vals <- function(x, y, model_name) {
   if(model_name == 'briere2_1999'){
     tmin = min(d$x, na.rm = TRUE)
     tmax = max(d$x, na.rm = TRUE)
-    b = 2
-    a = 1 * 10^-4
+    b = 3
+    a = 2 * 10^-4
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
 

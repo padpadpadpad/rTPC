@@ -78,5 +78,13 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c, topt = topt))
   }
 
+  if(model_name == 'briere2_1999'){
+    tmin = max(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE) * 10
+    b = 10
+    a = 10^-2
+    return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
 
 }
