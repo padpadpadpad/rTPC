@@ -161,13 +161,13 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                        start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
                        start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
                        supp_errors = 'Y')),
-            sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+            sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                                           start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
                                            supp_errors = 'Y')),
-            johnsonlewin = map(data, ~nls_multstart(rate ~ johnsonlewin_1946(temp_k = K, r0, e, eh, topt),
+            johnsonlewin = map(data, ~nls_multstart(rate ~ johnsonlewin_1946(temp = temp, r0, e, eh, topt),
                                            data = .x,
                                            iter = 500,
                                            start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
@@ -176,8 +176,8 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
             thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') - 1,
-                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') + 2,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') + 2,
                                            supp_errors = 'Y',
                                            lower = c(a= 0, b = -10, c = 0, topt = 0))),
             briere2 = map(data, ~nls_multstart(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
@@ -249,13 +249,13 @@ d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
                                            start_lower = c(a = 1e9, e = 5, c = 1e9, eh = 0),
                                            start_upper = c(a = 1e11, e = 20, c = 1e11, eh = 20),
                                            supp_errors = 'Y')),
-            sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
+            sharpeschoolfull = map(data, ~nls_multstart(rate ~ sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref = 15),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
-                                           start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') + 10,
                                            supp_errors = 'Y')),
-            sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp_k = K, r_tref, e, el, tl, tref = 15),
+            sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp = temp, r_tref, e, el, tl, tref = 15),
                                            data = .x,
                                            iter = 500,
                                            start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
@@ -295,8 +295,7 @@ Nevertheless, we can extract parameters and visualise our model fits.
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
 # preds
-newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
-                  K = seq(min(d_1$K), max(d_1$K), length.out = 100))
+newdata <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100))
 d_preds <- d_stack %>%
   mutate(., preds = map(output, augment, newdata = newdata)) %>%
   unnest(preds)
@@ -347,7 +346,7 @@ params_extra <- d_stack %>%
   select(., -c(data, output)) %>%
   unnest(est) %>%
   ungroup() %>%
-  select(model:ncol(.)) %>%
+  select(c(model, rmax:ncol(.))) %>%
   mutate_if(is.numeric, function(x) round(x, 2))
 
 # set column names for html table
@@ -523,19 +522,19 @@ sharpeschoolhigh
 
 <td style="text-align:center;">
 
-314.80
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-275.69
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-318.71
+45.56
 
 </td>
 
@@ -587,61 +586,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+0.98
 
 </td>
 
 <td style="text-align:center;">
 
-314.80
+49.00
 
 </td>
 
 <td style="text-align:center;">
 
-275.69
+0.31
 
 </td>
 
 <td style="text-align:center;">
 
-318.71
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-0.58
+0.12
 
 </td>
 
 <td style="text-align:center;">
 
-11.48
+NA
 
 </td>
 
 <td style="text-align:center;">
 
-2.06
+1.15
 
 </td>
 
 <td style="text-align:center;">
 
-3.91
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.21
 
 </td>
 
@@ -657,95 +656,25 @@ thomas
 
 <td style="text-align:center;">
 
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-<td style="text-align:center;">
-
-NA
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:center;">
-
-briere2
-
-</td>
-
-<td style="text-align:center;">
-
 1.36
 
 </td>
 
 <td style="text-align:center;">
 
-37.49
+38.37
 
 </td>
 
 <td style="text-align:center;">
 
-20.00
+15.43
 
 </td>
 
 <td style="text-align:center;">
 
-48.78
+48.73
 
 </td>
 
@@ -769,19 +698,89 @@ briere2
 
 <td style="text-align:center;">
 
-11.29
+10.36
 
 </td>
 
 <td style="text-align:center;">
 
-28.78
+33.31
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.21
+\-0.36
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:center;">
+
+briere2
+
+</td>
+
+<td style="text-align:center;">
+
+1.33
+
+</td>
+
+<td style="text-align:center;">
+
+37.12
+
+</td>
+
+<td style="text-align:center;">
+
+16.75
+
+</td>
+
+<td style="text-align:center;">
+
+48.88
+
+</td>
+
+<td style="text-align:center;">
+
+0.72
+
+</td>
+
+<td style="text-align:center;">
+
+1.74
+
+</td>
+
+<td style="text-align:center;">
+
+2.48
+
+</td>
+
+<td style="text-align:center;">
+
+11.77
+
+</td>
+
+<td style="text-align:center;">
+
+32.14
+
+</td>
+
+<td style="text-align:center;">
+
+\-0.19
 
 </td>
 
@@ -909,29 +908,29 @@ d_models <- group_by(d_10, curve_id, growth.temp, process, flux) %>%
                        start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
                        start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
                        supp_errors = 'Y')),
-            sharpeschoolhigh = map(data, ~nls_multstart_progress(rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+            sharpeschoolhigh = map(data, ~nls_multstart_progress(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                        data = .x,
                        iter = 500,
-                       start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
-                       start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
+                       start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
+                       start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
                        supp_errors = 'Y')),
-         gaussian = map(data, ~nls_multstart_progress(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
+            gaussian = map(data, ~nls_multstart_progress(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                         data = .x,
                         iter = 500,
                         start_lower = c(rmax = 0, topt = 20, a = 0),
                         start_upper = c(rmax = 2, topt = 40, a = 30),
                         supp_errors = 'Y')),
-         quadratic = map(data, ~nls_multstart_progress(rate ~ quadratic_2008(temp = temp, a, b, c),
+            quadratic = map(data, ~nls_multstart_progress(rate ~ quadratic_2008(temp = temp, a, b, c),
                         data = .x,
                         iter = 500,
                         start_lower = c(a = 0, b = -2, c = -1),
                         start_upper = c(a = 30, b = 2, c = 1),
                         supp_errors = 'Y')),
-         sharpeschoolfull = map(data, ~nls_multstart_progress(rate ~ sharpeschoolfull_1981(temp_k = K, r_tref, e, el, tl, eh, th, tref = 15),
+            sharpeschoolfull = map(data, ~nls_multstart_progress(rate ~ sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref = 15),
                         data = .x,
                         iter = 500,
-                        start_lower = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') - 5,
-                        start_upper = get_start_vals(.x$K, .x$rate, model_name = 'sharpeschoolfull_1981') + 5,
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') - 5,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolfull_1981') + 5,
                         supp_errors = 'Y')))
 ```
 
@@ -942,14 +941,12 @@ We can easily then visualise the fit of each curve for each fit.
 d_stack <- gather(d_models, 'model', 'output', 6:ncol(d_models))
 
 # preds
-new_data <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100),
-                  K = seq(min(d_1$K), max(d_1$K), length.out = 100))
+new_data <- tibble(temp = seq(min(d_1$temp), max(d_1$temp), length.out = 100))
 
 # get preds
 d_preds <- d_stack %>%
   mutate(., preds = map(output, augment, newdata = newdata)) %>%
-  unnest(preds) %>%
-  mutate(., temp = ifelse(model %in% c('sharpeschoolhigh', 'sharpeschoolfull'), K - 273.15, temp))
+  unnest(preds)
 
 # plot preds
 lines <- data.frame(val = 0, curve_id = 1:10)
@@ -978,8 +975,7 @@ plot these across each model for each TPC.
 params_extra <- d_stack %>%
   mutate(., est = map(output, est_params)) %>%
   select(., -c(data, output)) %>%
-  unnest(est) %>%
-  mutate_if(is.numeric, function(x){ifelse(x > 200, x - 273.15, x)})
+  unnest(est)
 
 params_extra <- gather(params_extra, 'term', 'estimate', rmax:ncol(params_extra))
 
@@ -1019,6 +1015,8 @@ d_stack %>%
   head(5) %>%
   kableExtra::kable(align = 'c', digits = 2) %>%
   kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
+#> Adding missing grouping variables: `growth.temp`, `process`, `flux`
+#> Adding missing grouping variables: `growth.temp`, `process`, `flux`
 ```
 
 <table class="table table-striped table-hover table-condensed" style="font-size: 14px; margin-left: auto; margin-right: auto;">
@@ -1026,6 +1024,24 @@ d_stack %>%
 <thead>
 
 <tr>
+
+<th style="text-align:center;">
+
+growth.temp
+
+</th>
+
+<th style="text-align:center;">
+
+process
+
+</th>
+
+<th style="text-align:center;">
+
+flux
+
+</th>
 
 <th style="text-align:center;">
 
@@ -1091,6 +1107,24 @@ df.residual
 
 <td style="text-align:center;">
 
+20
+
+</td>
+
+<td style="text-align:center;">
+
+acclimation
+
+</td>
+
+<td style="text-align:center;">
+
+respiration
+
+</td>
+
+<td style="text-align:center;">
+
 1
 
 </td>
@@ -1146,6 +1180,24 @@ TRUE
 </tr>
 
 <tr>
+
+<td style="text-align:center;">
+
+20
+
+</td>
+
+<td style="text-align:center;">
+
+acclimation
+
+</td>
+
+<td style="text-align:center;">
+
+respiration
+
+</td>
 
 <td style="text-align:center;">
 
@@ -1207,6 +1259,24 @@ TRUE
 
 <td style="text-align:center;">
 
+20
+
+</td>
+
+<td style="text-align:center;">
+
+acclimation
+
+</td>
+
+<td style="text-align:center;">
+
+respiration
+
+</td>
+
+<td style="text-align:center;">
+
 1
 
 </td>
@@ -1265,6 +1335,24 @@ TRUE
 
 <td style="text-align:center;">
 
+20
+
+</td>
+
+<td style="text-align:center;">
+
+acclimation
+
+</td>
+
+<td style="text-align:center;">
+
+respiration
+
+</td>
+
+<td style="text-align:center;">
+
 1
 
 </td>
@@ -1320,6 +1408,24 @@ TRUE
 </tr>
 
 <tr>
+
+<td style="text-align:center;">
+
+20
+
+</td>
+
+<td style="text-align:center;">
+
+acclimation
+
+</td>
+
+<td style="text-align:center;">
+
+respiration
+
+</td>
 
 <td style="text-align:center;">
 
@@ -1598,21 +1704,21 @@ d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosyn
 
 # run both models
 d_models <- nest(d_ave) %>%
-  mutate(., mod = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+  mutate(., mod = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
-                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
                                            supp_errors = 'Y')),
-         mod_weights = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp_k = K, r_tref, e, eh, th, tref = 15),
+         mod_weights = map(data, ~nls_multstart(ave_rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                                           start_upper = get_start_vals(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                                           lower = get_lower_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
-                                           upper = get_upper_lims(.x$K, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'sharpeschoolhigh_1981'),
                                            supp_errors = 'Y',
                                            # include weights here!
                                            modelweights = 1/sd)))
