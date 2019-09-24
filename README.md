@@ -112,14 +112,12 @@ There are 60 curves overall.
 
 ``` r
 # load in data
-data("Chlorella_TRC")
-
-# change rate to be non-log transformed
-d <- mutate(Chlorella_TRC, rate = exp(ln.rate))
+data("chlorella_tpc")
+d <- chlorella_tpc
 
 # show the data
 ggplot(d, aes(temp, rate, group = curve_id)) +
-  facet_grid(flux ~growth.temp) +
+  facet_grid(flux ~growth_temp) +
   geom_point(alpha = 0.5) +
   geom_line(alpha = 0.5) +
   theme_bw()
@@ -153,7 +151,7 @@ to do so soon.
 d_1 <- filter(d, curve_id == 1)
 
 # run in purrr - going to be a huge long command this one
-d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
+d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
   nest() %>%
   mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
@@ -586,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.98
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-49.00
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-0.31
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+45.56
 
 </td>
 
 <td style="text-align:center;">
 
-0.12
+0.58
 
 </td>
 
 <td style="text-align:center;">
 
-NA
+11.48
 
 </td>
 
 <td style="text-align:center;">
 
-1.15
+2.06
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+3.91
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+43.02
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.21
+\-0.67
 
 </td>
 
@@ -900,7 +898,7 @@ number_of_curves <- length(unique(d_10$curve_id))
 pb <- progress_estimated(number_of_curves*number_of_models)
 
 # run each model on each curve
-d_models <- group_by(d_10, curve_id, growth.temp, process, flux) %>%
+d_models <- group_by(d_10, curve_id, growth_temp, process, flux) %>%
   nest() %>%
   mutate(., lactin2 = map(data, ~nls_multstart_progress(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
@@ -1015,8 +1013,8 @@ d_stack %>%
   head(5) %>%
   kableExtra::kable(align = 'c', digits = 2) %>%
   kableExtra::kable_styling(font_size = 14, bootstrap_options = c("striped", "hover", "condensed"), position = 'center')
-#> Adding missing grouping variables: `growth.temp`, `process`, `flux`
-#> Adding missing grouping variables: `growth.temp`, `process`, `flux`
+#> Adding missing grouping variables: `growth_temp`, `process`, `flux`
+#> Adding missing grouping variables: `growth_temp`, `process`, `flux`
 ```
 
 <table class="table table-striped table-hover table-condensed" style="font-size: 14px; margin-left: auto; margin-right: auto;">
@@ -1027,7 +1025,7 @@ d_stack %>%
 
 <th style="text-align:center;">
 
-growth.temp
+growth\_temp
 
 </th>
 
@@ -1696,8 +1694,8 @@ temperature and (b) the average rate and the standard deviation at each
 temperature.
 
 ``` r
-d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
-  group_by(temp, K) %>%
+d_ave <- filter(d, process == 'adaptation', growth_temp == 20, flux == 'photosynthesis') %>%
+  group_by(temp) %>%
   summarise(., sd = sd(rate),
             ave_rate = mean(rate)) %>%
   ungroup()
@@ -1729,8 +1727,7 @@ d_models <- nest(d_ave) %>%
 d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
 
 # preds
-newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
-                  K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
+newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100))
 d_preds <- d_stack %>%
   mutate(., preds = map(output, augment, newdata = newdata)) %>%
   unnest(preds)

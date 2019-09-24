@@ -86,14 +86,12 @@ __rTPC__ comes with a set of TPCs of photosynthesis and respiration of the aquat
 
 ```{r quicklook, fig.height = 5, fig.width = 9, fig.align='center', message=FALSE, warning=FALSE}
 # load in data
-data("Chlorella_TRC")
-
-# change rate to be non-log transformed
-d <- mutate(Chlorella_TRC, rate = exp(ln.rate))
+data("chlorella_tpc")
+d <- chlorella_tpc
 
 # show the data
 ggplot(d, aes(temp, rate, group = curve_id)) +
-  facet_grid(flux ~growth.temp) +
+  facet_grid(flux ~growth_temp) +
   geom_point(alpha = 0.5) +
   geom_line(alpha = 0.5) +
   theme_bw()
@@ -108,7 +106,7 @@ __rTPC__ contains helper functions to aid in model fitting. First, __get_start_v
 d_1 <- filter(d, curve_id == 1)
 
 # run in purrr - going to be a huge long command this one
-d_models <- group_by(d_1, curve_id, growth.temp, process, flux) %>%
+d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
   nest() %>%
   mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
@@ -330,7 +328,7 @@ number_of_curves <- length(unique(d_10$curve_id))
 pb <- progress_estimated(number_of_curves*number_of_models)
 
 # run each model on each curve
-d_models <- group_by(d_10, curve_id, growth.temp, process, flux) %>%
+d_models <- group_by(d_10, curve_id, growth_temp, process, flux) %>%
   nest() %>%
   mutate(., lactin2 = map(data, ~nls_multstart_progress(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
                        data = .x,
@@ -511,8 +509,8 @@ Instead, we can incorporate model uncertainty using the __weights__ argument wit
 I will demonstrate how it works by averaging across the 3 biological replicates for a given curve, calculating the standard deviation, $\sigma$ for each mean rate value and fitting the Sharpe-Schoolfield model for high temperature inactivation to (a) only the average rate at each temperature and (b) the average rate and the standard deviation at each temperature.
 
 ```{r example_model_weights, fig.height=5, fig.width = 6, out.width = '50%', fig.align='center'}
-d_ave <- filter(d, process == 'adaptation', growth.temp == 20, flux == 'photosynthesis') %>%
-  group_by(temp, K) %>%
+d_ave <- filter(d, process == 'adaptation', growth_temp == 20, flux == 'photosynthesis') %>%
+  group_by(temp) %>%
   summarise(., sd = sd(rate),
             ave_rate = mean(rate)) %>%
   ungroup()
@@ -542,8 +540,7 @@ d_models <- nest(d_ave) %>%
 d_stack <- gather(d_models, 'model', 'output', starts_with('mod'))
 
 # preds
-newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100),
-                  K = seq(min(d_ave$K), max(d_ave$K), length.out = 100))
+newdata <- tibble(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100))
 d_preds <- d_stack %>%
   mutate(., preds = map(output, augment, newdata = newdata)) %>%
   unnest(preds)

@@ -26,6 +26,10 @@ data("Chlorella_TRC")
 # change rate to be non-log transformed
 d <- mutate(Chlorella_TRC, rate = exp(ln.rate))
 
+chlorella_tpc <- select(d, curve_id, growth_temp = growth.temp, process, flux, temp, rate)
+usethis::use_data(chlorella_tpc, rTPC)
+
+
 # filter for just the first curve
 d_1 <- filter(d, curve_id == 1)
 
