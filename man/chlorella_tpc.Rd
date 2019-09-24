@@ -26,8 +26,8 @@ A dataset containing example data of rates of photosynthesis and respiration of 
 data("chlorella_tpc")
 library(ggplot2)
 ggplot(chlorella_tpc) +
- geom_point(aes(temp, ln.rate, col = process)) +
- facet_wrap(~ growth.temp + flux)
+ geom_point(aes(temp, rate, col = process)) +
+ facet_wrap(~ growth_temp + flux)
 }
 \references{
 Padfield, D., Yvon-durocher, G., Buckling, A., Jennings, S. & Yvon-durocher, G. (2015). Rapid evolution of metabolic traits explains thermal adaptation in phytoplankton, Ecology Letters, 19, 133-142.

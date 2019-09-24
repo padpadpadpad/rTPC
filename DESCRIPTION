@@ -22,3 +22,4 @@ Suggests:
     MuMIn
 Imports: 
     moments
+Depends: R (>= 2.10)
