@@ -7,6 +7,8 @@
 sharpeschoollow_1981(temp, r_tref, e, el, tl, tref)
 }
 \arguments{
+\item{temp}{temperature in degrees centigrade}
+
 \item{r_tref}{rate at the standardised temperature, tref}
 
 \item{e}{activation energy (eV)}
@@ -16,8 +18,6 @@ sharpeschoollow_1981(temp, r_tref, e, el, tl, tref)
 \item{tl}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures}
 
 \item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated due to low temperature}
-
-\item{(temp}{+ 273.15) temperature in degrees centigrade}
 }
 \description{
 Sharpe Schoolfield Model for low temperature inactivation

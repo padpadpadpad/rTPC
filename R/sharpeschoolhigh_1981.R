@@ -1,7 +1,7 @@
 #' Sharpe Schoolfield Model for high temperature inactivation
 #'
 #'
-#' @param (temp + 273.15) temperature in degrees centigrade
+#' @param temp temperature in degrees centigrade
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param eh high temperature de-activation energy (eV)

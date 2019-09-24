@@ -1,7 +1,7 @@
 #' Sharpe Schoolfield Model for low temperature inactivation
 #'
 #'
-#' @param (temp + 273.15) temperature in degrees centigrade
+#' @param temp temperature in degrees centigrade
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param el low temperature de-activation energy (eV)
