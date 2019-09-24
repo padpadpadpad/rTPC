@@ -4,14 +4,14 @@
 \alias{lactin2_1995}
 \title{Lactin2 function}
 \usage{
-lactin2_1995(temp, p, c, tmax, delta_t)
+lactin2_1995(temp, a, b, tmax, delta_t)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{p}{constant that determines the steepness of the rising portion of the curve}
+\item{a}{constant that determines the steepness of the rising portion of the curve}
 
-\item{c}{constant that determines the height of the overall curve}
+\item{b}{constant that determines the height of the overall curve}
 
 \item{tmax}{changes the temperature at which the curve begins to decelerate beyond the optimum}
 

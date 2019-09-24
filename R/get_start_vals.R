@@ -90,10 +90,10 @@ get_start_vals <- function(x, y, model_name) {
   if(model_name == 'lactin2_1995'){
     tmax = max(d$x, na.rm = TRUE)
     delta_t = tmax - d$x[d$y == max(d$y, na.rm = TRUE)]
-    p = 0.1
-    c = 0
+    a = 0.1194843
+    b = -0.254008
 
-    return(c(p = p, c = c, tmax = tmax, delta_t = delta_t))
+    return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
   }
 
 

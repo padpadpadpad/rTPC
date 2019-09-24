@@ -86,5 +86,13 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'lactin2_1995'){
+    tmax = max(d$x, na.rm = TRUE) *10
+    delta_t = tmax - d$x[d$y == max(d$y, na.rm = TRUE)] *10
+    a = 1
+    b = 1
+
+    return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
+  }
 
 }

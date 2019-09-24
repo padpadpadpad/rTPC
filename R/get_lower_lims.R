@@ -86,5 +86,13 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'lactin2_1995'){
+    tmax = min(d$x, na.rm = TRUE)
+    delta_t = 0
+    a = 0
+    b = -10
+
+    return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
+  }
 
 }

@@ -153,11 +153,11 @@ d_1 <- filter(d, curve_id == 1)
 # run in purrr - going to be a huge long command this one
 d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
   nest() %>%
-  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
+  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, a, b, tmax, delta_t),
                        data = .x,
                        iter = 500,
-                       start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
-                       start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
+                       start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'lactin2_1995') - 2,
+                       start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'lactin2_1995') + 2,
                        supp_errors = 'Y')),
             sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                                            data = .x,
@@ -584,25 +584,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+1.78
 
 </td>
 
 <td style="text-align:center;">
 
-41.65
+41.68
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+1.83
 
 </td>
 
 <td style="text-align:center;">
 
-45.56
+45.51
 
 </td>
 
@@ -626,19 +626,19 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-3.91
+3.84
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+43.68
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.65
 
 </td>
 
