@@ -177,15 +177,15 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') + 2,
                                            supp_errors = 'Y',
-                                           lower = c(a= 0, b = -10, c = 0, topt = 0))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'thomas_2012'))),
             briere2 = map(data, ~nls_multstart(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') + 1,
                                            supp_errors = 'Y',
-                                           lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
-                                           upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'briere2_1999'),
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'briere2_1999'))),
             spain = map(data, ~nls_multstart(rate ~ spain_1982(temp = temp, a, b, c, r0),
                                            data = .x,
                                            iter = 500,
@@ -269,7 +269,7 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, a, q10, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') *0.8,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') * 0.8,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') * 1.2,
                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
@@ -584,25 +584,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.78
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-41.68
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-1.83
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-45.51
+45.56
 
 </td>
 
@@ -626,19 +626,19 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-3.84
+3.91
 
 </td>
 
 <td style="text-align:center;">
 
-43.68
+43.02
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.65
+\-0.67
 
 </td>
 
@@ -654,25 +654,25 @@ thomas
 
 <td style="text-align:center;">
 
-1.36
+1.66
 
 </td>
 
 <td style="text-align:center;">
 
-38.37
+38.83
 
 </td>
 
 <td style="text-align:center;">
 
-15.43
+14.08
 
 </td>
 
 <td style="text-align:center;">
 
-48.73
+46.62
 
 </td>
 
@@ -696,19 +696,19 @@ thomas
 
 <td style="text-align:center;">
 
-10.36
+7.80
 
 </td>
 
 <td style="text-align:center;">
 
-33.31
+32.55
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.36
+\-0.54
 
 </td>
 
@@ -800,19 +800,19 @@ spain
 
 <td style="text-align:center;">
 
-39.96
+39.97
 
 </td>
 
 <td style="text-align:center;">
 
-\-1.37
+\-1.38
 
 </td>
 
 <td style="text-align:center;">
 
-48.67
+48.68
 
 </td>
 
