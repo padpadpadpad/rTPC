@@ -213,8 +213,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, topt = 20, a = 0),
-                                           start_upper = c(rmax = 2, topt = 40, a = 30),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 2,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 2,
                                            supp_errors = 'Y')),
             oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
                                            data = .x,
@@ -584,7 +584,7 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.97
+0.95
 
 </td>
 
@@ -596,7 +596,7 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-\-15.93
+\-Inf
 
 </td>
 
@@ -638,7 +638,7 @@ Inf
 
 <td style="text-align:center;">
 
-\-0.15
+\-0.10
 
 </td>
 
@@ -812,7 +812,7 @@ spain
 
 <td style="text-align:center;">
 
-48.67
+48.68
 
 </td>
 

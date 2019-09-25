@@ -104,4 +104,12 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c))
   }
 
+  if(model_name == 'gaussian_1987'){
+    rmax = min(d$y, na.rm = TRUE)
+    topt = min(d$x, na.rm = TRUE)
+    a = 0
+
+    return(c(rmax = rmax, topt = topt, a = a))
+  }
+
 }

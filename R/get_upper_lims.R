@@ -104,4 +104,11 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c))
   }
 
+  if(model_name == 'gaussian_1987'){
+    rmax = max(d$y, na.rm = TRUE) * 10
+    topt = max(d$x, na.rm = TRUE)
+    a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
+
+    return(c(rmax = rmax, topt = topt, a = a))
+  }
 }
