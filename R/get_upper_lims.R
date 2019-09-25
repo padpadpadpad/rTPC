@@ -95,4 +95,13 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
   }
 
+  # do not really have a scooby
+  if(model_name == 'flinn_1991'){
+
+    b = 100
+    a = 100
+    c = 10
+    return(c(a = a, b = b, c = c))
+  }
+
 }

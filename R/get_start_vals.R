@@ -146,4 +146,12 @@ get_start_vals <- function(x, y, model_name) {
     return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'flinn_1991'){
+
+    b = (-2*0.005*d$x[d$y==max(d$y)])[1]
+    a = -min(b*d$x +0.005*(d$x^2))
+    c = 1
+    return(c(a = a, b = b, c = c))
+  }
+
 }

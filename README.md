@@ -207,8 +207,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             flinn = map(data, ~nls_multstart(rate ~ flinn_1991(temp = temp, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(a = 0, b = -2, c = -1),
-                                           start_upper = c(a = 30, b = 2, c = 1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'flinn_1991') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'flinn_1991') + 10,
                                            supp_errors = 'Y')),
             gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                                            data = .x,
@@ -584,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+0.97
 
 </td>
 
 <td style="text-align:center;">
 
-41.65
+49.00
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+\-15.93
 
 </td>
 
 <td style="text-align:center;">
 
-45.56
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-0.58
+0.12
 
 </td>
 
 <td style="text-align:center;">
 
-11.48
+NA
 
 </td>
 
 <td style="text-align:center;">
 
-2.06
+1.15
 
 </td>
 
 <td style="text-align:center;">
 
-3.91
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.15
 
 </td>
 
@@ -800,19 +800,19 @@ spain
 
 <td style="text-align:center;">
 
-39.97
+39.96
 
 </td>
 
 <td style="text-align:center;">
 
-\-1.38
+\-1.37
 
 </td>
 
 <td style="text-align:center;">
 
-48.68
+48.67
 
 </td>
 
