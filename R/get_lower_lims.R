@@ -112,4 +112,25 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(rmax = rmax, topt = topt, a = a))
   }
 
+  if(model_name == 'joehnk_2008'){
+
+    rmax = min(d$y, na.rm = TRUE)
+    topt = min(d$x, na.rm = TRUE)
+    a = 0
+    b = 0
+    c = 0
+
+    return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+  }
+
+  if(model_name == 'oneill_1972'){
+
+    rmax = min(d$y, na.rm = TRUE)
+    topt = min(d$x, na.rm = TRUE)
+    ctmax = min(d$x, na.rm = TRUE)
+    q10 = 0
+
+    return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+  }
+
 }

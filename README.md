@@ -219,16 +219,16 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
-                                           start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') + 1,
                                            supp_errors = 'Y')),
             joehnk = map(data, ~nls_multstart(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
-                                           start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'joehnk_2008') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'joehnk_2008') + 1,
                                            supp_errors = 'Y',
-                                           lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'joehnk_2008'))),
             kamykowski = map(data, ~nls_multstart(rate ~ kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
                                            data = .x,
                                            iter = 500,
@@ -584,7 +584,7 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.95
+0.94
 
 </td>
 
@@ -596,7 +596,7 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-\-Inf
+\-11.72
 
 </td>
 
@@ -638,7 +638,7 @@ Inf
 
 <td style="text-align:center;">
 
-\-0.10
+\-0.15
 
 </td>
 
@@ -812,7 +812,7 @@ spain
 
 <td style="text-align:center;">
 
-48.68
+48.67
 
 </td>
 

@@ -111,4 +111,25 @@ get_upper_lims <- function(x, y, model_name) {
 
     return(c(rmax = rmax, topt = topt, a = a))
   }
+
+  if(model_name == 'joehnk_2008'){
+
+    rmax = max(d$y, na.rm = TRUE) * 10
+    topt = max(d$x, na.rm = TRUE)
+    a = 100
+    b = 10
+    c = 10
+
+    return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+  }
+
+  if(model_name == 'oneill_1972'){
+
+    rmax = max(d$y, na.rm = TRUE) * 10
+    topt = max(d$x, na.rm = TRUE)
+    ctmax = max(d$x, na.rm = TRUE) * 10
+    q10 = 10
+
+    return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+  }
 }

@@ -4,18 +4,18 @@
 \alias{oneill_1972}
 \title{O'Neill 1972 function}
 \usage{
-oneill_1972(temp, rmax, tmax, topt, a)
+oneill_1972(temp, rmax, ctmax, topt, q10)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
 \item{rmax}{the rate at optimum temperature}
 
-\item{tmax}{high temperature at which rates become negative}
+\item{ctmax}{high temperature at which rates become negative}
 
 \item{topt}{optimum temperature}
 
-\item{a}{shape parameter to adjust the asymmetry of the skewness}
+\item{q10}{defines the fold change in performance as a result of increasing the temperature by 10 ºC}
 }
 \description{
 O'Neill 1972 function

@@ -154,4 +154,26 @@ get_start_vals <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c))
   }
 
+  if(model_name == 'joehnk_2008'){
+
+    rmax = max(d$y, na.rm = TRUE)
+    topt = d$x[d$y == rmax]
+    a = mean(c(5.77, 4.68, 18.61))
+    b = mean(c(1.30,1.02,1.02))
+    c = mean(c(1.37,1.15,1.04))
+
+    return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+  }
+
+  if(model_name == 'oneill_1972'){
+
+    rmax = max(d$y, na.rm = TRUE)
+    topt = d$x[d$y == rmax]
+    ctmax = max(d$y, na.rm = TRUE)
+    q10 = 1.7
+
+    return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+  }
+
+
 }
