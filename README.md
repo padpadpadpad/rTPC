@@ -216,7 +216,7 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 2,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 2,
                                            supp_errors = 'Y')),
-            oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
+            oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, q10),
                                            data = .x,
                                            iter = 500,
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') - 1,
@@ -584,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.94
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-49.00
+41.64
 
 </td>
 
 <td style="text-align:center;">
 
-\-11.72
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+45.56
 
 </td>
 
 <td style="text-align:center;">
 
-0.12
+0.58
 
 </td>
 
 <td style="text-align:center;">
 
-NA
+11.48
 
 </td>
 
 <td style="text-align:center;">
 
-1.15
+2.06
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+3.92
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+43.02
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.15
+\-0.67
 
 </td>
 
