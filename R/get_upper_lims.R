@@ -132,4 +132,13 @@ get_upper_lims <- function(x, y, model_name) {
 
     return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
   }
+
+  if(model_name == 'ratkowsky_1983'){
+    tmin = max(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE) * 10
+    a = 1 *100
+    b = 0.1 * 100
+    return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
 }

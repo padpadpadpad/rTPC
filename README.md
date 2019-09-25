@@ -195,8 +195,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             ratkowsky = map(data, ~nls_multstart(rate ~ ratkowsky_1983(temp = temp, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'ratkowsky_1983') - 2,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'ratkowsky_1983') + 2,
                                            supp_errors = 'Y')),
             boatman = map(data, ~nls_multstart(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
                                            data = .x,
@@ -584,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+1.05
 
 </td>
 
 <td style="text-align:center;">
 
-41.64
+39.88
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+\-Inf
 
 </td>
 
 <td style="text-align:center;">
 
-45.56
+49.82
 
 </td>
 
 <td style="text-align:center;">
 
-0.58
+0.72
 
 </td>
 
 <td style="text-align:center;">
 
-11.48
+1.74
 
 </td>
 
 <td style="text-align:center;">
 
-2.06
+2.48
 
 </td>
 
 <td style="text-align:center;">
 
-3.92
+9.94
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+Inf
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.02
 
 </td>
 

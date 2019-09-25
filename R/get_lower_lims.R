@@ -133,4 +133,12 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
   }
 
+  if(model_name == 'ratkowsky_1983'){
+    tmin = 0
+    tmax = min(d$x, na.rm = TRUE)
+    a = 0
+    b = 0
+    return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+  }
+
 }
