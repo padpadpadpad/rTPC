@@ -584,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.05
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-39.88
+41.64
 
 </td>
 
 <td style="text-align:center;">
 
-\-Inf
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-49.82
+45.57
 
 </td>
 
 <td style="text-align:center;">
 
-0.72
+0.58
 
 </td>
 
 <td style="text-align:center;">
 
-1.74
+11.48
 
 </td>
 
 <td style="text-align:center;">
 
-2.48
+2.06
 
 </td>
 
 <td style="text-align:center;">
 
-9.94
+3.93
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+43.03
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.02
+\-0.67
 
 </td>
 
@@ -654,25 +654,25 @@ thomas
 
 <td style="text-align:center;">
 
-1.66
+1.36
 
 </td>
 
 <td style="text-align:center;">
 
-38.83
+38.37
 
 </td>
 
 <td style="text-align:center;">
 
-14.08
+15.43
 
 </td>
 
 <td style="text-align:center;">
 
-46.62
+48.73
 
 </td>
 
@@ -696,19 +696,19 @@ thomas
 
 <td style="text-align:center;">
 
-7.80
+10.36
 
 </td>
 
 <td style="text-align:center;">
 
-32.55
+33.31
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.54
+\-0.36
 
 </td>
 
