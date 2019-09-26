@@ -28,7 +28,7 @@ data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
-start_vals <- get_start_vals(d$temp, d$rate, model_name == 'kamykowski_1985')
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'kamykowski_1985')
 mod <- minpack.lm::nlsLM(rate~kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
 data = d,
 start = start_vals,
