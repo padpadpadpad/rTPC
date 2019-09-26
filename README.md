@@ -3,6 +3,10 @@
 
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. It contains all the models previously used to fit TPCs and has helper functions to help in setting sensible start parameters, upper and lower parameter limits and estimating parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
+## Bugs and suggestions
+
+Please report any bugs and suggestions to the Issues tab or email d.padfield@exeter.ac.uk.
+
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
 <!-- badges: end -->
@@ -584,61 +588,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.08
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-37.14
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-\-11.50
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-62.77
+45.56
 
 </td>
 
 <td style="text-align:center;">
 
-0.72
+0.58
 
 </td>
 
 <td style="text-align:center;">
 
-1.74
+11.48
 
 </td>
 
 <td style="text-align:center;">
 
-2.48
+2.06
 
 </td>
 
 <td style="text-align:center;">
 
-25.63
+3.91
 
 </td>
 
 <td style="text-align:center;">
 
-74.28
+43.02
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.14
+\-0.67
 
 </td>
 
@@ -812,7 +816,7 @@ spain
 
 <td style="text-align:center;">
 
-48.68
+48.67
 
 </td>
 
@@ -1754,3 +1758,145 @@ little difference to the curve fit, but this will obviously depend on
 how much variation there is in your uncertainty across temperatures.
 
 ## Bootstrapping model fits
+
+We can bootstrap our models to (a) visualise uncertainty of our model
+and its predictions and (b) allow us to quantify the uncertainty of the
+derived parameters in **est\_params()**. This example uses
+non-parametric bootstrapping, where we sample from the residuals of the
+original model fit. This is an identical approach to that implemented in
+**nlstools::nlsBoot()**, but we retain each model fit in order to
+calculate confidence intervals for predictions and derived parameters.
+
+To demonstrate the approach, we will bootstrap the first two curves in
+**chlorella\_tpc** after fitting the Sharpe-Schoolfield model for high
+temperature inactivation.
+
+``` r
+# subset data
+d_2 <- filter(chlorella_tpc, curve_id <= 2)
+
+# fit nls.multstart
+d_fits <- d_2 %>%
+  group_by(curve_id) %>%
+  nest() %>%
+  mutate(fit = purrr::map(data, ~ nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y')))
+
+# get preds for each point
+preds <- d_fits %>%
+  mutate(., pred = map(fit, augment)) %>%
+  unnest(pred) %>%
+  select(., - c(X.weights.)) 
+
+# define number of bootstraps
+nboot <- 250
+
+# start progress bar and estimate time it will take
+number_of_models <- 1
+number_of_curves <- length(unique(d_2$curve_id))
+
+# setup progress bar
+pb <- progress_estimated(number_of_curves*number_of_models*nboot)
+
+# create new replicate dataframes
+boots <- group_by(preds, curve_id) %>%
+  mutate(., n = 1:n()) %>%
+  # creates nboot replicates of the dataset
+  slice(rep(1:n(), times = nboot)) %>%
+  mutate(., boot_num = rep(1:nboot, each = n()/nboot)) %>%
+  group_by(boot_num,curve_id) %>%
+  # sample the residuals of each fit and add to fitted values from the model
+  mutate(., boot_rate = .fitted + sample(scale(.resid, scale=FALSE), replace=TRUE)) %>%
+  nest() %>%
+  # fit the model to each bootstrapped dataset
+  mutate(., fit = purrr::map(data, ~ nls_multstart_progress(boot_rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
+  data = .x,
+  iter = 500,
+  start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
+  start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
+  supp_errors = 'Y',
+  na.action = na.omit,
+  lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+  upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'))))
+
+# calculate confidence intervals of predictions
+new_data <- d_2 %>%
+  do(data.frame(temp = seq(min(.$temp, na.rm = TRUE), max(.$temp, na.rm = TRUE), length.out = 200), stringsAsFactors = FALSE))
+
+# max and min for each curve
+max_min <- group_by(d_2, curve_id) %>%
+  summarise(., min_temp = min(temp, na.rm = TRUE), max_temp = max(temp, na.rm = TRUE)) %>%
+  ungroup()
+
+preds <- d_fits %>%
+  mutate(., pred = map(fit, augment, newdata = new_data)) %>%
+  unnest(pred)
+
+# get predictions
+preds_boot <- boots %>%
+  mutate(., pred = map(fit, augment, newdata = new_data)) %>%
+  unnest(pred) %>%
+  group_by(temp, curve_id) %>%
+  summarise(., lwr_CI = quantile(.fitted, 0.025),
+            upr_CI = quantile(.fitted, 0.975)) %>%
+  ungroup() %>%
+  merge(., select(preds, temp, .fitted, curve_id), by = c('temp', 'curve_id')) %>%
+  merge(., max_min, by = 'curve_id') %>%
+  group_by(., curve_id) %>%
+  filter(., temp > unique(min_temp) & temp < unique(max_temp)) %>%
+  ungroup()
+
+# plot predictions
+ggplot() +
+  geom_point(aes(temp, rate), d_2) +
+  geom_line(aes(temp, .fitted), preds_boot) +
+  geom_ribbon(aes(temp, ymin = lwr_CI, ymax = upr_CI), alpha = 0.2, preds_boot) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  facet_wrap(~curve_id, labeller = labeller(curve_id = label_facets_num))
+```
+
+<img src="man/figures/README-bootstrap_fit-1.png" width="100%" />
+
+We can extract the derived parameters and calculate confidence
+intervals.
+
+``` r
+# calculate confidence interval for each curve
+params_boot <- ungroup(boots) %>%
+  mutate(., params = map(fit, est_params),
+         curve_id = paste('curve no:', curve_id, sep = ' ')) %>%
+  unnest(params) %>%
+  gather(., 'term', '.fitted', rmax:ncol(.)) %>%
+  group_by(term, curve_id) %>%
+  summarise(., estimate = quantile(.fitted, 0.5, na.rm = TRUE),
+            lwr_CI = quantile(.fitted, 0.025, na.rm = TRUE),
+            upr_CI = quantile(.fitted, 0.975, na.rm = TRUE)) %>%
+  ungroup() 
+  
+# plot confidence intervals for each parameter
+ggplot(params_boot, aes(curve_id, estimate)) +
+  geom_point(size = 4) +
+  geom_linerange(aes(ymin = lwr_CI, ymax = upr_CI, x = curve_id)) +
+  facet_wrap(~ term, scales = 'free_y', ncol = 5, labeller = labeller(term = label_facets_num)) +
+  theme_bw() +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  xlab('')
+```
+
+<img src="man/figures/README-boot_params-1.png" width="100%" style="display: block; margin: auto;" />
+
+This is all I have for now\!
