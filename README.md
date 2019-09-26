@@ -232,8 +232,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             kamykowski = map(data, ~nls_multstart(rate ~ kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 10, a = -3, b = -1, c = -1),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 3, b = 1, c =1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'kamykowski_1985') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'kamykowski_1985') + 1,
                                            supp_errors = 'Y')),
             quadratic = map(data, ~nls_multstart(rate ~ quadratic_2008(temp = temp, a, b, c),
                                            data = .x,
@@ -584,61 +584,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+1.08
 
 </td>
 
 <td style="text-align:center;">
 
-41.64
+37.14
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+\-11.50
 
 </td>
 
 <td style="text-align:center;">
 
-45.57
+62.77
 
 </td>
 
 <td style="text-align:center;">
 
-0.58
+0.72
 
 </td>
 
 <td style="text-align:center;">
 
-11.48
+1.74
 
 </td>
 
 <td style="text-align:center;">
 
-2.06
+2.48
 
 </td>
 
 <td style="text-align:center;">
 
-3.93
+25.63
 
 </td>
 
 <td style="text-align:center;">
 
-43.03
+74.28
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.14
 
 </td>
 
@@ -812,7 +812,7 @@ spain
 
 <td style="text-align:center;">
 
-48.67
+48.68
 
 </td>
 

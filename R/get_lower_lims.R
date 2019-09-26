@@ -141,4 +141,15 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'kamykowski_1985'){
+
+    tmin = min(d$x, na.rm = TRUE) * 0.1
+    tmax = min(d$x, na.rm = TRUE)
+    a = 0
+    b = 0
+    c = 0
+
+    return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+  }
+
 }

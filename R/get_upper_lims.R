@@ -141,4 +141,15 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
+  if(model_name == 'kamykowski_1985'){
+
+    tmin = max(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE) * 10
+    a = 20
+    b = 20
+    c = 20
+
+    return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+  }
+
 }

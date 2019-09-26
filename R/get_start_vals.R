@@ -175,5 +175,15 @@ get_start_vals <- function(x, y, model_name) {
     return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
   }
 
+  if(model_name == 'kamykowski_1985'){
+
+    tmin = min(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE)
+    a = 1.242143
+    b = 0.5882857
+    c = 1.238821
+
+    return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+  }
 
 }
