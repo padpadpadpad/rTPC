@@ -1,11 +1,11 @@
-#' Estimate the activation energy
+#' Estimate the Q10 value of a TPC
 #'
-#' @description Estimates the activation energy of a given thermal performance curve
+#' @description Estimates the Q10 value of a given thermal performance curve
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @author Daniel Padfield
-#' @export get_e
+#' @export get_q10
 
-get_e <- function(model){
+get_q10 <- function(model){
 
   # capture environment from model - contains data
   x <- model$m$getEnv()
@@ -28,12 +28,11 @@ get_e <- function(model){
   temp <- temp[temp$x1 <= topt,]
 
   # create K column if needed
-  temp$K <- ifelse(temp$x1 < 150, temp$x1 + 273.15, temp$x1)
+  temp$temp <- ifelse(temp$x1 > 150, temp$x1 - 273.15, temp$x1)
 
   # run model
-  mod <- stats::nls(x2 ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), temp, start = c(lnc = stats::median(temp$x2), e = 1), na.action = stats::na.omit)
-  e = unname(stats::coef(mod)[2])
+  mod <- stats::nls(x2 ~ a*10^(log10(q10)/(10/temp)), start = c(a = 0.0577, q10 = 2.77), temp, na.action = stats::na.omit)
+  q10 = unname(stats::coef(mod)[2])
 
-  return(e)
+  return(q10)
 }
-

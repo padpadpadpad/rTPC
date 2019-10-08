@@ -4,10 +4,10 @@
 \alias{sharpeschoolhigh_1981}
 \title{Sharpe Schoolfield Model for high temperature inactivation}
 \usage{
-sharpeschoolhigh_1981(temp_k, r_tref, e, eh, th, tref)
+sharpeschoolhigh_1981(temp, r_tref, e, eh, th, tref)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
+\item{temp}{temperature in degrees centigrade}
 
 \item{r_tref}{rate at the standardised temperature, tref}
 

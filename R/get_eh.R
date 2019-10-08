@@ -1,11 +1,11 @@
-#' Estimate the activation energy
+#' Estimate the deactivation energy
 #'
-#' @description Estimates the activation energy of a given thermal performance curve
+#' @description Estimates the deactivation energy of a given thermal performance curve
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @author Daniel Padfield
-#' @export get_e
+#' @export get_eh
 
-get_e <- function(model){
+get_eh <- function(model){
 
   # capture environment from model - contains data
   x <- model$m$getEnv()
@@ -25,15 +25,15 @@ get_e <- function(model){
   topt <- rTPC::get_topt(model)
 
   # keep just values below topt
-  temp <- temp[temp$x1 <= topt,]
+  temp <- temp[temp$x1 >= topt,]
 
   # create K column if needed
   temp$K <- ifelse(temp$x1 < 150, temp$x1 + 273.15, temp$x1)
 
   # run model
-  mod <- stats::nls(x2 ~ lnc*exp(e/8.62e-05*(1/median(K) - 1/K)), temp, start = c(lnc = stats::median(temp$x2), e = 1), na.action = stats::na.omit)
-  e = unname(stats::coef(mod)[2])
+  mod <- stats::nls(x2 ~ lnc*exp(-e/8.62e-05*(1/median(K) - 1/K)), temp, start = c(lnc = stats::median(temp$x2), e = 1), na.action = stats::na.omit)
+  eh = unname(stats::coef(mod)[2])
 
-  return(e)
+  return(eh)
 }
 

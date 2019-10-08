@@ -4,10 +4,10 @@
 \alias{johnsonlewin_1946}
 \title{Johnson-Lewin model}
 \usage{
-johnsonlewin_1946(temp_k, r0, e, eh, topt)
+johnsonlewin_1946(temp, r0, e, eh, topt)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
+\item{temp}{temperature in degrees centigrade}
 
 \item{r0}{scaling parameter}
 

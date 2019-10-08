@@ -4,10 +4,10 @@
 \alias{sharpeschoolfull_1981}
 \title{Full Sharpe Schoolfield Model}
 \usage{
-sharpeschoolfull_1981(temp_k, r_tref, e, el, tl, eh, th, tref)
+sharpeschoolfull_1981(temp, r_tref, e, el, tl, eh, th, tref)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
+\item{temp}{temperature in degrees centigrade}
 
 \item{r_tref}{rate at the standardised temperature, tref}
 
