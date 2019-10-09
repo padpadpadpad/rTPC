@@ -3,6 +3,10 @@
 
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. It contains all the models previously used to fit TPCs and has helper functions to help in setting sensible start parameters, upper and lower parameter limits and estimating parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
+## Bugs and suggestions
+
+Please report any bugs and suggestions to the Issues tab or email d.padfield@exeter.ac.uk.
+
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
 <!-- badges: end -->
@@ -74,7 +78,7 @@ pts <- function(x){
 
 ## Before you start modelling
 
-Before fitting any of these models, it is likely that some filtering and
+Before fitting any models, it is likely that some filtering and
 cleaning of the data needs to be done. Some things you should consider
 are:
 
@@ -153,11 +157,11 @@ d_1 <- filter(d, curve_id == 1)
 # run in purrr - going to be a huge long command this one
 d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
   nest() %>%
-  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, p, c, tmax, delta_t),
+  mutate(., lactin2 = map(data, ~nls_multstart(rate ~ lactin2_1995(temp = temp, a, b, tmax, delta_t),
                        data = .x,
                        iter = 500,
-                       start_lower = c(p = 0, c = -2, tmax = 35, delta_t = 0),
-                       start_upper = c(p = 3, c = 0, tmax = 55, delta_t = 15),
+                       start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'lactin2_1995') - 2,
+                       start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'lactin2_1995') + 2,
                        supp_errors = 'Y')),
             sharpeschoolhigh = map(data, ~nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
                                            data = .x,
@@ -177,15 +181,15 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') + 2,
                                            supp_errors = 'Y',
-                                           lower = c(a= 0, b = -10, c = 0, topt = 0))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'thomas_2012'))),
             briere2 = map(data, ~nls_multstart(rate ~ briere2_1999(temp = temp, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'briere2_1999') + 1,
                                            supp_errors = 'Y',
-                                           lower = c(tmin = -10, tmax = 20, a = -10, b = -10),
-                                           upper = c(tmin = 20, tmax = 80, a = 10, b = 10))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'briere2_1999'),
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'briere2_1999'))),
             spain = map(data, ~nls_multstart(rate ~ spain_1982(temp = temp, a, b, c, r0),
                                            data = .x,
                                            iter = 500,
@@ -195,45 +199,45 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             ratkowsky = map(data, ~nls_multstart(rate ~ ratkowsky_1983(temp = temp, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 20, a = -10, b = -10),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 10, b = 10),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'ratkowsky_1983') - 2,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'ratkowsky_1983') + 2,
                                            supp_errors = 'Y')),
             boatman = map(data, ~nls_multstart(rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, tmin = 0, tmax = 35, a = -1, b = -1),
-                                           start_upper = c(rmax = 2, tmin = 10, tmax = 50, a = 1, b = 1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'boatman_2017') -1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'boatman_2017') + 1,
                                            supp_errors = 'Y')),
             flinn = map(data, ~nls_multstart(rate ~ flinn_1991(temp = temp, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(a = 0, b = -2, c = -1),
-                                           start_upper = c(a = 30, b = 2, c = 1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'flinn_1991') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'flinn_1991') + 10,
                                            supp_errors = 'Y')),
             gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp = temp, rmax, topt, a),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, topt = 20, a = 0),
-                                           start_upper = c(rmax = 2, topt = 40, a = 30),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 2,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 2,
                                            supp_errors = 'Y')),
-            oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, a),
+            oneill = map(data, ~nls_multstart(rate ~ oneill_1972(temp = temp, rmax, tmax, topt, q10),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 1, tmax = 30, topt = 20, a = 1),
-                                           start_upper = c(rmax = 2, tmax = 50, topt = 40, a = 2),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') + 1,
                                            supp_errors = 'Y')),
             joehnk = map(data, ~nls_multstart(rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(rmax = 0, topt = 20, a = 0, b = 1, c = 1),
-                                           start_upper = c(rmax = 2, topt = 40, a = 30, b = 2, c = 2),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'joehnk_2008') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'joehnk_2008') + 1,
                                            supp_errors = 'Y',
-                                           lower = c(rmax = 0, topt = 0, a = 0, b = 1, c = 1))),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'joehnk_2008'))),
             kamykowski = map(data, ~nls_multstart(rate ~ kamykowski_1985(temp = temp, tmin, tmax, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(tmin = 0, tmax = 10, a = -3, b = -1, c = -1),
-                                           start_upper = c(tmin = 20, tmax = 50, a = 3, b = 1, c =1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'kamykowski_1985') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'kamykowski_1985') + 1,
                                            supp_errors = 'Y')),
             quadratic = map(data, ~nls_multstart(rate ~ quadratic_2008(temp = temp, a, b, c),
                                            data = .x,
@@ -269,7 +273,7 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, a, q10, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') *0.8,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') * 0.8,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') * 1.2,
                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
@@ -878,14 +882,14 @@ n\_{TPCs}](https://latex.codecogs.com/png.latex?n_%7Btot%7D%20%3D%20n_%7Bmodels%
 d_10 <- filter(d, curve_id <= 10)
 
 # when scaling up our code to fit hundreds of models, its nice to have a progress bar
-nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
-                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
+nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower,
+                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100,
                                    control, modelweights, ...){
   if(!is.null(pb)){
     pb$tick()$print()
   }
-  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
-                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
+  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower,
+                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count,
                 control = control, modelweights = modelweights, ...)
 }
 
@@ -1754,3 +1758,145 @@ little difference to the curve fit, but this will obviously depend on
 how much variation there is in your uncertainty across temperatures.
 
 ## Bootstrapping model fits
+
+We can bootstrap our models to (a) visualise uncertainty of our model
+and its predictions and (b) allow us to quantify the uncertainty of the
+derived parameters in **est\_params()**. This example uses
+non-parametric bootstrapping, where we sample from the residuals of the
+original model fit. This is an identical approach to that implemented in
+**nlstools::nlsBoot()**, but we retain each model fit in order to
+calculate confidence intervals for predictions and derived parameters.
+
+To demonstrate the approach, we will bootstrap the first two curves in
+**chlorella\_tpc** after fitting the Sharpe-Schoolfield model for high
+temperature inactivation.
+
+``` r
+# subset data
+d_2 <- filter(chlorella_tpc, curve_id <= 2)
+
+# fit nls.multstart
+d_fits <- d_2 %>%
+  group_by(curve_id) %>%
+  nest() %>%
+  mutate(fit = purrr::map(data, ~ nls_multstart(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                                           supp_errors = 'Y')))
+
+# get preds for each point
+preds <- d_fits %>%
+  mutate(., pred = map(fit, augment)) %>%
+  unnest(pred) %>%
+  select(., - c(X.weights.))
+
+# define number of bootstraps
+nboot <- 250
+
+# start progress bar and estimate time it will take
+number_of_models <- 1
+number_of_curves <- length(unique(d_2$curve_id))
+
+# setup progress bar
+pb <- progress_estimated(number_of_curves*number_of_models*nboot)
+
+# create new replicate dataframes
+boots <- group_by(preds, curve_id) %>%
+  mutate(., n = 1:n()) %>%
+  # creates nboot replicates of the dataset
+  slice(rep(1:n(), times = nboot)) %>%
+  mutate(., boot_num = rep(1:nboot, each = n()/nboot)) %>%
+  group_by(boot_num,curve_id) %>%
+  # sample the residuals of each fit and add to fitted values from the model
+  mutate(., boot_rate = .fitted + sample(scale(.resid, scale=FALSE), replace=TRUE)) %>%
+  nest() %>%
+  # fit the model to each bootstrapped dataset
+  mutate(., fit = purrr::map(data, ~ nls_multstart_progress(boot_rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
+  data = .x,
+  iter = 500,
+  start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
+  start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
+  supp_errors = 'Y',
+  na.action = na.omit,
+  lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+  upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'))))
+
+# calculate confidence intervals of predictions
+new_data <- d_2 %>%
+  do(data.frame(temp = seq(min(.$temp, na.rm = TRUE), max(.$temp, na.rm = TRUE), length.out = 200), stringsAsFactors = FALSE))
+
+# max and min for each curve
+max_min <- group_by(d_2, curve_id) %>%
+  summarise(., min_temp = min(temp, na.rm = TRUE), max_temp = max(temp, na.rm = TRUE)) %>%
+  ungroup()
+
+preds <- d_fits %>%
+  mutate(., pred = map(fit, augment, newdata = new_data)) %>%
+  unnest(pred)
+
+# get predictions
+preds_boot <- boots %>%
+  mutate(., pred = map(fit, augment, newdata = new_data)) %>%
+  unnest(pred) %>%
+  group_by(temp, curve_id) %>%
+  summarise(., lwr_CI = quantile(.fitted, 0.025),
+            upr_CI = quantile(.fitted, 0.975)) %>%
+  ungroup() %>%
+  merge(., select(preds, temp, .fitted, curve_id), by = c('temp', 'curve_id')) %>%
+  merge(., max_min, by = 'curve_id') %>%
+  group_by(., curve_id) %>%
+  filter(., temp > unique(min_temp) & temp < unique(max_temp)) %>%
+  ungroup()
+
+# plot predictions
+ggplot() +
+  geom_point(aes(temp, rate), d_2) +
+  geom_line(aes(temp, .fitted), preds_boot) +
+  geom_ribbon(aes(temp, ymin = lwr_CI, ymax = upr_CI), alpha = 0.2, preds_boot) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate') +
+  facet_wrap(~curve_id, labeller = labeller(curve_id = label_facets_num))
+```
+
+<img src="man/figures/README-bootstrap_fit-1.png" width="100%" />
+
+We can extract the derived parameters and calculate confidence
+intervals.
+
+``` r
+# calculate confidence interval for each curve
+params_boot <- ungroup(boots) %>%
+  mutate(., params = map(fit, est_params),
+         curve_id = paste('curve no:', curve_id, sep = ' ')) %>%
+  unnest(params) %>%
+  gather(., 'term', '.fitted', rmax:ncol(.)) %>%
+  group_by(term, curve_id) %>%
+  summarise(., estimate = quantile(.fitted, 0.5, na.rm = TRUE),
+            lwr_CI = quantile(.fitted, 0.025, na.rm = TRUE),
+            upr_CI = quantile(.fitted, 0.975, na.rm = TRUE)) %>%
+  ungroup()
+
+# plot confidence intervals for each parameter
+ggplot(params_boot, aes(curve_id, estimate)) +
+  geom_point(size = 4) +
+  geom_linerange(aes(ymin = lwr_CI, ymax = upr_CI, x = curve_id)) +
+  facet_wrap(~ term, scales = 'free_y', ncol = 5, labeller = labeller(term = label_facets_num)) +
+  theme_bw() +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  xlab('')
+```
+
+<img src="man/figures/README-boot_params-1.png" width="100%" style="display: block; margin: auto;" />
+
+This is all I have for now\!

@@ -19,7 +19,8 @@ Suggests:
     dplyr,
     tidyr,
     nls.multstart,
-    MuMIn
+    MuMIn,
+    minpack.lm
 Imports: 
     moments
 Depends: R (>= 2.10)
