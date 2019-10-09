@@ -78,7 +78,7 @@ pts <- function(x){
 
 ## Before you start modelling
 
-Before fitting any models, it is likely that some filtering and
+Before fitting any of these models, it is likely that some filtering and
 cleaning of the data needs to be done. Some things you should consider
 are:
 
@@ -588,19 +588,19 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.93
+0.88
 
 </td>
 
 <td style="text-align:center;">
 
-38.30
+37.77
 
 </td>
 
 <td style="text-align:center;">
 
-\-19.78
+\-16.62
 
 </td>
 
@@ -882,14 +882,14 @@ n\_{TPCs}](https://latex.codecogs.com/png.latex?n_%7Btot%7D%20%3D%20n_%7Bmodels%
 d_10 <- filter(d, curve_id <= 10)
 
 # when scaling up our code to fit hundreds of models, its nice to have a progress bar
-nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower,
-                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100,
+nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
+                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
                                    control, modelweights, ...){
   if(!is.null(pb)){
     pb$tick()$print()
   }
-  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower,
-                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count,
+  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
+                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
                 control = control, modelweights = modelweights, ...)
 }
 
@@ -1792,7 +1792,7 @@ d_fits <- d_2 %>%
 preds <- d_fits %>%
   mutate(., pred = map(fit, augment)) %>%
   unnest(pred) %>%
-  select(., - c(X.weights.))
+  select(., - c(X.weights.)) 
 
 # define number of bootstraps
 nboot <- 250
@@ -1882,8 +1882,8 @@ params_boot <- ungroup(boots) %>%
   summarise(., estimate = quantile(.fitted, 0.5, na.rm = TRUE),
             lwr_CI = quantile(.fitted, 0.025, na.rm = TRUE),
             upr_CI = quantile(.fitted, 0.975, na.rm = TRUE)) %>%
-  ungroup()
-
+  ungroup() 
+  
 # plot confidence intervals for each parameter
 ggplot(params_boot, aes(curve_id, estimate)) +
   geom_point(size = 4) +
