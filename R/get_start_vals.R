@@ -137,6 +137,7 @@ get_start_vals <- function(x, y, model_name) {
     return(c(a=a, b=b, c=c, d=d, e=e))
   }
 
+
   if(model_name == 'boatman_2017'){
     rmax = max(d$y, na.rm = TRUE)
     tmin = min(d$x, na.rm = TRUE)
@@ -185,5 +186,13 @@ get_start_vals <- function(x, y, model_name) {
 
     return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
   }
+
+
+  if(model_name == 'hinshelwood_1947'){
+    a = 595892892
+    b = 1.57e+30
+    e = 0.5125673
+    eh = 1.922022
+    return(c(a=a, e=e, b=b, eh = eh))}
 
 }

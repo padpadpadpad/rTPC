@@ -4,16 +4,16 @@
 \alias{hinshelwood_1947}
 \title{Hinshelwood 1947 model}
 \usage{
-hinshelwood_1947(temp_k, a, e, c, eh)
+hinshelwood_1947(temp, a, e, b, eh)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
+\item{temp}{temperature in degrees centigrade}
 
 \item{a}{pre-exponential factor}
 
 \item{e}{activation energy (eV)}
 
-\item{c}{pre-exponential factor}
+\item{b}{pre-exponential factor}
 
 \item{eh}{de-activation energy (eV)}
 }

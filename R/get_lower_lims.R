@@ -152,4 +152,11 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
   }
 
+  if(model_name == 'hinshelwood_1947'){
+    a = 0
+    b = 0
+    e = 0
+    eh = 0
+    return(c(a=a, e=e, b=b, eh = eh))}
+
 }

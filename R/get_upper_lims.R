@@ -152,4 +152,10 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
   }
 
+  if(model_name == 'hinshelwood_1947'){
+    a = 1e50
+    b = 1e100
+    e = 10
+    eh = 30
+    return(c(a=a, e=e, b=b, eh = eh))}
 }
