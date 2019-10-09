@@ -242,8 +242,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             quadratic = map(data, ~nls_multstart(rate ~ quadratic_2008(temp = temp, a, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(a = 0, b = -2, c = -1),
-                                           start_upper = c(a = 30, b = 2, c = 1),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'quadratic_2008') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'quadratic_2008') + 1,
                                            supp_errors = 'Y')),
             hinshelwood = map(data, ~nls_multstart(rate ~ hinshelwood_1947(temp = temp, a, e, c, eh),
                                            data = .x,
@@ -588,61 +588,61 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-0.88
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-37.77
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-\-16.62
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+45.56
 
 </td>
 
 <td style="text-align:center;">
 
-0.72
+0.58
 
 </td>
 
 <td style="text-align:center;">
 
-1.74
+11.48
 
 </td>
 
 <td style="text-align:center;">
 
-2.48
+2.06
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+3.91
 
 </td>
 
 <td style="text-align:center;">
 
-Inf
+43.02
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.11
+\-0.67
 
 </td>
 
