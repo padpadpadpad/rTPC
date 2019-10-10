@@ -217,8 +217,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             weibull = map(data, ~nls_multstart(rate ~ weibull_1995(temp = temp, a, topt, b, c),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(a = 0, topt = 30, b = 100, c = 10),
-                                           start_upper = c(a = 3, topt = 50, b = 200, c = 50),
+                                           start_lower = c(a = 1, topt = 30, b = 100, c = 50),
+                                           start_upper = c(a = 2, topt = 40, b = 300, c = 150),
                                            lower = c(a = 0, topt = 20, b = 0, c = 0),
                                            supp_errors = 'Y')),
             rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, a, q10, b, c),
@@ -228,6 +228,14 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') * 1.2,
                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
+                                           supp_errors = 'Y')),
+            beta = map(data, ~nls_multstart(rate ~ beta_2012(temp = temp, a, b, c, d, e),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'beta_2012') -10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'beta_2012') + 10,
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
                                            supp_errors = 'Y')))
 
 ```

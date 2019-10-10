@@ -11,7 +11,7 @@
 get_upper_lims <- function(x, y, model_name) {
 
   # error message for wrong spelling of model name
-  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017')
+  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017', 'beta_2012', 'molnar_2013')
 
   if (model_name %in% mod_names == FALSE){
     stop("supplied model_name is not an available model in rTPC. Please check the spelling of model_name.")
@@ -158,4 +158,12 @@ get_upper_lims <- function(x, y, model_name) {
     e = 10
     eh = 30
     return(c(a=a, e=e, b=b, eh = eh))}
+
+  if(model_name == 'beta_2012'){
+    a = a = max(d$y, na.rm = TRUE) *100
+    b = d$x[d$y == max(d$y, na.rm = TRUE)]*10
+    c = d$x[d$y == max(d$y, na.rm = TRUE)]*10
+    d = 100
+    e = 100
+    return(c(a=a, b=b, c=c, d=d, e=e))}
 }
