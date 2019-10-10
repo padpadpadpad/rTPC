@@ -20,6 +20,22 @@ briere2_1999(temp, tmin, tmax, a, b)
 \description{
 Briere2 function
 }
+\examples{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere2_1999')
+mod <- minpack.lm::nlsLM(rate~briere2_1999(temp = temp, tmin, tmax, a, b),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)
+}
 \references{
 Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthro- pods. Environ. Entomol. 28, 22–29 (1999)
 }
