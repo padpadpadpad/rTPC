@@ -12,5 +12,5 @@
 #' @export thomas_2017
 
 thomas_2017 <- function(temp, a, b, c, d, e){
-  return(a * exp(b * temp) - (c - d*(exp(e*temp))))
+  return(a * exp(b * temp) - (c + d*(exp(e*temp))))
 }

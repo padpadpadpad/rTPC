@@ -1,17 +1,17 @@
-#' Gaussian function for TPC
+#' Modified gaussian function for TPC
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax maximum rate at optimum temperature
 #' @param topt optimum temperature
 #' @param a related to full curve width
+#' @param b allows for asymmetry in the curve fit
 #' @author Daniel Padfield
 #' @references
 #'
-#' Lynch, M., Gabriel, W., 1987. Environmental tolerance. Am. Nat. 129, 283–303.
 #'
-#' @export gaussian_1987
+#' @export modifiedgaussian_2006
 
-gaussian_1987 <- function(temp, rmax, topt, a){
-  est <- rmax * exp(-0.5 * (abs(temp - topt)/a)^2)
+modifiedgaussian_2006 <- function(temp, rmax, topt, a, b){
+  est <- rmax * exp(-0.5 * (abs(temp - topt)/a)^b)
   return(est)
 }

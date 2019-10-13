@@ -285,6 +285,12 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'beta_2012') + 10,
                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
+                                           supp_errors = 'Y')),
+            modgaussian = map(data, ~nls_multstart(rate ~ modifiedgaussian_2006(temp = temp, rmax, topt, a, b),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') +1,
                                            supp_errors = 'Y')))
 ```
 
@@ -596,25 +602,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+1.80
 
 </td>
 
 <td style="text-align:center;">
 
-41.65
+41.60
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+2.52
 
 </td>
 
 <td style="text-align:center;">
 
-45.56
+45.71
 
 </td>
 
@@ -638,13 +644,13 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-3.91
+4.11
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+43.18
 
 </td>
 
@@ -812,19 +818,19 @@ spain
 
 <td style="text-align:center;">
 
-39.97
+39.96
 
 </td>
 
 <td style="text-align:center;">
 
-\-1.38
+\-1.37
 
 </td>
 
 <td style="text-align:center;">
 
-48.68
+48.67
 
 </td>
 

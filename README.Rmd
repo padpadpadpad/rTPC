@@ -126,7 +126,7 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
                                            start_upper = c(r0 = 1e11, e = 2, eh = 10, topt = 330),
                                            supp_errors = 'Y')),
-            thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
+            thomas_2012 = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
                                            iter = 500,
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
@@ -236,6 +236,12 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'beta_2012') + 10,
                                            upper = get_upper_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
                                            lower = get_lower_lims(.x$temp, .x$rate, model_name = 'beta_2012'),
+                                           supp_errors = 'Y')),
+            modgaussian = map(data, ~nls_multstart(rate ~ modifiedgaussian_2006(temp = temp, rmax, topt, a, b),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') - 1,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') +1,
                                            supp_errors = 'Y')))
 
 ```
