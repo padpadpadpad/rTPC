@@ -166,4 +166,12 @@ get_lower_lims <- function(x, y, model_name) {
     d = 0
     e = 0
     return(c(a=a, b=b, c=c, d=d, e=e))}
+
+  if(model_name == 'weibull_1995'){
+    a = min(d$y, na.rm = TRUE) * 0.1
+    topt = min(d$x, na.rm = TRUE)
+    b = 0
+    c = 0
+    return(c(a=a, topt = topt, b=b, c=c))}
+
 }

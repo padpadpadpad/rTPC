@@ -7,12 +7,13 @@
 #' @param b defines the breadth of the curve
 #' @param c defines the curve shape
 #' @author Daniel Padfield
+#' @author Jeremy Cohen
 #' @references Angilletta Jr, Michael J. "Estimating and comparing thermal performance curves." Journal of Thermal Biology 31.7 (2006): 541-545.
 #'
 #' @export weibull_1995
 
 weibull_1995 <- function(temp, a, topt, b, c){
-  return(a*((c-1)/c)^((1-c)/c)*((temp - topt)/b + ((c-1)/c)^(1/c))^(c-1)*exp(-1*(((temp - topt)/b) + ((c-1)/c)^(1/c))^c) + ((c-1)/c))
+  return((a*(((c-1)/c)^((1-c)/c))*((((temp-topt)/b)+(((c-1)/c)^(1/c)))^(c-1))*(exp(-((((temp-topt)/b)+(((c-1)/c)^(1/c)))^c)+((c-1)/c)))))
 }
 
 

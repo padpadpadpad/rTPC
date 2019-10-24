@@ -175,7 +175,7 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
                                            start_upper = c(r0 = 1e11, e = 2, eh = 10, topt = 330),
                                            supp_errors = 'Y')),
-            thomas = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
+            thomas_2012 = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
                                            iter = 500,
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,
@@ -265,10 +265,9 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            supp_errors = 'Y')),
             weibull = map(data, ~nls_multstart(rate ~ weibull_1995(temp = temp, a, topt, b, c),
                                            data = .x,
-                                           iter = 500,
-                                           start_lower = c(a = 1, topt = 30, b = 100, c = 50),
-                                           start_upper = c(a = 2, topt = 40, b = 300, c = 150),
-                                           lower = c(a = 0, topt = 20, b = 0, c = 0),
+                                           iter = 1000,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'weibull_1995') -2,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'weibull_1995') + 2,
                                            supp_errors = 'Y')),
             rezende = map(data, ~nls_multstart(rate ~ rezende_2019(temp = temp, a, q10, b, c),
                                            data = .x,
@@ -291,6 +290,12 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
                                            iter = 500,
                                            start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') - 1,
                                            start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'modifiedgaussian_2006') +1,
+                                           supp_errors = 'Y')),
+         thomas_2017 = map(data, ~nls_multstart(rate ~ thomas_2017(temp = temp, a, b, c, d, e),
+                                           data = .x,
+                                           iter = 500,
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2017') *0.5,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2017') *1.5,
                                            supp_errors = 'Y')))
 ```
 
@@ -602,25 +607,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.80
+1.81
 
 </td>
 
 <td style="text-align:center;">
 
-41.60
+41.65
 
 </td>
 
 <td style="text-align:center;">
 
-2.52
+2.54
 
 </td>
 
 <td style="text-align:center;">
 
-45.71
+45.56
 
 </td>
 
@@ -644,13 +649,13 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-4.11
+3.91
 
 </td>
 
 <td style="text-align:center;">
 
-43.18
+43.02
 
 </td>
 
@@ -666,7 +671,7 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-thomas
+thomas\_2012
 
 </td>
 

@@ -212,4 +212,23 @@ get_start_vals <- function(x, y, model_name) {
 
     return(c(rmax = rmax, topt = topt, a = a, b=b))
   }
+
+  if(model_name == 'weibull_1995'){
+    a = mean(d$y, na.rm = TRUE)
+    topt = d$x[d$y == max(d$y, na.rm = TRUE)]
+    b = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+    c = 4
+
+    return(c(a = a, topt = topt, b=b,c=c))
+  }
+
+  if(model_name == 'thomas_2017'){
+    a = 1.17
+    b = 0.06
+    c = 1.1
+    d = 0.26
+    e = 0.1
+
+    return(c(a = a, b=b, c=c, d=d, e=e))
+  }
 }
