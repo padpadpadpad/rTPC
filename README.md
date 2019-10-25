@@ -172,8 +172,8 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             johnsonlewin = map(data, ~nls_multstart(rate ~ johnsonlewin_1946(temp = temp, r0, e, eh, topt),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(r0 = 1e9, e = 0, eh = 0, topt = 270),
-                                           start_upper = c(r0 = 1e11, e = 2, eh = 10, topt = 330),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'johnsonlewin_1946') - 5,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'johnsonlewin_1946') + 5,
                                            supp_errors = 'Y')),
             thomas_2012 = map(data, ~nls_multstart(rate ~ thomas_2012(temp = temp, a, b, c, topt),
                                            data = .x,
@@ -260,8 +260,10 @@ d_models <- group_by(d_1, curve_id, growth_temp, process, flux) %>%
             sharpeschoollow = map(data, ~nls_multstart(rate ~ sharpeschoollow_1981(temp = temp, r_tref, e, el, tl, tref = 15),
                                            data = .x,
                                            iter = 500,
-                                           start_lower = c(r_tref = 0.01, e = 0, el = 0, tl = 270),
-                                           start_upper = c(r_tref = 2, e = 3, el = 10, tl = 330),
+                                           start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoollow_1981') - 10,
+                                           start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoollow_1981') + 10,
+                                           lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoollow_1981'),
+                                           upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoollow_1981'),
                                            supp_errors = 'Y')),
             weibull = map(data, ~nls_multstart(rate ~ weibull_1995(temp = temp, a, topt, b, c),
                                            data = .x,
@@ -607,25 +609,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.81
+1.73
 
 </td>
 
 <td style="text-align:center;">
 
-41.65
+41.80
 
 </td>
 
 <td style="text-align:center;">
 
-2.54
+\-1.26
 
 </td>
 
 <td style="text-align:center;">
 
-45.56
+45.40
 
 </td>
 
@@ -649,19 +651,19 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-3.91
+3.60
 
 </td>
 
 <td style="text-align:center;">
 
-43.02
+46.66
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.67
+\-0.64
 
 </td>
 
