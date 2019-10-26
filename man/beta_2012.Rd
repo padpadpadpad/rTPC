@@ -2,7 +2,7 @@
 % Please edit documentation in R/beta_2012.R
 \name{beta_2012}
 \alias{beta_2012}
-\title{Beta model for TPC}
+\title{Beta model for fitting thermal performance curves}
 \usage{
 beta_2012(temp, a, b, c, d, e)
 }
@@ -20,10 +20,26 @@ beta_2012(temp, a, b, c, d, e)
 \item{e}{dimensionless parameter}
 }
 \description{
-Beta model for TPC
+Beta model for fitting thermal performance curves
+}
+\examples{
+\dontrun{
+#' data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'beta_2012')
+mod <- minpack.lm::nlsLM(rate~beta_2012(temp = temp, a, b, c, d, e),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 1000))
+
+# look at model
+summary(mod)
+est_params(mod)}
 }
 \references{
-Niehaus, Amanda C., et al. "Predicting the physiological performance of ectotherms in fluctuating thermal environments." Journal of Experimental Biology 215.4 (2012): 694-701.
+Niehaus, Amanda C., et al. Predicting the physiological performance of ectotherms in fluctuating thermal environments. Journal of Experimental Biology 215.4: 694-701 (2012)
 }
 \author{
 Daniel Padfield

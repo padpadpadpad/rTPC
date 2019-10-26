@@ -2,7 +2,7 @@
 % Please edit documentation in R/oneill_1972.R
 \name{oneill_1972}
 \alias{oneill_1972}
-\title{O'Neill 1972 function}
+\title{O'Neill 1972 model for fitting thermal performance curves}
 \usage{
 oneill_1972(temp, rmax, ctmax, topt, q10)
 }
@@ -11,14 +11,31 @@ oneill_1972(temp, rmax, ctmax, topt, q10)
 
 \item{rmax}{the rate at optimum temperature}
 
-\item{ctmax}{high temperature at which rates become negative}
+\item{ctmax}{high temperature (ºC) at which rates become negative}
 
-\item{topt}{optimum temperature}
+\item{topt}{optimum temperature (ºC)}
 
 \item{q10}{defines the fold change in performance as a result of increasing the temperature by 10 ºC}
 }
 \description{
-O'Neill 1972 function
+O'Neill 1972 model for fitting thermal performance curves
+}
+\examples{
+\dontrun{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'oneill_1972')
+mod <- minpack.lm::nlsLM(rate~oneill_1972(temp = temp, rmax, ctmax, topt, q10),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)}
 }
 \references{
 O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge ,. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)

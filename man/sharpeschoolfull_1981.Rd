@@ -15,13 +15,13 @@ sharpeschoolfull_1981(temp, r_tref, e, el, tl, eh, th, tref)
 
 \item{el}{low temperature de-activation energy (eV)}
 
-\item{tl}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures}
+\item{tl}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures (ºC)}
 
-\item{eh}{high temperature de-activation energy (eV)}
+\item{eh}{high temperature de-activation energy (eV) (ºC)}
 
-\item{th}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures}
+\item{th}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures (ºC)}
 
-\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures}
+\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures (ºC)}
 }
 \description{
 Full Sharpe Schoolfield Model
@@ -33,7 +33,8 @@ d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolfull_1981')
-mod <- minpack.lm::nlsLM(rate~sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref=15),
+mod <- minpack.lm::nlsLM(rate~sharpeschoolfull_1981(temp = temp, r_tref, e,
+el, tl, eh, th, tref=15),
 data = d,
 start = start_vals,
 control = minpack.lm::nls.lm.control(maxiter = 100))
@@ -43,7 +44,7 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)
+Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
 }
 \author{
 Daniel Padfield

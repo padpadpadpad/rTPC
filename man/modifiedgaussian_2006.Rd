@@ -20,9 +20,6 @@ modifiedgaussian_2006(temp, rmax, topt, a, b)
 \description{
 Modified gaussian function for TPC
 }
-\references{
-
-}
 \author{
 Daniel Padfield
 }

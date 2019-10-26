@@ -15,7 +15,7 @@ johnsonlewin_1946(temp, r0, e, eh, topt)
 
 \item{eh}{high temperature de-activation energy (eV)}
 
-\item{topt}{optimum temperature (K)}
+\item{topt}{optimum temperature (ºC)}
 }
 \description{
 Johnson-Lewin model

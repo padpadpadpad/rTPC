@@ -6,9 +6,6 @@
 #' @param a related to full curve width
 #' @param b allows for asymmetry in the curve fit
 #' @author Daniel Padfield
-#' @references
-#'
-#'
 #' @export modifiedgaussian_2006
 
 modifiedgaussian_2006 <- function(temp, rmax, topt, a, b){
