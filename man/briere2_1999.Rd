@@ -2,23 +2,39 @@
 % Please edit documentation in R/briere2_1999.R
 \name{briere2_1999}
 \alias{briere2_1999}
-\title{Briere2 function}
+\title{Briere2 model for fitting thermal performance curves}
 \usage{
 briere2_1999(temp, tmin, tmax, a, b)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{tmin}{low temperature at which rates become negative}
+\item{tmin}{low temperature (ºC) at which rates become negative}
 
-\item{tmax}{high temperature at which rates become negative}
+\item{tmax}{high temperature (ºC) at which rates become negative}
 
 \item{a}{scale parameter to adjust maximum rate of the curve}
 
 \item{b}{shape parameter to adjust the asymmetry of the curve}
 }
 \description{
-Briere2 function
+Briere2 model for fitting thermal performance curves
+}
+\examples{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere2_1999')
+mod <- minpack.lm::nlsLM(rate~briere2_1999(temp = temp, tmin, tmax, a, b),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)
 }
 \examples{
 # load in data

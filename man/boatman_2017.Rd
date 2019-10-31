@@ -2,7 +2,7 @@
 % Please edit documentation in R/boatman_2017.R
 \name{boatman_2017}
 \alias{boatman_2017}
-\title{Boatman 2017 function}
+\title{Boatman model for fitting thermal performance curves}
 \usage{
 boatman_2017(temp, rmax, tmin, tmax, a, b)
 }
@@ -11,16 +11,34 @@ boatman_2017(temp, rmax, tmin, tmax, a, b)
 
 \item{rmax}{the rate at optimum temperature}
 
-\item{tmin}{low temperature at which rates become negative}
+\item{tmin}{low temperature (ºC) at which rates become negative}
 
-\item{tmax}{high temperature at which rates become negative}
+\item{tmax}{high temperature (ºC) at which rates become negative}
 
 \item{a}{shape parameter to adjust the asymmetry of the skewness}
 
 \item{b}{is a shape determining parameter, which alters the kurtosis}
 }
 \description{
-Boatman 2017 function
+Boatman model for fitting thermal performance curves
+}
+\examples{
+\dontrun{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'boatman_2017')
+mod <- minpack.lm::nlsLM(rate~boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 1000))
+
+# look at model
+summary(mod)
+est_params(mod)}
+
 }
 \references{
 Boatman, T. G., Lawson, T., & Geider, R. J. A key marine diazotroph in a changing ocean: The interacting effects of temperature, CO2 and light on the growth of Trichodesmium erythraeum IMS101. PLoS ONE, 12, e0168796 (2017)

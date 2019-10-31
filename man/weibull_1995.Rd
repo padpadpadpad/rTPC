@@ -25,4 +25,6 @@ Angilletta Jr, Michael J. "Estimating and comparing thermal performance curves."
 }
 \author{
 Daniel Padfield
+
+Jeremy Cohen
 }

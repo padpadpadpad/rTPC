@@ -2,7 +2,7 @@
 % Please edit documentation in R/gaussian_1987.R
 \name{gaussian_1987}
 \alias{gaussian_1987}
-\title{Gaussian function for TPC}
+\title{Gaussian model for fitting thermal performance curves}
 \usage{
 gaussian_1987(temp, rmax, topt, a)
 }
@@ -11,15 +11,31 @@ gaussian_1987(temp, rmax, topt, a)
 
 \item{rmax}{maximum rate at optimum temperature}
 
-\item{topt}{optimum temperature}
+\item{topt}{optimum temperature (ºC)}
 
 \item{a}{related to full curve width}
 }
 \description{
-Gaussian function for TPC
+Gaussian model for fitting thermal performance curves
+}
+\examples{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'gaussian_1987')
+mod <- minpack.lm::nlsLM(rate~gaussian_1987(temp = temp, rmax, topt, a),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)
 }
 \references{
-Lynch, M., Gabriel, W., 1987. Environmental tolerance. Am. Nat. 129, 283–303.
+Lynch, M., Gabriel, W., Environmental tolerance. American Naturalist. 129, 283–303. (1987)
 }
 \author{
 Daniel Padfield

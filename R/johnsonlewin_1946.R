@@ -4,7 +4,7 @@
 #' @param temp temperature in degrees centigrade
 #' @param e activation energy (eV)
 #' @param eh high temperature de-activation energy (eV)
-#' @param topt optimum temperature (K)
+#' @param topt optimum temperature (ºC)
 #' @param r0 scaling parameter
 #' @author Daniel Padfield
 #' @references Johnson, Frank H., and Isaac Lewin. "The growth rate of E. coli in relation to temperature, quinine and coenzyme." Journal of Cellular and Comparative Physiology 28.1 (1946): 47-75.

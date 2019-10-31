@@ -5,12 +5,12 @@
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param el low temperature de-activation energy (eV)
-#' @param tl temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures
-#' @param eh high temperature de-activation energy (eV)
-#' @param th temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures
-#' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures
+#' @param tl temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures (ºC)
+#' @param eh high temperature de-activation energy (eV) (ºC)
+#' @param th temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures (ºC)
+#' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures (ºC)
 #' @author Daniel Padfield
-#' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)
+#' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
@@ -18,11 +18,12 @@
 #'
 #' # get start values and fit model
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolfull_1981')
-#' mod <- minpack.lm::nlsLM(rate~sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, eh, th, tref=15),
+#' mod <- minpack.lm::nlsLM(rate~sharpeschoolfull_1981(temp = temp, r_tref, e,
+#' el, tl, eh, th, tref=15),
 #' data = d,
 #' start = start_vals,
 #' control = minpack.lm::nls.lm.control(maxiter = 100))
-#' 
+#'
 #' # look at model
 #' summary(mod)
 #' est_params(mod)
