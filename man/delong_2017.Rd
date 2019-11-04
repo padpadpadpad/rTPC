@@ -22,6 +22,22 @@ delong_2017(temp_k, c, eb, ef, tm, ehc)
 \description{
 deLong enzyme-assisted Arrhenius model
 }
+\examples{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'delong_2017')
+mod <- minpack.lm::nlsLM(rate~delong_2017(temp = temp, c, eb, ef, tm, ehc),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)
+}
 \references{
 DeLong, John P., et al. "The combined effects of reactant kinetics and enzyme stability explain the temperature dependence of metabolic rates." Ecology and evolution 7.11 (2017): 3940-3950.
 }
