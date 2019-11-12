@@ -7,7 +7,7 @@
 #' @param b allows for asymmetry in the curve fit
 #' @author Daniel Padfield
 #' @examples
-# load in data
+#  \dontrun{#load in data
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
@@ -20,7 +20,7 @@
 #'
 #' # look at model
 #' summary(mod)
-#' est_params(mod)
+#' est_params(mod)}
 #' @export modifiedgaussian_2006
 
 modifiedgaussian_2006 <- function(temp, rmax, topt, a, b){

@@ -9,7 +9,7 @@
 #' @author Daniel Padfield
 #' @references DeLong, John P., et al. "The combined effects of reactant kinetics and enzyme stability explain the temperature dependence of metabolic rates." Ecology and evolution 7.11 (2017): 3940-3950.
 #' @examples
-#' # load in data
+#' \dontrun{# load in data
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
@@ -22,7 +22,7 @@
 #'
 #' # look at model
 #' summary(mod)
-#' est_params(mod)
+#' est_params(mod)}
 #' @export delong_2017
 
 delong_2017 <- function(temp_k, c, eb, ef, tm, ehc){
