@@ -22,6 +22,22 @@ joehnk_2008(temp, rmax, topt, a, b, c)
 \description{
 Jöhnk 2008 function
 }
+\examples{
+# load in data
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'joehnk_2008')
+mod <- minpack.lm::nlsLM(rate~joehnk_2008(temp = temp, rmax, topt, a, b, c),
+data = d,
+start = start_vals,
+control = minpack.lm::nls.lm.control(maxiter = 100))
+
+# look at model
+summary(mod)
+est_params(mod)
+}
 \references{
 Joehnk, Klaus D., et al. "Summer heatwaves promote blooms of harmful cyanobacteria." Global change biology 14.3: 495-512 (2008)
 }
