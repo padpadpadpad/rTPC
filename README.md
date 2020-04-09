@@ -609,25 +609,25 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-1.73
+1.52
 
 </td>
 
 <td style="text-align:center;">
 
-41.80
+42.27
 
 </td>
 
 <td style="text-align:center;">
 
-\-1.26
+\-13.82
 
 </td>
 
 <td style="text-align:center;">
 
-45.40
+45.39
 
 </td>
 
@@ -651,19 +651,19 @@ johnsonlewin
 
 <td style="text-align:center;">
 
-3.60
+3.12
 
 </td>
 
 <td style="text-align:center;">
 
-46.66
+59.21
 
 </td>
 
 <td style="text-align:center;">
 
-\-0.64
+\-0.48
 
 </td>
 
@@ -1782,11 +1782,101 @@ how much variation there is in your uncertainty across temperatures.
 
 We can bootstrap our models to (a) visualise uncertainty of our model
 and its predictions and (b) allow us to quantify the uncertainty of the
-derived parameters in **est\_params()**. This example uses
-non-parametric bootstrapping, where we sample from the residuals of the
-original model fit. This is an identical approach to that implemented in
-**nlstools::nlsBoot()**, but we retain each model fit in order to
-calculate confidence intervals for predictions and derived parameters.
+derived parameters in **est\_params()**. We will implement a couple of
+different bootstrap approaches, all of which are described
+[here](https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A).
+
+### Bootstrap raw data
+
+The most conservative method of bootstrapping is to resample the raw
+data with replacement. This is the preferred method when possible
+because it does not assume anything about (a) the model and (b) the
+distribution of the errors. It only assumes that each data point is an
+independent observation, which is problematic in many experiments when
+the thermal performance curves of individual populations are taken
+across temperatures. The number of temperatures sampled will also limit
+this bootstrap approach. When there are very few datapoints at
+temperatures beyond
+![T\_{opt}](https://latex.codecogs.com/png.latex?T_%7Bopt%7D "T_{opt}"),
+it is likely that some bootstrapped datasets will not have any data
+points beyond this point. This will result in very wide uncertainty at
+these high temperatures. However, this approach is very effective when
+there are technical, independent replicates at each temperature. We can
+demonstrate this approach by assuming that all the measurements across
+temperatures for each replicate in the `chlorella_tpc` are independent.
+
+``` r
+# subset data
+d_2 <- filter(chlorella_tpc, growth_temp == 20, flux == 'photosynthesis', process == 'adaptation')
+
+# define number of bootstraps
+nboot <- 250
+
+# start progress bar and estimate time it will take
+number_of_models <- 1
+number_of_curves <- 1
+
+# setup progress bar
+pb <- progress_estimated(number_of_curves*number_of_models*nboot)
+
+# create new replicate dataframes
+boots <- group_by(d_2) %>%
+  rsample::bootstraps(times = nboot) %>%
+  mutate(data = map(splits, rsample::analysis)) %>%
+  group_by(id) %>%
+  # fit the model to each bootstrapped dataset
+  mutate(., fit = purrr::map(data, ~ nls_multstart_progress(rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
+  data = .x,
+  iter = 500,
+  start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 5,
+  start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 5,
+  supp_errors = 'Y',
+  na.action = na.omit,
+  lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+  upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'))))
+
+# calculate confidence intervals of predictions
+new_data <- d_2 %>%
+  do(data.frame(temp = seq(min(.$temp, na.rm = TRUE), max(.$temp, na.rm = TRUE), length.out = 200), stringsAsFactors = FALSE))
+
+# calculate confidence intervals for predictions
+preds_boot <- boots %>%
+  mutate(., pred = map(fit, augment, newdata = new_data)) %>%
+  unnest(pred) %>%
+  group_by(temp) %>%
+  summarise(., lwr_CI = quantile(.fitted, 0.025),
+            upr_CI = quantile(.fitted, 0.975),
+            mu = quantile(.fitted, 0.5)) %>%
+  ungroup()
+
+# plot predictions
+ggplot() +
+  geom_point(aes(temp, rate), d_2) +
+  geom_line(aes(temp, mu), preds_boot) +
+  geom_ribbon(aes(temp, ymin = lwr_CI, ymax = upr_CI), alpha = 0.2, preds_boot) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  xlab('Temperature (ºC)') +
+  ylab('rate')
+```
+
+<img src="man/figures/README-bootstrap_raw-1.png" width="100%" />
+
+However, in the `chlorella_tpc` the data points are not independent
+within each replicate population. Moreover, within each replicate curve
+there is only a single data point at each temperature, which makes
+sampling the raw data problematic. In these instances, we can implement
+different bootstrapping approaches, such as resampling of residuals.
+
+#### Bootstrapping residuals
+
+This example uses non-parametric bootstrapping, where we sample from the
+residuals of the original model fit. This is an identical approach to
+that implemented in **nlstools::nlsBoot()**, but we retain each model
+fit in order to calculate confidence intervals for predictions and
+derived parameters.
 
 To demonstrate the approach, we will bootstrap the first two curves in
 **chlorella\_tpc** after fitting the Sharpe-Schoolfield model for high
