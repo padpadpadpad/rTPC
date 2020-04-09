@@ -9,7 +9,21 @@
 #' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated due to low temperature
 #' @author Daniel Padfield
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)
+#' @examples
+#' # load in data
+#' data('chlorella_tpc')
+#' d <- subset(chlorella_tpc, curve_id == 1)
 #'
+#' # get start values and fit model
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoollow_1981')
+#' mod <- minpack.lm::nlsLM(rate~sharpeschoollow_1981(temp = temp, r_tref, e, el, tl, tref=15),
+#' data = d,
+#' start = start_vals,
+#' control = minpack.lm::nls.lm.control(maxiter = 100))
+#'
+#' # look at model
+#' summary(mod)
+#' est_params(mod)
 #' @export sharpeschoollow_1981
 
 sharpeschoollow_1981 <- function(temp, r_tref, e, el, tl, tref){

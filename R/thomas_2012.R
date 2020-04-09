@@ -9,7 +9,21 @@
 #' @references
 #'
 #' Thomas, Mridul K., et al. A global pattern of thermal adaptation in marine phytoplankton. Science 338.6110, 1085-1088 (2012)
+#' @examples
+#' # load in data
+#' data('chlorella_tpc')
+#' d <- subset(chlorella_tpc, curve_id == 1)
 #'
+#' # get start values and fit model
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'thomas_2012')
+#' mod <- minpack.lm::nlsLM(rate~thomas_2012(temp = temp, a, b, c, topt),
+#' data = d,
+#' start = start_vals,
+#' control = minpack.lm::nls.lm.control(maxiter = 100))
+#'
+#' # look at model
+#' summary(mod)
+#' est_params(mod)
 #' @export thomas_2012
 
 thomas_2012 <- function(temp, a, b, c, topt){

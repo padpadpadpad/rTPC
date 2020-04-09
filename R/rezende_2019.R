@@ -7,6 +7,21 @@
 #' @param c parameter controlling the rate of decline beyond the threshold temperature, b.
 #' @author Daniel Padfield
 #' @references Rezende, Enrico L., and Francisco Bozinovic. "Thermal performance across levels of biological organization." Philosophical Transactions of the Royal Society B 374.1778 (2019): 20180549.
+#' @examples
+#' # load in data
+#' data('chlorella_tpc')
+#' d <- subset(chlorella_tpc, curve_id == 1)
+#'
+#' # get start values and fit model
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'rezende_2019')
+#' mod <- minpack.lm::nlsLM(rate~rezende_2019(temp = temp, q10, a, b, c),
+#' data = d,
+#' start = start_vals,
+#' control = minpack.lm::nls.lm.control(maxiter = 100))
+#'
+#' # look at model
+#' summary(mod)
+#' est_params(mod)
 #' @export rezende_2019
 
 rezende_2019 <- function(temp, q10, a, b, c){

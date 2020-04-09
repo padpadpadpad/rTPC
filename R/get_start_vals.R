@@ -222,26 +222,6 @@ get_start_vals <- function(x, y, model_name) {
     return(c(a = a, topt = topt, b=b,c=c))
   }
 
-  if(model_name == 'thomas_2017'){
-    a = 1.17
-    b = 0.06
-    c = 1.1
-    d = 0.26
-    e = 0.1
-
-    return(c(a = a, b=b, c=c, d=d, e=e))
-  }
-
-  if(model_name == 'thomas_2017'){
-    a = 1.17
-    b = 0.06
-    c = 1.1
-    d = 0.26
-    e = 0.1
-
-    return(c(a = a, b=b, c=c, d=d, e=e))
-  }
-
   if(model_name == 'johnsonlewin_1946'){
     r0 = min(d$y, na.rm = TRUE)
     pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
