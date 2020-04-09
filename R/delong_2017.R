@@ -13,6 +13,6 @@
 
 delong_2017 <- function(temp_k, c, eb, ef, tm, ehc){
   k <- 8.62e-05
-  return( c*exp(-(eb-(ef*(1-(temp_k/tm))+ehc*(temp_k-tm-(temp_k*log(temp_k/tm))))))/(k*temp_k))
+  return( c*exp(-(eb-(ef*(1-(temp_k/tm))+ehc*(temp_k-tm-(temp_k*log(temp_k/tm)))))/(k*temp_k)))
 }
 
