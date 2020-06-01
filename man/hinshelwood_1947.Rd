@@ -2,23 +2,28 @@
 % Please edit documentation in R/hinshelwood_1947.R
 \name{hinshelwood_1947}
 \alias{hinshelwood_1947}
-\title{Hinshelwood 1947 model}
+\title{Hinshelwood for fitting thermal performance curves}
 \usage{
 hinshelwood_1947(temp, a, e, b, eh)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{a}{pre-exponential factor}
+\item{a}{pre-exponential constant for the activation energy}
 
 \item{e}{activation energy (eV)}
 
-\item{b}{pre-exponential factor}
+\item{b}{pre-exponential constant for the deactivation energy}
 
 \item{eh}{de-activation energy (eV)}
 }
 \description{
-Hinshelwood 1947 model
+Hinshelwood for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate=a \cdot exp^{\frac{-E}{k \cdot T}} - b \cdot exp^\frac{-E_h}{k \cdot T}}{%
+rate = a.exp(-e/k.temp) - b.exp(-eh/k.temp)}
 }
 \examples{
 # load in data

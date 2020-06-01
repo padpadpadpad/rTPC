@@ -1,12 +1,15 @@
-#' Hinshelwood 1947 model
+#' Hinshelwood for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
-#' @param a pre-exponential factor
+#' @param a pre-exponential constant for the activation energy
 #' @param e activation energy (eV)
-#' @param b pre-exponential factor
+#' @param b pre-exponential constant for the deactivation energy
 #' @param eh de-activation energy (eV)
 #' @author Daniel Padfield
 #' @references Hinshelwood C.N. The Chemical Kinetics of the Bacterial Cell. Oxford University Press. (1947)
+#' @details Equation:
+#' \deqn{rate=a \cdot exp^{\frac{-E}{k \cdot T}} - b \cdot exp^\frac{-E_h}{k \cdot T}}{%
+#' rate = a.exp(-e/k.temp) - b.exp(-eh/k.temp)}
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')

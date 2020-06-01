@@ -1,11 +1,14 @@
-#' Flinn 1991 model for fitting thermal performance curves
+#' Flinn model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
-#' @param a parameter that defines the height
-#' @param b parameter that describes the slope of the increase
-#' @param c parameter that describes the position and steepness of the decline
+#' @param a parameter that controls the height of the curve
+#' @param b parameter that controls the slope of the initial increase of the curve
+#' @param c parameter that controls the position and steepness of the decline of the curve
 #' @author Daniel Padfield
 #' @references Flinn PW Temperature-dependent functional response of the parasitoid Cephalonomia waterstoni (Gahan) (Hymenoptera, Bethylidae) attacking rusty grain beetle larvae (Coleoptera, Cucujidae). Environmental Entomology, 20, 872–876, (1991)
+#' @details Equation:
+#' \deqn{rate=Rate = \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
+#' rate = 1 / (1 + a + b.temp + c.temp^2)}
 #' @examples
 #' \dontrun{
 #' # load in data

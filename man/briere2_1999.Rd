@@ -2,7 +2,7 @@
 % Please edit documentation in R/briere2_1999.R
 \name{briere2_1999}
 \alias{briere2_1999}
-\title{Briere2 model for fitting thermal performance curves}
+\title{Briere2 et al. model for fitting thermal performance curves}
 \usage{
 briere2_1999(temp, tmin, tmax, a, b)
 }
@@ -18,7 +18,12 @@ briere2_1999(temp, tmin, tmax, a, b)
 \item{b}{shape parameter to adjust the asymmetry of the curve}
 }
 \description{
-Briere2 model for fitting thermal performance curves
+Briere2 et al. model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - T)^{\frac{1}{b}}}{%
+rate = a.temp.(temp - tmin).(tmax - temp)^(1/b)}
 }
 \examples{
 # load in data
@@ -37,7 +42,7 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthro- pods. Environ. Entomol. 28, 22–29 (1999)
+Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthropods. Environmental Entomololgy, 28, 22–29 (1999)
 }
 \author{
 Daniel Padfield

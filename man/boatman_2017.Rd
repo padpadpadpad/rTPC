@@ -2,7 +2,7 @@
 % Please edit documentation in R/boatman_2017.R
 \name{boatman_2017}
 \alias{boatman_2017}
-\title{Boatman model for fitting thermal performance curves}
+\title{Boatman et al. model for fitting thermal performance curves}
 \usage{
 boatman_2017(temp, rmax, tmin, tmax, a, b)
 }
@@ -15,12 +15,17 @@ boatman_2017(temp, rmax, tmin, tmax, a, b)
 
 \item{tmax}{high temperature (ºC) at which rates become negative}
 
-\item{a}{shape parameter to adjust the asymmetry of the skewness}
+\item{a}{shape parameter to adjust the skewness of the curve}
 
-\item{b}{is a shape determining parameter, which alters the kurtosis}
+\item{b}{shape  parameter to adjust the kurtosis of the curve}
 }
 \description{
-Boatman model for fitting thermal performance curves
+Boatman et al. model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate= \mu _{max} \cdot \left(sin\bigg[\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg]\right)^{b}}{%
+rate = rmax.(sin(pi.((temp - tmin)/(tmax - tmin))^a))^b}
 }
 \examples{
 \dontrun{

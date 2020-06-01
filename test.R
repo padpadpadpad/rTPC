@@ -55,6 +55,13 @@ get_upper_lims(d_1$temp, d_1$rate, model_name = 'rezende_2019')
 get_lower_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoolhigh_1981')
 get_upper_lims(d_1$temp, d_1$rate, model_name = 'sharpeschoollow_1981')
 
+mod <- nls.multstart::nls_multstart(rate ~ hinshelwood_1947(temp = temp, a, e, b, eh),
+                                    data = d_1,
+                                    iter = 500,
+                                    start_lower = get_start_vals(d_1$temp, d_1$rate, model_name = 'hinshelwood_1947') * 0.8,
+                                    start_upper = get_start_vals(d_1$temp, d_1$rate, model_name = 'hinshelwood_1947') * 1.1,
+                                    supp_errors = 'Y')
+
 mod <- nls.multstart::nls_multstart(rate ~ delong_2017(temp_K = K, c, eb, ef, tm, ehc),
               data = d_1,
               iter = 500,

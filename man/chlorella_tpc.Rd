@@ -4,7 +4,8 @@
 \name{chlorella_tpc}
 \alias{chlorella_tpc}
 \title{Example metabolic thermal performance curves}
-\format{A data frame with 649 rows and 7 variables:
+\format{
+A data frame with 649 rows and 7 variables:
 \describe{
   \item{curve_id}{a unique value for each separate curve}
   \item{growth_temp}{the growth temperature that the culture was maintained at before measurements were taken (degrees centigrade)}
@@ -12,7 +13,8 @@
   \item{flux}{whether the curve depicts respiration or gross photosynthesis}
   \item{temp}{the assay temperature at which the metabolic rate was measured (degrees centigrade)}
   \item{rate}{the metabolic rate measured (micro mol O2 micro gram C-1 hr-1)}
-}}
+}
+}
 \source{
 Daniel Padfield
 }

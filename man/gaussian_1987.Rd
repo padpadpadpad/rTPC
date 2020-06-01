@@ -13,10 +13,15 @@ gaussian_1987(temp, rmax, topt, a)
 
 \item{topt}{optimum temperature (ºC)}
 
-\item{a}{related to full curve width}
+\item{a}{related to the full curve width}
 }
 \description{
 Gaussian model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate=\mu _{max} \cdot exp^{\bigg[-0.5 \left(\frac{|T-T_{opt}|}{a}\right)^2\bigg]}}{%
+rate = rmax.exp(-0.5.(abs(temp - topt)/a)^2)}
 }
 \examples{
 # load in data
@@ -35,7 +40,7 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Lynch, M., Gabriel, W., Environmental tolerance. American Naturalist. 129, 283–303. (1987)
+Lynch, M., Gabriel, W., Environmental tolerance. The American Naturalist. 129, 283–303. (1987)
 }
 \author{
 Daniel Padfield

@@ -2,7 +2,7 @@
 % Please edit documentation in R/quadratic_2008.R
 \name{quadratic_2008}
 \alias{quadratic_2008}
-\title{Quadratic model}
+\title{Quadratic model for fitting thermal performance curves}
 \usage{
 quadratic_2008(temp, a, b, c)
 }
@@ -16,7 +16,12 @@ quadratic_2008(temp, a, b, c)
 \item{c}{parameter with no biological meaning}
 }
 \description{
-Quadratic model
+Quadratic model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate=a + b \cdot T + c \cdot T^2}{%
+rate = a + b.temp + c.temp^2}
 }
 \examples{
 # load in data
@@ -35,7 +40,7 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Montagnes, David JS, et al. "Short‐term temperature change may impact freshwater carbon flux: a microbial perspective." Global Change Biology 14.12: 2823-2838. (2008)
+Montagnes, David JS, et al. Short‐term temperature change may impact freshwater carbon flux: a microbial perspective. Global Change Biology 14.12: 2823-2838. (2008)
 }
 \author{
 Daniel Padfield

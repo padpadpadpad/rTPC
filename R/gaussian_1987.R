@@ -3,9 +3,13 @@
 #' @param temp temperature in degrees centigrade
 #' @param rmax maximum rate at optimum temperature
 #' @param topt optimum temperature (ºC)
-#' @param a related to full curve width
+#' @param a related to the full curve width
 #' @author Daniel Padfield
-#' @references Lynch, M., Gabriel, W., Environmental tolerance. American Naturalist. 129, 283–303. (1987)
+#' @references Lynch, M., Gabriel, W., Environmental tolerance. The American Naturalist. 129, 283–303. (1987)
+#' @details Equation:
+#' \deqn{rate=\mu _{max} \cdot exp^{\bigg[-0.5 \left(\frac{|T-T_{opt}|}{a}\right)^2\bigg]}}{%
+#' rate = rmax.exp(-0.5.(abs(temp - topt)/a)^2)}
+#'
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')

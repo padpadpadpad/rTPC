@@ -2,14 +2,14 @@
 % Please edit documentation in R/oneill_1972.R
 \name{oneill_1972}
 \alias{oneill_1972}
-\title{O'Neill 1972 model for fitting thermal performance curves}
+\title{O'Neill model for fitting thermal performance curves}
 \usage{
 oneill_1972(temp, rmax, ctmax, topt, q10)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{rmax}{the rate at optimum temperature}
+\item{rmax}{maximum rate at optimum temperature}
 
 \item{ctmax}{high temperature (ºC) at which rates become negative}
 
@@ -18,7 +18,7 @@ oneill_1972(temp, rmax, ctmax, topt, q10)
 \item{q10}{defines the fold change in performance as a result of increasing the temperature by 10 ºC}
 }
 \description{
-O'Neill 1972 model for fitting thermal performance curves
+O'Neill model for fitting thermal performance curves
 }
 \examples{
 \dontrun{
@@ -38,7 +38,7 @@ summary(mod)
 est_params(mod)}
 }
 \references{
-O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge ,. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)
+O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)
 }
 \author{
 Daniel Padfield

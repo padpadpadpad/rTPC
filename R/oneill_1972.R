@@ -1,12 +1,12 @@
-#' O'Neill 1972 model for fitting thermal performance curves
+#' O'Neill model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
-#' @param rmax the rate at optimum temperature
+#' @param rmax maximum rate at optimum temperature
 #' @param ctmax high temperature (ºC) at which rates become negative
 #' @param topt optimum temperature (ºC)
 #' @param q10 defines the fold change in performance as a result of increasing the temperature by 10 ºC
 #' @author Daniel Padfield
-#' @references O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge ,. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)
+#' @references O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)
 #' @examples
 #' \dontrun{
 #' # load in data

@@ -2,21 +2,26 @@
 % Please edit documentation in R/flinn_1991.R
 \name{flinn_1991}
 \alias{flinn_1991}
-\title{Flinn 1991 model for fitting thermal performance curves}
+\title{Flinn model for fitting thermal performance curves}
 \usage{
 flinn_1991(temp, a, b, c)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{a}{parameter that defines the height}
+\item{a}{parameter that controls the height of the curve}
 
-\item{b}{parameter that describes the slope of the increase}
+\item{b}{parameter that controls the slope of the initial increase of the curve}
 
-\item{c}{parameter that describes the position and steepness of the decline}
+\item{c}{parameter that controls the position and steepness of the decline of the curve}
 }
 \description{
-Flinn 1991 model for fitting thermal performance curves
+Flinn model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate=Rate = \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
+rate = 1 / (1 + a + b.temp + c.temp^2)}
 }
 \examples{
 \dontrun{
