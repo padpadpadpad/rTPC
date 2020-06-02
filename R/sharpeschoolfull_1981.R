@@ -1,16 +1,21 @@
-#' Full Sharpe Schoolfield Model
+#' Full Sharpe-Schoolfield model for fitting thermal performance curves
 #'
 #'
 #' @param temp temperature in degrees centigrade
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param el low temperature de-activation energy (eV)
-#' @param tl temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures (ºC)
-#' @param eh high temperature de-activation energy (eV) (ºC)
-#' @param th temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures (ºC)
-#' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures (ºC)
+#' @param tl temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures
+#' @param eh high temperature de-activation energy (eV)
+#' @param th temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures
+#' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures
 #' @author Daniel Padfield
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
+#' @details Equation:
+#' \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref}})}}{1+ exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})} + exp^{\frac{e_h}{k}(\frac{1}{t_h}-\frac{1}{temp + 273.15})}}}{%
+#' rate = r_tref.exp(e/k.(1/tref - 1/(temp + 273.15))) / (1 + exp(-el/k.(1/(tl + 273.15) - 1/(temp + 273.15))) + exp(eh/k.(1/(th + 273.15) - 1/(temp + 273.15))))}
+#'
+#' where k is Boltzmann's constant with a value of 8.62e-05.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')

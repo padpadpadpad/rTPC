@@ -2,7 +2,7 @@
 % Please edit documentation in R/sharpeschoolfull_1981.R
 \name{sharpeschoolfull_1981}
 \alias{sharpeschoolfull_1981}
-\title{Full Sharpe Schoolfield Model}
+\title{Full Sharpe-Schoolfield model for fitting thermal performance curves}
 \usage{
 sharpeschoolfull_1981(temp, r_tref, e, el, tl, eh, th, tref)
 }
@@ -15,16 +15,22 @@ sharpeschoolfull_1981(temp, r_tref, e, el, tl, eh, th, tref)
 
 \item{el}{low temperature de-activation energy (eV)}
 
-\item{tl}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures (ºC)}
+\item{tl}{temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures}
 
-\item{eh}{high temperature de-activation energy (eV) (ºC)}
+\item{eh}{high temperature de-activation energy (eV)}
 
-\item{th}{temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures (ºC)}
+\item{th}{temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures}
 
-\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures (ºC)}
+\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures}
 }
 \description{
-Full Sharpe Schoolfield Model
+Full Sharpe-Schoolfield model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref}})}}{1+ exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})} + exp^{\frac{e_h}{k}(\frac{1}{t_h}-\frac{1}{temp + 273.15})}}}{%
+rate = r_tref.exp(e/k.(1/tref - 1/(temp + 273.15))) / (1 + exp(-el/k.(1/(tl + 273.15) - 1/(temp + 273.15))) + exp(eh/k.(1/(th + 273.15) - 1/(temp + 273.15))))}
+where k is Boltzmann's constant with a value of 8.62e-05
 }
 \examples{
 # load in data

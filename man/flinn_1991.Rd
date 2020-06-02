@@ -20,7 +20,7 @@ Flinn model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate=Rate = \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
+\deqn{rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
 rate = 1 / (1 + a + b.temp + c.temp^2)}
 }
 \examples{

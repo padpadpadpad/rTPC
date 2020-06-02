@@ -7,7 +7,7 @@
 #' @author Daniel Padfield
 #' @references Flinn PW Temperature-dependent functional response of the parasitoid Cephalonomia waterstoni (Gahan) (Hymenoptera, Bethylidae) attacking rusty grain beetle larvae (Coleoptera, Cucujidae). Environmental Entomology, 20, 872–876, (1991)
 #' @details Equation:
-#' \deqn{rate=Rate = \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
+#' \deqn{rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
 #' rate = 1 / (1 + a + b.temp + c.temp^2)}
 #' @examples
 #' \dontrun{
