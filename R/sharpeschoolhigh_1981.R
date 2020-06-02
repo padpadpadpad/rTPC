@@ -1,14 +1,22 @@
-#' Sharpe Schoolfield Model for high temperature inactivation
-#'
+#' Sharpe-Schoolfield model (high temperature inactivation only) for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param eh high temperature de-activation energy (eV)
-#' @param th temperature at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures
-#' @param tref standardisation temperature in degrees centigrade
+#' @param th temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures
+#' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures
 #' @author Daniel Padfield
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)
+#' @details Equation:
+#' \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref} + 273.15})}}{1 + exp^{\frac{e_h}{k}(\frac{1}{t_h}-\frac{1}{temp + 273.15})}}}{%
+#' rate = r_tref.exp(e/k.(1/tref - 1/(temp + 273.15))) / (1 + exp(eh/k.(1/(th + 273.15) - 1/(temp + 273.15))))}
+#'
+#' where k is Boltzmann's constant with a value of 8.62e-05.
+#'
+#' Start values in \code{get_start_vals} are derived from the data.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')

@@ -12,10 +12,14 @@
 #' @author Daniel Padfield
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
 #' @details Equation:
-#' \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref}})}}{1+ exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})} + exp^{\frac{e_h}{k}(\frac{1}{t_h}-\frac{1}{temp + 273.15})}}}{%
+#' \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref} + 273.15})}}{1+ exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})} + exp^{\frac{e_h}{k}(\frac{1}{t_h}-\frac{1}{temp + 273.15})}}}{%
 #' rate = r_tref.exp(e/k.(1/tref - 1/(temp + 273.15))) / (1 + exp(-el/k.(1/(tl + 273.15) - 1/(temp + 273.15))) + exp(eh/k.(1/(th + 273.15) - 1/(temp + 273.15))))}
 #'
 #' where k is Boltzmann's constant with a value of 8.62e-05.
+#'
+#' Start values in \code{get_start_vals} are derived from the data.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
