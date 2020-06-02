@@ -35,7 +35,7 @@ where k is Boltzmann's constant with a value of 8.62e-05.
 
 Start values in \code{get_start_vals} are derived from the data.
 
-Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based  extreme values that are unlikely to occur in ecological settings.
 }
 \examples{
 # load in data

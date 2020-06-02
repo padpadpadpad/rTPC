@@ -17,7 +17,7 @@ sharpeschoolhigh_1981(temp, r_tref, e, eh, th, tref)
 
 \item{th}{temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures}
 
-\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures}
+\item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures}
 }
 \description{
 Sharpe-Schoolfield model (high temperature inactivation only) for fitting thermal performance curves
@@ -31,7 +31,7 @@ where k is Boltzmann's constant with a value of 8.62e-05.
 
 Start values in \code{get_start_vals} are derived from the data.
 
-Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based  extreme values that are unlikely to occur in ecological settings.
 }
 \examples{
 # load in data
