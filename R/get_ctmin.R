@@ -1,9 +1,8 @@
-#' Estimate the critical thermal minimum
+#' Estimate the critical thermal minimum of a thermal performance curve
 #'
-#' @description Estimates the critical thermal minimum from a model model of a thermal performance curve.
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @author Daniel Padfield
-#' @details Optimum temperature is calculated by predicting over a temperature range 50 degrees beyond the minimum and maximum value in the dataset. The value closest to 0 is then extracted. When this is impossible due to the curve formula (i.e the Sharpe-Schoolfield models), the temperature where the rate is 5% of the maximum rate is estimated. Predictions are done every 0.001 temperature value so the estimate of the crticial thermal minimum should be accurate up to 0.001 ºC/K
+#' @details Optimum temperature is calculated by predicting over a temperature range 50 degrees lower than the minimum value in the dataset. The predicted rate value closest to 0 is then extracted. When this is impossible due to the curve formula (i.e the Sharpe-Schoolfield model), the temperature where the rate is 5 percent of the maximum rate is estimated. Predictions are done every 0.001 ºC value so the estimate of the critical thermal minimum should be accurate up to 0.001 ºC.
+#' @return Estimate of critical thermal minimum (ºC)
 #'
 #' @export get_ctmin
 
