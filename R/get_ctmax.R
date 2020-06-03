@@ -1,10 +1,8 @@
-#' Estimate the critical thermal maximum
+#' Estimate the critical thermal maximum of a thermal performance curve
 #'
-#' @description Estimates the critical thermal maximum from a model model of a thermal performance curve.
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @author Daniel Padfield
-#' @details Optimum temperature is calculated by predicting over a temperature range 50 degrees beyond the maximum value in the dataset. The value closest to 0 is then extracted. When this is impossible due to the curve formula (i.e the Sharpe-Schoolfield models), the temperature where the rate is 5% of the maximum rate is estimated. Predictions are done every 0.001 temperature value so the estimate of the crticial thermal maximum should be accurate up to 0.001 ºC/K
-#'
+#' @details Critical thermal maximum is calculated by predicting over a temperature range 50 ºC beyond the maximum value in the dataset. The predicted rate value closest to 0 is then extracted. When this is impossible due to the curve formula (i.e the Sharpe-Schoolfield model), the temperature where the rate is 5% of the maximum rate is estimated. Predictions are done every 0.001 temperature value so the estimate of the critical thermal maximum should be accurate up to 0.001 ºC.
+#' @return estimate of critical thermal maximum (ºC)
 #' @export get_ctmax
 
 get_ctmax <- function(model){
@@ -51,8 +49,6 @@ get_ctmax <- function(model){
   # if it is infinite - set it to 5% of rate
   newdata_extrap <- newdata_extrap[newdata_extrap$preds <= 0.05 * rmax,]
   if(is.infinite(ctmax)){ctmax <- min(newdata_extrap[,param_ind], na.rm = TRUE)}
-
-  # if this is infinite, not really sure
 
   return(ctmax)
 }
