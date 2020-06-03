@@ -4,12 +4,16 @@
 #' @param rmax maximum rate at optimum temperature
 #' @param topt optimum temperature (ºC)
 #' @param a related to the full curve width
-#' @author Daniel Padfield
 #' @references Lynch, M., Gabriel, W., Environmental tolerance. The American Naturalist. 129, 283–303. (1987)
 #' @details Equation:
-#' \deqn{rate=\mu _{max} \cdot exp^{\bigg[-0.5 \left(\frac{|T-T_{opt}|}{a}\right)^2\bigg]}}{%
+#' \deqn{rate = r_{max} \cdot exp^{\bigg[-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg]}}{%
 #' rate = rmax.exp(-0.5.(abs(temp - topt)/a)^2)}
 #'
+#' Start values in \code{get_start_vals} are derived from the data
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model easy to fit.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
