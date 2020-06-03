@@ -184,4 +184,11 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
   }
 
+  if(model_name == 'johnsonlewin_1946'){
+    r0 = min(d$y, na.rm = TRUE) / 100
+    e = 0
+    eh = 0
+    topt = min(d$x, na.rm = TRUE)
+    return(c(r0 = r0, e = e, eh = eh, topt = topt))
+  }
 }

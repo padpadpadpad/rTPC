@@ -2,7 +2,7 @@
 % Please edit documentation in R/johnsonlewin_1946.R
 \name{johnsonlewin_1946}
 \alias{johnsonlewin_1946}
-\title{Johnson-Lewin model}
+\title{Johnson-Lewin model for fitting thermal performance curves}
 \usage{
 johnsonlewin_1946(temp, r0, e, eh, topt)
 }
@@ -18,7 +18,21 @@ johnsonlewin_1946(temp, r0, e, eh, topt)
 \item{topt}{optimum temperature (ºC)}
 }
 \description{
-Johnson-Lewin model
+Johnson-Lewin model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate= \frac{r_0 \cdot exp^{\frac{-e}{k\cdot (temp + 273.15)}}}{1 + exp^{-\frac{1}{k(temp + 273.15)}} \cdot \bigg[e_h -\big(\frac{E_h}{(t_{opt} - 273.15)}\big) + k \cdot ln\big(\frac{e}{e_h - e}\big)\bigg]}}{%
+rate = (r0.exp(-e/(k.(temp + 273.15)))) / ((1 + exp((-1/(k.(temp + 273.15)))* (eh - ((eh/(topt - 273.15)) + k.log(e/(eh - e))).(temp + 273.15)))))}
+
+where \code{k} is Boltzmann's constant with a value of 8.62e-05.
+
+Start values in \code{get_start_vals} are derived from the data.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based  extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -37,8 +51,5 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Johnson, Frank H., and Isaac Lewin. "The growth rate of E. coli in relation to temperature, quinine and coenzyme." Journal of Cellular and Comparative Physiology 28.1 (1946): 47-75.
-}
-\author{
-Daniel Padfield
+Johnson, Frank H., and Isaac Lewin. The growth rate of E. coli in relation to temperature, quinine and coenzyme. Journal of Cellular and Comparative Physiology 28.1 (1946): 47-75.
 }

@@ -184,4 +184,11 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
   }
 
+  if(model_name == 'johnsonlewin_1946'){
+    r0 = max(d$y, na.rm = TRUE) / 100
+    e = 20
+    eh = 40
+    topt = max(d$x, na.rm = TRUE) * 10
+    return(c(r0 = r0, e = e, eh = eh, topt = topt))
+  }
 }
