@@ -2,7 +2,7 @@
 % Please edit documentation in R/boatman_2017.R
 \name{boatman_2017}
 \alias{boatman_2017}
-\title{Boatman et al. model for fitting thermal performance curves}
+\title{Boatman model for fitting thermal performance curves}
 \usage{
 boatman_2017(temp, rmax, tmin, tmax, a, b)
 }
@@ -20,12 +20,19 @@ boatman_2017(temp, rmax, tmin, tmax, a, b)
 \item{b}{shape  parameter to adjust the kurtosis of the curve}
 }
 \description{
-Boatman et al. model for fitting thermal performance curves
+Boatman model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate= \mu _{max} \cdot \left(sin\bigg[\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg]\right)^{b}}{%
+\deqn{rate= r_{max} \cdot \left(sin\bigg[\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg]\right)^{b}}{%
 rate = rmax.(sin(pi.((temp - tmin)/(tmax - tmin))^a))^b}
+
+Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 \dontrun{
@@ -47,7 +54,4 @@ est_params(mod)}
 }
 \references{
 Boatman, T. G., Lawson, T., & Geider, R. J. A key marine diazotroph in a changing ocean: The interacting effects of temperature, CO2 and light on the growth of Trichodesmium erythraeum IMS101. PLoS ONE, 12, e0168796 (2017)
-}
-\author{
-Daniel Padfield
 }
