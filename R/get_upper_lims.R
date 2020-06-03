@@ -173,4 +173,15 @@ get_upper_lims <- function(x, y, model_name) {
     b = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE) * 100
     c = 100
     return(c(a=a, topt = topt, b=b, c=c))}
+
+  if(model_name == 'delong_2017'){
+    c =  14.45 * 100
+    eb = 0.58 * 100
+    ef = 2.215 * 100
+    ehc = 0.085 * 100
+    tm = max(d$x, na.rm = TRUE) * 100
+
+    return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+  }
+
 }

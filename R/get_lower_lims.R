@@ -174,4 +174,14 @@ get_lower_lims <- function(x, y, model_name) {
     c = 0
     return(c(a=a, topt = topt, b=b, c=c))}
 
+  if(model_name == 'delong_2017'){
+    c =  0
+    eb = 0
+    ef = 0
+    tm = 0
+    ehc = 0
+
+    return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+  }
+
 }

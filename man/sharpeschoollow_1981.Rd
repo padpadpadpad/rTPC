@@ -27,7 +27,7 @@ Equation:
 \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref} + 273.15})}}{1 + exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})}}}{%
 rate = r_tref.exp(e/k.(1/tref - 1/(temp + 273.15))) / (1 + exp(-el/k.(1/(tl + 273.15) - 1/(temp + 273.15))))}
 
-where k is Boltzmann's constant with a value of 8.62e-05.
+where \code{k} is Boltzmann's constant with a value of 8.62e-05.
 
 Start values in \code{get_start_vals} are derived from the data.
 

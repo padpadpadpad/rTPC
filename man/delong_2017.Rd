@@ -2,25 +2,39 @@
 % Please edit documentation in R/delong_2017.R
 \name{delong_2017}
 \alias{delong_2017}
-\title{deLong enzyme-assisted Arrhenius model}
+\title{deLong enzyme-assisted Arrhenius model for fitting thermal performance curves}
 \usage{
 delong_2017(temp_k, c, eb, ef, tm, ehc)
 }
 \arguments{
-\item{temp_k}{temperature in degrees Kelvin}
-
 \item{c}{potential reaction rate}
 
 \item{eb}{baseline energy needed for the reaction to occur (eV)}
 
-\item{ef}{temperature dependence of folding the enzymes used in the metabolic reaction, relative to the melting temperature}
+\item{ef}{temperature dependence of folding the enzymes used in the metabolic reaction, relative to the melting temperature (eV)}
 
-\item{tm}{melting temperature in degrees Kelvin}
+\item{tm}{melting temperature in degrees centigrade}
 
-\item{ehc}{temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature}
+\item{ehc}{temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature (eV)}
+
+\item{temp}{temperature in degrees centigrade}
 }
 \description{
-deLong enzyme-assisted Arrhenius model
+deLong enzyme-assisted Arrhenius model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate = c \cdot exp\frac{-(e_b-(e_f(1-\frac{temp - 273.15}{t_m})+e_{hc} \cdot ((temp - 273.15) - t_m - (temp - 273.15) \cdot ln(\frac{temp - 273.15}{t_m}))))}{k \cdot (temp - 273.15)}}{%
+rate = c.exp(-(eb-(ef.(1-((temp + 273.15)/tm))+ehc.((temp + 273.15)-tm-((temp + 273.15).log((temp + 273.15)/tm)))))/(k.(temp + 273.15)))}
+
+where \code{k} is Boltzmann's constant with a value of 8.62e-05 and \code{tm} is actually \code{tm - 273.15}
+
+Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 \dontrun{# load in data
@@ -40,7 +54,4 @@ est_params(mod)}
 }
 \references{
 DeLong, John P., et al. "The combined effects of reactant kinetics and enzyme stability explain the temperature dependence of metabolic rates." Ecology and evolution 7.11 (2017): 3940-3950.
-}
-\author{
-Daniel Padfield
 }
