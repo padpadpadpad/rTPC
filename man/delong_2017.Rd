@@ -4,9 +4,11 @@
 \alias{delong_2017}
 \title{deLong enzyme-assisted Arrhenius model for fitting thermal performance curves}
 \usage{
-delong_2017(temp_k, c, eb, ef, tm, ehc)
+delong_2017(temp, c, eb, ef, tm, ehc)
 }
 \arguments{
+\item{temp}{temperature in degrees centigrade}
+
 \item{c}{potential reaction rate}
 
 \item{eb}{baseline energy needed for the reaction to occur (eV)}
@@ -16,8 +18,6 @@ delong_2017(temp_k, c, eb, ef, tm, ehc)
 \item{tm}{melting temperature in degrees centigrade}
 
 \item{ehc}{temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature (eV)}
-
-\item{temp}{temperature in degrees centigrade}
 }
 \description{
 deLong enzyme-assisted Arrhenius model for fitting thermal performance curves

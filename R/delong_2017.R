@@ -35,11 +35,9 @@
 #' est_params(mod)}
 #' @export delong_2017
 
-delong_2017 <- function(temp_k, c, eb, ef, tm, ehc){
-  delong_2017 <- function(temp_k, c, eb, ef, tm, ehc){
+delong_2017 <- function(temp, c, eb, ef, tm, ehc){
     k <- 8.62e-05
 
     return( c*exp(-(eb-(ef*(1-((temp + 273.15)/(tm-273.15)))+ehc*((temp + 273.15)-(tm - 273.15)-((temp + 273.15)*log((temp + 273.15)/(tm - 273.15))))))/(k*(temp + 273.15))))
   }
-}
 
