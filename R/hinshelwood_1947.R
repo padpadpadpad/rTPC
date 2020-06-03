@@ -1,4 +1,4 @@
-#' Hinshelwood for fitting thermal performance curves
+#' Hinshelwood model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param a pre-exponential constant for the activation energy
@@ -8,8 +8,16 @@
 #' @author Daniel Padfield
 #' @references Hinshelwood C.N. The Chemical Kinetics of the Bacterial Cell. Oxford University Press. (1947)
 #' @details Equation:
-#' \deqn{rate=a \cdot exp^{\frac{-E}{k \cdot T}} - b \cdot exp^\frac{-E_h}{k \cdot T}}{%
-#' rate = a.exp(-e/k.temp) - b.exp(-eh/k.temp)}
+#' \deqn{rate=a \cdot exp^{\frac{-e}{k \cdot (temp + 273.15)}} - b \cdot exp^\frac{-e_h}{k \cdot (temp + 273.15)}}{%
+#' rate = a.exp(-e/k.(temp + 273.15)) - b.exp(-eh/k.(temp + 273.15))}
+#'
+#' where \code{k} is Boltzmann's constant with a value of 8.62e-05
+#'
+#' Start values in \code{get_start_vals} are taken from the literature.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model difficult to fit.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
