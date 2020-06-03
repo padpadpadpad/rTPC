@@ -2,16 +2,19 @@
 % Please edit documentation in R/get_eh.R
 \name{get_eh}
 \alias{get_eh}
-\title{Estimate the deactivation energy}
+\title{Estimate the deactivation energy of a thermal performance curve}
 \usage{
 get_eh(model)
 }
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
-\description{
-Estimates the deactivation energy of a given thermal performance curve
+\value{
+Estimate of activation energy (eV)
 }
-\author{
-Daniel Padfield
+\description{
+Estimate the deactivation energy of a thermal performance curve
+}
+\details{
+fits a modified-Boltzmann equation to all raw data beyond the optimum temperature (ºC; as estimated by \code{get_topt}).
 }
