@@ -1,7 +1,7 @@
 #' Estimate the activation energy of a thermal performance curve
 #'
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @details fits a Boltzmann equation to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
+#' @details fits a modified-Boltzmann equation to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
 #' @return Estimate of activation energy (eV)
 #' @export get_e
 
