@@ -16,8 +16,9 @@
 #' Start values in \code{get_start_vals} are derived from the data.
 #'
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based  extreme values that are unlikely to occur in ecological settings.
-#' @note Generally we found this model easy to fit.
+#' @note Generally we found this model difficult to fit.
 #' @examples
+#' \dontrun{
 #' # load in data
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
@@ -31,7 +32,7 @@
 #'
 #' # look at model
 #' summary(mod)
-#' est_params(mod)
+#' est_params(mod)}
 #' @export johnsonlewin_1946
 
 johnsonlewin_1946 <- function(temp, r0, e, eh, topt){
