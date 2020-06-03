@@ -1,13 +1,21 @@
-#' Jöhnk 2008 function
+#' Jöhnk 2008 model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax the rate at optimum temperature
-#' @param topt optimum temperatute
+#' @param topt optimum temperatute (ºC)
 #' @param a parameter with no biological meaning
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
-#' @author Daniel Padfield
-#' @references Joehnk, Klaus D., et al. "Summer heatwaves promote blooms of harmful cyanobacteria." Global change biology 14.3: 495-512 (2008)
+#' @details Equation:
+#' \deqn{rate=r_{max} \bigg[1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{ln(c)}(c^{temp-t_{opt}} -1)\bigg)\bigg]}{%
+#' rate = rmax.(1 + a.((b^(temp - topt) - 1) - (log(b)/log(c)).(c^(temp - topt) - 1)))}
+#'
+#' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model easy to fit.
+#' @references Joehnk, Klaus D., et al. Summer heatwaves promote blooms of harmful cyanobacteria. Global change biology 14.3: 495-512 (2008)
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')

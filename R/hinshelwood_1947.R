@@ -5,7 +5,6 @@
 #' @param e activation energy (eV)
 #' @param b pre-exponential constant for the deactivation energy
 #' @param eh de-activation energy (eV)
-#' @author Daniel Padfield
 #' @references Hinshelwood C.N. The Chemical Kinetics of the Bacterial Cell. Oxford University Press. (1947)
 #' @details Equation:
 #' \deqn{rate=a \cdot exp^{\frac{-e}{k \cdot (temp + 273.15)}} - b \cdot exp^\frac{-e_h}{k \cdot (temp + 273.15)}}{%

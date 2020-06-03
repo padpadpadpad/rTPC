@@ -53,6 +53,3 @@ est_params(mod)
 \references{
 Hinshelwood C.N. The Chemical Kinetics of the Bacterial Cell. Oxford University Press. (1947)
 }
-\author{
-Daniel Padfield
-}
