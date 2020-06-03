@@ -22,6 +22,13 @@ Flinn model for fitting thermal performance curves
 Equation:
 \deqn{rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%
 rate = 1 / (1 + a + b.temp + c.temp^2)}
+
+Start values in \code{get_start_vals} are derived from previous methods from the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 \dontrun{
@@ -42,7 +49,4 @@ est_params(mod)}
 }
 \references{
 Flinn PW Temperature-dependent functional response of the parasitoid Cephalonomia waterstoni (Gahan) (Hymenoptera, Bethylidae) attacking rusty grain beetle larvae (Coleoptera, Cucujidae). Environmental Entomology, 20, 872–876, (1991)
-}
-\author{
-Daniel Padfield
 }
