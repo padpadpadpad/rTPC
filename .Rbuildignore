@@ -4,5 +4,6 @@
 ^test\.R$
 ^\.travis\.yml$
 ^README_cache/*$
-^/logos/*
 ^header\.md$
+^hex_sticker\.R$
+^logos/hex_sticker\.png$

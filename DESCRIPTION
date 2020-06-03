@@ -3,8 +3,8 @@ Type: Package
 Title: Functions for fitting thermal performance curves
 Version: 0.1.0
 Authors@R: c(
-    person(given = "Daniel", family = "Padfield", email = "d.padfield@exeter.ac.uk", role = c("aut", "cre")),
-    person(family = "O'Sullivan", given = "Hannah", email = "hjosullivan123@gmail.com", role = "aut", "cre"))
+    person("Daniel", "Padfield", email = "d.padfield@exeter.ac.uk", role = c("aut", "cre")),
+    person("Hannah", "O'Sullivan", email = "hjosullivan123@gmail.com", role = "aut", "cre"))
 Maintainer: Daniel Padfield <d.padfield@exeter.ac.uk>
 Description: Package to help fit thermal performance curves to physiological data.
 License: GPL-3
