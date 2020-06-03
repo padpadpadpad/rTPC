@@ -2,16 +2,19 @@
 % Please edit documentation in R/get_q10.R
 \name{get_q10}
 \alias{get_q10}
-\title{Estimate the Q10 value of a TPC}
+\title{Estimate the q10 value of a thermal performance curve}
 \usage{
 get_q10(model)
 }
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
-\description{
-Estimates the Q10 value of a given thermal performance curve
+\value{
+q10 value
 }
-\author{
-Daniel Padfield
+\description{
+Estimate the q10 value of a thermal performance curve
+}
+\details{
+Fits the q10 portion of \code{rezende_2019} to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
 }

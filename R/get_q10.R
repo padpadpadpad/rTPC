@@ -1,8 +1,8 @@
-#' Estimate the Q10 value of a TPC
+#' Estimate the q10 value of a thermal performance curve
 #'
-#' @description Estimates the Q10 value of a given thermal performance curve
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @author Daniel Padfield
+#' @details Fits the q10 portion of \code{rezende_2019} to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
+#' @return q10 value
 #' @export get_q10
 
 get_q10 <- function(model){

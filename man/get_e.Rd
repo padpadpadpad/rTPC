@@ -16,5 +16,5 @@ Estimate of activation energy (eV)
 Estimate the activation energy of a thermal performance curve
 }
 \details{
-fits a modified-Boltzmann equation to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
+Fits a modified-Boltzmann equation to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
 }
