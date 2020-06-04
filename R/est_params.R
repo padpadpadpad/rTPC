@@ -1,10 +1,20 @@
-#' Estimate extra parameters
+#' Estimate extra parameters of a thermal performance curve
 #'
-#' @description Estimates extra parameters that are commonly calculated from TPCs
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @author Daniel Padfield
-#' @details Currently calculates maximum rate (rmax), optimum temperature (topt), critical thermal maximum (ctmax) and minimum (ctmin), thermal tolerance, thermal safety margin and the skewness of the curve. If any parameters cannot be calculated they will return NA.
+#' @details Currently estimates:
+#' * maximum rate (rmax)
+#' * optimum temperature (topt)
+#' * critical thermal maximum (ctmax)
+#' * critical thermal minimum (ctmin)
+#' * activation energy (e)
+#' * deactivation energy (eh)
+#' * q10 value
+#' * thermal safety margin
+#' * thermal tolerance
+#' * skewness
 #'
+#' If any parameters cannot be calculated for a thermal performance curve, they will return NA.
+#' @md
 #' @export est_params
 
 est_params <- function(model){
@@ -15,10 +25,10 @@ est_params <- function(model){
                   e = tryCatch(rTPC::get_e(model), error = function(err) NA),
                   eh = tryCatch(rTPC::get_eh(model), error = function(err) NA),
                   q10 = tryCatch(rTPC::get_q10(model), error = function(err) NA),
+                  thermal_safety_margin = tryCatch(rTPC::get_thermalsafetymargin(model), error = function(err) NA),
+                  tolerance_range = tryCatch(rTPC::get_tolerancerange(model), error = function(err) NA),
+                  skewness = tryCatch(rTPC::get_skewness(model), error = function(err) NA),
                   stringsAsFactors = FALSE)
-  t$thermal_safety_margin <- tryCatch(t$ctmax - t$topt, error = function(err) NA)
-  t$tolerance_range <- tryCatch(t$ctmax - t$ctmin, error = function(err) NA)
-  t$skewness <- tryCatch(rTPC::get_skewness(model), error = function(err) NA)
 
   return(t)
 }

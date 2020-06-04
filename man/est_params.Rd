@@ -2,7 +2,7 @@
 % Please edit documentation in R/est_params.R
 \name{est_params}
 \alias{est_params}
-\title{Estimate extra parameters}
+\title{Estimate extra parameters of a thermal performance curve}
 \usage{
 est_params(model)
 }
@@ -10,11 +10,22 @@ est_params(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \description{
-Estimates extra parameters that are commonly calculated from TPCs
+Estimate extra parameters of a thermal performance curve
 }
 \details{
-Currently calculates maximum rate (rmax), optimum temperature (topt), critical thermal maximum (ctmax) and minimum (ctmin), thermal tolerance, thermal safety margin and the skewness of the curve. If any parameters cannot be calculated they will return NA.
+Currently estimates:
+\itemize{
+\item maximum rate (rmax)
+\item optimum temperature (topt)
+\item critical thermal maximum (ctmax)
+\item critical thermal minimum (ctmin)
+\item activation energy (e)
+\item deactivation energy (eh)
+\item q10 value
+\item thermal safety margin
+\item thermal tolerance
+\item skewness
 }
-\author{
-Daniel Padfield
+
+If any parameters cannot be calculated for a thermal performance curve, they will return NA.
 }
