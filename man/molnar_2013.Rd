@@ -29,6 +29,3 @@ Molnar model for mortality rate
 \references{
 Molnár, P. K., Kutz, S. J., Hoar, B. M., Dobson, A. P., Metabolic approaches to understanding climate change impacts on seasonal host-macroparasite dynamics. Ecology Letters. 16, 9–21 (2013)
 }
-\author{
-Hannah O'Sullivan
-}

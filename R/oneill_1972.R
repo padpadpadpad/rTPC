@@ -5,7 +5,19 @@
 #' @param ctmax high temperature (ºC) at which rates become negative
 #' @param topt optimum temperature (ºC)
 #' @param q10 defines the fold change in performance as a result of increasing the temperature by 10 ºC
-#' @author Daniel Padfield
+#' @details Equation:
+#' \deqn{rate = r_{max} \cdot \bigg(\frac{ct_{max} - temp}{ct_{max} - t_{opt}}\bigg)^{x} \cdot exp^{x \cdot \frac{temp - t_{opt}}{ct_{max} - t_{opt}}}}{%
+#' rate = rmax.(ctmax - temp / ctmax - topt)^2.exp(x.(temp-topt/ctmax-topt))}
+#' \deqn{where: x = \frac{w^{2}}{400}\cdot\bigg(1 + \sqrt{1 + \frac{40}{w}}\bigg)^{2}}{%
+#' where x = (w^2/400).(1 + sqrt(1+(40/w))^2)}
+#' \deqn{and:\ W = (q_{10} - 1)\cdot (ct_{max} - t_{opt})}{%
+#' and: w = (q10 - 1)*(ctmax - topt)}
+#'
+#' Start values in \code{get_start_vals} are derived from the data and previous values in the literature
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model easy to fit.
 #' @references O’Neill, R.V., Goldstein, R.A., Shugart, H.H., Mankin, J.B. Terrestrial Ecosystem Energy Model. Eastern Deciduous Forest Biome Memo Report Oak Ridge. The Environmental Sciences Division of the Oak Ridge National Laboratory. (1972)
 #' @examples
 #' \dontrun{
