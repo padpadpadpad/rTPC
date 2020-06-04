@@ -2,7 +2,7 @@
 % Please edit documentation in R/lactin2_1995.R
 \name{lactin2_1995}
 \alias{lactin2_1995}
-\title{Lactin2 function}
+\title{Lactin2 model for fitting thermal performance curves}
 \usage{
 lactin2_1995(temp, a, b, tmax, delta_t)
 }
@@ -13,12 +13,24 @@ lactin2_1995(temp, a, b, tmax, delta_t)
 
 \item{b}{constant that determines the height of the overall curve}
 
-\item{tmax}{changes the temperature at which the curve begins to decelerate beyond the optimum}
+\item{tmax}{the temperature at which the curve begins to decelerate beyond the optimum (ºC)}
 
-\item{delta_t}{thermal safety margin}
+\item{delta_t}{thermal safety margin (ºC)}
 }
 \description{
-Lactin2 function
+Lactin2 model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate= = exp^{a \cdot temp} - exp^{a \cdot t_{max} - \bigg(\frac{t_{max} - temp}{\delta _{t}}\bigg)} + b}{%
+rate =  exp(a.temp) - exp(a.tmax - ((tmax - temp) / delta_t)) + b}
+
+Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -37,8 +49,5 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environ. Entomol. 24, 69-75 (1995)
-}
-\author{
-Daniel Padfield
+Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environmental Entomology 24, 69-75 (1995)
 }

@@ -1,12 +1,20 @@
-#' Lactin2 function
+#' Lactin2 model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param a constant that determines the steepness of the rising portion of the curve
 #' @param b constant that determines the height of the overall curve
-#' @param tmax changes the temperature at which the curve begins to decelerate beyond the optimum
-#' @param delta_t thermal safety margin
-#' @author Daniel Padfield
-#' @references Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environ. Entomol. 24, 69-75 (1995)
+#' @param tmax the temperature at which the curve begins to decelerate beyond the optimum (ºC)
+#' @param delta_t thermal safety margin (ºC)
+#' @references Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environmental Entomology 24, 69-75 (1995)
+#' @details Equation:
+#' \deqn{rate= = exp^{a \cdot temp} - exp^{a \cdot t_{max} - \bigg(\frac{t_{max} - temp}{\delta _{t}}\bigg)} + b}{%
+#' rate =  exp(a.temp) - exp(a.tmax - ((tmax - temp) / delta_t)) + b}
+#'
+#' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model easy to fit.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
