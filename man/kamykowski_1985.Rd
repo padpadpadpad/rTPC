@@ -2,16 +2,16 @@
 % Please edit documentation in R/kamykowski_1985.R
 \name{kamykowski_1985}
 \alias{kamykowski_1985}
-\title{Kamykowski 1985 function}
+\title{Kamykowski model for fitting thermal performance curves}
 \usage{
 kamykowski_1985(temp, tmin, tmax, a, b, c)
 }
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{tmin}{low temperature at which rates become negative}
+\item{tmin}{low temperature (ºC) at which rates become negative}
 
-\item{tmax}{high temperature at which rates become negative}
+\item{tmax}{high temperature (ºC) at which rates become negative}
 
 \item{a}{parameter with no biological meaning}
 
@@ -20,7 +20,19 @@ kamykowski_1985(temp, tmin, tmax, a, b, c)
 \item{c}{parameter with no biological meaning}
 }
 \description{
-Kamykowski 1985 function
+Kamykowski model for fitting thermal performance curves
+}
+\details{
+Equation:
+\deqn{rate= a \cdot \big[ 1 - exp^{-b\cdot \big(temp-t_{min}\big)}\big] \cdot \big[ 1-exp^{-c \cdot \big(t_{max}-temp\big)}\big]}{%
+rate =  a.(1 - exp(-b.(temp - tmin))).(1 - exp(-c.(tmax - temp)))}
+
+Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -39,8 +51,5 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Kamykowski, Daniel. "A survey of protozoan laboratory temperature studies applied to marine dinoflagellate behavior from a field perspective." Contributions in Marine Science. 1985. (1985).
-}
-\author{
-Daniel Padfield
+Kamykowski, Daniel. A survey of protozoan laboratory temperature studies applied to marine dinoflagellate behaviour from a field perspective. Contributions in Marine Science. (1985).
 }
