@@ -202,11 +202,10 @@ get_start_vals <- function(x, y, model_name) {
     e = 2
     return(c(a=a, b=b, c=c, d=d, e=e))}
 
-
   if(model_name == 'modifiedgaussian_2006'){
     rmax = max(d$y, na.rm = TRUE)
     topt = d$x[d$y == rmax]
-    a = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+    a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE))/2
     b = 2
 
     return(c(rmax = rmax, topt = topt, a = a, b=b))
