@@ -22,7 +22,7 @@ Johnson-Lewin model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate= \frac{r_0 \cdot exp^{\frac{-e}{k\cdot (temp + 273.15)}}}{1 + exp^{-\frac{1}{k(temp + 273.15)}} \cdot \bigg[e_h -\big(\frac{E_h}{(t_{opt} - 273.15)}\big) + k \cdot ln\big(\frac{e}{e_h - e}\big)\bigg]}}{%
+\deqn{rate= \frac{r_0 \cdot exp^{\frac{-e}{k\cdot (temp + 273.15)}}}{1 + exp^{-\frac{e_h -\big(\frac{e_h}{(t_{opt} - 273.15)} + k \cdot ln\big(\frac{e}{e_h - e}\big) \big) \cdot (temp + 273.15)}{k \cdot (temp + 273.15)}}}}{%
 rate = (r0.exp(-e/(k.(temp + 273.15)))) / ((1 + exp((-1/(k.(temp + 273.15)))* (eh - ((eh/(topt - 273.15)) + k.log(e/(eh - e))).(temp + 273.15)))))}
 
 where \code{k} is Boltzmann's constant with a value of 8.62e-05.
