@@ -9,6 +9,9 @@ get_skewness(model)
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
+\value{
+skewness value
+}
 \description{
 Estimates skewness of a thermal performance curve
 }

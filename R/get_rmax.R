@@ -1,10 +1,8 @@
-#' Estimate maximum rate
+#' Estimate maximum rate of a thermal performance curve
 #'
-#' @description Estimates maximum rate from a model of a thermal performance curve.
 #' @param model nls model object that contains a model of a thermal performance curve
-#' @author Daniel Padfield
-#' @details Maximum rate is calculated by predicting over the temperature range using the previously estimated parameters and picking the maximum rate value. Predictions are done every 0.001 temperature value.
-#'
+#' @details Maximum rate is calculated by predicting over the temperature range using the previously estimated parameters and picking the maximum rate value. Predictions are done every 0.001 ºC.
+#' @return maximum rate value
 #' @export get_rmax
 
 get_rmax <- function(model){

@@ -2,19 +2,19 @@
 % Please edit documentation in R/get_rmax.R
 \name{get_rmax}
 \alias{get_rmax}
-\title{Estimate maximum rate}
+\title{Estimate maximum rate of a thermal performance curve}
 \usage{
 get_rmax(model)
 }
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
+\value{
+maximum rate value
+}
 \description{
-Estimates maximum rate from a model of a thermal performance curve.
+Estimate maximum rate of a thermal performance curve
 }
 \details{
-Maximum rate is calculated by predicting over the temperature range using the previously estimated parameters and picking the maximum rate value. Predictions are done every 0.001 temperature value.
-}
-\author{
-Daniel Padfield
+Maximum rate is calculated by predicting over the temperature range using the previously estimated parameters and picking the maximum rate value. Predictions are done every 0.001 ºC.
 }
