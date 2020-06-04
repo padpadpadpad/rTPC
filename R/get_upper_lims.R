@@ -200,4 +200,11 @@ get_upper_lims <- function(x, y, model_name) {
     topt = max(d$x, na.rm = TRUE) * 10
     return(c(r0 = r0, e = e, eh = eh, topt = topt))
   }
+
+  if(model_name == 'quadratic_2008'){
+    b = (-2*-0.005*max(d$y, na.rm = TRUE)) * 100
+    a = max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE) * 100
+    c = 10
+    return(c(a = a, b = b, c = c))
+  }
 }

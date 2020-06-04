@@ -200,4 +200,11 @@ get_lower_lims <- function(x, y, model_name) {
     topt = min(d$x, na.rm = TRUE)
     return(c(r0 = r0, e = e, eh = eh, topt = topt))
   }
+
+  if(model_name == 'quadratic_2008'){
+    b = (-2*-0.005*max(d$y, na.rm = TRUE)) * 0.001
+    a = max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE) * 0.001
+    c = -2 * 10
+    return(c(a = a, b = b, c = c))
+  }
 }

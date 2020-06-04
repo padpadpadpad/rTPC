@@ -4,11 +4,16 @@
 #' @param a parameter that defines the rate at 0 ºC
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
-#' @author Daniel Padfield
 #' @references Montagnes, David JS, et al. Short‐term temperature change may impact freshwater carbon flux: a microbial perspective. Global Change Biology 14.12: 2823-2838. (2008)
 #' @details Equation:
-#' \deqn{rate=a + b \cdot T + c \cdot T^2}{%
+#' \deqn{rate = a + b \cdot temp + c \cdot temp^2}{%
 #' rate = a + b.temp + c.temp^2}
+#'
+#' Start values in \code{get_start_vals} are derived from the data using previous methods in the literature
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+#'
+#' @note Generally we found this model easy to fit.
 #' @examples
 #' # load in data
 #' data('chlorella_tpc')
