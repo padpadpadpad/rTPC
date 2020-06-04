@@ -2,19 +2,19 @@
 % Please edit documentation in R/get_topt.R
 \name{get_topt}
 \alias{get_topt}
-\title{Estimate optimum temperature}
+\title{Estimate optimum temperature of a thermal performance curve}
 \usage{
 get_topt(model)
 }
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
+\value{
+Optimum temperature (in ºC)
+}
 \description{
-Estimates optimum temperature from a model model of a thermal performance curve.
+Estimate optimum temperature of a thermal performance curve
 }
 \details{
-Optimum temperature is calculated by predicting over the temperature range using the previously estimated parameters and subsetting for the largest rate value. Predictions are done every 0.001 temperature value so the estimate of optimum temperature should be accurate up to 0.001 ºC/K
-}
-\author{
-Daniel Padfield
+Optimum temperature (ºC) is calculated by predicting over the temperature range using the previously estimated parameters and keeping the temperature where the largest rate value occurs. Predictions are done every 0.001 ºC so the estimate of optimum temperature should be accurate up to 0.001 ºC.
 }
