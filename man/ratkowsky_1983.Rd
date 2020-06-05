@@ -9,16 +9,28 @@ ratkowsky_1983(temp, tmin, tmax, a, b)
 \arguments{
 \item{temp}{temperature in degrees centigrade}
 
-\item{tmin}{low temperature at which rates become negative}
+\item{tmin}{low temperature (ºC) at which rates become negative}
 
-\item{tmax}{high temperature at which rates become negative}
+\item{tmax}{high temperature (ºC) at which rates become negative}
 
 \item{a}{parameter defined as sqrt(rate)/(temp - tmin)}
 
-\item{b}{empirical parameter needed to fit the data for temperature above topt}
+\item{b}{empirical parameter needed to fit the data for temperatures beyond the optimum temperature}
 }
 \description{
 Ratkowsky 1983 model
+}
+\details{
+Equation:
+\deqn{rate = (a \cdot (temp-t_{min}))^2 \cdot (1-exp(b \cdot (temp-t_{max})))^2}{%
+rate = ((a.(temp - tmin)).(1 - exp(b.(temp - tmax))))^2}
+
+Start values in \code{get_start_vals} are derived from the data and previous values in the literature.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -38,7 +50,4 @@ est_params(mod)
 }
 \references{
 Ratkowsky, D.A., Lowry, R.K., McMeekin, T.A., Stokes, A.N., Chandler, R.E., Model for bacterial growth rate throughout the entire biokinetic temperature range. J. Bacteriol. 154: 1222–1226 (1983)
-}
-\author{
-Daniel Padfield
 }
