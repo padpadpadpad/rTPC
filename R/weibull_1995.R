@@ -6,7 +6,7 @@
 #' @param topt optimum temperature
 #' @param b defines the breadth of the curve
 #' @param c defines the curve shape
-#' @references Angilletta Jr, Michael J. "Estimating and comparing thermal performance curves." Journal of Thermal Biology 31.7 (2006): 541-545.
+#' @references Angilletta Jr, Michael J. Estimating and comparing thermal performance curves. Journal of Thermal Biology 31.7 (2006): 541-545.
 #' @details Equation:
 #' \deqn{rate = a \cdot \bigg( \frac{c-1}{c}\bigg)^{\frac{1-c}{c}}\bigg[\frac{temp-t_{opt}}{b}+\bigg(\frac{c-1}{c}\bigg)^{\frac{1}{c}}\bigg]^{c-1}exp^{-\big[\frac{temp-t_{opt}}{b}+\big( \frac{c-1}{c}\big)^{\frac{1}{c}}\big]^c} + \frac{c-1}{c}}{%
 #' rate = ((a.(((c-1)/c)^((1-c)/c)).((((temp-topt)/b)+(((c-1)/c)^(1/c)))^(c-1)).(exp(-((((temp-topt)/b)+(((c-1)/c)^(1/c)))^c)+((c-1)/c)))))}
