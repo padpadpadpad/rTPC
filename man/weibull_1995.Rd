@@ -49,5 +49,5 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Angilletta Jr, Michael J. "Estimating and comparing thermal performance curves." Journal of Thermal Biology 31.7 (2006): 541-545.
+Angilletta Jr, Michael J. Estimating and comparing thermal performance curves. Journal of Thermal Biology 31.7 (2006): 541-545.
 }
