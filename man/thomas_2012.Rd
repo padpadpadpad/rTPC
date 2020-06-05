@@ -2,7 +2,7 @@
 % Please edit documentation in R/thomas_2012.R
 \name{thomas_2012}
 \alias{thomas_2012}
-\title{Thomas (2012) model for TPC}
+\title{Thomas (2012) model}
 \usage{
 thomas_2012(temp, a, b, c, topt)
 }
@@ -18,7 +18,19 @@ thomas_2012(temp, a, b, c, topt)
 \item{topt}{determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt}
 }
 \description{
-Thomas (2012) model for TPC
+Thomas (2012) model
+}
+\details{
+Equation:
+\deqn{rate = a \cdot exp^{b \cdot T} \bigg[1-\bigg(\frac{T - T_{opt}}{c}\bigg)^2\bigg]}{%
+rate = a . exp(b . temp) . (1 - ((temp - topt)/(c/2))^2)}
+
+Start values in \code{get_start_vals} are derived from the data.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based on extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -38,7 +50,4 @@ est_params(mod)
 }
 \references{
 Thomas, Mridul K., et al. A global pattern of thermal adaptation in marine phytoplankton. Science 338.6110, 1085-1088 (2012)
-}
-\author{
-Daniel Padfield
 }
