@@ -169,7 +169,7 @@ get_start_vals <- function(x, y, model_name) {
 
     rmax = max(d$y, na.rm = TRUE)
     topt = d$x[d$y == rmax]
-    ctmax = max(d$y, na.rm = TRUE)
+    ctmax = max(d$x, na.rm = TRUE)
     q10 = 1.7
 
     return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))

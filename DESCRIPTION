@@ -20,7 +20,8 @@ Suggests:
     tidyr,
     nls.multstart,
     MuMIn,
-    minpack.lm
+    minpack.lm,
+    testthat
 Imports: 
     moments
 Depends: R (>= 2.10)
