@@ -34,7 +34,7 @@ ggplot(preds) +
   geom_line(aes(temp, .fitted)) +
   theme_bw()
 
-# run test for oneill function
+# run test
 testthat::test_that("oneill function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),

@@ -35,8 +35,8 @@ ggplot(preds) +
   geom_line(aes(temp, .fitted)) +
   theme_bw()
 
-# run test for boatman function
-testthat::test_that("briere_1999 function works", {
+# run test
+testthat::test_that("briere2_1999 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
     c(-0.1,  0.2,  0.4,  0.7,  0.9,  1.1,  1.3,  1.3,  1.3,  1.1,  0.7,  0.0))
