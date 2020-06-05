@@ -7,7 +7,7 @@
 #' @param topt determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt
 #' @references Thomas, Mridul K., et al. A global pattern of thermal adaptation in marine phytoplankton. Science 338.6110, 1085-1088 (2012)
 #' @details Equation:
-#' \deqn{rate = a \cdot exp^{b \cdot temp} \bigg[1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg]}{%
+#' \deqn{rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg)}{%
 #' rate = a . exp(b . temp) . (1 - ((temp - topt)/(c/2))^2)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data.
