@@ -6,7 +6,7 @@
 #' @param a related to the full curve width
 #' @references Lynch, M., Gabriel, W., Environmental tolerance. The American Naturalist. 129, 283–303. (1987)
 #' @details Equation:
-#' \deqn{rate = r_{max} \cdot exp^{\bigg[-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg]}}{%
+#' \deqn{rate = r_{max} \cdot exp^{\bigg(-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg)}}{%
 #' rate = rmax.exp(-0.5.(abs(temp - topt)/a)^2)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data

@@ -20,7 +20,7 @@ Gaussian model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate = r_{max} \cdot exp^{\bigg[-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg]}}{%
+\deqn{rate = r_{max} \cdot exp^{\bigg(-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg)}}{%
 rate = rmax.exp(-0.5.(abs(temp - topt)/a)^2)}
 
 Start values in \code{get_start_vals} are derived from the data

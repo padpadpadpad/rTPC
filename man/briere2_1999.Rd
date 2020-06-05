@@ -22,7 +22,7 @@ Briere2 model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - T)^{\frac{1}{b}}}{%
+\deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{b}}}{%
 rate = a.temp.(temp - tmin).(tmax - temp)^(1/b)}
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

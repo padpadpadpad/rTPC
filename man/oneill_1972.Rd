@@ -26,7 +26,7 @@ Equation:
 rate = rmax.(ctmax - temp / ctmax - topt)^2.exp(x.(temp-topt/ctmax-topt))}
 \deqn{where: x = \frac{w^{2}}{400}\cdot\bigg(1 + \sqrt{1 + \frac{40}{w}}\bigg)^{2}}{%
 where x = (w^2/400).(1 + sqrt(1+(40/w))^2)}
-\deqn{and:\ W = (q_{10} - 1)\cdot (ct_{max} - t_{opt})}{%
+\deqn{and:\ w = (q_{10} - 1)\cdot (ct_{max} - t_{opt})}{%
 and: w = (q10 - 1)*(ctmax - topt)}
 
 Start values in \code{get_start_vals} are derived from the data and previous values in the literature

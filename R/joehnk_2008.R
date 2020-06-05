@@ -7,7 +7,7 @@
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
 #' @details Equation:
-#' \deqn{rate=r_{max} \bigg[1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{ln(c)}(c^{temp-t_{opt}} -1)\bigg)\bigg]}{%
+#' \deqn{rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{ln(c)}(c^{temp-t_{opt}} -1)\bigg)\bigg)}{%
 #' rate = rmax.(1 + a.((b^(temp - topt) - 1) - (log(b)/log(c)).(c^(temp - topt) - 1)))}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

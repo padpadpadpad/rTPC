@@ -24,7 +24,7 @@ Boatman model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate= r_{max} \cdot \left(sin\bigg[\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg]\right)^{b}}{%
+\deqn{rate= r_{max} \cdot \left(sin\bigg(\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg)\right)^{b}}{%
 rate = rmax.(sin(pi.((temp - tmin)/(tmax - tmin))^a))^b}
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

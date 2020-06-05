@@ -24,7 +24,7 @@ Kamykowski model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate= a \cdot \big[ 1 - exp^{-b\cdot \big(temp-t_{min}\big)}\big] \cdot \big[ 1-exp^{-c \cdot \big(t_{max}-temp\big)}\big]}{%
+\deqn{rate= a \cdot \big( 1 - exp^{-b\cdot \big(temp-t_{min}\big)}\big) \cdot \big( 1-exp^{-c \cdot \big(t_{max}-temp\big)}\big)}{%
 rate =  a.(1 - exp(-b.(temp - tmin))).(1 - exp(-c.(tmax - temp)))}
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

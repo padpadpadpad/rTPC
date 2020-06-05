@@ -7,7 +7,7 @@
 #' @param b shape parameter to adjust the asymmetry of the curve
 #' @references Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthropods. Environmental Entomololgy, 28, 22–29 (1999)
 #' @details Equation:
-#' \deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - T)^{\frac{1}{b}}}{%
+#' \deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{b}}}{%
 #' rate = a.temp.(temp - tmin).(tmax - temp)^(1/b)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

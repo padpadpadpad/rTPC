@@ -8,7 +8,7 @@
 #' @param b shape  parameter to adjust the kurtosis of the curve
 #' @references Boatman, T. G., Lawson, T., & Geider, R. J. A key marine diazotroph in a changing ocean: The interacting effects of temperature, CO2 and light on the growth of Trichodesmium erythraeum IMS101. PLoS ONE, 12, e0168796 (2017)
 #' @details Equation:
-#' \deqn{rate= r_{max} \cdot \left(sin\bigg[\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg]\right)^{b}}{%
+#' \deqn{rate= r_{max} \cdot \left(sin\bigg(\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg)\right)^{b}}{%
 #' rate = rmax.(sin(pi.((temp - tmin)/(tmax - tmin))^a))^b}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
