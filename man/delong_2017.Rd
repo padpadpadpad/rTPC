@@ -24,7 +24,7 @@ deLong enzyme-assisted Arrhenius model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate = c \cdot exp\frac{-(e_b-(e_f(1-\frac{temp - 273.15}{t_m})+e_{hc} \cdot ((temp - 273.15) - t_m - (temp - 273.15) \cdot ln(\frac{temp - 273.15}{t_m}))))}{k \cdot (temp - 273.15)}}{%
+\deqn{rate = c \cdot exp\frac{-(e_b-(e_f(1-\frac{temp + 273.15}{t_m})+e_{hc} \cdot ((temp + 273.15) - t_m - (temp + 273.15) \cdot ln(\frac{temp + 273.15}{t_m}))))}{k \cdot (temp + 273.15)}}{%
 rate = c.exp(-(eb-(ef.(1-((temp + 273.15)/tm))+ehc.((temp + 273.15)-tm-((temp + 273.15).log((temp + 273.15)/tm)))))/(k.(temp + 273.15)))}
 
 where \code{k} is Boltzmann's constant with a value of 8.62e-05 and \code{tm} is actually \code{tm - 273.15}
