@@ -2,7 +2,7 @@
 % Please edit documentation in R/thomas_2017.R
 \name{thomas_2017}
 \alias{thomas_2017}
-\title{Thomas 2017}
+\title{Thomas model (2017)}
 \usage{
 thomas_2017(temp, a, b, c, d, e)
 }
@@ -20,7 +20,19 @@ thomas_2017(temp, a, b, c, d, e)
 \item{e}{along with d controls the exponential increase in mortality rates with temperature}
 }
 \description{
-Thomas 2017
+Thomas model (2017)
+}
+\details{
+Equation:
+\deqn{rate = a \cdot exp^{b \cdot temp} - (c + d \cdot exp^{e \cdot temp})}{%
+rate = a . exp(b . temp) - (c + d.(exp(e.temp)))}
+
+Start values in \code{get_start_vals} are derived from the data.
+
+Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based on extreme values that are unlikely to occur in ecological settings.
+}
+\note{
+Generally we found this model easy to fit.
 }
 \examples{
 # load in data
@@ -39,8 +51,5 @@ summary(mod)
 est_params(mod)
 }
 \references{
-Thomas, Mridul K., et al. "Temperature–nutrient interactions exacerbate sensitivity to warming in phytoplankton." Global change biology 23.8 (2017): 3269-3280.
-}
-\author{
-Daniel Padfield
+Thomas, Mridul K., et al. Temperature–nutrient interactions exacerbate sensitivity to warming in phytoplankton. Global change biology 23.8 (2017): 3269-3280.
 }
