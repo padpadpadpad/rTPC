@@ -22,7 +22,7 @@ Thomas (2012) model
 }
 \details{
 Equation:
-\deqn{rate = a \cdot exp^{b \cdot T} \bigg[1-\bigg(\frac{T - T_{opt}}{c}\bigg)^2\bigg]}{%
+\deqn{rate = a \cdot exp^{b \cdot temp} \bigg[1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg]}{%
 rate = a . exp(b . temp) . (1 - ((temp - topt)/(c/2))^2)}
 
 Start values in \code{get_start_vals} are derived from the data.
