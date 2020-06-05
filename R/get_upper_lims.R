@@ -28,8 +28,8 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'rezende_2019'){
     b = max(d$x, na.rm = TRUE)
     q10 = 15
-    a = 5 # max of data from paper was 1.7
-    c = 0.05 # max of data from paper was 0.03034
+    a = 10 # max of data from paper was 1.7
+    c = 1 # max of data from paper was 0.03034
 
     return(c(q10 = q10, a = a, b = b, c = c))
   }
