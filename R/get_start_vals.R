@@ -230,4 +230,12 @@ get_start_vals <- function(x, y, model_name) {
     return(c(r0 = r0, e = e, eh = eh, topt = topt))
   }
 
+  if(model_name == 'spain_1982'){
+    r0 = min(d$y, na.rm = TRUE)
+    a = 0
+    b = 0
+    c = 0
+    return(c(a = a, b = b, c = c, r0 = r0))
+  }
+
 }

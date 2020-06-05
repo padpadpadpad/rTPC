@@ -10,12 +10,13 @@
 #' @details Equation:
 #' \deqn{rate = r_0 \cdot exp^{a \cdot temp} \cdot (1-b \cdot exp^{c \cdot temp})}{%
 #' rate = est = r0 . exp(a.temp) . (1 - b.exp(c.temp))}
-#' 
-#' Start values in \code{get_start_vals} are derived from the data.
 #'
-#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based on extreme values that are unlikely to occur in ecological settings.
+#' Start values in \code{get_start_vals} are derived from the data or plucked from thin air.
+#'
+#' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or plucked from thin air.
 #' @note Generally we found this model easy to fit.
 #' @examples
+#' \dontrun{
 #' # load in data
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
@@ -25,10 +26,10 @@
 #' mod <- minpack.lm::nlsLM(rate~spain_1982(temp = temp, a, b, c, r0),
 #' data = d,
 #' start = start_vals,
-#' control = minpack.lm::nls.lm.control(maxiter = 100))
+#' control = minpack.lm::nls.lm.control(maxiter = 1000))
 #'
 #' # look at model
-#' summary(mod)
+#' summary(mod)}
 #' @export spain_1982
 
 spain_1982 <- function(temp, a, b, c, r0){

@@ -207,4 +207,12 @@ get_upper_lims <- function(x, y, model_name) {
     c = 10
     return(c(a = a, b = b, c = c))
   }
+
+  if(model_name == 'spain_1982'){
+    r0 = max(d$y, na.rm = TRUE)
+    a = 2
+    b = 2
+    c = 2
+    return(c(a = a, b = b, c = c, r0 = r0))
+  }
 }
