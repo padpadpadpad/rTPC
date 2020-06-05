@@ -26,7 +26,7 @@ est_params <- function(model){
                   eh = tryCatch(rTPC::get_eh(model), error = function(err) NA),
                   q10 = tryCatch(rTPC::get_q10(model), error = function(err) NA),
                   thermal_safety_margin = tryCatch(rTPC::get_thermalsafetymargin(model), error = function(err) NA),
-                  tolerance_range = tryCatch(rTPC::get_tolerancerange(model), error = function(err) NA),
+                  tolerance_range = tryCatch(rTPC::thermaltolerance(model), error = function(err) NA),
                   skewness = tryCatch(rTPC::get_skewness(model), error = function(err) NA),
                   stringsAsFactors = FALSE)
 
