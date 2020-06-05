@@ -1,5 +1,8 @@
 context("test-boatman_2017.R")
 
+# do not run the test on CRAN as they take too long
+testthat::skip_on_cran()
+
 # method: fit model and get predictions. Check these are consistent.
 
 # load in ggplot

@@ -1,5 +1,8 @@
 context("test-beta_2012.R")
 
+# do not run the test on CRAN as they take too long
+testthat::skip_on_cran()
+
 # method: fit model and get predictions. Check these against others.
 
 # load in ggplot
