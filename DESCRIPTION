@@ -21,7 +21,10 @@ Suggests:
     nls.multstart,
     MuMIn,
     minpack.lm,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 Imports: 
     moments
 Depends: R (>= 2.10)
+VignetteBuilder: knitr
