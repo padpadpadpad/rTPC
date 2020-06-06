@@ -202,8 +202,8 @@ get_lower_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'quadratic_2008'){
-    b = (-2*-0.005*max(d$y, na.rm = TRUE)) * 0.001
-    a = max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE) * 0.001
+    b = abs((-2*-0.005*max(d$y, na.rm = TRUE))) * - 100
+    a = abs(max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE)) * -100
     c = -2 * 10
     return(c(a = a, b = b, c = c))
   }
