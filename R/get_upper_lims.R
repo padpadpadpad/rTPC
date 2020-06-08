@@ -72,7 +72,7 @@ get_upper_lims <- function(x, y, model_name) {
 
   if(model_name == 'thomas_2012'){
     topt = max(d$x, na.rm = TRUE) * 2
-    c = max(d$x, na.rm = TRUE) - max(d$x, na.rm = TRUE) * 10
+    c = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
     a = 10
     b = 10
     return(c(a = a, b = b, c = c, topt = topt))
@@ -194,7 +194,7 @@ get_upper_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'johnsonlewin_1946'){
-    r0 = max(d$y, na.rm = TRUE) / 100
+    r0 = Inf
     e = 20
     eh = 40
     topt = max(d$x, na.rm = TRUE) * 10
