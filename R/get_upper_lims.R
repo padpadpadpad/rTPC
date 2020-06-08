@@ -70,13 +70,16 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
-  if(model_name == 'thomas_2012'){
-    topt = max(d$x, na.rm = TRUE) * 2
-    c = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
-    a = 10
-    b = 10
-    return(c(a = a, b = b, c = c, topt = topt))
+  if(model_name == 'thomas_2017'){
+    a = 100
+    b = 100
+    c = 100
+    d = 100
+    e = 100
+    return(c(a=a, b=b, c=c, d=d, e=e))
   }
+
+
 
   if(model_name == 'briere2_1999'){
     tmin = max(d$x, na.rm = TRUE)

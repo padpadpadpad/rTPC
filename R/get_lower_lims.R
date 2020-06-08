@@ -78,6 +78,15 @@ get_lower_lims <- function(x, y, model_name) {
     return(c(a = a, b = b, c = c, topt = topt))
   }
 
+  if(model_name == 'thomas_2017'){
+    a = -100
+    b = -100
+    c = -100
+    d = -100
+    e = -100
+    return(c(a=a, b=b, c=c, d=d, e=e))
+  }
+
   if(model_name == 'briere2_1999'){
     tmin = 0
     tmax = min(d$x, na.rm = TRUE)
