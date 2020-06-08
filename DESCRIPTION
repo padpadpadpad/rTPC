@@ -14,10 +14,7 @@ RoxygenNote: 7.1.0
 Suggests: 
     broom,
     ggplot2,
-    purrr,
     grid,
-    dplyr,
-    tidyr,
     nls.multstart,
     MuMIn,
     minpack.lm,

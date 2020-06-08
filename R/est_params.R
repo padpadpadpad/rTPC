@@ -2,18 +2,18 @@
 #'
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @details Currently estimates:
-#' * maximum rate (rmax)
-#' * optimum temperature (topt)
-#' * critical thermal maximum (ctmax)
-#' * critical thermal minimum (ctmin)
-#' * activation energy (e)
-#' * deactivation energy (eh)
-#' * q10 value
-#' * thermal safety margin
-#' * thermal tolerance
-#' * skewness
+#' * maximum rate (rmax) using [get_rmax()]
+#' * optimum temperature (topt) using [get_topt()]
+#' * critical thermal maximum (ctmax) using [get_ctmax()]
+#' * critical thermal minimum (ctmin) using [get_ctmin()]
+#' * activation energy (e) using [get_e()]
+#' * deactivation energy (eh) using [get_eh()]
+#' * q10 value using [get_q10()]
+#' * thermal safety margin using [get_thermalsafetymargin()]
+#' * thermal tolerance using [get_thermaltolerance()]
+#' * skewness using [get_skewness()]
 #'
-#' If any parameters cannot be calculated for a thermal performance curve, they will return NA.
+#' If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 #' @md
 #' @export est_params
 

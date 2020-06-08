@@ -15,17 +15,17 @@ Estimate extra parameters of a thermal performance curve
 \details{
 Currently estimates:
 \itemize{
-\item maximum rate (rmax)
-\item optimum temperature (topt)
-\item critical thermal maximum (ctmax)
-\item critical thermal minimum (ctmin)
-\item activation energy (e)
-\item deactivation energy (eh)
-\item q10 value
-\item thermal safety margin
-\item thermal tolerance
-\item skewness
+\item maximum rate (rmax) using \code{\link[=get_rmax]{get_rmax()}}
+\item optimum temperature (topt) using \code{\link[=get_topt]{get_topt()}}
+\item critical thermal maximum (ctmax) using \code{\link[=get_ctmax]{get_ctmax()}}
+\item critical thermal minimum (ctmin) using \code{\link[=get_ctmin]{get_ctmin()}}
+\item activation energy (e) using \code{\link[=get_e]{get_e()}}
+\item deactivation energy (eh) using \code{\link[=get_eh]{get_eh()}}
+\item q10 value using \code{\link[=get_q10]{get_q10()}}
+\item thermal safety margin using \code{\link[=get_thermalsafetymargin]{get_thermalsafetymargin()}}
+\item thermal tolerance using \code{\link[=get_thermaltolerance]{get_thermaltolerance()}}
+\item skewness using \code{\link[=get_skewness]{get_skewness()}}
 }
 
-If any parameters cannot be calculated for a thermal performance curve, they will return NA.
+If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 }
