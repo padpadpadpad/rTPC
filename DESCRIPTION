@@ -21,7 +21,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    tidyverse
+    tidyverse,
+    ggrepel
 Imports: 
     moments
 Depends: R (>= 2.10)
