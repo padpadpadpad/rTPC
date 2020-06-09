@@ -19,11 +19,11 @@ start_vals <- get_start_vals(d$temp, d$rate, model_name = 'johnsonlewin_1946')
 # fit model
 mod <- suppressWarnings(nls.multstart::nls_multstart(rate~johnsonlewin_1946(temp = temp, r0, e, eh, topt),
                                                      data = d,
-                                                     iter = rep(3, times = length(start_vals)),
+                                                     iter = rep(5, times = length(start_vals)),
                                                      start_lower = start_vals -1,
                                                      start_upper = start_vals + 1,
                                                      lower = get_lower_lims(d$temp, d$rate, model_name = 'johnsonlewin_1946'),
-
+                                                     upper = get_upper_lims(d$temp, d$rate, model_name = 'johnsonlewin_1946'),
                                                      supp_errors = 'Y',
                                     convergence_count = FALSE))
 
@@ -40,6 +40,6 @@ ggplot(preds) +
 testthat::test_that("johnsonlewin_1946 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.4, 0.4, 0.5, 0.6, 0.8, 0.9, 1.1, 1.3, 1.5, 1.5, 0.0, 0.0))
+    c(0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0, 1.2, 1.5, 1.7, 0.0, 0.0))
 })
 
