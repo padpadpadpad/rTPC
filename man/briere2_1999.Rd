@@ -57,7 +57,7 @@ mod <- nls.multstart::nls_multstart(rate~briere2_1999(temp = temp, tmin, tmax, a
 summary(mod)
 
 # get predictions
-preds <- tibble::tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- data.frame(temp = seq(min(d$temp), max(d$temp), length.out = 100))
 preds <- broom::augment(mod, newdata = preds)
 
 # plot
