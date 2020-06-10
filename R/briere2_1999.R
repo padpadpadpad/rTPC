@@ -26,14 +26,14 @@
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere2_1999')
 #' # fit model
 #' mod <- nls.multstart::nls_multstart(rate~briere2_1999(temp = temp, tmin, tmax, a, b),
-#'                                  data = d,
-#'                                  iter = c(4,4,4,4),
-#'                                  start_lower = start_vals - 10,
-#'                                  start_upper = start_vals + 10,
-#'                                  lower = get_lower_lims(d$temp, d$rate, model_name = 'briere2_1999'),
-#'                                  upper = get_upper_lims(d$temp, d$rate, model_name = 'briere2_1999'),
-#'                                  supp_errors = 'Y',
-#'                                  convergence_count = FALSE)
+#' data = d,
+#' iter = c(4,4,4,4),
+#' start_lower = start_vals - 10,
+#' start_upper = start_vals + 10,
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'briere2_1999'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'briere2_1999'),
+#' supp_errors = 'Y',
+#' convergence_count = FALSE)
 #'
 #' # look at model fit
 #' summary(mod)

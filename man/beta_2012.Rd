@@ -47,14 +47,14 @@ d <- subset(chlorella_tpc, curve_id == 1)
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'beta_2012')
 # fit model
 mod <- nls.multstart::nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
-                                 data = d,
-                                 iter = c(7,7,7,7,7),
-                                 start_lower = start_vals - 10,
-                                 start_upper = start_vals + 10,
-                                 lower = get_lower_lims(d$temp, d$rate, model_name = 'beta_2012'),
-                                 upper = get_upper_lims(d$temp, d$rate, model_name = 'beta_2012'),
-                                 supp_errors = 'Y',
-                                 convergence_count = FALSE)
+data = d,
+iter = c(7,7,7,7,7),
+start_lower = start_vals - 10,
+start_upper = start_vals + 10,
+lower = get_lower_lims(d$temp, d$rate, model_name = 'beta_2012'),
+upper = get_upper_lims(d$temp, d$rate, model_name = 'beta_2012'),
+supp_errors = 'Y',
+convergence_count = FALSE)
 
 # look at model fit
 summary(mod)

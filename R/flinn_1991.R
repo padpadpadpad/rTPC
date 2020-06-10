@@ -27,14 +27,14 @@
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'flinn_1991')
 #' # fit model
 #' mod <- nls.multstart::nls_multstart(rate~flinn_1991(temp = temp, a, b, c),
-#'                                  data = d,
-#'                                  iter = c(4,4,4),
-#'                                  start_lower = start_vals - 1,
-#'                                  start_upper = start_vals + 1,
-#'                                  lower = get_lower_lims(d$temp, d$rate, model_name = 'flinn_1991'),
-#'                                  upper = get_upper_lims(d$temp, d$rate, model_name = 'flinn_1991'),
-#'                                  supp_errors = 'Y',
-#'                                  convergence_count = FALSE)
+#' data = d,
+#' iter = c(4,4,4),
+#' start_lower = start_vals - 1,
+#' start_upper = start_vals + 1,
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'flinn_1991'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'flinn_1991'),
+#' supp_errors = 'Y',
+#' convergence_count = FALSE)
 #'
 #' # look at model fit
 #' summary(mod)

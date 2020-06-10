@@ -30,14 +30,14 @@
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'delong_2017')
 #' # fit model
 #' mod <- nls.multstart::nls_multstart(rate~delong_2017(temp = temp, c, eb, ef, tm,ehc),
-#'                                  data = d,
-#'                                  iter = c(4,4,4,4,4),
-#'                                  start_lower = start_vals - 10,
-#'                                  start_upper = start_vals + 10,
-#'                                  lower = get_lower_lims(d$temp, d$rate, model_name = 'delong_2017'),
-#'                                  upper = get_upper_lims(d$temp, d$rate, model_name = 'delong_2017'),
-#'                                  supp_errors = 'Y',
-#'                                  convergence_count = FALSE)
+#' data = d,
+#' iter = c(4,4,4,4,4),
+#' start_lower = start_vals - 10,
+#' start_upper = start_vals + 10,
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'delong_2017'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'delong_2017'),
+#' supp_errors = 'Y',
+#' convergence_count = FALSE)
 #'
 #' # look at model fit
 #' summary(mod)
