@@ -4,7 +4,7 @@ author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 description: >
-  A brief introduction as to how rTPC can be used to fit a thermal performance curve using nls.multstart.
+  An introduction to rTPC and how it can be used to fit thermal performance curves using nls.multstart.
 vignette: >
   %\VignetteIndexEntry{Intro to rTPC}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,10 +19,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-***
 ### Things to consider
 
-
+- How many data points do you have for each curve? To fit all of the 23 models in **rTPC**, there needs to be a minimum of 7 points per curve.
+- If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.
+- Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.
+- Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.
 
 ***
 
@@ -80,9 +82,9 @@ low_lims
 upper_lims
 ```
 
-One problem with most methods of fitting models in R using non-linear least squares regression is that they are sensitive to the choice of starting parameters. This problem also occurs in previous specialist R packages that help fit thermal performance curves, such as [devRate](https://github.com/frareb/devRate/) and [temperatureresponse](https://github.com/low-decarie/temperatureresponse)  These methods can fail entirely or give different parameter estimates between multiple runs of the same code.
+One problem with most methods of fitting models in R using non-linear least squares regression is that they are sensitive to the choice of starting parameters. This problem also occurs in previous specialist R packages that help fit thermal performance curves, such as [devRate](https://github.com/frareb/devRate/) and [temperatureresponse](https://github.com/low-decarie/temperatureresponse). These methods can fail entirely or give different parameter estimates between multiple runs of the same code.
 
-When developing **rTPC**, we made a conscious decision to not re-write workflows and code that is already available in the R ecosystem. Consequently, to overcome the above problem, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()** but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked on AIC score.
+To overcome this, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()** but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked on AIC score.
 
 In __nls_multstart__, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to FALSE, **nls_multstart()** will try and fit all iterations.
 
@@ -99,7 +101,7 @@ fit <- nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tre
 fit
 ```
 
-To estimate additional parameters of interest, we can use **rTPC::est_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available  methods can be viewed by running `?est_params`. We would be particularly interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
+To estimate additional parameters of interest, we can use **rTPC::est_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available  methods can be viewed by running `?est_params`. For example, we may be interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
 
 ```{r}
 # estimate additional traits

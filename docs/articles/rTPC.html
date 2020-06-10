@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to rTPC">
-<meta property="og:description" content="A brief introduction as to how rTPC can be used to fit a thermal performance curve using nls.multstart.
+<meta property="og:description" content="An introduction to rTPC and how it can be used to fit thermal performance curves using nls.multstart.
 ">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -105,10 +105,15 @@
 
     
     
-<hr>
 <div id="things-to-consider" class="section level3">
 <h3 class="hasAnchor">
 <a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<ul>
+<li>How many data points do you have for each curve? To fit all of the 23 models in <strong>rTPC</strong>, there needs to be a minimum of 7 points per curve.</li>
+<li>If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.</li>
+<li>Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.</li>
+<li>Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.</li>
+</ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
@@ -161,8 +166,8 @@
 <span class="no">upper_lims</span>
 <span class="co">#&gt;    r_tref         e        eh        th </span>
 <span class="co">#&gt;  1.616894 10.000000 20.000000 49.000000</span></pre></body></html></div>
-<p>One problem with most methods of fitting models in R using non-linear least squares regression is that they are sensitive to the choice of starting parameters. This problem also occurs in previous specialist R packages that help fit thermal performance curves, such as <a href="https://github.com/frareb/devRate/">devRate</a> and <a href="https://github.com/low-decarie/temperatureresponse">temperatureresponse</a> These methods can fail entirely or give different parameter estimates between multiple runs of the same code.</p>
-<p>When developing <strong>rTPC</strong>, we made a conscious decision to not re-write workflows and code that is already available in the R ecosystem. Consequently, to overcome the above problem, we recommend using the R package <a href="https://github.com/padpadpadpad/nls.multstart"><strong>nls.multstart</strong></a>, which uses <strong>minpackLM::nlsLM()</strong> but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked on AIC score.</p>
+<p>One problem with most methods of fitting models in R using non-linear least squares regression is that they are sensitive to the choice of starting parameters. This problem also occurs in previous specialist R packages that help fit thermal performance curves, such as <a href="https://github.com/frareb/devRate/">devRate</a> and <a href="https://github.com/low-decarie/temperatureresponse">temperatureresponse</a>. These methods can fail entirely or give different parameter estimates between multiple runs of the same code.</p>
+<p>To overcome this, we recommend using the R package <a href="https://github.com/padpadpadpad/nls.multstart"><strong>nls.multstart</strong></a>, which uses <strong>minpackLM::nlsLM()</strong> but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked on AIC score.</p>
 <p>In <strong>nls_multstart</strong>, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between <code>start_lower</code> and <code>start_upper</code> for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to FALSE, <strong>nls_multstart()</strong> will try and fit all iterations.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
                                                      <span class="kw">data</span> <span class="kw">=</span> <span class="no">d</span>,
@@ -181,9 +186,9 @@
 <span class="co">#&gt;  0.2595  0.5826 14.2031 43.5531 </span>
 <span class="co">#&gt;  residual sum-of-squares: 0.3144</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Number of iterations to convergence: 22 </span>
+<span class="co">#&gt; Number of iterations to convergence: 19 </span>
 <span class="co">#&gt; Achieved convergence tolerance: 1.49e-08</span></pre></body></html></div>
-<p>To estimate additional parameters of interest, we can use <strong>rTPC::est_params()</strong>. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available methods can be viewed by running <code><a href="../reference/est_params.html">?est_params</a></code>. We would be particularly interested in variation in the optimum temperature, <span class="math inline">\(T_{opt}\)</span>, given that we adapted algae to different temperatures.</p>
+<p>To estimate additional parameters of interest, we can use <strong>rTPC::est_params()</strong>. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available methods can be viewed by running <code><a href="../reference/est_params.html">?est_params</a></code>. For example, we may be interested in variation in the optimum temperature, <span class="math inline">\(T_{opt}\)</span>, given that we adapted algae to different temperatures.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># estimate additional traits</span>
 <span class="fu"><a href="../reference/est_params.html">est_params</a></span>(<span class="no">fit</span>) <span class="kw">%&gt;%</span>
   <span class="co"># round for easy viewing</span>
