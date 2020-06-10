@@ -59,7 +59,7 @@ mod <- nls.multstart::nls_multstart(rate~boatman_2017(temp = temp, rmax, tmin, t
 summary(mod)
 
 # get predictions
-preds <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- tibble::tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
 preds <- broom::augment(mod, newdata = preds)
 
 # plot

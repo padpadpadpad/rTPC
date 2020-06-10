@@ -31,7 +31,7 @@ Daniel Padfield and Hannah O'Sullivan (2020). rTPC: an R package for helping fit
 Please report any bugs and suggestions to the [Issues](https://github.com/padpadpadpad/rTPC/issues) or email d.padfield@exeter.ac.uk.
 
 <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+  [![Build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
 <!-- badges: end -->
 
 ## Installation

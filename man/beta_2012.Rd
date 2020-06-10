@@ -60,7 +60,7 @@ mod <- nls.multstart::nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
 summary(mod)
 
 # get predictions
-preds <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- tibble::tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
 preds <- broom::augment(mod, newdata = preds)
 
 # plot
