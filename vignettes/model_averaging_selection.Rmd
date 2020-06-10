@@ -1,5 +1,5 @@
 ---
-title: "Fitting multiple models to a TPC: model selection and model averaging"
+title: "Model selection and model averaging"
 author: "Daniel Padfield"
 date: "`r Sys.Date()`"
 description: >
@@ -37,7 +37,7 @@ library(ggrepel)
 
 The easiest pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
 
-Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see [this vignette](fitting_multiple_models_to_a_TPC.html)): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
+Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see [this vignette](fit_many_models.html)): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
 
 We can demonstrate the model averaging process for these model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
 

@@ -1,5 +1,5 @@
 ---
-title: "Modelling a thermal performance curve using rTPC"
+title: "Introduction to rTPC"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"

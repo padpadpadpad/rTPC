@@ -1,0 +1,62 @@
+template:
+  params:
+    bootswatch: cosmo
+
+articles:
+- title: Get started
+  navbar: ~
+  contents:
+  - rTPC
+- title: Single curve fit
+  navbar: ~
+  contents:
+  - fit_many_models
+  - model_averaging_selection
+
+reference:
+- title: Models
+  contents:
+  - beta_2012
+  - boatman_2017
+  - briere2_1999
+  - delong_2017
+  - flinn_1991
+  - gaussian_1987
+  - hinshelwood_1947
+  - joehnk_2008
+  - johnsonlewin_1946
+  - kamykowski_1985
+  - lactin2_1995
+  - modifiedgaussian_2006
+  - oneill_1972
+  - quadratic_2008
+  - ratkowsky_1983
+  - rezende_2019
+  - sharpeschoolfull_1981
+  - sharpeschoolhigh_1981
+  - sharpeschoollow_1981
+  - spain_1982
+  - thomas_2012
+  - thomas_2017
+  - weibull_1995
+- title: Helper functions
+  contents:
+  - est_params
+  - get_ctmax
+  - get_ctmin
+  - get_e
+  - get_eh
+  - get_lower_lims
+  - get_model_names
+  - get_q10
+  - get_rmax
+  - get_skewness
+  - get_start_vals
+  - get_thermalsafetymargin
+  - get_thermaltolerance
+  - get_topt
+  - get_topt
+  - get_upper_lims
+- title: Data
+  contents:
+  - chlorella_tpc

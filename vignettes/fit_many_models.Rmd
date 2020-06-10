@@ -1,5 +1,5 @@
 ---
-title: "Fitting multiple models to a TPC using rTPC"
+title: "Fitting many models"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
@@ -41,7 +41,7 @@ label_facets_num <- function(string){
 }
 ```
 
-After searching the literature, __rTPC__ contains 23 different model formulations previously used. The [first vignette](intro_to_rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all 23 model formulations.
+After searching the literature, __rTPC__ contains 23 different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all 23 model formulations.
 
 **DISCLAIMER Although we fit all 23 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend ever doing model selection on 23 model formulations.**
 

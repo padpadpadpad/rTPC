@@ -7,3 +7,6 @@
 ^header\.md$
 ^hex_sticker\.R$
 ^logos/hex_sticker\.png$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
