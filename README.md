@@ -3,6 +3,12 @@
 
 # **rTPC** <img src="logo.png" width="250" align="right" />
 
+<!-- badges: start -->
+
+[![Build
+status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+<!-- badges: end -->
+
 **rTPC** is an R package that helps fit thermal performance curves
 (TPCs) in R. **rTPC** contains 23 model formulations previously used to
 fit TPCs and has helper functions to help set sensible start parameters,
@@ -31,12 +37,6 @@ helping fit thermal performance curves. R package version. 0.1.0.
 Please report any bugs and suggestions to the
 [Issues](https://github.com/padpadpadpad/rTPC/issues) or email
 <d.padfield@exeter.ac.uk>.
-
-<!-- badges: start -->
-
-[![Travis build
-status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
-<!-- badges: end -->
 
 ## Installation
 

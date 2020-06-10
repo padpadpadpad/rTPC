@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 
 # __rTPC__ <img src="logo.png" width="250" align="right" />
 
+<!-- badges: start -->
+  [![Build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+<!-- badges: end -->
+
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. __rTPC__ contains 23 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
 The idea behind **rTPC** is to make fitting thermal performance curves easier, but we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for fitting non-linear least squares regression and packages from the [**tidyverse**](https://www.tidyverse.org) for data manipulation, fitting multiple models, and visualisation.
@@ -30,9 +34,7 @@ Daniel Padfield and Hannah O'Sullivan (2020). rTPC: an R package for helping fit
 
 Please report any bugs and suggestions to the [Issues](https://github.com/padpadpadpad/rTPC/issues) or email d.padfield@exeter.ac.uk.
 
-<!-- badges: start -->
-  [![Build status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
-<!-- badges: end -->
+
 
 ## Installation
 

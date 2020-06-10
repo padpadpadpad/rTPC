@@ -95,6 +95,8 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#rtpc-" class="anchor"></a><strong>rTPC</strong> <img src="logo.png" width="250" align="right">
 </h1></div>
+<!-- badges: start -->
+
 <p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 23 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
 <p>The idea behind <strong>rTPC</strong> is to make fitting thermal performance curves easier, but we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation.</p>
 <p>This R package and the pipelines outlined in the vignettes are in the process of being written up into a methods paper. In the meantime, please cite as:</p>
@@ -103,8 +105,6 @@
 <h2 class="hasAnchor">
 <a href="#bugs-and-suggestions" class="anchor"></a>Bugs and suggestions</h2>
 <p>Please report any bugs and suggestions to the <a href="https://github.com/padpadpadpad/rTPC/issues">Issues</a> or email <a href="mailto:d.padfield@exeter.ac.uk" class="email">d.padfield@exeter.ac.uk</a>.</p>
-<!-- badges: start -->
-<p><a href="https://travis-ci.org/padpadpadpad/rTPC"><img src="https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master" alt="Travis build status"></a> <!-- badges: end --></p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -147,7 +147,13 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.org/padpadpadpad/rTPC"><img src="https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master" alt="Build status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
