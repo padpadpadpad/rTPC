@@ -35,20 +35,40 @@ Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the d
 Generally we found this model difficult to fit.
 }
 \examples{
-\dontrun{
-#' data('chlorella_tpc')
+\donttest{
+# load in ggplot
+library(ggplot2)
+
+# subset for the first TPC curve
+data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'beta_2012')
-mod <- minpack.lm::nlsLM(rate~beta_2012(temp = temp, a, b, c, d, e),
-data = d,
-start = start_vals,
-control = minpack.lm::nls.lm.control(maxiter = 1000))
+# fit model
+mod <- nls.multstart::nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
+                                 data = d,
+                                 iter = c(7,7,7,7,7),
+                                 start_lower = start_vals - 10,
+                                 start_upper = start_vals + 10,
+                                 lower = get_lower_lims(d$temp, d$rate, model_name = 'beta_2012'),
+                                 upper = get_upper_lims(d$temp, d$rate, model_name = 'beta_2012'),
+                                 supp_errors = 'Y',
+                                 convergence_count = FALSE)
 
-# look at model
+# look at model fit
 summary(mod)
-est_params(mod)}
+
+# get predictions
+preds <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- broom::augment(mod, newdata = preds)
+
+# plot
+ggplot(preds) +
+geom_point(aes(temp, rate), d) +
+geom_line(aes(temp, .fitted), col = 'blue') +
+theme_bw()
+}
 }
 \references{
 Niehaus, Amanda C., et al. Predicting the physiological performance of ectotherms in fluctuating thermal environments. Journal of Experimental Biology 215.4: 694-701 (2012)
