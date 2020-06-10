@@ -191,14 +191,14 @@ $$rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}$$</p>
 <span class='no'>start_vals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>)
 <span class='co'># fit model</span>
 <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nls.multstart</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='no'>rate</span>~<span class='fu'>flinn_1991</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>),
-                                 <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
-                                 <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>),
-                                 <span class='kw'>start_lower</span> <span class='kw'>=</span> <span class='no'>start_vals</span> - <span class='fl'>1</span>,
-                                 <span class='kw'>start_upper</span> <span class='kw'>=</span> <span class='no'>start_vals</span> + <span class='fl'>1</span>,
-                                 <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
-                                 <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
-                                 <span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
-                                 <span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
+<span class='kw'>iter</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>),
+<span class='kw'>start_lower</span> <span class='kw'>=</span> <span class='no'>start_vals</span> - <span class='fl'>1</span>,
+<span class='kw'>start_upper</span> <span class='kw'>=</span> <span class='no'>start_vals</span> + <span class='fl'>1</span>,
+<span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
+<span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
+<span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
+<span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># look at model fit</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
@@ -218,7 +218,7 @@ $$rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}$$</p>
 #&gt; Achieved convergence tolerance: 1.49e-08
 #&gt; </div><div class='input'>
 <span class='co'># get predictions</span>
-<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'>tibble</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
 <span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>broom</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/broom/man/reexports.html'>augment</a></span>(<span class='no'>mod</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='no'>preds</span>)
 
 <span class='co'># plot</span>

@@ -18,20 +18,39 @@
 #'
 #' @note Generally we found this model difficult to fit.
 #' @examples
-#' # load in data
+#' # load in ggplot
+#' library(ggplot2)
+#'
+#' # subset for the first TPC curve
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'hinshelwood_1947')
-#' mod <- minpack.lm::nlsLM(rate~hinshelwood_1947(temp = temp, a, e, b, eh),
+#' # fit model
+#' mod <- nls.multstart::nls_multstart(rate~hinshelwood_1947(temp = temp,a, e, b, eh),
 #' data = d,
-#' start = start_vals,
-#' control = minpack.lm::nls.lm.control(maxiter = 100))
+#' iter = c(5,5,5,5),
+#' start_lower = start_vals - 1,
+#' start_upper = start_vals + 1,
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'hinshelwood_1947'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'hinshelwood_1947'),
+#' supp_errors = 'Y',
+#' convergence_count = FALSE)
 #'
-#' # look at model
+#' # look at model fit
 #' summary(mod)
-#' est_params(mod)
+#'
+#' # get predictions
+#' preds <- data.frame(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+#' preds <- broom::augment(mod, newdata = preds)
+#'
+#' # plot
+#' ggplot(preds) +
+#' geom_point(aes(temp, rate), d) +
+#' geom_line(aes(temp, .fitted), col = 'blue') +
+#' theme_bw()
+#'
 #' @export hinshelwood_1947
 
 hinshelwood_1947 <- function(temp, a, e, b, eh){

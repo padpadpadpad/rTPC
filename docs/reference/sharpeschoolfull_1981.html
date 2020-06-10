@@ -197,42 +197,58 @@ $$rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}
     <p>Schoolfield, R. M., Sharpe, P. J. &amp; Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># load in data</span>
+    <pre class="examples"><div class='input'><span class='co'># load in ggplot</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nls.multstart</span>)
+
+<span class='co'># subset for the first TPC curve</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'chlorella_tpc'</span>)
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>chlorella_tpc</span>, <span class='no'>curve_id</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
 <span class='co'># get start values and fit model</span>
 <span class='no'>start_vals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'sharpeschoolfull_1981'</span>)
-<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>minpack.lm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/minpack.lm/man/nlsLM.html'>nlsLM</a></span>(<span class='no'>rate</span>~<span class='fu'>sharpeschoolfull_1981</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>r_tref</span>, <span class='no'>e</span>,
-<span class='no'>el</span>, <span class='no'>tl</span>, <span class='no'>eh</span>, <span class='no'>th</span>, <span class='kw'>tref</span><span class='kw'>=</span><span class='fl'>15</span>),
+<span class='co'># fit model</span>
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='no'>rate</span>~<span class='fu'>sharpeschoolfull_1981</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>r_tref</span>, <span class='no'>e</span>, <span class='no'>el</span>, <span class='no'>tl</span>, <span class='no'>eh</span>, <span class='no'>th</span>, <span class='kw'>tref</span> <span class='kw'>=</span> <span class='fl'>20</span>),
 <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
-<span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>start_vals</span>,
-<span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>minpack.lm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/minpack.lm/man/nls.lm.control.html'>nls.lm.control</a></span>(<span class='kw'>maxiter</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='kw'>iter</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>),
+<span class='kw'>start_lower</span> <span class='kw'>=</span> <span class='no'>start_vals</span> - <span class='fl'>10</span>,
+<span class='kw'>start_upper</span> <span class='kw'>=</span> <span class='no'>start_vals</span> + <span class='fl'>10</span>,
+<span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'sharpeschoolfull_1981'</span>),
+<span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'sharpeschoolfull_1981'</span>),
+<span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
+<span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='co'># look at model</span>
+<span class='co'># look at model fit</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
 #&gt; Formula: rate ~ sharpeschoolfull_1981(temp = temp, r_tref, e, el, tl, 
-#&gt;     eh, th, tref = 15)
+#&gt;     eh, th, tref = 20)
 #&gt; 
 #&gt; Parameters:
 #&gt;        Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; r_tref   0.1238     0.1031   1.201   0.2751    
-#&gt; e        1.3364     1.3128   1.018   0.3480    
-#&gt; el      -1.4191     0.4896  -2.899   0.0274 *  
-#&gt; tl      30.7635    23.4515   1.312   0.2375    
-#&gt; eh      21.3681    27.6465   0.773   0.4689    
-#&gt; th      43.1672     3.0459  14.172 7.71e-06 ***
+#&gt; r_tref  1.61689    4.91089   0.329   0.7532    
+#&gt; e       0.02815    1.01715   0.028   0.9788    
+#&gt; el      1.44338    0.68857   2.096   0.0809 .  
+#&gt; tl     28.53344   21.51355   1.326   0.2330    
+#&gt; eh     19.24223   25.84738   0.744   0.4847    
+#&gt; th     44.01635    1.62323  27.116 1.66e-07 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.1829 on 6 degrees of freedom
+#&gt; Residual standard error: 0.1831 on 6 degrees of freedom
 #&gt; 
-#&gt; Number of iterations to convergence: 22 
+#&gt; Number of iterations to convergence: 24 
 #&gt; Achieved convergence tolerance: 1.49e-08
-#&gt; </div><div class='input'><span class='fu'><a href='est_params.html'>est_params</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt;       rmax   topt  ctmin  ctmax         e       eh      q10
-#&gt; 1 1.563474 41.862 12.729 45.423 0.5802496 11.48403 2.063147
-#&gt;   thermal_safety_margin tolerance_range  skewness
-#&gt; 1                 3.561          32.694 -10.90378</div></pre>
+#&gt; </div><div class='input'>
+<span class='co'># get predictions</span>
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>broom</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/broom/man/reexports.html'>augment</a></span>(<span class='no'>mod</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='no'>preds</span>)
+
+<span class='co'># plot</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>preds</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>), <span class='no'>d</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>.fitted</span>), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'blue'</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='sharpeschoolfull_1981-1.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

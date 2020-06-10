@@ -41,22 +41,23 @@ reference:
   - weibull_1995
 - title: Helper functions
   contents:
+  - get_model_names
+  - get_start_vals
+  - get_lower_lims
+  - get_upper_lims
+- title: Estimating parameters
+  contents:
   - est_params
   - get_ctmax
   - get_ctmin
   - get_e
   - get_eh
-  - get_lower_lims
-  - get_model_names
   - get_q10
   - get_rmax
   - get_skewness
-  - get_start_vals
   - get_thermalsafetymargin
   - get_thermaltolerance
   - get_topt
-  - get_topt
-  - get_upper_lims
 - title: Data
   contents:
   - chlorella_tpc

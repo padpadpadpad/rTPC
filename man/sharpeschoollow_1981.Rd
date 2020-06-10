@@ -37,20 +37,40 @@ Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the d
 Generally we found this model easy to fit.
 }
 \examples{
-# load in data
+# load in ggplot
+library(ggplot2)
+library(nls.multstart)
+
+# subset for the first TPC curve
 data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoollow_1981')
-mod <- minpack.lm::nlsLM(rate~sharpeschoollow_1981(temp = temp, r_tref, e, el, tl, tref=15),
+# fit model
+mod <- nls_multstart(rate~sharpeschoollow_1981(temp = temp, r_tref, e, el, tl, tref = 20),
 data = d,
-start = start_vals,
-control = minpack.lm::nls.lm.control(maxiter = 100))
+iter = c(3,3,3,3),
+start_lower = start_vals - 10,
+start_upper = start_vals + 10,
+lower = get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoollow_1981'),
+upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoollow_1981'),
+supp_errors = 'Y',
+convergence_count = FALSE)
 
-# look at model
+# look at model fit
 summary(mod)
-est_params(mod)
+
+# get predictions
+preds <- data.frame(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- broom::augment(mod, newdata = preds)
+
+# plot
+ggplot(preds) +
+geom_point(aes(temp, rate), d) +
+geom_line(aes(temp, .fitted), col = 'blue') +
+theme_bw()
+
 }
 \references{
 Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)

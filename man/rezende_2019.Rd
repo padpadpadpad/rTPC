@@ -35,20 +35,39 @@ Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme v
 Generally we found this model easy to fit.
 }
 \examples{
-# load in data
+# load in ggplot
+library(ggplot2)
+
+# subset for the first TPC curve
 data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'rezende_2019')
-mod <- minpack.lm::nlsLM(rate~rezende_2019(temp = temp, q10, a, b, c),
+# fit model
+mod <- nls.multstart::nls_multstart(rate~rezende_2019(temp = temp, q10, a, b, c),
 data = d,
-start = start_vals,
-control = minpack.lm::nls.lm.control(maxiter = 100))
+iter = c(4,4,4,4),
+start_lower = start_vals - 10,
+start_upper = start_vals + 10,
+lower = get_lower_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+upper = get_upper_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+supp_errors = 'Y',
+convergence_count = FALSE)
 
-# look at model
+# look at model fit
 summary(mod)
-est_params(mod)
+
+# get predictions
+preds <- data.frame(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- broom::augment(mod, newdata = preds)
+
+# plot
+ggplot(preds) +
+geom_point(aes(temp, rate), d) +
+geom_line(aes(temp, .fitted), col = 'blue') +
+theme_bw()
+
 }
 \references{
 Rezende, Enrico L., and Francisco Bozinovic. Thermal performance across levels of biological organization. Philosophical Transactions of the Royal Society B 374.1778 (2019): 20180549.

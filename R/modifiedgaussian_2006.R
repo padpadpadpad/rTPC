@@ -16,20 +16,39 @@
 #' @note Generally we found this model difficult to fit.
 #' @references Angilletta Jr, M. J. (2006). Estimating and comparing thermal performance curves. Journal of Thermal Biology, 31(7), 541-545.
 #' @examples
-#' \dontrun{ #load in data
+#' # load in ggplot
+#' library(ggplot2)
+#'
+#' # subset for the first TPC curve
 #' data('chlorella_tpc')
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'modifiedgaussian_2006')
-#' mod <- minpack.lm::nlsLM(rate~modifiedgaussian_2006(temp = temp, rmax, topt, a, b),
+#' # fit model
+#' mod <- nls.multstart::nls_multstart(rate~modifiedgaussian_2006(temp = temp, rmax, topt, a, b),
 #' data = d,
-#' start = start_vals,
-#' control = minpack.lm::nls.lm.control(maxiter = 1000))
+#' iter = c(3,3,3,3),
+#' start_lower = start_vals - 10,
+#' start_upper = start_vals + 10,
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'modifiedgaussian_2006'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'modifiedgaussian_2006'),
+#' supp_errors = 'Y',
+#' convergence_count = FALSE)
 #'
-#' # look at model
+#' # look at model fit
 #' summary(mod)
-#' est_params(mod)}
+#'
+#' # get predictions
+#' preds <- data.frame(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+#' preds <- broom::augment(mod, newdata = preds)
+#'
+#' # plot
+#' ggplot(preds) +
+#' geom_point(aes(temp, rate), d) +
+#' geom_line(aes(temp, .fitted), col = 'blue') +
+#' theme_bw()
+#'
 #' @export modifiedgaussian_2006
 
 modifiedgaussian_2006 <- function(temp, rmax, topt, a, b){
