@@ -1,5 +1,5 @@
 ---
-title: "Modelling a thermal performance curve using rTPC and nls.multstart"
+title: "Modelling a thermal performance curve using rTPC"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
@@ -14,9 +14,17 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = 'center'
 )
 ```
+
+***
+### Things to consider
+
+
+
+***
 
 ```{r setup, message=FALSE}
 # load packages
@@ -30,7 +38,7 @@ __rTPC__ provides a suite of functions to help fit thermal performance curves to
 
 The available model formulations can be accessed using __get_model_names()__.
 
-```{r}
+```{r get_mod_names}
 get_model_names()
 ```
 

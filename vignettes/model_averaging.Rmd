@@ -1,0 +1,261 @@
+---
+title: "Fitting multiple models to a TPC: model selection and model averaging"
+author: "Daniel Padfield"
+date: "`r Sys.Date()`"
+description: >
+  A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{model_selection_and_averaging}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = 'center'
+)
+```
+
+***
+### Key things to consider 
+
+
+
+***
+
+```{r setup, message=FALSE}
+# load packages
+library(rTPC)
+library(nls.multstart)
+library(broom)
+library(tidyverse)
+library(ggrepel)
+```
+
+The easiest pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
+
+Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see [this vignette](fitting_multiple_models_to_a_TPC.html)): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
+
+We can demonstrate the model averaging process for these model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
+
+```{r first_plot, fig.width=6, fig.height = 4}
+# load in data
+data("chlorella_tpc")
+
+# keep just a single curve
+d <- filter(chlorella_tpc, curve_id == 1)
+
+# show the data
+ggplot(d, aes(temp, rate)) +
+  geom_point() +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Respiration across temperatures')
+
+```
+
+The 5 models can then be fitted using the same approach as in the [previous vignette](fitting_multiple_models_to_a_TPC.html), using list columns **purrr::map()** to fit and store multiple models in a data frame.
+
+```{r fit_multiple_models, warning=FALSE}
+# fit five chosen model formulation in rTPC
+d_fits <- nest(d, data = c(temp, rate)) %>%
+  mutate(boatman = map(data, ~nls_multstart(rate~boatman_2017(temp = temp, rmax, tmin, tmax, a,b),
+                        data = .x,
+                        iter = c(4,4,4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'boatman_2017') - 10,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'boatman_2017') + 10,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'boatman_2017'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'boatman_2017'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         gaussian = map(data, ~nls_multstart(rate~gaussian_1987(temp = temp, rmax, topt, a),
+                        data = .x,
+                        iter = c(4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'gaussian_1987') - 10,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'gaussian_1987') + 10,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'gaussian_1987'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'gaussian_1987'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         oneill = map(data, ~nls_multstart(rate~oneill_1972(temp = temp, rmax, ctmax, topt, q10),
+                        data = .x,
+                        iter = c(4,4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'oneill_1972') - 10,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'oneill_1972') + 10,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'oneill_1972'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'oneill_1972'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         quadratic = map(data, ~nls_multstart(rate~quadratic_2008(temp = temp, a, b, c),
+                        data = .x,
+                        iter = c(4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'quadratic_2008') - 0.5,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'quadratic_2008') + 0.5,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'quadratic_2008'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'quadratic_2008'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         rezende = map(data, ~nls_multstart(rate~rezende_2019(temp = temp, q10, a,b,c),
+                        data = .x,
+                        iter = c(4,4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'rezende_2019') - 10,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'rezende_2019') + 10,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+                        data = .x,
+                        iter = c(4,4,4,4),
+                        start_lower = get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                        start_upper = get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                        lower = get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)))
+```
+
+The predictions of each model can be estimated using **broom::augment()**. This can be done on all models at once after the models are stacked into long format. To create a smooth curve fit, the predictions are done on a new temperature vector that has 100 points over the temperature range. The predictions for each model formulation are then visualised in **ggplot2**.
+
+```{r preds_and_plot, fig.width = 6, fig.height = 4}
+# stack models
+d_stack <- select(d_fits, -data) %>%
+  pivot_longer(., names_to = 'model_name', values_to = 'fit', boatman:sharpeschoolhigh)
+
+# get predictions using augment
+newdata <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+d_preds <- d_stack %>%
+  mutate(., preds = map(fit, augment, newdata = newdata)) %>%
+  select(-fit) %>%
+  unnest(preds)
+
+# take a random point from each model for labelling
+d_labs <- filter(d_preds, temp < 30) %>%
+  group_by(., model_name) %>%
+  sample_n(., 1) %>%
+  ungroup()
+
+# plot
+ggplot(d_preds, aes(temp, .fitted)) +
+  geom_line(aes(col = model_name)) +
+  geom_label_repel(aes(temp, .fitted, label = model_name, col = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', d_labs) +
+  geom_point(aes(temp, rate), d) +
+  theme_bw(base_size = 12) +
+  theme(legend.position = 'none') +
+  labs(x = 'Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Respiration across temperatures') +
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  scale_color_brewer(type = 'qual', palette = 2)
+
+```
+
+As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using  measures of relative model fit - such as AIC, BIC, and AICc (AICc correcting for small sample size). Which measure is most appropriate is going to be determined by the question being answered. AIC and BIC are both returned by **broom::glance()**, and AICc can be added using **MuMIn::AICc()**
+
+```{r calculate_fit_measures}
+d_ic <- d_stack %>%
+  mutate(., info = map(fit, glance),
+         AICc =  map_dbl(fit, MuMIn::AICc)) %>%
+  select(-fit) %>%
+  unnest(info) %>%
+  select(model_name, sigma, AIC, AICc, BIC, df.residual)
+
+d_ic
+
+```
+In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model. 
+
+```{r model_selection, fig.width=6, fig.height = 4}
+# filter for best model
+best_model = filter(d_ic, AICc == min(AICc)) %>% pull(model_name)
+best_model
+
+# get colour code
+col_best_mod = RColorBrewer::brewer.pal(n = 6, name = "Dark2")[6]
+
+# plot
+ggplot(d_preds, aes(temp, .fitted)) +
+  geom_line(aes(group = model_name), col = 'grey50', alpha = 0.5) +
+  geom_line(data = filter(d_preds, model_name == best_model), col = col_best_mod) +
+  geom_label_repel(aes(temp, .fitted, label = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', data = filter(d_labs, model_name == best_model), col = col_best_mod) +
+  geom_point(aes(temp, rate), d) +
+  theme_bw(base_size = 12) +
+  theme(legend.position = 'none') +
+  labs(x = 'Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Respiration across temperatures',
+       subtitle= 'The Sharpe-Schoolfield model is the best model') +
+  geom_hline(aes(yintercept = 0), linetype = 2) 
+
+```
+
+For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model's weighting. The best supported model's predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in whatever information criterion metric is being used. A common approach is to only keep models within $\Delta 2 AIC$ of the best model.
+
+```{r model_weights, fig.width=6, fig.height = 4}
+# get model weights
+# filtering on AIC score is hashtagged out in this example
+d_ic <- d_ic %>%
+  # filter(d_ic, aic - min(aic) <= 2) %>%
+  mutate(., weight = MuMIn::Weights(AICc))
+
+select(d_ic, model_name, weight) %>%
+  arrange(., desc(weight))
+
+# calculate average prediction
+ave_preds <- left_join(d_preds, select(d_ic, model_name, weight)) %>%
+  group_by(temp) %>%
+  summarise(., .fitted = sum(.fitted*weight)) %>%
+  ungroup() %>%
+  mutate(model_name = 'model average')
+
+# create label for averaged predictions
+d_labs <- filter(ave_preds, temp < 30) %>% sample_n(., 1)
+
+# plot these
+ggplot(d_preds, aes(temp, .fitted)) +
+  geom_line(aes(col = model_name), alpha = 0.3) +
+  geom_line(data = ave_preds, col = 'blue') +
+  geom_label_repel(aes(label = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', data = d_labs, col = 'blue') +
+  geom_point(aes(temp, rate), d) +
+  theme_bw(base_size = 12) +
+  theme(legend.position = 'none') +
+  labs(x = 'Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Respiration across temperatures',
+       subtitle= 'Model averaged predictions') +
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  scale_color_brewer(type = 'qual', palette = 2)
+
+
+```
+
+In this example, as is obvious from the model weights, the Sharpe-Schoolfield model is overwhelmingly the most supported. This plays out in the plot, with the predictions deviating very little from the predictions based on the Sharpe-Schoolfield model.
+
+Model averaging can also be applied to estimated extra parameters, such as optimum temperature and maximum rate.
+
+```{r ave_est_params}
+# calculate estimated parameters
+params <- d_stack %>%
+  mutate(., params = map(fit, est_params)) %>%
+  select(-fit) %>%
+  unnest(params)
+
+# get averaged parameters based on model weights
+ave_params <- left_join(params, select(d_ic, model_name, weight)) %>%
+  summarise(., across(rmax:skewness, function(x){sum(x*.$weight)})) %>%
+  mutate(model_name = 'model average')
+
+# show them
+bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
+  mutate_if(is.numeric, round, 2)
+
+```
+***
+
+### Further reading
+
+
