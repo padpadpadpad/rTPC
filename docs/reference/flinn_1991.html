@@ -180,21 +180,52 @@ $$rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}$$</p>
     <p>Flinn PW Temperature-dependent functional response of the parasitoid Cephalonomia waterstoni (Gahan) (Hymenoptera, Bethylidae) attacking rusty grain beetle larvae (Coleoptera, Cucujidae). Environmental Entomology, 20, 872–876, (1991)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='co'># load in data</span>
+    <pre class="examples"><div class='input'><span class='co'># load in ggplot</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+
+<span class='co'># subset for the first TPC curve</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'chlorella_tpc'</span>)
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>chlorella_tpc</span>, <span class='no'>curve_id</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
 <span class='co'># get start values and fit model</span>
 <span class='no'>start_vals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>)
-<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>minpack.lm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/minpack.lm/man/nlsLM.html'>nlsLM</a></span>(<span class='no'>rate</span>~<span class='fu'>flinn_1991</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
-<span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>start_vals</span>,
-<span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>minpack.lm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/minpack.lm/man/nls.lm.control.html'>nls.lm.control</a></span>(<span class='kw'>maxiter</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='co'># fit model</span>
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nls.multstart</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='no'>rate</span>~<span class='fu'>flinn_1991</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>),
+                                 <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
+                                 <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>),
+                                 <span class='kw'>start_lower</span> <span class='kw'>=</span> <span class='no'>start_vals</span> - <span class='fl'>1</span>,
+                                 <span class='kw'>start_upper</span> <span class='kw'>=</span> <span class='no'>start_vals</span> + <span class='fl'>1</span>,
+                                 <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
+                                 <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'flinn_1991'</span>),
+                                 <span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
+                                 <span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='co'># look at model</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)
-<span class='fu'><a href='est_params.html'>est_params</a></span>(<span class='no'>mod</span>)}</div></pre>
+<span class='co'># look at model fit</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
+#&gt; Formula: rate ~ flinn_1991(temp = temp, a, b, c)
+#&gt; 
+#&gt; Parameters:
+#&gt;    Estimate Std. Error t value Pr(&gt;|t|)  
+#&gt; a 15.736391   6.184662   2.544   0.0315 *
+#&gt; b -0.865546   0.333214  -2.598   0.0289 *
+#&gt; c  0.011626   0.004482   2.594   0.0290 *
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#&gt; 
+#&gt; Residual standard error: 0.3336 on 9 degrees of freedom
+#&gt; 
+#&gt; Number of iterations to convergence: 48 
+#&gt; Achieved convergence tolerance: 1.49e-08
+#&gt; </div><div class='input'>
+<span class='co'># get predictions</span>
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'>tibble</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>broom</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/broom/man/reexports.html'>augment</a></span>(<span class='no'>mod</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='no'>preds</span>)
+
+<span class='co'># plot</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>preds</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>), <span class='no'>d</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>.fitted</span>), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'blue'</span>) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='flinn_1991-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

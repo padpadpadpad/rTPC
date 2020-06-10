@@ -37,20 +37,38 @@ Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the d
 Generally we found this model easy to fit.
 }
 \examples{
-\dontrun{# load in data
+# load in ggplot
+library(ggplot2)
+
+# subset for the first TPC curve
 data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'delong_2017')
-mod <- minpack.lm::nlsLM(rate~delong_2017(temp = temp, c, eb, ef, tm, ehc),
-data = d,
-start = start_vals,
-control = minpack.lm::nls.lm.control(maxiter = 100))
+# fit model
+mod <- nls.multstart::nls_multstart(rate~delong_2017(temp = temp, c, eb, ef, tm,ehc),
+                                 data = d,
+                                 iter = c(4,4,4,4,4),
+                                 start_lower = start_vals - 10,
+                                 start_upper = start_vals + 10,
+                                 lower = get_lower_lims(d$temp, d$rate, model_name = 'delong_2017'),
+                                 upper = get_upper_lims(d$temp, d$rate, model_name = 'delong_2017'),
+                                 supp_errors = 'Y',
+                                 convergence_count = FALSE)
 
-# look at model
+# look at model fit
 summary(mod)
-est_params(mod)}
+
+# get predictions
+preds <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
+preds <- broom::augment(mod, newdata = preds)
+
+# plot
+ggplot(preds) +
+geom_point(aes(temp, rate), d) +
+geom_line(aes(temp, .fitted), col = 'blue') +
+theme_bw()
 }
 \references{
 DeLong, John P., et al. The combined effects of reactant kinetics and enzyme stability explain the temperature dependence of metabolic rates. Ecology and evolution 7.11 (2017): 3940-3950.
