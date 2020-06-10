@@ -1,4 +1,4 @@
-#' Thomas (2012) model
+#' Thomas model (2012) for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param a arbitrary constant

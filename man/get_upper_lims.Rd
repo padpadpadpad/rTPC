@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_upper_lims.R
 \name{get_upper_lims}
 \alias{get_upper_lims}
-\title{Set uninformed upper limits on parameter values}
+\title{Set broad upper limits on parameter values}
 \usage{
 get_upper_lims(x, y, model_name)
 }

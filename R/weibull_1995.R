@@ -1,4 +1,4 @@
-#' Weibull model
+#' Weibull model for fitting thermal performance curves
 #'
 #'
 #' @param temp temperature in degrees centigrade

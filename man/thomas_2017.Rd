@@ -2,7 +2,7 @@
 % Please edit documentation in R/thomas_2017.R
 \name{thomas_2017}
 \alias{thomas_2017}
-\title{Thomas model (2017)}
+\title{Thomas model (2017) for fitting thermal performance curves}
 \usage{
 thomas_2017(temp, a, b, c, d, e)
 }
@@ -20,7 +20,7 @@ thomas_2017(temp, a, b, c, d, e)
 \item{e}{along with d controls the exponential increase in mortality rates with temperature}
 }
 \description{
-Thomas model (2017)
+Thomas model (2017) for fitting thermal performance curves
 }
 \details{
 Equation:

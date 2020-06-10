@@ -2,7 +2,7 @@
 % Please edit documentation in R/thomas_2012.R
 \name{thomas_2012}
 \alias{thomas_2012}
-\title{Thomas (2012) model}
+\title{Thomas model (2012) for fitting thermal performance curves}
 \usage{
 thomas_2012(temp, a, b, c, topt)
 }
@@ -18,7 +18,7 @@ thomas_2012(temp, a, b, c, topt)
 \item{topt}{determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt}
 }
 \description{
-Thomas (2012) model
+Thomas model (2012) for fitting thermal performance curves
 }
 \details{
 Equation:

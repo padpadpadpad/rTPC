@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_lower_lims.R
 \name{get_lower_lims}
 \alias{get_lower_lims}
-\title{Set uninformed lower limits on parameter values}
+\title{Set broad lower limits on parameter values}
 \usage{
 get_lower_lims(x, y, model_name)
 }

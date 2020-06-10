@@ -1,4 +1,4 @@
-#' Set uninformed lower limits on parameter values
+#' Set broad lower limits on parameter values
 #'
 #' @description Sets wide lower limits on parameter values for each TPC model
 #' @param x vector of temperature values

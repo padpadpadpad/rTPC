@@ -1,4 +1,4 @@
-#' Thomas model (2017)
+#' Thomas model (2017) for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param a birth rate at 0 ºC

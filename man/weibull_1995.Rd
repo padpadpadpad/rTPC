@@ -2,7 +2,7 @@
 % Please edit documentation in R/weibull_1995.R
 \name{weibull_1995}
 \alias{weibull_1995}
-\title{Weibull model}
+\title{Weibull model for fitting thermal performance curves}
 \usage{
 weibull_1995(temp, a, topt, b, c)
 }
@@ -18,7 +18,7 @@ weibull_1995(temp, a, topt, b, c)
 \item{c}{defines the curve shape}
 }
 \description{
-Weibull model
+Weibull model for fitting thermal performance curves
 }
 \details{
 Equation:
