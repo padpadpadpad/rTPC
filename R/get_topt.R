@@ -25,6 +25,6 @@ get_topt <- function(model){
   # predict over a whole wide range of data
   newdata$preds <- stats::predict(model, newdata = newdata)
   topt = newdata[newdata$preds == max(newdata$preds),param_ind]
-  return(topt)
+  return(mean(topt))
 }
 
