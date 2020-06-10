@@ -4,7 +4,7 @@ Title: Functions for fitting thermal performance curves
 Version: 0.1.0
 Authors@R: c(
     person("Daniel", "Padfield", email = "d.padfield@exeter.ac.uk", role = c("aut", "cre")),
-    person("Hannah", "O'Sullivan", email = "hjosullivan123@gmail.com", role = "aut", "cre"))
+    person("Hannah", "O'Sullivan", email = "hjosullivan123@gmail.com", role = c("aut")))
 Maintainer: Daniel Padfield <d.padfield@exeter.ac.uk>
 Description: Package to help fit thermal performance curves to physiological data.
 License: GPL-3
@@ -22,8 +22,7 @@ Suggests:
     knitr,
     rmarkdown,
     tidyverse,
-    ggrepel
-Imports: 
-    moments
+    ggrepel,
+    RColorBrewer
 Depends: R (>= 2.10)
 VignetteBuilder: knitr
