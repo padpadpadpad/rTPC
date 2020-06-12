@@ -2,8 +2,6 @@
 title: "Model selection and model averaging"
 author: "Daniel Padfield"
 date: "`r Sys.Date()`"
-description: >
-  A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{model_selection_and_averaging}
@@ -11,18 +9,27 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+#### A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
+
+***
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  #tidy.opts=list(width.cutoff=60),
+  #tidy=TRUE,
   fig.align = 'center'
 )
 ```
 
-***
-### Key things to consider 
+### Things to consider 
 
-
+- There is no magic bullet with model selection and model averaging.
+- Think carefully about which models to fit **before** any fitting takes place.
+- Should models be weighted when doing model averaging? 
+    - It seems illogical to allow a poor model to ruin the prediction, so it makes sense to down-weight it. This is the advice much of ecology takes: only average models within $\Delta 2 AIC$ of the best model.
+    -  If we have already pre-selected sensible models from the 23, it may often be wiser not to compute model weights. This is the common procedure in economics and with the IPCC earth-system-models.
 
 ***
 
@@ -35,7 +42,7 @@ library(tidyverse)
 library(ggrepel)
 ```
 
-The easiest pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
+The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
 
 Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see [this vignette](fit_many_models.html)): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
 
@@ -258,4 +265,6 @@ bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
 
 ### Further reading
 
-
+- Dormann, C. F., Calabrese, J. M., Guillera‐Arroita, G., Matechou, E., Bahn, V., Bartoń, K., ... & Guelat, J. (2018). Model averaging in ecology: A review of Bayesian, information‐theoretic, and tactical approaches for predictive inference. Ecological Monographs, 88(4), 485-504. [https://doi.org/10.1002/ecm.1309](https://doi.org/10.1002/ecm.1309)
+- Burnham K. P., Anderson, D.R. (2002) Model Selection and Multi-Model Inference: a Practical Information-Theoretical Approach. 2nd ed. Berlin: Springer.
+- Banner, K. M., & Higgs, M. D. (2017). Considerations for assessing model averaging of regression coefficients. Ecological Applications, 27(1), 78-93. [https://doi.org/10.1002/eap.1419](https://doi.org/10.1002/eap.1419)

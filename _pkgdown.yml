@@ -12,6 +12,10 @@ articles:
   contents:
   - fit_many_models
   - model_averaging_selection
+- title: Multiple curve fits
+  navbar: ~
+  contents:
+  - fit_many_curves
 
 reference:
 - title: Models

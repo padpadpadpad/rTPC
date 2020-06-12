@@ -17,17 +17,23 @@ downstream analyses, such as cardinal temperatures, maximum rate and
 optimum temperature.
 
 The idea behind **rTPC** is to make fitting thermal performance curves
-easier, but we made a conscious decision not to repeat code and methods
-that are already optimised and available in the R ecosystem.
-Consequently, the workflows take advantage of
+easier, to provide workflows and examples of fitting TPCs without saying
+which models work best. Which model and which workflow is “best” is
+going to be down to the question that is being asked. Throughout the
+vignettes, *Things to consider* sections give ideas of what need to be
+considered about *before* the analysis takes place.
+
+When developing **rTPC**, we made a conscious decision not to repeat
+code and methods that are already optimised and available in the R
+ecosystem. Consequently, the workflows take advantage of
 [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for
 fitting non-linear least squares regression and packages from the
 [**tidyverse**](https://www.tidyverse.org) for data manipulation,
 fitting multiple models, and visualisation.
 
-This R package and the pipelines outlined in the vignettes are in the
-process of being written up into a methods paper. In the meantime,
-please cite as:
+**rTPC** and the pipelines outlined in the vignettes are in the process
+of being written up into a methods paper. In the meantime, please cite
+as:
 
 Daniel Padfield and Hannah O’Sullivan (2020). rTPC: an R package for
 helping fit thermal performance curves. R package version. 0.1.0.

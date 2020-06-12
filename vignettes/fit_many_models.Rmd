@@ -3,26 +3,32 @@ title: "Fitting many models"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
-description: >
-  A brief example of how multiple models can be fitted to a single TPC using rTPC, nls.multstart, and the tidyverse.
 vignette: >
   %\VignetteIndexEntry{fitting_multiple_models_to_a_TPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+#### A brief example of how multiple models can be fitted to a single TPC using rTPC, nls.multstart, and the tidyverse.
+
+***
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  #tidy.opts=list(width.cutoff=60),
+  #tidy=TRUE,
   fig.align = 'center'
 )
 ```
 
-***
-### Key things to consider 
+### Things to consider
 
-
+- How many data points do you have for each curve? To fit all of the 23 models in **rTPC**, there needs to be a minimum of 7 points per curve.
+- If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.
+- Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.
+- Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.
 
 ***
 
@@ -64,7 +70,7 @@ ggplot(d, aes(temp, rate)) +
 
 ```
 
-When developing **rTPC**, we made a conscious decision to not re-write workflows and code that is already available in the R ecosystem. Consequently, when fitting multiple models, we take advantage of list columns and functionality provided by **purrr**. A great introduction to this is the "[Many Models](https://r4ds.had.co.nz/many-models.html)" Chapter of R for Data Science.
+When fitting multiple models, we take advantage of list columns and functionality provided by **purrr**. A great introduction to this is the "[Many Models](https://r4ds.had.co.nz/many-models.html)" Chapter of R for Data Science.
 
 For a single curve, we nest the dataframe, creating a list column which contains the temperature and rate values. We then create separate columns for each model fit using **purrr::map()**. Here, we use a gridstart approach when fitting models with **nls_multstart()**. This method creates a combination of start parameters, equally spaced across each of the starting parameter bounds. This can be specified with a vector of the same length as the number of parameters, c(5, 5, 5) for 3 estimated parameters will yield 125 iterations.
 
@@ -329,6 +335,10 @@ ggplot(d_preds, aes(temp, rate)) +
   geom_hline(aes(yintercept = 0), linetype = 2)
 
 ```
+
+***
+
+### Troubleshooting curve fits
 
 If any of the fits do not look like they have converged properly, there are things you can try:
 

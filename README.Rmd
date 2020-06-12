@@ -24,7 +24,9 @@ knitr::opts_chunk$set(
 
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. __rTPC__ contains 23 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
-The idea behind **rTPC** is to make fitting thermal performance curves easier, but we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for fitting non-linear least squares regression and packages from the [**tidyverse**](https://www.tidyverse.org) for data manipulation, fitting multiple models, and visualisation.
+The idea behind **rTPC** is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which models work best. Which model and which workflow is "best" is going to be down to the question that is being asked. Throughout the vignettes, *Things to consider* sections give ideas of what need to be considered about _before_ the analysis takes place.
+
+When developing **rTPC**, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for fitting non-linear least squares regression and packages from the [**tidyverse**](https://www.tidyverse.org) for data manipulation, fitting multiple models, and visualisation.
 
 **rTPC** and the pipelines outlined in the vignettes are in the process of being written up into a methods paper. In the meantime, please cite as:
 
@@ -33,8 +35,6 @@ Daniel Padfield and Hannah O'Sullivan (2020). rTPC: an R package for helping fit
 ## Bugs and suggestions
 
 Please report any bugs and suggestions to the [Issues](https://github.com/padpadpadpad/rTPC/issues) or email d.padfield@exeter.ac.uk.
-
-
 
 ## Installation
 

@@ -18,8 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Fitting many models">
-<meta property="og:description" content="A brief example of how multiple models can be fitted to a single TPC using rTPC, nls.multstart, and the tidyverse.
-">
+<meta property="og:description" content="rTPC">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -70,6 +69,9 @@
     <li>
       <a href="../articles/model_averaging_selection.html">Model selection and model averaging</a>
     </li>
+    <li>
+      <a href="../articles/fit_many_curves.html">Fitting many curves using rTPC</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -96,7 +98,7 @@
       <h1 data-toc-skip>Fitting many models</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-06-10</h4>
+            <h4 class="date">2020-06-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_models.Rmd"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_models.Rmd</code></div>
@@ -105,10 +107,20 @@
 
     
     
+<div id="a-brief-example-of-how-multiple-models-can-be-fitted-to-a-single-tpc-using-rtpc-nls-multstart-and-the-tidyverse-" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a-brief-example-of-how-multiple-models-can-be-fitted-to-a-single-tpc-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how multiple models can be fitted to a single TPC using rTPC, nls.multstart, and the tidyverse.</h4>
 <hr>
-<div id="key-things-to-consider" class="section level3">
+</div>
+<div id="things-to-consider" class="section level3">
 <h3 class="hasAnchor">
-<a href="#key-things-to-consider" class="anchor"></a>Key things to consider</h3>
+<a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<ul>
+<li>How many data points do you have for each curve? To fit all of the 23 models in <strong>rTPC</strong>, there needs to be a minimum of 7 points per curve.</li>
+<li>If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.</li>
+<li>Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.</li>
+<li>Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.</li>
+</ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
@@ -139,7 +151,7 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Respiration across temperatures'</span>)</pre></body></html></div>
 <p><img src="fit_many_models_files/figure-html/first_plot-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>When developing <strong>rTPC</strong>, we made a conscious decision to not re-write workflows and code that is already available in the R ecosystem. Consequently, when fitting multiple models, we take advantage of list columns and functionality provided by <strong>purrr</strong>. A great introduction to this is the “<a href="https://r4ds.had.co.nz/many-models.html">Many Models</a>” Chapter of R for Data Science.</p>
+<p>When fitting multiple models, we take advantage of list columns and functionality provided by <strong>purrr</strong>. A great introduction to this is the “<a href="https://r4ds.had.co.nz/many-models.html">Many Models</a>” Chapter of R for Data Science.</p>
 <p>For a single curve, we nest the dataframe, creating a list column which contains the temperature and rate values. We then create separate columns for each model fit using <strong>purrr::map()</strong>. Here, we use a gridstart approach when fitting models with <strong>nls_multstart()</strong>. This method creates a combination of start parameters, equally spaced across each of the starting parameter bounds. This can be specified with a vector of the same length as the number of parameters, c(5, 5, 5) for 3 estimated parameters will yield 125 iterations.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># fit every model formulation in rTPC</span>
 <span class="no">d_fits</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">rate</span>)) <span class="kw">%&gt;%</span>
@@ -405,6 +417,11 @@
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Fits of every model available in rTPC'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p><img src="fit_many_models_files/figure-html/preds_and_plot-1.png" width="768" style="display: block; margin: auto;"></p>
+<hr>
+</div>
+<div id="troubleshooting-curve-fits" class="section level3">
+<h3 class="hasAnchor">
+<a href="#troubleshooting-curve-fits" class="anchor"></a>Troubleshooting curve fits</h3>
 <p>If any of the fits do not look like they have converged properly, there are things you can try:</p>
 <ul>
 <li>Some functions may produce warnings (for example: <code>NaNs produced</code>). This is likely due to a specific set of start parameters and does not necessarily mean <strong>nls_multstart()</strong> has failed. Wrap <strong>nls_multstart()</strong> in <strong>suppressWarnings()</strong> to turn this behaviour off.</li>

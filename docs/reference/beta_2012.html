@@ -111,6 +111,9 @@
     <li>
       <a href="../articles/model_averaging_selection.html">Model selection and model averaging</a>
     </li>
+    <li>
+      <a href="../articles/fit_many_curves.html">Fitting many curves using rTPC</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -210,7 +213,7 @@ $$rate=\frac{a\left(\frac{temp-b+\frac{c(d-1)}{d+e-2}}{c}\right)^{d-1}  \cdot \l
 <span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># look at model fit</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='img'><img src='beta_2012-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
 #&gt; Formula: rate ~ beta_2012(temp = temp, a, b, c, d, e)
 #&gt; 
 #&gt; Parameters:
@@ -237,7 +240,7 @@ $$rate=\frac{a\left(\frac{temp-b+\frac{c(d-1)}{d+e-2}}{c}\right)^{d-1}  \cdot \l
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>preds</span>) +
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>), <span class='no'>d</span>) +
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>.fitted</span>), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'blue'</span>) +
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='beta_2012-2.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='beta_2012-1.png' alt='' width='700' height='433' /></div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -4,7 +4,7 @@ author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 description: >
-  An introduction to rTPC and how it can be used to fit thermal performance curves using nls.multstart.
+
 vignette: >
   %\VignetteIndexEntry{Intro to rTPC}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,16 +15,13 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  #tidy.opts=list(width.cutoff=60),
+  #tidy=TRUE,
   fig.align = 'center'
 )
 ```
 
-### Things to consider
-
-- How many data points do you have for each curve? To fit all of the 23 models in **rTPC**, there needs to be a minimum of 7 points per curve.
-- If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.
-- Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.
-- Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.
+#### An introduction to rTPC and how it can be used to fit thermal performance curves using nls.multstart.
 
 ***
 
