@@ -74,9 +74,9 @@ be used on multiple curves.
 
 ## Getting started
 
-  - For an introduction to **rTPC**, see vignette(“rTPC”)
-  - To follow the general pipeline, see vignette(“fit\_many\_curves”)
-    and vignette(“fit\_many\_models”).
+  - For an introduction to **rTPC**, see `vignette("rTPC")`
+  - To follow the general pipeline, see `vignette("fit_many_models")`
+    and `vignette("fit_many_curves")`.
   - For examples of extensions to this pipeline, see the
-    vignette(“model\_averaging\_selection”) and
-    vignette(“model\_weighting”).
+    `vignette("model_averaging_selection")` and
+    `vignette("model_weighting")`.
