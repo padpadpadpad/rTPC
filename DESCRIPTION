@@ -25,6 +25,7 @@ Suggests:
     rmarkdown,
     tidyverse,
     ggrepel,
-    RColorBrewer
+    RColorBrewer,
+    progress
 Depends: R (>= 2.10)
 VignetteBuilder: knitr

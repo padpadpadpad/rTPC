@@ -28,16 +28,15 @@ library(rTPC)
 library(nls.multstart)
 library(broom)
 library(tidyverse)
-library(ggrepel)
 ```
 
-In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 23 model formulations to demonstrate this approach, we will use only 2 models in this example: **gaussian_1987** and **sharpeschoolhigh_1981()**.
+In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 23 model formulations to demonstrate this approach, we will use only 2 models in this example: **gaussian_1987()** and **sharpeschoolhigh_1981()**.
 
 We can demonstrate the fitting of multiple curves by modelling all 60 TPCs from the example dataset of **rTPC** curve from the example dataset **rTPC**. These TPCs are of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. These algae differed in their growth temperature, `growth_temp`, and how long they had been grown at that temperature, `process`, either for ~100 or ~10 generations.
 
 Using a similar approach to the [previous vignette](fitting_multiple_models_to_a_TPC.html), models can be fitted to each individual curve using list columns **purrr::map()** to fit and store multiple models in a data frame.
 
-When fitting lots of models at once, it is useful to know the progress of a code that may take a long time to run. We can create a progress bar using `pro`
+When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run. We can create a progress bar using the [**progress**](https://github.com/r-lib/progress/blob/master/README.md) package. In order to do this, I create a new function **nls_multstart_progress** that contains a **pb$tick()** call. This means every time the function is called, it will add one tick onto the progress bar. The progress bar is created using **progress_bar$new()**, where we set the total length of the progress bar is set by the number of models in total being fit.
 
 ```{r fit_multiple_models, warning=FALSE}
 # load in data
@@ -87,6 +86,10 @@ d_fits <- nest(d, data = c(temp, rate)) %>%
                         supp_errors = 'Y',
                         convergence_count = FALSE)))
 ```
+```
+[=========================================================] 100% 00:00:40
+```
+
 
 Like previous vignettes, the predictions of each model can be estimated using **broom::augment()**. To achieve this, we first create a new list column containing high resolution temperature values by taking the `min` and `max` of each curve. Next we stack the models and finally we get the new predictions using the **map2()**, which allows us to use both `fit` and `new_data` list columns. After unnesting the `preds` column, we are then left with high resolution predictions for each curve. As this is a lot, each line of the code is commented.
 

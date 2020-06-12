@@ -119,12 +119,11 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggrepel</span>)</pre></body></html></div>
-<p>In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 23 model formulations to demonstrate this approach, we will use only 2 models in this example: <strong>gaussian_1987</strong> and <strong>sharpeschoolhigh_1981()</strong>.</p>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)</pre></body></html></div>
+<p>In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 23 model formulations to demonstrate this approach, we will use only 2 models in this example: <strong>gaussian_1987()</strong> and <strong>sharpeschoolhigh_1981()</strong>.</p>
 <p>We can demonstrate the fitting of multiple curves by modelling all 60 TPCs from the example dataset of <strong>rTPC</strong> curve from the example dataset <strong>rTPC</strong>. These TPCs are of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. These algae differed in their growth temperature, <code>growth_temp</code>, and how long they had been grown at that temperature, <code>process</code>, either for ~100 or ~10 generations.</p>
 <p>Using a similar approach to the <a href="fitting_multiple_models_to_a_TPC.html">previous vignette</a>, models can be fitted to each individual curve using list columns <strong>purrr::map()</strong> to fit and store multiple models in a data frame.</p>
-<p>When fitting lots of models at once, it is useful to know the progress of a code that may take a long time to run. We can create a progress bar using <code>pro</code></p>
+<p>When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run. We can create a progress bar using the <a href="https://github.com/r-lib/progress/blob/master/README.md"><strong>progress</strong></a> package. In order to do this, I create a new function <strong>nls_multstart_progress</strong> that contains a <strong>pb<span class="math inline">\(tick()** call. This means every time the function is called, it will add one tick onto the progress bar. The progress bar is created using **progress_bar\)</span>new()</strong>, where we set the total length of the progress bar is set by the number of models in total being fit.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># load in data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"chlorella_tpc"</span>)
 <span class="no">d</span> <span class="kw">&lt;-</span> <span class="no">chlorella_tpc</span>
@@ -171,8 +170,9 @@
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
                         <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
                         <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)))</pre></body></html></div>
+<pre><code>[=========================================================] 100% 00:00:40</code></pre>
 <p>Like previous vignettes, the predictions of each model can be estimated using <strong>broom::augment()</strong>. To achieve this, we first create a new list column containing high resolution temperature values by taking the <code>min</code> and <code>max</code> of each curve. Next we stack the models and finally we get the new predictions using the <strong>map2()</strong>, which allows us to use both <code>fit</code> and <code>new_data</code> list columns. After unnesting the <code>preds</code> column, we are then left with high resolution predictions for each curve. As this is a lot, each line of the code is commented.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># create new list column of for high resolution data</span>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># create new list column of for high resolution data</span>
 <span class="no">d_preds</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_fits</span>, <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>)))) <span class="kw">%&gt;%</span>
   <span class="co"># get rid of original data column</span>
   <span class="fu">select</span>(<span class="no">.</span>, -<span class="no">data</span>) <span class="kw">%&gt;%</span>
@@ -197,7 +197,7 @@
 <span class="co">#&gt; $ temp        &lt;dbl&gt; 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.6666…</span>
 <span class="co">#&gt; $ .fitted     &lt;dbl&gt; 0.02790076, 0.03175769, 0.03607053, 0.04088150, 0.0462351…</span></pre></body></html></div>
 <p>We can then plot the predictions of each curve using <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># plot</span>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># plot</span>
 <span class="fu">ggplot</span>(<span class="no">d_preds</span>) +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">model_name</span>)) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>), <span class="no">d</span>) +
@@ -211,7 +211,7 @@
        <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'gaussian in green; sharpeschoolhigh in orange'</span>)</pre></body></html></div>
 <p><img src="fit_many_curves_files/figure-html/plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>The traits of each thermal performance curve can also easily be calculated.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># stack models and calculate extra params</span>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># stack models and calculate extra params</span>
 <span class="no">d_params</span> <span class="kw">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="no">d_fits</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'model_name'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'fit'</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">gaussian</span>,<span class="no">sharpeschoolhigh</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">est_params</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">select</span>(<span class="no">curve_id</span>, <span class="no">growth_temp</span>, <span class="no">process</span>, <span class="no">flux</span>, <span class="no">model_name</span>, <span class="no">params</span>) <span class="kw">%&gt;%</span>
