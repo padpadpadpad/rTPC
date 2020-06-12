@@ -11,6 +11,7 @@ articles:
   navbar: Fitting a single curve
   contents:
   - fit_many_models
+  - model_weighting
   - model_averaging_selection
 - title: Multiple curve fits
   navbar: Fitting many curves
