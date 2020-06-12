@@ -8,7 +8,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 #### A brief example of how to fit many models to multiple TPCs using rTPC, nls.multstart and the tidyverse.
 
 ***

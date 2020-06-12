@@ -8,7 +8,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 #### A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
 
 ***

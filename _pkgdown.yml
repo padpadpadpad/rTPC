@@ -8,12 +8,12 @@ articles:
   contents:
   - rTPC
 - title: Single curve fit
-  navbar: ~
+  navbar: Fitting a single curve
   contents:
   - fit_many_models
   - model_averaging_selection
 - title: Multiple curve fits
-  navbar: ~
+  navbar: Fitting many curves
   contents:
   - fit_many_curves
 
