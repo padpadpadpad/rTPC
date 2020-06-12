@@ -74,16 +74,9 @@ be used on multiple curves.
 
 ## Getting started
 
-  - For an introduction to **rTPC**, see the [rTPC
-    vignette](https://padpadpadpad.github.io/rTPC/articles/rTPC.html)
-  - To follow the general pipeline, see the [fitting many
-    curves](https://padpadpadpad.github.io/rTPC/articles/fit_many_curves.html)
-    and [fitting many
-    models](https://padpadpadpad.github.io/rTPC/articles/fit_many_models.html)
-    vignettes.
-  - For examples of extensions to this pipeline, see the [model
-    selection and
-    averaging](https://padpadpadpad.github.io/rTPC/articles/model_averaging_selection.html)
-    and [model
-    weighting](https://padpadpadpad.github.io/rTPC/articles/model_weighting.html)
-    vignettes.
+  - For an introduction to **rTPC**, see vignette(“rTPC”)
+  - To follow the general pipeline, see vignette(“fit\_many\_curves”)
+    and vignette(“fit\_many\_models”).
+  - For examples of extensions to this pipeline, see the
+    vignette(“model\_averaging\_selection”) and
+    vignette(“model\_weighting”).
