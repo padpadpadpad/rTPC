@@ -52,3 +52,9 @@ remotes::install_github("padpadpadpad/rTPC", build_vignettes = TRUE)
 <img src="man/figures/rTPC_pipeline.png" width="1000" align="center" />
 
 **Figure 1. General pipeline for fitting thermal performance curves using rTPC**. First, Collect, check, and manipulate data into long format. Next Choose which model from **rTPC** are going to be used. Here, a random assortment of four models were chosen. Then fit the models to data using **nls.multstart** and helper functions from **rTPC**. Model can then be visualised using the **tidyverse** suite of packages and common traits of TPCs can be estimated using **rTPC::est_params()**. This simple pipeline can easily be scaled up to be used on multiple curves.
+
+## Getting started
+
+- For an introduction to **rTPC**, see the [rTPC vignette](https://padpadpadpad.github.io/rTPC/articles/rTPC.html)
+- To follow the general pipeline, see the [fitting many curves](https://padpadpadpad.github.io/rTPC/articles/fit_many_curves.html) and [fitting many models](https://padpadpadpad.github.io/rTPC/articles/fit_many_models.html) vignettes.
+- For examples of extensions to this pipeline, see the [model selection and averaging](https://padpadpadpad.github.io/rTPC/articles/model_averaging_selection.html) and [model weighting](https://padpadpadpad.github.io/rTPC/articles/model_weighting.html) vignettes.

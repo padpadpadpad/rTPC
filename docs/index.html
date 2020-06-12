@@ -66,10 +66,13 @@
 <li class="divider">
     <li class="dropdown-header">Fitting a single curve</li>
     <li>
-      <a href="articles/fit_many_models.html">Fitting many models</a>
+      <a href="articles/fit_many_models.html">Fitting many models with rTPC</a>
     </li>
     <li>
-      <a href="articles/model_averaging_selection.html">Model selection and model averaging</a>
+      <a href="articles/model_weighting.html">Model weighting with rTPC</a>
+    </li>
+    <li>
+      <a href="articles/model_averaging_selection.html">Model selection and model averaging with rTPC</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Fitting many curves</li>
@@ -127,6 +130,17 @@
 <p><strong>rTPC</strong> makes it easy to fit multiple models to multiple thermal performance curves.</p>
 <p><img src="reference/figures/rTPC_pipeline.png" width="1000" align="center"></p>
 <p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. First, Collect, check, and manipulate data into long format. Next Choose which model from <strong>rTPC</strong> are going to be used. Here, a random assortment of four models were chosen. Then fit the models to data using <strong>nls.multstart</strong> and helper functions from <strong>rTPC</strong>. Model can then be visualised using the <strong>tidyverse</strong> suite of packages and common traits of TPCs can be estimated using <strong>rTPC::est_params()</strong>. This simple pipeline can easily be scaled up to be used on multiple curves.</p>
+</div>
+<div id="getting-started" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-started" class="anchor"></a>Getting started</h2>
+<ul>
+<li>For an introduction to <strong>rTPC</strong>, see the <a href="vignettes/rTPC.html">rTPC vignette</a>
+</li>
+<li>To follow the general pipeline, see the <a href="vignettes/fit_many_curves.html">fitting many curves</a> and <a href="vignettes/fit_many_models.html">fitting many models</a> vignettes.</li>
+<li>For examples of extensions to this pipeline, see the <a href="vignettes/model_averaging_selection.html">model selection and averaging</a> and <a href="vignettes/model_weighting.html">model weighting</a> vignettes.</li>
+<li>For the extensions to the</li>
+</ul>
 </div>
 </div>
   </div>
