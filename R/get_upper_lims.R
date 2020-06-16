@@ -22,8 +22,8 @@ get_upper_lims <- function(x, y, model_name) {
   d <- d[order(d$x),]
 
   # split data into post topt and pre topt
-  post_topt <- d[d$x >= d[d$y == max(d$y, na.rm = TRUE),'x'],]
-  pre_topt <- d[d$x <= d[d$y == max(d$y, na.rm = TRUE),'x'],]
+  post_topt <- d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+  pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
 
   if(model_name == 'rezende_2019'){
     b = max(d$x, na.rm = TRUE)
@@ -47,7 +47,7 @@ get_upper_lims <- function(x, y, model_name) {
     e = 10
     eh = 20
     th = max(d$x, na.rm = TRUE)
-    tl = d[d$y == max(d$y, na.rm = TRUE),]$x
+    tl = mean(d[d$y == max(d$y, na.rm = TRUE),]$x)
     el = 20
 
     return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
@@ -56,7 +56,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'sharpeschoollow_1981'){
     r_tref = max(d$y, na.rm = TRUE)
     e = 10
-    tl = d[d$y == max(d$y, na.rm = TRUE),]$x
+    tl = mean(d[d$y == max(d$y, na.rm = TRUE),]$x)
     el = 20
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
@@ -91,7 +91,7 @@ get_upper_lims <- function(x, y, model_name) {
 
   if(model_name == 'lactin2_1995'){
     tmax = max(d$x, na.rm = TRUE) *10
-    delta_t = tmax - d$x[d$y == max(d$y, na.rm = TRUE)] *10
+    delta_t = (tmax - mean(d$x[d$y == max(d$y, na.rm = TRUE)])) *10
     a = 1
     b = 1
 
@@ -173,8 +173,8 @@ get_upper_lims <- function(x, y, model_name) {
 
   if(model_name == 'beta_2012'){
     a = a = max(d$y, na.rm = TRUE) *100
-    b = d$x[d$y == max(d$y, na.rm = TRUE)]*10
-    c = d$x[d$y == max(d$y, na.rm = TRUE)]*10
+    b = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
+    c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
     d = 100
     e = 100
     return(c(a=a, b=b, c=c, d=d, e=e))}
@@ -206,7 +206,7 @@ get_upper_lims <- function(x, y, model_name) {
 
   if(model_name == 'quadratic_2008'){
     b = abs((-2*-0.005*max(d$y, na.rm = TRUE))) * 100
-    a = abs(max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE)) * 100
+    a = (abs(max(d$y, na.rm = TRUE) - max(b*d$x - 0.005*(d$x^2), na.rm = TRUE))) * 100
     c = 10
     return(c(a = a, b = b, c = c))
   }

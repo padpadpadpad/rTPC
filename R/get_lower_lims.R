@@ -22,8 +22,8 @@ get_lower_lims <- function(x, y, model_name) {
   d <- d[order(d$x),]
 
   # split data into post topt and pre topt
-  post_topt <- d[d$x >= d[d$y == max(d$y, na.rm = TRUE),'x'],]
-  pre_topt <- d[d$x <= d[d$y == max(d$y, na.rm = TRUE),'x'],]
+  post_topt <- d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+  pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
 
   if(model_name == 'rezende_2019'){
     b = 0
