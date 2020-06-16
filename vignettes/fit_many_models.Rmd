@@ -72,7 +72,7 @@ When fitting multiple models, we take advantage of list columns and functionalit
 
 For a single curve, we nest the dataframe, creating a list column which contains the temperature and rate values. We then create separate columns for each model fit using **purrr::map()**. Here, we use a gridstart approach when fitting models with **nls_multstart()**. This method creates a combination of start parameters, equally spaced across each of the starting parameter bounds. This can be specified with a vector of the same length as the number of parameters, c(5, 5, 5) for 3 estimated parameters will yield 125 iterations.
 
-```{r many_mods, warning=FALSE}
+```{r many_mods, warning=FALSE,message=FALSE}
 # fit every model formulation in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
   mutate(beta = map(data, ~nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),

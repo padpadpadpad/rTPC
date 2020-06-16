@@ -13,6 +13,7 @@ articles:
   - fit_many_models
   - model_weighting
   - model_averaging_selection
+  - bootstrapping_models
 - title: Multiple curve fits
   navbar: Fitting many curves
   contents:
@@ -65,4 +66,5 @@ reference:
   - get_topt
 - title: Data
   contents:
+  - bacteria_tpc
   - chlorella_tpc

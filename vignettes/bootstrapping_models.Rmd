@@ -1,0 +1,205 @@
+---
+title: "Bootstrapping using rTPC"
+author: "Daniel Padfield"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{bootstrapping_models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+#### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
+***
+### Things to consider 
+
+- **This vignette is still a work in progress**
+- Significant differences between parameters can be evaluated by re-sampling the whole dataset with replacement
+- When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some re-sampled datasets not having any points beyond the optimum temperature
+- In these instances, creating new datasets from mean centre residuals of the original model fit can allow the confidence intervals of derived parameters to be estimated. However, these are likely to increase false positives if used for hypothesis testing.
+- Think carefully at about your level of replication.
+
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  #tidy.opts=list(width.cutoff=60),
+  #tidy=TRUE,
+  fig.align = 'center'
+)
+```
+
+```{r setup, message=FALSE}
+# load packages
+library(rTPC)
+library(nls.multstart)
+library(broom)
+library(tidyverse)
+library(modelr)
+library(progress)
+library(patchwork)
+
+# edit nls_multstart to allow for a progress bar
+nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
+                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
+                                   control, modelweights, ...){
+  if(!is.null(pb)){
+    pb$tick()
+  }
+  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
+                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
+                control = control, modelweights = modelweights, ...)
+}
+
+
+```
+
+# Resampling the original data with replacement
+
+Bootstrapping involves simulating “new” datasets produced from the existing data by sampling with replacement. The same model is then fitted separately on each individual bootstrapped dataset. Doing this over and over allows us to visualise uncertainty of predictions and produce confidence intervals of estimated parameters.
+
+First, we will demonstrate a situation when this approach works very well, using data from a recent paper by Padfield _et al._ (2020), that measures the thermal performance of the bacteria, _Pseudomonas fluorescens_, in the presence and absence of its phage, $\phi 2$. In this study, each single growth rate estimate is a technical replicate, coming from an isogenic strain of bacteria either inoculated with, or without, the phage. As such, all the data points within each phage treatment can be used to estimate the same curve. This becomes obvious as there is no `rep` column as in the `chlorella_tpc` dataset, but we can visualise one of the curves (bacteria in the absence of phage), using **ggplot2**.
+
+```{r load_data, fig.height=4, fig.width=6}
+# load in data
+data("bacteria_tpc")
+
+# keep just a single curve
+d <- filter(bacteria_tpc, phage == 'nophage')
+
+# show the data
+ggplot(d, aes(temp, rate)) +
+  geom_point(size = 2, alpha = 0.5) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+```
+
+As in the study, we can fit the Sharpe-Schoolfield model to the data and plot the predictions using the approaches in `vignette(rTPC)` and `vignette(fit_many_models)`.
+
+```{r fit_and_plot, fig.height=4, fig.width=6}
+# fit Sharpe-Schoolfield model
+d_fit <- nest(d, data = c(temp, rate)) %>%
+  mutate(sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+                        data = .x,
+                        iter = c(3,3,3,3),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         # create new temperature data
+         new_data = map(data, ~tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))),
+         # predict over that data,
+         preds =  map2(sharpeschoolhigh, new_data, ~augment(.x, newdata = .y)))
+
+# unnest predictions
+d_preds <- select(d_fit, preds) %>%
+  unnest(preds)
+
+# plot data and predictions
+ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
+  geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+```
+Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 250 bootstraps of the data and fit separate models to each using the **modelr** package. We will create a progress bar as used in `vignette(fit_many_curves)` to track the progress of the fit.
+
+```{r bootstrap_models}
+# number of boots
+n_boots <- 250
+
+# create new datasets and prepare them for fitting
+d_boots <- group_by(d, phage) %>%
+  do(modelr::bootstrap(., n = n_boots, id = 'boot_num')) %>%
+  ungroup() %>%
+  mutate(strap = map(strap, data.frame))
+
+# start progress bar and estimate time it will take
+number_of_models <- 1
+
+# setup progress bar
+pb <- progress::progress_bar$new(total = n_boots*number_of_models,
+                                 clear = FALSE,
+                                 format ="[:bar] :percent :elapsedfull")
+
+
+# fit each model
+d_boots <- mutate(d_boots, refit = map(strap, ~ nls_multstart_progress(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+                        data = .x,
+                        iter = c(3,3,3,3),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+                  # create new temperature data
+                  new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
+                  # predict over that data
+                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+```
+
+```
+[=========================================================] 100% 00:02:04
+```
+
+```{r glimpse_boots}
+glimpse(d_boots)
+```
+
+Each bootstrapped model is stored in `refit`, with the predictions stored in `preds`. We can easily create confidence intervals around the original fitted predictions and overlay them onto our first plot. We can also just show some of the bootstrapped predictions alongside those of the original model.
+
+```{r plot_boots, fig.height=3, fig.width=8}
+# calculate bootstrapped confidence intervals
+d_conf <- select(d_boots, preds) %>%
+  unnest(preds) %>%
+  group_by(temp) %>%
+  mutate(conf_lower = quantile(.fitted, 0.025),
+         conf_upper = quantile(.fitted, 0.975)) %>%
+  ungroup()
+
+# unnest all predictions
+d_boot_preds <- select(d_boots, boot_num, preds) %>%
+  unnest(preds)
+
+# plot bootstrapped CIs
+p1 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'blue', alpha = 0.3) +
+  geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+# plot bootstrapped predictions
+p2 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
+  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'blue', alpha = 0.03) +
+  geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+p1 + p2
+
+```
+
+
+
+***
+NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package [**brms**](https://github.com/paul-buerkner/brms). Examples of using **brms** to model thermal performance curves can be found on the [GitHub repository](https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature) of the paper
+
+*** 
+#### References

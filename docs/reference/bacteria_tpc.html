@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimate thermal tolerance of a thermal performance curve — get_thermaltolerance • rTPC</title>
+<title>Example thermal performance curves of bacterial growth — bacteria_tpc • rTPC</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Estimate thermal tolerance of a thermal performance curve — get_thermaltolerance" />
-<meta property="og:description" content="Estimate thermal tolerance of a thermal performance curve" />
+<meta property="og:title" content="Example thermal performance curves of bacterial growth — bacteria_tpc" />
+<meta property="og:description" content="A dataset containing example data of growth rates of the bacteria Pseudomonas fluorescens in the presence and absence of its phage, phi2. Growth rates were measured across a range of assay temperatures to incorporate the entire thermal performance of the bacteria The dataset is the cleaned version so some data points have been omitted. There are multiple independent measurements per temperature for each treatment." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -147,33 +147,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Estimate thermal tolerance of a thermal performance curve</h1>
-    <small class="dont-index">Source: <a href='https://github.com/padpadpadpad/rTPC/blob/master/R/get_thermaltolerance.R'><code>R/get_thermaltolerance.R</code></a></small>
-    <div class="hidden name"><code>get_thermaltolerance.Rd</code></div>
+    <h1>Example thermal performance curves of bacterial growth</h1>
+    <small class="dont-index">Source: <a href='https://github.com/padpadpadpad/rTPC/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>bacteria_tpc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Estimate thermal tolerance of a thermal performance curve</p>
+    <p>A dataset containing example data of growth rates of the bacteria Pseudomonas fluorescens in the presence and absence of its phage, phi2. Growth rates were measured across a range of assay temperatures to incorporate the entire thermal performance of the bacteria The dataset is the cleaned version so some data points have been omitted. There are multiple independent measurements per temperature for each treatment.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_thermaltolerance</span>(<span class='no'>model</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"bacteria_tpc"</span>)</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>model</th>
-      <td><p>nls model object that contains a model of a thermal performance curve</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>Thermal tolerance (in ºC)</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A data frame with 649 rows and 7 variables:</p><dl'>
+  <dt>phage</dt><dd><p>whether the bacteria was grown with or without phage</p></dd>
+  <dt>temp</dt><dd><p>the assay temperature at which the growth rate was measured (degrees centigrade)</p></dd>
+  <dt>rate</dt><dd><p>estimated growth rate per hour</p></dd>
 
-    <p>Thermal tolerance is calculated as: CTmax - CTmin. This is calculated using the functions <code>get_ctmax</code> and <code>get_ctmin</code>.</p>
+</dl>
 
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p>Daniel Padfield</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Padfield, D., Castledine, M., &amp; Buckling, A. (2020). Temperature-dependent changes to host–parasite interactions alter the thermal performance of a bacterial host. The ISME Journal, 14(2), 389-398.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"bacteria_tpc"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>bacteria_tpc</span>) +
+ <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>phage</span>))</div><div class='img'><img src='bacteria_tpc-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
