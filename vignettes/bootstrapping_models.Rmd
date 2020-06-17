@@ -1,9 +1,12 @@
 ---
 title: "Bootstrapping using rTPC"
 author: "Daniel Padfield"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    toc: false
+pkgdown:
+  as_is: true
 date: "`r Sys.Date()`"
-toc: no
 vignette: >
   %\VignetteIndexEntry{bootstrapping_models}
   %\VignetteEngine{knitr::rmarkdown}
@@ -197,6 +200,9 @@ p1 + p2
 
 ```
 
+# Resampling residuals
+
+Resampling the data with replacement is the most 
 
 
 ***
