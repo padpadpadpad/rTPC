@@ -1,14 +1,16 @@
 ---
 title: "Bootstrapping using rTPC"
 author: "Daniel Padfield"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+date: "`r Sys.Date()`"
+toc: no
 vignette: >
   %\VignetteIndexEntry{bootstrapping_models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 #### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
+
 ***
 ### Things to consider 
 
@@ -202,3 +204,9 @@ NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit ther
 
 *** 
 #### References
+
+- https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf
+- http://wangyuchen.github.io/rnote/chap4-1.html#leverage-values
+- https://stats.stackexchange.com/questions/29990/identifying-outliers-for-non-linear-regression
+- https://www.stat.cmu.edu/~cshalizi/402/lectures/08-bootstrap/lecture-08.pdf
+- https://people.math.umass.edu/~johnpb/s697m/boot.pdf
