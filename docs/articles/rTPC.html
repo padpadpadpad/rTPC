@@ -23,7 +23,13 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-74093873-3"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-74093873-3');
+</script>
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
@@ -102,13 +108,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="rTPC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-06-17</h4>
+            <h4 class="date">2020-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/rTPC.Rmd"><code>vignettes/rTPC.Rmd</code></a></small>
       <div class="hidden name"><code>rTPC.Rmd</code></div>
@@ -192,7 +198,7 @@
 <span class="co">#&gt;  0.2595  0.5826 14.2031 43.5531 </span>
 <span class="co">#&gt;  residual sum-of-squares: 0.3144</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Number of iterations to convergence: 25 </span>
+<span class="co">#&gt; Number of iterations to convergence: 90 </span>
 <span class="co">#&gt; Achieved convergence tolerance: 1.49e-08</span></pre></body></html></div>
 <p>To estimate additional parameters of interest, we can use <strong>rTPC::est_params()</strong>. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available methods can be viewed by running <code><a href="../reference/est_params.html">?est_params</a></code>. For example, we may be interested in variation in the optimum temperature, <span class="math inline">\(T_{opt}\)</span>, given that we adapted algae to different temperatures.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># estimate additional traits</span>
