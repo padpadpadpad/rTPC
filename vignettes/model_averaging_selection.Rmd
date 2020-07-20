@@ -4,7 +4,7 @@ author: "Daniel Padfield"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{model_selection_and_averaging}
+  %\VignetteIndexEntry{Model selection and model averaging with rTPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

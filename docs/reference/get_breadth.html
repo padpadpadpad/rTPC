@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimate extra parameters of a thermal performance curve — est_params • rTPC</title>
+<title>Estimate thermal performance breadth of a thermal performance curve — get_breadth • rTPC</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Estimate extra parameters of a thermal performance curve — est_params" />
-<meta property="og:description" content="Estimate extra parameters of a thermal performance curve" />
+<meta property="og:title" content="Estimate thermal performance breadth of a thermal performance curve — get_breadth" />
+<meta property="og:description" content="Estimate thermal performance breadth of a thermal performance curve" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -157,16 +157,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Estimate extra parameters of a thermal performance curve</h1>
-    <small class="dont-index">Source: <a href='https://github.com/padpadpadpad/rTPC/blob/master/R/est_params.R'><code>R/est_params.R</code></a></small>
-    <div class="hidden name"><code>est_params.Rd</code></div>
+    <h1>Estimate thermal performance breadth of a thermal performance curve</h1>
+    <small class="dont-index">Source: <a href='https://github.com/padpadpadpad/rTPC/blob/master/R/get_breadth.R'><code>R/get_breadth.R</code></a></small>
+    <div class="hidden name"><code>get_breadth.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Estimate extra parameters of a thermal performance curve</p>
+    <p>Estimate thermal performance breadth of a thermal performance curve</p>
     </div>
 
-    <pre class="usage"><span class='fu'>est_params</span>(<span class='no'>model</span>)</pre>
+    <pre class="usage"><span class='fu'>get_breadth</span>(<span class='no'>model</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.8</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,25 +175,18 @@
       <th>model</th>
       <td><p>nls model object that contains a model of a thermal performance curve</p></td>
     </tr>
+    <tr>
+      <th>level</th>
+      <td><p>proportion of maximum rate over which thermal performance breadth is calculated</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Thermal performance breadth (in ºC)</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Currently estimates:</p><ul>
-<li><p>maximum rate (rmax) using <code><a href='get_rmax.html'>get_rmax()</a></code></p></li>
-<li><p>optimum temperature (topt) using <code><a href='get_topt.html'>get_topt()</a></code></p></li>
-<li><p>critical thermal maximum (ctmax) using <code><a href='get_ctmax.html'>get_ctmax()</a></code></p></li>
-<li><p>critical thermal minimum (ctmin) using <code><a href='get_ctmin.html'>get_ctmin()</a></code></p></li>
-<li><p>activation energy (e) using <code><a href='get_e.html'>get_e()</a></code></p></li>
-<li><p>deactivation energy (eh) using <code><a href='get_eh.html'>get_eh()</a></code></p></li>
-<li><p>q10 value using <code><a href='get_q10.html'>get_q10()</a></code></p></li>
-<li><p>thermal safety margin using <code><a href='get_thermalsafetymargin.html'>get_thermalsafetymargin()</a></code></p></li>
-<li><p>thermal tolerance using <code><a href='get_thermaltolerance.html'>get_thermaltolerance()</a></code></p></li>
-<li><p>thermal performance breadth using <code><a href='get_breadth.html'>get_breadth()</a></code></p></li>
-<li><p>skewness using <code><a href='get_skewness.html'>get_skewness()</a></code></p></li>
-</ul>
-
-<p>If any parameters cannot be calculated for a thermal performance curve, they will return <code>NA</code>.</p>
+    <p>Thermal performance breadth is calculated as the range of temperatures over which a curve's rate is at least 0.8 of peak. This defaults to a proportion of 0.8 but can be changed using the <code>level</code> argument.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

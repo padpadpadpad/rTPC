@@ -11,6 +11,7 @@
 #' * q10 value using [get_q10()]
 #' * thermal safety margin using [get_thermalsafetymargin()]
 #' * thermal tolerance using [get_thermaltolerance()]
+#' * thermal performance breadth using [get_breadth()]
 #' * skewness using [get_skewness()]
 #'
 #' If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
@@ -27,6 +28,7 @@ est_params <- function(model){
                   q10 = suppressWarnings(tryCatch(rTPC::get_q10(model), error = function(err) NA)),
                   thermal_safety_margin = suppressWarnings(tryCatch(rTPC::get_thermalsafetymargin(model), error = function(err) NA)),
                   thermal_tolerance = suppressWarnings(tryCatch(rTPC::get_thermaltolerance(model), error = function(err) NA)),
+                  breadth = suppressWarnings(tryCatch(rTPC::get_breadth(model), error = function(err) NA)),
                   skewness = suppressWarnings(tryCatch(rTPC::get_skewness(model), error = function(err) NA)),
                   stringsAsFactors = FALSE)
 

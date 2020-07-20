@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Fitting many curves using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-08</h4>
+            <h4 class="date">2020-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_curves.Rmd</code></div>
@@ -192,7 +192,7 @@
   <span class="fu">pivot_longer</span>(<span class="no">.</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'model_name'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'fit'</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">gaussian</span>,<span class="no">sharpeschoolhigh</span>)) <span class="kw">%&gt;%</span>
   <span class="co"># create new list column containing the predictions</span>
   <span class="co"># this uses both fit and new_data list columns</span>
-  <span class="fu">mutate</span>(<span class="kw">preds</span> <span class="kw">=</span> <span class="fu">map2</span>(<span class="no">fit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">preds</span> <span class="kw">=</span> <span class="fu">map2</span>(<span class="no">fit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>))) <span class="kw">%&gt;%</span>
   <span class="co"># select only the columns we want to keep</span>
   <span class="fu">select</span>(<span class="no">curve_id</span>, <span class="no">growth_temp</span>, <span class="no">process</span>, <span class="no">flux</span>, <span class="no">model_name</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
   <span class="co"># unlist the preds list column</span>
@@ -231,7 +231,7 @@
 
 <span class="fu">glimpse</span>(<span class="no">d_params</span>)
 <span class="co">#&gt; Rows: 120</span>
-<span class="co">#&gt; Columns: 15</span>
+<span class="co">#&gt; Columns: 16</span>
 <span class="co">#&gt; $ curve_id              &lt;dbl&gt; 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8,…</span>
 <span class="co">#&gt; $ growth_temp           &lt;dbl&gt; 20, 20, 20, 20, 23, 23, 27, 27, 27, 27, 30, 30,…</span>
 <span class="co">#&gt; $ process               &lt;chr&gt; "acclimation", "acclimation", "acclimation", "a…</span>
@@ -246,6 +246,7 @@
 <span class="co">#&gt; $ q10                   &lt;dbl&gt; 2.373766, 2.063147, 2.927011, 2.305129, 3.72211…</span>
 <span class="co">#&gt; $ thermal_safety_margin &lt;dbl&gt; 17.643, 3.912, 16.718, 8.673, 17.246, 17.894, 1…</span>
 <span class="co">#&gt; $ thermal_tolerance     &lt;dbl&gt; 35.286, 43.019, 33.437, 41.594, 34.493, 41.094,…</span>
+<span class="co">#&gt; $ breadth               &lt;dbl&gt; 9.651, 5.371, 9.165, 6.495, 9.442, 7.714, 10.35…</span>
 <span class="co">#&gt; $ skewness              &lt;dbl&gt; -4.008871e-01, -1.090378e+01, -2.526351e-01, -1…</span></pre></body></html></div>
 </div>
   </div>

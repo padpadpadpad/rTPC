@@ -4,7 +4,7 @@ author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{fitting_multiple_models_to_a_TPC}
+  %\VignetteIndexEntry{Fitting many models with rTPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

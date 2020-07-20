@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-08</h4>
+            <h4 class="date">2020-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -194,7 +194,7 @@
          <span class="co"># create new temperature data</span>
          <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))),
          <span class="co"># predict over that data,</span>
-         <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">sharpeschoolhigh</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
+         <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">sharpeschoolhigh</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
 
 <span class="co"># unnest predictions</span>
 <span class="no">d_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_fit</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -240,7 +240,7 @@
                   <span class="co"># create new temperature data</span>
                   <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))),
                   <span class="co"># predict over that data</span>
-                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))</pre></body></html></div>
+                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))</pre></body></html></div>
 <pre><code>[=========================================================] 100% 00:02:04</code></pre>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu">glimpse</span>(<span class="no">d_boots</span>)
 <span class="co">#&gt; Rows: 250</span>
@@ -332,7 +332,7 @@
          <span class="co"># create new temperature data</span>
          <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))),
          <span class="co"># predict over that data,</span>
-         <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">sharpeschoolhigh</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
+         <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">sharpeschoolhigh</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
 
 <span class="co"># start progress bar and estimate time it will take</span>
 <span class="no">number_of_models</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
@@ -368,15 +368,27 @@
 
 <span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
 
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
+<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
+
 <span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 243</span>
+<span class="co">#&gt; [1] 237</span>
 
 <span class="co"># create new temperature data</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))),
                   <span class="co"># predict over that data</span>
-                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
+                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
 <span class="no">d_conf</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -392,12 +404,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.111      0.346</span>
-<span class="co">#&gt; 2  16.1      0.112      0.349</span>
-<span class="co">#&gt; 3  16.2      0.114      0.351</span>
-<span class="co">#&gt; 4  16.3      0.115      0.354</span>
-<span class="co">#&gt; 5  16.4      0.117      0.356</span>
-<span class="co">#&gt; 6  16.5      0.119      0.359</span>
+<span class="co">#&gt; 1  16        0.114      0.331</span>
+<span class="co">#&gt; 2  16.1      0.116      0.333</span>
+<span class="co">#&gt; 3  16.2      0.118      0.335</span>
+<span class="co">#&gt; 4  16.3      0.121      0.338</span>
+<span class="co">#&gt; 5  16.4      0.123      0.340</span>
+<span class="co">#&gt; 6  16.5      0.125      0.343</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>

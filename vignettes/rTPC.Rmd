@@ -6,7 +6,7 @@ date: "`r Sys.Date()`"
 description: >
 
 vignette: >
-  %\VignetteIndexEntry{Intro to rTPC}
+  %\VignetteIndexEntry{Introduction to rTPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

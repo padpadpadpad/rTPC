@@ -118,7 +118,7 @@ ggplot() +
 ```
 Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 250 bootstraps of the data and fit separate models to each using the **modelr** package. We will create a progress bar as used in `vignette(fit_many_curves)` to track the progress of the fit.
 
-```{r bootstrap_models}
+```{r bootstrap_models1}
 # number of boots
 n_boots <- 250
 
@@ -168,7 +168,7 @@ Each bootstrapped model is stored in `refit`, with the predictions stored in `pr
 d_conf <- select(d_boots, preds) %>%
   unnest(preds) %>%
   group_by(temp) %>%
-  mutate(conf_lower = quantile(.fitted, 0.025),
+  summarise(conf_lower = quantile(.fitted, 0.025),
          conf_upper = quantile(.fitted, 0.975)) %>%
   ungroup()
 
@@ -200,9 +200,141 @@ p1 + p2
 
 ```
 
+This method becomes more problematic when there is a small sample size. It is common for thermal performance curves to only have a single measurement at each temperature. This means that lots of the bootstrapped models will not have any points from that temperature. This can be seen by bootstrapping-with-replacement a curve from the `chlorella_tpc` dataset used throughout these vignettes.
+
+```{r bootstrap_models2_plot, fig.height=6, fig.width=8}
+# load in chlorella data
+data('chlorella_tpc') 
+d2 <- filter(chlorella_tpc, curve_id == 1)
+
+# number of boots
+n_boots <- 250
+
+# create new datasets and prepare them for fitting
+d_boots <- group_by(d2, curve_id) %>%
+  do(modelr::bootstrap(., n = n_boots, id = 'boot_num')) %>%
+  ungroup() %>%
+  mutate(strap = map(strap, data.frame))
+
+# plot ten of these alongside the actual data
+d_boots_plot <- select(d_boots, -curve_id) %>%
+  unnest(strap) %>%
+  filter(as.numeric(boot_num) < 8) %>%
+  mutate(., boot_num = paste('bootstrap', boot_num, sep = ' ')) %>%
+  bind_rows(., mutate(d2, boot_num = 'actual_data'))
+
+# plot
+ggplot(d_boots_plot, aes(temp, rate)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~boot_num) +
+  theme_bw() +
+  theme(strip.background = element_blank(),
+        strip.text = element_text(hjust = 0))
+
+```
+
+By plotting some of the bootstrapped datasets, we can see which points of the original data were resampled (darker points). There are many different curves that can come from these resampled curves. This is likely to be a bigger problem when there is only one point beyond the optimum of the curve. We can see how much of a problem this is when we model the raw data and the bootstrapped data as before. 
+
+As before, the model predictions of each bootstrap are taken only from the range of temperatures of that bootstrapped dataset, not the range of values of the raw dataset.
+
+```{r bootstrap_models2, fig.height=3,fig.width=8}
+# fit Sharpe-Schoolfield model to raw data
+d_fit <- nest(d2, data = c(temp, rate)) %>%
+  mutate(sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+                        data = .x,
+                        iter = c(3,3,3,3),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         # create new temperature data
+         new_data = map(data, ~tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))),
+         # predict over that data,
+         preds =  map2(sharpeschoolhigh, new_data, ~augment(.x, newdata = .y)))
+
+# start progress bar and estimate time it will take
+number_of_models <- 1
+
+# setup progress bar
+pb <- progress::progress_bar$new(total = n_boots*number_of_models,
+                                 clear = FALSE,
+                                 format ="[:bar] :percent :elapsedfull")
+
+nls_multstart_safe <- possibly(nls_multstart_progress, otherwise = NA, quiet = TRUE)
+
+# fit each model
+d_boots <- mutate(d_boots, refit = map(strap, ~ nls_multstart_safe(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+                        data = .x,
+                        iter = 200,
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)))
+
+# remove fits that are NA
+d_boots <- filter(d_boots, !is.na(refit))
+nrow(d_boots)
+
+# create new temperature data
+d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
+                  # predict over that data
+                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+
+# calculate bootstrapped confidence intervals
+d_conf <- select(d_boots, preds) %>%
+  unnest(preds) %>%
+  mutate(temp = round(temp, 1)) %>%
+  group_by(temp) %>%
+  summarise(conf_lower = quantile(.fitted, 0.025),
+         conf_upper = quantile(.fitted, 0.975)) %>%
+  ungroup()
+
+head(d_conf)
+
+# unnest all predictions
+d_boot_preds <- select(d_boots, boot_num, preds) %>%
+  unnest(preds)
+
+# unnest predictions
+d_preds <- select(d_fit, preds) %>%
+  unnest(preds)
+
+# plot bootstrapped CIs
+p1 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'blue', alpha = 0.3) +
+  geom_point(aes(temp, rate), d2, size = 2, alpha = 0.5) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+# plot bootstrapped predictions
+p2 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
+  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'blue', alpha = 0.03) +
+  geom_point(aes(temp, rate), d2, size = 2, alpha = 0.3) +
+  theme_bw(base_size = 12) +
+  labs(x = 'Temperature (ºC)',
+       y = 'Growth rate',
+       title = 'Growth rate across temperatures')
+
+p1 + p2
+
+
+```
+
+As can be seen, bootstrapping-with-replacement with only a single point at each temperature can lead to a large variety of fits. In the second panel, we can see the variety of the curve fits, clustering around 4 possible paths for the decrease in rate beyond the optimum temperature. This makes the uncertainty around these predictions, and the derived estimate $E_h$ highly uncertain using this method of bootstrapping.
+
 # Resampling residuals
 
-Resampling the data with replacement is the most 
+Re-sampling the data with replacement is the most common way of thinking about bootstrapping. However, bootstrapping ordinary least squares regression models is often done using bootstrapping residuals.
+
+
 
 
 ***

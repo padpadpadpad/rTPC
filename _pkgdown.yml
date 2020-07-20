@@ -64,6 +64,7 @@ reference:
   - get_skewness
   - get_thermalsafetymargin
   - get_thermaltolerance
+  - get_breadth
   - get_topt
 - title: Data
   contents:

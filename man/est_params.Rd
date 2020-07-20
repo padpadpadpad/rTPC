@@ -24,6 +24,7 @@ Currently estimates:
 \item q10 value using \code{\link[=get_q10]{get_q10()}}
 \item thermal safety margin using \code{\link[=get_thermalsafetymargin]{get_thermalsafetymargin()}}
 \item thermal tolerance using \code{\link[=get_thermaltolerance]{get_thermaltolerance()}}
+\item thermal performance breadth using \code{\link[=get_breadth]{get_breadth()}}
 \item skewness using \code{\link[=get_skewness]{get_skewness()}}
 }
 

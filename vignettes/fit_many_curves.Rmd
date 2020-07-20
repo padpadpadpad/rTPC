@@ -4,7 +4,7 @@ author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{fit_many_curves}
+  %\VignetteIndexEntry{Fitting many curves using rTPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
