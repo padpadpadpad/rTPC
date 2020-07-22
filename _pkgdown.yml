@@ -70,3 +70,6 @@ reference:
   contents:
   - bacteria_tpc
   - chlorella_tpc
+
+toc:
+  depth: 2
