@@ -128,9 +128,9 @@
 <a href="#a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.</h4>
 <hr>
 </div>
-<div id="things-to-consider" class="section level3">
-<h3 class="hasAnchor">
-<a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<div id="things-to-consider" class="section level2">
+<h2 class="hasAnchor">
+<a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li><strong>This vignette is still a work in progress</strong></li>
 <li>Significant differences between parameters can be evaluated by re-sampling the whole dataset with replacement</li>
@@ -353,11 +353,6 @@
                         <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
                         <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>)))
-<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
-
-<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
-
-<span class="co">#&gt; Warning in runif(iter, .x, .y): NAs produced</span>
 
 <span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
@@ -383,12 +378,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16       0.0825      0.333</span>
-<span class="co">#&gt; 2  16.1     0.0853      0.335</span>
-<span class="co">#&gt; 3  16.2     0.0881      0.338</span>
-<span class="co">#&gt; 4  16.3     0.0909      0.340</span>
-<span class="co">#&gt; 5  16.4     0.0939      0.342</span>
-<span class="co">#&gt; 6  16.5     0.0961      0.345</span>
+<span class="co">#&gt; 1  16        0.107      0.310</span>
+<span class="co">#&gt; 2  16.1      0.109      0.312</span>
+<span class="co">#&gt; 3  16.2      0.111      0.315</span>
+<span class="co">#&gt; 4  16.3      0.113      0.317</span>
+<span class="co">#&gt; 5  16.4      0.115      0.319</span>
+<span class="co">#&gt; 6  16.5      0.117      0.322</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -420,6 +415,7 @@
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/bootstrap_models2-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code>[============================================================] 100% 00:02:19NAs produced</code></pre>
 <p>As can be seen, bootstrapping-with-replacement with only a single point at each temperature can lead to a large variety of fits. In the second panel, we can see the variety of the curve fits, clustering around 4 possible paths for the decrease in rate beyond the optimum temperature. This makes the uncertainty around these predictions, and the estimate of <span class="math inline">\(E_h\)</span> is highly uncertain using this method of bootstrapping.</p>
 </div>
 <div id="re-sampling-residuals" class="section level1">
@@ -437,7 +433,7 @@
 <p>This method makes the assumption that the original model fit is a good representation of the data, and that the error terms in the model are normally distributed and independent. If the model is incorrectly specified – for example, if there is unmodelled non-linearity, non-constant error variance, or outliers – these characteristics will not carry over into the re-sampled data sets.</p>
 <p>Furthermore, there is evidence that the confidence intervals created using this method are often narrower than using the data re-sampling approach, which will increase the false positive error rate if confidence interval estimates are used as a proxy for significance testing. We consequently recommend using residual re-sampling with caution, but it can be very useful for the reasons above.</p>
 <p>We can demonstrate this approach using the <code>chlorella_tpc</code> data. We first create our new datasets using <strong>slice</strong> to create replicates of the fitted values and residuals, before re-sampling the residuals to create a new y value.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># look at the original model fit</span>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># look at the original model fit</span>
 <span class="no">d_fit</span>
 <span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   curve_id growth_temp process  flux   data    sharpeschoolhigh new_data  preds </span>
@@ -480,7 +476,7 @@
         <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>))</pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/residual_resample_data-1.png" width="768" style="display: block; margin: auto;"> The re-sampled data always has the same predictor values, but you can see that the values of the response variable have changed.</p>
 <p>We can now model these as we have done before.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># start progress bar and estimate time it will take</span>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># start progress bar and estimate time it will take</span>
 <span class="no">number_of_models</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
 
 <span class="co"># setup progress bar</span>
@@ -491,7 +487,7 @@
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">curve_id</span>, <span class="no">temp</span>, <span class="no">new_y</span>, <span class="no">boot_num</span>) <span class="kw">%&gt;%</span>
   <span class="fu">nest</span>(<span class="no">.</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">new_y</span>)) <span class="kw">%&gt;%</span>
   <span class="co"># fit the model to each bootstrapped dataset</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="kw pkg">purrr</span><span class="kw ns">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, ~<span class="fu">nls_multstart_safe</span>(<span class="no">new_y</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
+  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="kw pkg">purrr</span><span class="kw ns">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, ~<span class="fu">nls_multstart_progress</span>(<span class="no">new_y</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
                         <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">200</span>,
                         <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">new_y</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>) - <span class="fl">10</span>,
@@ -525,12 +521,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.189      0.421</span>
-<span class="co">#&gt; 2  16.1      0.191      0.424</span>
-<span class="co">#&gt; 3  16.2      0.193      0.427</span>
-<span class="co">#&gt; 4  16.3      0.195      0.429</span>
-<span class="co">#&gt; 5  16.4      0.197      0.432</span>
-<span class="co">#&gt; 6  16.5      0.199      0.435</span>
+<span class="co">#&gt; 1  16        0.189      0.393</span>
+<span class="co">#&gt; 2  16.1      0.191      0.396</span>
+<span class="co">#&gt; 3  16.2      0.193      0.398</span>
+<span class="co">#&gt; 4  16.3      0.195      0.401</span>
+<span class="co">#&gt; 5  16.4      0.197      0.404</span>
+<span class="co">#&gt; 6  16.5      0.199      0.406</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -563,6 +559,7 @@
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/residual_resample_model-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code>[============================================================] 100% 00:01:57</code></pre>
 <hr>
 <p>NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a>. Examples of using <strong>brms</strong> to model thermal performance curves can be found on the <a href="https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature">GitHub repository</a> of the paper</p>
 <hr>

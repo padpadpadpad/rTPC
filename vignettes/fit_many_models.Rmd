@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
   fig.align = 'center'
 )
 ```
-### Things to consider
+## Things to consider
 
 - How many data points do you have for each curve? To fit all of the 23 models in **rTPC**, there needs to be a minimum of 7 points per curve.
 - If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.
@@ -335,7 +335,7 @@ ggplot(d_preds, aes(temp, rate)) +
 ```
 
 ***
-### Troubleshooting curve fits
+## Troubleshooting curve fits
 
 If any of the fits do not look like they have converged properly, there are things you can try:
 

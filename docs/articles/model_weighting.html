@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Model weighting with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-20</h4>
+            <h4 class="date">2020-07-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/model_weighting.Rmd"><code>vignettes/model_weighting.Rmd</code></a></small>
       <div class="hidden name"><code>model_weighting.Rmd</code></div>
@@ -128,9 +128,9 @@
 <a href="#a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.</h4>
 <hr>
 </div>
-<div id="things-to-consider" class="section level3">
-<h3 class="hasAnchor">
-<a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<div id="things-to-consider" class="section level2">
+<h2 class="hasAnchor">
+<a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li>The optimal weighting is <span class="math inline">\(\frac{1}{\sigma}\)</span>. The standard deviation is easy to calculate when calculating the means of the rate data.</li>
 <li>Carefully consider your level of replication before undertaking your statistical analysis.
@@ -149,6 +149,10 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggrepel</span>)</pre></body></html></div>
 <p>The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in <strong>rTPC</strong>, <strong>nls_multstart()</strong>, and <strong>purrr</strong>.</p>
+</div>
+<div id="using-model-weights" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-model-weights" class="anchor"></a>Using model weights</h2>
 <p>Here, we demonstrate how this pipeline can easily be extended to incorporate measurement uncertainty by using the <code>weights</code> argument of <strong>nls_multstart()</strong>. Methods of fitting TPCs in the literature often fit models to averaged rate values at each temperature. This fits a model on the mean rate value, but often the variation around this calculated mean value is ignored. However, there may be more spread in the rate data at the extreme temperatures (very hot or very cold). Ignoring the homoscedasticity in the data may alter the model fit.</p>
 <p>Instead, we can incorporate measurement uncertainty using the <strong>weights</strong> argument within <strong>nls_multstart()</strong>, to perform a weighted non-linear least squares regression. The optimal weight for each data point is the standard deviation, <span class="math inline">\(1/\sigma\)</span>, which easily be calculated when averaging over technical or biological replicates.</p>
 <p>We can demonstrate weighted non-linear least squares regression by using the example dataset contained within <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. Instead of plotting a single curve, we average over the biological replicates, <code>rep</code>, within a growth temperature, to get mean rate values at each assay temperature and their standard deviation. These are then plotted using <strong>ggplot2</strong>.</p>
@@ -250,7 +254,9 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

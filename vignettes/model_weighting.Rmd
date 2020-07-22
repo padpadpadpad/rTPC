@@ -10,7 +10,7 @@ vignette: >
 ---
 #### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
 ***
-### Things to consider 
+## Things to consider 
 
 - The optimal weighting is $\frac{1}{\sigma}$. The standard deviation is easy to calculate when calculating the means of the rate data.
 - Carefully consider your level of replication before undertaking your statistical analysis.
@@ -40,11 +40,13 @@ library(ggrepel)
 
 The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
 
+## Using model weights
+
 Here, we demonstrate how this pipeline can easily be extended to incorporate measurement uncertainty by using the `weights` argument of **nls_multstart()**.  Methods of fitting TPCs in the literature often fit models to averaged rate values at each temperature. This fits a model on the mean rate value, but often the variation around this calculated mean value is ignored. However, there may be more spread in the rate data at the extreme temperatures (very hot or very cold). Ignoring the homoscedasticity in the data may alter the model fit.
 
 Instead, we can incorporate measurement uncertainty using the __weights__ argument within __nls_multstart()__, to perform a weighted non-linear least squares regression. The optimal weight for each data point is the standard deviation, $1/\sigma$, which easily be calculated when averaging over technical or biological replicates.
 
-We can demonstrate weighted non-linear least squares regression by using  the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature, to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. 
+We can demonstrate weighted non-linear least squares regression by using the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature, to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. 
 
 ```{r get_data, fig.height=4, fig.width = 6}
 # get curve data

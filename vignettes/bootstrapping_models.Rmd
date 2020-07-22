@@ -11,7 +11,7 @@ vignette: >
 #### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
 
 ***
-### Things to consider 
+## Things to consider 
 
 - **This vignette is still a work in progress**
 - Significant differences between parameters can be evaluated by re-sampling the whole dataset with replacement
@@ -27,7 +27,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   #tidy.opts=list(width.cutoff=60),
   #tidy=TRUE,
-  fig.align = 'center'
+  fig.align = 'center',
+  warning=FALSE
 )
 ```
 
@@ -322,6 +323,10 @@ p1 + p2
 
 
 ```
+```
+[============================================================] 100% 00:02:19NAs produced
+```
+
 
 As can be seen, bootstrapping-with-replacement with only a single point at each temperature can lead to a large variety of fits. In the second panel, we can see the variety of the curve fits, clustering around 4 possible paths for the decrease in rate beyond the optimum temperature. This makes the uncertainty around these predictions, and the estimate of $E_h$ is highly uncertain using this method of bootstrapping.
 
@@ -397,7 +402,7 @@ pb <- progress::progress_bar$new(total = n_boots*number_of_models,
 d_boots <- select(d_boots, curve_id, temp, new_y, boot_num) %>%
   nest(., data = c(temp, new_y)) %>%
   # fit the model to each bootstrapped dataset
-  mutate(., refit = purrr::map(data, ~nls_multstart_safe(new_y~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
+  mutate(., refit = purrr::map(data, ~nls_multstart_progress(new_y~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
                         data = .x,
                         iter = 200,
                         start_lower = get_start_vals(.x$temp, .x$new_y, model_name = 'sharpeschoolhigh_1981') - 10,
@@ -457,6 +462,10 @@ p2 <- ggplot() +
 p1 + p2
 
 
+```
+
+```
+[============================================================] 100% 00:01:57
 ```
 
 ***

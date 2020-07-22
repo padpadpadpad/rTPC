@@ -28,8 +28,8 @@ get_start_vals <- function(x, y, model_name) {
     r_tref = mean(d$y, na.rm = TRUE)
     pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
     post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
-    e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
-    eh = stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]]
+    e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+    eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
     th = mean(d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']), 'x'])
     return(c(r_tref = r_tref, e = e, eh = eh, th = th))
   }
@@ -38,10 +38,10 @@ get_start_vals <- function(x, y, model_name) {
     r_tref = mean(d$y, na.rm = TRUE)
     pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
     post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
-    e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
-    el <- stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1
     tl <- pre_topt$x[2]
-    eh = stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]]
+    e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+    eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
+    el <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1, error = function(err) 5))
     th = mean(d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']), 'x'])
     return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
   }
@@ -50,8 +50,8 @@ get_start_vals <- function(x, y, model_name) {
     r_tref = mean(d$y, na.rm = TRUE)
     pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
     post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
-    e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
-    el <- stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1
+    e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+    el <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1, error = function(err) 5))
     tl <- pre_topt$x[2]
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
@@ -224,8 +224,8 @@ get_start_vals <- function(x, y, model_name) {
     r0 = min(d$y, na.rm = TRUE)
     pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
     post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
-    e <- stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1
-    eh = stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]]
+    e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+    eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
     topt = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
     return(c(r0 = r0, e = e, eh = eh, topt = topt))
   }

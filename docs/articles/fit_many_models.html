@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Fitting many models with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-20</h4>
+            <h4 class="date">2020-07-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_models.Rmd"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_models.Rmd</code></div>
@@ -128,9 +128,9 @@
 <a href="#a-brief-example-of-how-multiple-models-can-be-fitted-to-a-single-tpc-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how multiple models can be fitted to a single TPC using rTPC, nls.multstart, and the tidyverse.</h4>
 <hr>
 </div>
-<div id="things-to-consider" class="section level3">
-<h3 class="hasAnchor">
-<a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<div id="things-to-consider" class="section level2">
+<h2 class="hasAnchor">
+<a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li>How many data points do you have for each curve? To fit all of the 23 models in <strong>rTPC</strong>, there needs to be a minimum of 7 points per curve.</li>
 <li>If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.</li>
@@ -435,9 +435,9 @@
 <p><img src="fit_many_models_files/figure-html/preds_and_plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
 </div>
-<div id="troubleshooting-curve-fits" class="section level3">
-<h3 class="hasAnchor">
-<a href="#troubleshooting-curve-fits" class="anchor"></a>Troubleshooting curve fits</h3>
+<div id="troubleshooting-curve-fits" class="section level2">
+<h2 class="hasAnchor">
+<a href="#troubleshooting-curve-fits" class="anchor"></a>Troubleshooting curve fits</h2>
 <p>If any of the fits do not look like they have converged properly, there are things you can try:</p>
 <ul>
 <li>Some functions may produce warnings (for example: <code>NaNs produced</code>). This is likely due to a specific set of start parameters and does not necessarily mean <strong>nls_multstart()</strong> has failed. Wrap <strong>nls_multstart()</strong> in <strong>suppressWarnings()</strong> to turn this behaviour off.</li>
@@ -451,7 +451,9 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

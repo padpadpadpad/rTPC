@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
   fig.align = 'center'
 )
 ```
-### Things to consider 
+## Things to consider 
 
 - There is no magic bullet with model selection and model averaging.
 - Think carefully about which models to fit **before** any fitting takes place.
@@ -172,7 +172,10 @@ d_ic <- d_stack %>%
 d_ic
 
 ```
-In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model. 
+
+## Model selection
+
+In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model.
 
 ```{r model_selection, fig.width=6, fig.height = 4}
 # filter for best model
@@ -197,6 +200,8 @@ ggplot(d_preds, aes(temp, .fitted)) +
   geom_hline(aes(yintercept = 0), linetype = 2) 
 
 ```
+
+## Model averaging
 
 For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model's weighting. The best supported model's predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in whatever information criterion metric is being used. A common approach is to only keep models within $\Delta 2 AIC$ of the best model.
 
@@ -261,7 +266,7 @@ bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
 ```
 ***
 
-### Further reading
+## Further reading
 
 - Dormann, C. F., Calabrese, J. M., Guillera‐Arroita, G., Matechou, E., Bahn, V., Bartoń, K., ... & Guelat, J. (2018). Model averaging in ecology: A review of Bayesian, information‐theoretic, and tactical approaches for predictive inference. Ecological Monographs, 88(4), 485-504. [https://doi.org/10.1002/ecm.1309](https://doi.org/10.1002/ecm.1309)
 - Burnham K. P., Anderson, D.R. (2002) Model Selection and Multi-Model Inference: a Practical Information-Theoretical Approach. 2nd ed. Berlin: Springer.

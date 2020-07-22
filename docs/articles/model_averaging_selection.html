@@ -114,7 +114,7 @@
       <h1 data-toc-skip>Model selection and model averaging with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-20</h4>
+            <h4 class="date">2020-07-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/model_averaging_selection.Rmd"><code>vignettes/model_averaging_selection.Rmd</code></a></small>
       <div class="hidden name"><code>model_averaging_selection.Rmd</code></div>
@@ -128,9 +128,9 @@
 <a href="#a-brief-example-of-how-model-selection-or-model-averaging-can-be-used-when-fitting-multiple-models-to-a-single-tpc-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse.</h4>
 <hr>
 </div>
-<div id="things-to-consider" class="section level3">
-<h3 class="hasAnchor">
-<a href="#things-to-consider" class="anchor"></a>Things to consider</h3>
+<div id="things-to-consider" class="section level2">
+<h2 class="hasAnchor">
+<a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li>There is no magic bullet with model selection and model averaging.</li>
 <li>Think carefully about which models to fit <strong>before</strong> any fitting takes place.</li>
@@ -271,6 +271,10 @@
 <span class="co">#&gt; 4 quadratic        0.408 17.1    22.8 19.0            9</span>
 <span class="co">#&gt; 5 rezende          0.362 14.8    24.8 17.2            8</span>
 <span class="co">#&gt; 6 sharpeschoolhigh 0.198  0.350  10.3  2.77           8</span></pre></body></html></div>
+</div>
+<div id="model-selection" class="section level2">
+<h2 class="hasAnchor">
+<a href="#model-selection" class="anchor"></a>Model selection</h2>
 <p>In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># filter for best model</span>
 <span class="no">best_model</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_ic</span>, <span class="no">AICc</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">AICc</span>)) <span class="kw">%&gt;%</span> <span class="fu">pull</span>(<span class="no">model_name</span>)
@@ -294,6 +298,10 @@
        <span class="kw">subtitle</span><span class="kw">=</span> <span class="st">'The Sharpe-Schoolfield model is the best model'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p><img src="model_averaging_selection_files/figure-html/model_selection-1.png" width="576" style="display: block; margin: auto;"></p>
+</div>
+<div id="model-averaging" class="section level2">
+<h2 class="hasAnchor">
+<a href="#model-averaging" class="anchor"></a>Model averaging</h2>
 <p>For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model’s weighting. The best supported model’s predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in whatever information criterion metric is being used. A common approach is to only keep models within <span class="math inline">\(\Delta 2 AIC\)</span> of the best model.</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># get model weights</span>
 <span class="co"># filtering on AIC score is hashtagged out in this example</span>
@@ -371,9 +379,9 @@
 <span class="co">#&gt; #   skewness &lt;dbl&gt;</span></pre></body></html></div>
 <hr>
 </div>
-<div id="further-reading" class="section level3">
-<h3 class="hasAnchor">
-<a href="#further-reading" class="anchor"></a>Further reading</h3>
+<div id="further-reading" class="section level2">
+<h2 class="hasAnchor">
+<a href="#further-reading" class="anchor"></a>Further reading</h2>
 <ul>
 <li>Dormann, C. F., Calabrese, J. M., Guillera‐Arroita, G., Matechou, E., Bahn, V., Bartoń, K., … &amp; Guelat, J. (2018). Model averaging in ecology: A review of Bayesian, information‐theoretic, and tactical approaches for predictive inference. Ecological Monographs, 88(4), 485-504. <a href="https://doi.org/10.1002/ecm.1309">https://doi.org/10.1002/ecm.1309</a>
 </li>
@@ -386,7 +394,9 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
