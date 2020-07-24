@@ -15,6 +15,7 @@ articles:
   - model_weighting
   - model_averaging_selection
   - bootstrapping_models
+  - weighted_bootstrapping
 - title: Multiple curve fits
   navbar: Fitting many curves
   contents:

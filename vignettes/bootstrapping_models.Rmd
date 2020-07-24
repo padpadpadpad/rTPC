@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-#### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
+#### A brief example of how bootstrapping can help visualise and estimate model uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
 
 ***
 ## Things to consider 
@@ -16,7 +16,7 @@ vignette: >
 - **This vignette is still a work in progress**
 - Significant differences between parameters can be evaluated by re-sampling the whole dataset with replacement
 - When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some re-sampled datasets not having any points beyond the optimum temperature
-- In these instances, creating new datasets from mean centre residuals of the original model fit can allow the confidence intervals of derived parameters to be estimated. However, these are likely to increase false positives if used for hypothesis testing.
+- In these instances, creating new datasets from mean centred residuals of the original model fit can allow the confidence intervals of derived parameters to be estimated. However, these are likely to increase false positives if used for hypothesis testing.
 - Think carefully at about your level of replication.
 
 ***
