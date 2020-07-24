@@ -3,6 +3,9 @@ template:
     bootswatch: cosmo
     ganalytics: UA-74093873-3
 
+toc:
+  depth: 2
+
 articles:
 - title: Get started
   navbar: ~
@@ -71,6 +74,3 @@ reference:
   contents:
   - bacteria_tpc
   - chlorella_tpc
-
-toc:
-  depth: 2

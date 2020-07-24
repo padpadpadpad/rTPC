@@ -8,5 +8,6 @@ articles:
   model_averaging_selection: model_averaging_selection.html
   model_weighting: model_weighting.html
   rTPC: rTPC.html
-last_built: 2020-07-20T07:24Z
+  weighted_bootstrapping: weighted_bootstrapping.html
+last_built: 2020-07-24T14:59Z
 

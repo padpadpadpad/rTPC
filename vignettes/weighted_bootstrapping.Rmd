@@ -1,13 +1,14 @@
 ---
 title: "Bootstrapping with weights using rTPC"
 author: "Daniel Padfield"
-output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bootstrapping with weights using rTPC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 #### A brief example of how bootstrapping can be implemented alongside model weighting to account for model uncertainty alongside measurement uncertainty.
 
 ***
