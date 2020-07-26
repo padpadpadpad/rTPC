@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-24</h4>
+            <h4 class="date">2020-07-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -381,12 +381,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.122      0.349</span>
-<span class="co">#&gt; 2  16.1      0.124      0.351</span>
-<span class="co">#&gt; 3  16.2      0.126      0.353</span>
-<span class="co">#&gt; 4  16.3      0.128      0.356</span>
-<span class="co">#&gt; 5  16.4      0.131      0.358</span>
-<span class="co">#&gt; 6  16.5      0.133      0.361</span>
+<span class="co">#&gt; 1  16       0.0975      0.340</span>
+<span class="co">#&gt; 2  16.1     0.0992      0.342</span>
+<span class="co">#&gt; 3  16.2     0.101       0.344</span>
+<span class="co">#&gt; 4  16.3     0.103       0.347</span>
+<span class="co">#&gt; 5  16.4     0.105       0.350</span>
+<span class="co">#&gt; 6  16.5     0.107       0.352</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -524,12 +524,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.194      0.421</span>
-<span class="co">#&gt; 2  16.1      0.196      0.423</span>
-<span class="co">#&gt; 3  16.2      0.198      0.426</span>
-<span class="co">#&gt; 4  16.3      0.200      0.429</span>
-<span class="co">#&gt; 5  16.4      0.202      0.431</span>
-<span class="co">#&gt; 6  16.5      0.204      0.434</span>
+<span class="co">#&gt; 1  16        0.177      0.406</span>
+<span class="co">#&gt; 2  16.1      0.179      0.408</span>
+<span class="co">#&gt; 3  16.2      0.181      0.411</span>
+<span class="co">#&gt; 4  16.3      0.183      0.413</span>
+<span class="co">#&gt; 5  16.4      0.185      0.416</span>
+<span class="co">#&gt; 6  16.5      0.187      0.418</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
