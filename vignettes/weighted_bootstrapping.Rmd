@@ -318,3 +318,101 @@ p2 <- ggplot() +
 p1 + p2
 
 ```
+
+***
+
+# Method 3: Weighted re-sampling and standard non-linear least squares regression
+
+This method re-samples each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset.
+
+```{r bootstrap3, fig.height=3,fig.width=8}
+# create new bootstraps
+d_boots <- d_ave %>%
+  mutate(., n = 1:n()) %>%
+  # creates nboot replicates of the dataset
+  slice(rep(1:n(), times = n_boots)) %>%
+  mutate(., boot_num = rep(1:n_boots, each = n()/n_boots)) %>%
+  arrange(boot_num, temp) %>%
+  group_by(boot_num) %>%
+  mutate(., inv_sd = 1/sd,
+         prob = inv_sd/sum(inv_sd)) %>%
+  unite(., 'resample', c(ave_rate, sd, temp), sep = '_') %>%
+  mutate(., resample = sample(resample, n(), replace = TRUE, prob = prob)) %>%
+  separate(., resample, c('ave_rate', 'sd', 'temp'), sep = '_') %>%
+  ungroup() %>%
+  mutate(across(c(ave_rate, sd, temp), as.numeric)) %>%
+  arrange(boot_num, temp) %>%
+  select(., boot_num, flux, temp, ave_rate, sd)
+
+# setup progress bar
+pb <- progress::progress_bar$new(total = n_boots*number_of_models,
+                                 clear = FALSE,
+                                 format ="[:bar] :percent :elapsedfull")
+
+# fit each model
+d_boots <- nest(d_boots, strap = c(temp, ave_rate, sd)) %>%
+  mutate(., refit = map(strap, ~nls_multstart_safe(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
+                        data = .x,
+                        iter = c(3,3,3,3),
+                        start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') + 10,
+                        lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
+                        upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)))
+
+# remove fits that are NA
+d_boots <- filter(d_boots, !is.na(refit))
+nrow(d_boots)
+
+# create new temperature data
+d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
+                  # predict over that data
+                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+
+# calculate bootstrapped confidence intervals
+d_conf <- select(d_boots, preds) %>%
+  unnest(preds) %>%
+  mutate(temp = round(temp, 1)) %>%
+  group_by(temp) %>%
+  summarise(conf_lower = quantile(.fitted, 0.025),
+         conf_upper = quantile(.fitted, 0.975)) %>%
+  ungroup()
+
+# unnest all predictions
+d_boot_preds <- select(d_boots, boot_num, preds) %>%
+  unnest(preds)
+
+# plot bootstrapped CIs
+p1 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'black') +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
+  geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
+  geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
+  theme_bw(base_size = 12) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  labs(x ='Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Photosynthesis rates across temperatures') +
+  geom_hline(aes(yintercept = 0), linetype = 2)
+
+# plot bootstrapped predictions
+p2 <- ggplot() +
+  geom_line(aes(temp, .fitted), d_preds, col = 'black') +
+  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'black', alpha = 0.03) +
+  geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
+  geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
+  theme_bw(base_size = 10) +
+  theme(legend.position = 'none',
+        strip.text = element_text(hjust = 0),
+        strip.background = element_blank()) +
+  labs(x ='Temperature (ºC)',
+       y = 'Metabolic rate',
+       title = 'Photosynthesis rates across temperatures') +
+  geom_hline(aes(yintercept = 0), linetype = 2)
+
+p1 + p2
+
+```
