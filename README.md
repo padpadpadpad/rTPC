@@ -72,11 +72,29 @@ packages and common traits of TPCs can be estimated using
 **rTPC::est\_params()**. This simple pipeline can easily be scaled up to
 be used on multiple curves.
 
+## Extensions to the pipeline
+
+**rTPC** can also be easily used to do a number of common tasks needed
+when fitting TPCs, such as model selection, model averaging,
+incorporating model weights and bootstrapping of model fits.
+
+<img src="man/figures/rTPC_pipeline_extensions.png" width="1000" align="center" />
+
+**Figure 2. Potential applications for fitting thermal performance
+curves using rTPC**. The pipeline can be easily extended to do model
+selection or model averaging by calculating AIC or BIC. If there is
+information measurement variation (e.g. when fitting TPCs to means and
+standard deviations), the pipeline can incorporate model weights that
+can drastically change the value of estimated parameters. After the best
+model has been selected, bootstrapping approaches can help visualise and
+calculate model uncertainty.
+
 ## Getting started
 
   - For an introduction to **rTPC**, see `vignette("rTPC")`
   - To follow the general pipeline, see `vignette("fit_many_models")`
     and `vignette("fit_many_curves")`.
   - For examples of extensions to this pipeline, see the
-    `vignette("model_averaging_selection")` and
-    `vignette("model_weighting")`.
+    `vignette("model_averaging_selection")`,
+    `vignette("model_weighting")`, `vignette("bootstrapping_models")`
+    and `vignette("weighted_bootstrapping")`.
