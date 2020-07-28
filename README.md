@@ -64,10 +64,10 @@ performance curves.
 
 **Figure 1. General pipeline for fitting thermal performance curves
 using rTPC**. First, Collect, check, and manipulate data into long
-format. Next Choose which model from **rTPC** are going to be used.
+format. Next choose which models from **rTPC** are going to be used.
 Here, a random assortment of four models were chosen. Then fit the
 models to data using **nls.multstart** and helper functions from
-**rTPC**. Model can then be visualised using the **tidyverse** suite of
+**rTPC**. Models can then be visualised using the **tidyverse** suite of
 packages and common traits of TPCs can be estimated using
 **rTPC::est\_params()**. This simple pipeline can easily be scaled up to
 be used on multiple curves.
