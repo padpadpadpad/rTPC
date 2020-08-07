@@ -64,6 +64,8 @@ When doing model weighting, as implemented in `vignette(model_weighting)`, the s
 
 We will demonstrate these approaches using the example in `vignette('model_weighting')`. This vignette uses  the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. Instead of fitting **kamykowski_1985**, we will instead fit **lactin2** because it remains easier to fit and will need less iterations for fitting.
 
+As we are only using 100 iterations, we also use 90% confidence intervals to evaluate the uncertainty and try and make the plots more readable in the examples.
+
 ```{r get_data, fig.height=4, fig.width = 6}
 # get curve data
 data("chlorella_tpc")
@@ -106,7 +108,8 @@ ggplot() +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 ```
 
 ***
@@ -123,7 +126,7 @@ where $n$ is the number of data points. To keep the columns `temp`, `sd`, and `a
 
 ```{r weighted_resample}
 # number of boots
-n_boots <- 100
+n_boots <- 250
 
 # create new re-sampled datasets and prepare them for fitting
 d_boots <- d_ave %>%
@@ -180,18 +183,16 @@ We can finally filter out any bootstrapped datasets that did not fit and plot th
 d_boots <- filter(d_boots, !is.na(refit))
 nrow(d_boots)
 
-# create new temperature data
-d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
-                  # predict over that data
-                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+# predict over temperature
+d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
 
 # calculate bootstrapped confidence intervals
 d_conf <- select(d_boots, preds) %>%
   unnest(preds) %>%
   mutate(temp = round(temp, 1)) %>%
   group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.025),
-         conf_upper = quantile(.fitted, 0.975)) %>%
+  summarise(conf_lower = quantile(.fitted, 0.05),
+         conf_upper = quantile(.fitted, 0.95)) %>%
   ungroup()
 
 # unnest all predictions
@@ -204,14 +205,15 @@ p1 <- ggplot() +
   geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 10) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
@@ -226,7 +228,8 @@ p2 <- ggplot() +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 p1 + p2
 
@@ -267,18 +270,16 @@ d_boots <- d_boots %>%
 d_boots <- filter(d_boots, !is.na(refit))
 nrow(d_boots)
 
-# create new temperature data
-d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
-                  # predict over that data
-                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+# predict over temperature
+d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
 
 # calculate bootstrapped confidence intervals
 d_conf <- select(d_boots, preds) %>%
   unnest(preds) %>%
   mutate(temp = round(temp, 1)) %>%
   group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.025),
-         conf_upper = quantile(.fitted, 0.975)) %>%
+  summarise(conf_lower = quantile(.fitted, 0.05),
+         conf_upper = quantile(.fitted, 0.95)) %>%
   ungroup()
 
 # unnest all predictions
@@ -291,14 +292,15 @@ p1 <- ggplot() +
   geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 10) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
@@ -313,7 +315,8 @@ p2 <- ggplot() +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 p1 + p2
 
@@ -365,18 +368,16 @@ d_boots <- nest(d_boots, strap = c(temp, ave_rate, sd)) %>%
 d_boots <- filter(d_boots, !is.na(refit))
 nrow(d_boots)
 
-# create new temperature data
-d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
-                  # predict over that data
-                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+# predict over temperature
+d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
 
 # calculate bootstrapped confidence intervals
 d_conf <- select(d_boots, preds) %>%
   unnest(preds) %>%
   mutate(temp = round(temp, 1)) %>%
   group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.025),
-         conf_upper = quantile(.fitted, 0.975)) %>%
+  summarise(conf_lower = quantile(.fitted, 0.05),
+         conf_upper = quantile(.fitted, 0.95)) %>%
   ungroup()
 
 # unnest all predictions
@@ -389,14 +390,15 @@ p1 <- ggplot() +
   geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 10) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank()) +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
@@ -411,7 +413,8 @@ p2 <- ggplot() +
   labs(x ='Temperature (ºC)',
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
-  geom_hline(aes(yintercept = 0), linetype = 2)
+  geom_hline(aes(yintercept = 0), linetype = 2) +
+  ylim(c(-0.25, 3.5))
 
 p1 + p2
 

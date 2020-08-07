@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-07-28</h4>
+            <h4 class="date">2020-08-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -211,8 +211,11 @@
   <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">'Temperature (ºC)'</span>,
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Growth rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Growth rate across temperatures'</span>)</pre></body></html></div>
-<p><img src="bootstrapping_models_files/figure-html/fit_and_plot-1.png" width="576" style="display: block; margin: auto;"> Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 250 bootstraps of the data and fit separate models to each using the <strong>modelr</strong> package. We will create a progress bar as used in <code>vignette(fit_many_curves)</code> to track the progress of the fit.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># number of boots</span>
+<p><img src="bootstrapping_models_files/figure-html/fit_and_plot-1.png" width="576" style="display: block; margin: auto;"> Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 100 bootstraps of the data and fit separate models to each using the <strong>modelr</strong> package. We will create a progress bar as used in <code>vignette(fit_many_curves)</code> to track the progress of the fit.</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># create new temperature data</span>
+<span class="no">new_temp_data</span> <span class="kw">&lt;-</span> <span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))
+
+<span class="co"># number of boots</span>
 <span class="no">n_boots</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
 
 <span class="co"># create new datasets and prepare them for fitting</span>
@@ -240,19 +243,16 @@
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
                         <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
                         <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-                  <span class="co"># create new temperature data</span>
-                  <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))),
-                  <span class="co"># predict over that data</span>
-                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))</pre></body></html></div>
+                  <span class="co"># predict over new temperature data</span>
+                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">new_temp_data</span>)))</pre></body></html></div>
 <pre><code>[=========================================================] 100% 00:02:04</code></pre>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu">glimpse</span>(<span class="no">d_boots</span>)
 <span class="co">#&gt; Rows: 100</span>
-<span class="co">#&gt; Columns: 6</span>
+<span class="co">#&gt; Columns: 5</span>
 <span class="co">#&gt; $ phage    &lt;chr&gt; "nophage", "nophage", "nophage", "nophage", "nophage", "noph…</span>
 <span class="co">#&gt; $ strap    &lt;list&gt; [&lt;data.frame[47 x 3]&gt;, &lt;data.frame[47 x 3]&gt;, &lt;data.frame[47…</span>
 <span class="co">#&gt; $ boot_num &lt;chr&gt; "001", "002", "003", "004", "005", "006", "007", "008", "009…</span>
 <span class="co">#&gt; $ refit    &lt;list&gt; [&lt;function () , resid, function () , rhs, function () , for…</span>
-<span class="co">#&gt; $ new_data &lt;list&gt; [&lt;tbl_df[221 x 1]&gt;, &lt;tbl_df[221 x 1]&gt;, &lt;tbl_df[221 x 1]&gt;, &lt;…</span>
 <span class="co">#&gt; $ preds    &lt;list&gt; [&lt;tbl_df[221 x 2]&gt;, &lt;tbl_df[221 x 2]&gt;, &lt;tbl_df[221 x 2]&gt;, &lt;…</span></pre></body></html></div>
 <p>Each bootstrapped model is stored in <code>refit</code>, with the predictions stored in <code>preds</code>. We can easily create confidence intervals around the original fitted predictions and overlay them onto our first plot. We can also just show some of the bootstrapped predictions alongside those of the original model.</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># calculate bootstrapped confidence intervals</span>
@@ -320,8 +320,8 @@
         <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>))</pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/bootstrap_models2_plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>By plotting some of the bootstrapped datasets, we can see which points of the original data were resampled (darker points). There are many different curves that can come from these resampled curves. This is likely to be a bigger problem when there is only one point beyond the optimum of the curve. We can see how much of a problem this is when we model the raw data and the bootstrapped data as before. As I cannot guarantee that there are not instances when there are only two or three different temperatures re-sampled, <strong>nls_multstart</strong> and some of the helper functions in <strong>rTPC</strong> such as <strong>get_start_vals</strong> may fail as the re-sampled data does not validate some of the assumptions of these functions. Consequently we create a <strong>nls_multstart_safe</strong> that returns NAs when <strong>nls_multstart</strong> errors, instead returning <code>NA</code> for that model fit.</p>
-<p>As before, the model predictions of each bootstrap are taken only from the range of temperatures of that bootstrapped dataset, not the range of values of the raw dataset.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># fit Sharpe-Schoolfield model to raw data</span>
+
 <span class="no">d_fit</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d2</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">rate</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">sharpeschoolhigh</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
@@ -347,6 +347,9 @@
 
 <span class="no">nls_multstart_safe</span> <span class="kw">&lt;-</span> <span class="fu">possibly</span>(<span class="no">nls_multstart_progress</span>, <span class="kw">otherwise</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 
+<span class="co"># create new temperature data</span>
+<span class="no">new_temp_data2</span> <span class="kw">&lt;-</span> <span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d2</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d2</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))
+
 <span class="co"># fit each model</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~ <span class="fu">nls_multstart_safe</span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
@@ -362,10 +365,8 @@
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
 <span class="co">#&gt; [1] 100</span>
 
-<span class="co"># create new temperature data</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">new_data</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">.x</span>$<span class="no">temp</span>), <span class="kw">by</span> <span class="kw">=</span> <span class="fl">0.1</span>))),
-                  <span class="co"># predict over that data</span>
-                  <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">refit</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
+<span class="co"># get predictions for each model</span>
+<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">new_temp_data2</span>)))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
 <span class="no">d_conf</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -381,12 +382,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.137      0.319</span>
-<span class="co">#&gt; 2  16.1      0.139      0.321</span>
-<span class="co">#&gt; 3  16.2      0.141      0.323</span>
-<span class="co">#&gt; 4  16.3      0.143      0.326</span>
-<span class="co">#&gt; 5  16.4      0.145      0.328</span>
-<span class="co">#&gt; 6  16.5      0.147      0.331</span>
+<span class="co">#&gt; 1  16        0.124      0.395</span>
+<span class="co">#&gt; 2  16.1      0.126      0.397</span>
+<span class="co">#&gt; 3  16.2      0.128      0.400</span>
+<span class="co">#&gt; 4  16.3      0.130      0.402</span>
+<span class="co">#&gt; 5  16.4      0.132      0.405</span>
+<span class="co">#&gt; 6  16.5      0.133      0.408</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -524,12 +525,12 @@
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;    temp conf_lower conf_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  16        0.196      0.425</span>
-<span class="co">#&gt; 2  16.1      0.198      0.428</span>
-<span class="co">#&gt; 3  16.2      0.200      0.431</span>
-<span class="co">#&gt; 4  16.3      0.202      0.433</span>
-<span class="co">#&gt; 5  16.4      0.204      0.436</span>
-<span class="co">#&gt; 6  16.5      0.206      0.438</span>
+<span class="co">#&gt; 1  16        0.189      0.414</span>
+<span class="co">#&gt; 2  16.1      0.191      0.416</span>
+<span class="co">#&gt; 3  16.2      0.193      0.419</span>
+<span class="co">#&gt; 4  16.3      0.195      0.422</span>
+<span class="co">#&gt; 5  16.4      0.197      0.425</span>
+<span class="co">#&gt; 6  16.5      0.199      0.428</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>

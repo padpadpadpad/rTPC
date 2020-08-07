@@ -113,9 +113,12 @@ ggplot() +
        title = 'Growth rate across temperatures')
 
 ```
-Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 250 bootstraps of the data and fit separate models to each using the **modelr** package. We will create a progress bar as used in `vignette(fit_many_curves)` to track the progress of the fit.
+Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. To illustrate this approach, I will create 100 bootstraps of the data and fit separate models to each using the **modelr** package. We will create a progress bar as used in `vignette(fit_many_curves)` to track the progress of the fit.
 
 ```{r bootstrap_models1}
+# create new temperature data
+new_temp_data <- tibble(temp = seq(min(d$temp), max(d$temp), by = 0.1))
+
 # number of boots
 n_boots <- 100
 
@@ -144,10 +147,8 @@ d_boots <- mutate(d_boots, refit = map(strap, ~ nls_multstart_progress(rate~shar
                         upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
                         supp_errors = 'Y',
                         convergence_count = FALSE)),
-                  # create new temperature data
-                  new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
-                  # predict over that data
-                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+                  # predict over new temperature data
+                  preds =  map(refit, ~augment(.x, newdata = new_temp_data)))
 ```
 
 ```
@@ -232,10 +233,9 @@ ggplot(d_boots_plot, aes(temp, rate)) +
 
 By plotting some of the bootstrapped datasets, we can see which points of the original data were resampled (darker points). There are many different curves that can come from these resampled curves. This is likely to be a bigger problem when there is only one point beyond the optimum of the curve. We can see how much of a problem this is when we model the raw data and the bootstrapped data as before. As I cannot guarantee that there are not instances when there are only two or three different temperatures re-sampled, **nls_multstart** and some of the helper functions in **rTPC** such as **get_start_vals** may fail as the re-sampled data does not validate some of the assumptions of these functions. Consequently we create a **nls_multstart_safe** that returns NAs when **nls_multstart** errors, instead returning `NA` for that model fit.
 
-As before, the model predictions of each bootstrap are taken only from the range of temperatures of that bootstrapped dataset, not the range of values of the raw dataset.
-
 ```{r bootstrap_models2, fig.height=3,fig.width=8}
 # fit Sharpe-Schoolfield model to raw data
+
 d_fit <- nest(d2, data = c(temp, rate)) %>%
   mutate(sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
                         data = .x,
@@ -261,6 +261,9 @@ pb <- progress::progress_bar$new(total = n_boots*number_of_models,
 
 nls_multstart_safe <- possibly(nls_multstart_progress, otherwise = NA, quiet = TRUE)
 
+# create new temperature data
+new_temp_data2 <- tibble(temp = seq(min(d2$temp), max(d2$temp), by = 0.1))
+
 # fit each model
 d_boots <- mutate(d_boots, refit = map(strap, ~ nls_multstart_safe(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
                         data = .x,
@@ -275,10 +278,8 @@ d_boots <- mutate(d_boots, refit = map(strap, ~ nls_multstart_safe(rate~sharpesc
 d_boots <- filter(d_boots, !is.na(refit))
 nrow(d_boots)
 
-# create new temperature data
-d_boots <- mutate(d_boots, new_data = map(strap, ~tibble(temp = seq(min(.x$temp), max(.x$temp), by = 0.1))),
-                  # predict over that data
-                  preds =  map2(refit, new_data, ~augment(.x, newdata = .y)))
+# get predictions for each model
+d_boots <- mutate(d_boots, preds = map(refit, ~augment(.x, newdata = new_temp_data2)))
 
 # calculate bootstrapped confidence intervals
 d_conf <- select(d_boots, preds) %>%
