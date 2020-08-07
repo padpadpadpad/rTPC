@@ -36,7 +36,7 @@ of being written up into a methods paper. In the meantime, please cite
 as:
 
 Daniel Padfield and Hannah O’Sullivan (2020). rTPC: an R package for
-helping fit thermal performance curves. R package version. 0.1.0.
+helping fit thermal performance curves. R package version 0.1.0.
 
 ## Bugs and suggestions
 

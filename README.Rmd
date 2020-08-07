@@ -5,6 +5,7 @@ output:
 always_allow_html: yes
 ---
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup, include = FALSE}
@@ -30,7 +31,7 @@ When developing **rTPC**, we made a conscious decision not to repeat code and me
 
 **rTPC** and the pipelines outlined in the vignettes are in the process of being written up into a methods paper. In the meantime, please cite as:
 
-Daniel Padfield and Hannah O'Sullivan (2020). rTPC: an R package for helping fit thermal performance curves. R package version. 0.1.0.
+Daniel Padfield and Hannah O'Sullivan (2020). rTPC: an R package for helping fit thermal performance curves. R package version 0.1.0.
 
 ## Bugs and suggestions
 
