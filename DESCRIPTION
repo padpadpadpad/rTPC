@@ -29,6 +29,8 @@ Suggests:
     progress,
     rsample,
     modelr,
-    patchwork
+    patchwork,
+    car,
+    boot
 Depends: R (>= 2.10)
 VignetteBuilder: knitr
