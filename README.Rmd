@@ -39,11 +39,11 @@ Please report any bugs and suggestions to the [Issues](https://github.com/padpad
 
 ## Installation
 
-__rTPC__ can easily be downloaded from GitHub using the `remotes::install_github()`. The vignettes available with the package can be downloaded by adding `build_vignettes = TRUE`.
+__rTPC__ can easily be downloaded from GitHub using the `remotes::install_github()`. The vignettes are all available online, but if you would like to build them locally, add `build_vignettes = TRUE` into your `install_github()` command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.
 
 ```{r install, eval = FALSE}
 # install package from GitHub
-remotes::install_github("padpadpadpad/rTPC", build_vignettes = TRUE)
+remotes::install_github("padpadpadpad/rTPC")
 ```
 
 ## General pipeline
