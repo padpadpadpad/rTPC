@@ -41,19 +41,6 @@ library(broom)
 library(tidyverse)
 library(patchwork)
 
-# edit nls_multstart to allow for a progress bar
-nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
-                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
-                                   control, modelweights, ...){
-  if(!is.null(pb)){
-    pb$tick()
-  }
-  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
-                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
-                control = control, modelweights = modelweights, ...)
-}
-
-
 ```
 
 When doing model weighting, as implemented in `vignette(model_weighting)`, the standard deviation of each point that can be used to account for measurement uncertainty and change the model fit of the thermal performance curve. However, how this approach can be combined with bootstrapping is unclear. Here, we provide three possible approaches to bootstrapping when using weighted non-linear regression to fit thermal performance curves. They all use the data re-sampling.
@@ -121,7 +108,6 @@ This method re-samples new datasets where each point is sampled proportionally t
 First we will create the re-sampled bootstrapped datasets. We will use probability weighting for the re-sampled data according to the relative sizes of the standard deviation, $\sigma$. We calculate this for each data point, $i$, as
 
 $$\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}$$
-
 where $n$ is the number of data points. To keep the columns `temp`, `sd`, and `ave_rate` together, we group them together and then separate them after weighted re-sampling.
 
 ```{r weighted_resample}

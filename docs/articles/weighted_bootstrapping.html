@@ -250,13 +250,13 @@
 <span class="co">#&gt;  1        1 photosynthesis    16    0.237 0.0448</span>
 <span class="co">#&gt;  2        1 photosynthesis    16    0.237 0.0448</span>
 <span class="co">#&gt;  3        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  4        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  5        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  6        1 photosynthesis    16    0.237 0.0448</span>
+<span class="co">#&gt;  4        1 photosynthesis    19    0.378 0.112 </span>
+<span class="co">#&gt;  5        1 photosynthesis    19    0.378 0.112 </span>
+<span class="co">#&gt;  6        1 photosynthesis    28    1.13  0.0507</span>
 <span class="co">#&gt;  7        1 photosynthesis    28    1.13  0.0507</span>
 <span class="co">#&gt;  8        1 photosynthesis    28    1.13  0.0507</span>
-<span class="co">#&gt;  9        1 photosynthesis    40    2.51  0.218 </span>
-<span class="co">#&gt; 10        1 photosynthesis    46    0.237 0.0448</span>
+<span class="co">#&gt;  9        1 photosynthesis    31    1.52  0.132 </span>
+<span class="co">#&gt; 10        1 photosynthesis    31    1.52  0.132 </span>
 <span class="co">#&gt; # … with 2,740 more rows</span></pre></body></html></div>
 <p>We will now implement weighted regression on each bootstrap.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># start progress bar and estimate time it will take</span>
@@ -285,7 +285,7 @@
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 249</span>
+<span class="co">#&gt; [1] 247</span>
 
 <span class="co"># predict over temperature</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
@@ -468,7 +468,7 @@
 <span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 249</span>
+<span class="co">#&gt; [1] 248</span>
 
 <span class="co"># predict over temperature</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))

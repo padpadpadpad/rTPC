@@ -215,12 +215,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2746438 0.7347465 2.409259 31.26808</span>
-<span class="co">#&gt; [2,] 0.2524487 0.8682780 2.229905 29.62300</span>
-<span class="co">#&gt; [3,] 0.2955400 0.7007045 2.346481 31.08958</span>
-<span class="co">#&gt; [4,] 0.2604907 0.7632848 2.519216 31.23700</span>
-<span class="co">#&gt; [5,] 0.2233076 1.1029223 2.330097 27.94865</span>
-<span class="co">#&gt; [6,] 0.2955204 0.8030443 2.263635 29.61833</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2875831 0.7878891 2.321089 30.02984</span>
+<span class="co">#&gt; [2,] 0.2902641 0.6632360 2.551769 31.64566</span>
+<span class="co">#&gt; [3,] 0.2593091 0.9364320 2.330374 28.91184</span>
+<span class="co">#&gt; [4,] 0.2427788 0.9909402 2.310783 28.44102</span>
+<span class="co">#&gt; [5,] 0.2634230 0.8523189 2.293464 29.68806</span>
+<span class="co">#&gt; [6,] 0.2969283 0.6005021 2.633710 32.52754</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -293,7 +293,7 @@
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 989 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 990 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>

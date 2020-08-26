@@ -10,7 +10,7 @@
 
 get_start_vals <- function(x, y, model_name) {
 
-  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017', 'beta_2012', 'modifiedgaussian_2006')
+  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017', 'beta_2012', 'modifiedgaussian_2006', 'pawar_2018')
 
   if (model_name %in% mod_names == FALSE){
     stop("supplied model_name is not an available model in rTPC. Please check the spelling of model_name.")
@@ -236,6 +236,16 @@ get_start_vals <- function(x, y, model_name) {
     b = 0
     c = 0
     return(c(a = a, b = b, c = c, r0 = r0))
+  }
+
+  if(model_name == 'pawar_2018'){
+    r_tref = mean(d$y, na.rm = TRUE)
+    pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+    post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
+    e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+    eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
+    topt = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
+    return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
   }
 
 }
