@@ -141,7 +141,7 @@
 <a href="#general-pipeline" class="anchor"></a>General pipeline</h2>
 <p><strong>rTPC</strong> makes it easy to fit multiple models to multiple thermal performance curves.</p>
 <p><img src="reference/figures/rTPC_pipeline.png" width="1000" align="center"></p>
-<p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. First, Collect, check, and manipulate data into long format. Next choose which models from <strong>rTPC</strong> are going to be used. Here, a random assortment of four models were chosen. Then fit the models to data using <strong>nls.multstart</strong> and helper functions from <strong>rTPC</strong>. Models can then be visualised using the <strong>tidyverse</strong> suite of packages and common traits of TPCs can be estimated using <strong>rTPC::est_params()</strong>. This simple pipeline can easily be scaled up to be used on multiple curves.</p>
+<p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. First, Collect, check, and manipulate data into long format. Next choose which models from <strong>rTPC</strong> are going to be used. Here, a random assortment of four models were chosen. Then fit the models to data using <strong>nls.multstart</strong> and helper functions from <strong>rTPC</strong>. Models can then be visualised using the <strong>tidyverse</strong> suite of packages and common traits of TPCs can be calculated using <strong>rTPC::calc_params()</strong>. This simple pipeline can easily be scaled up to be used on multiple curves.</p>
 </div>
 <div id="extensions-to-the-pipeline" class="section level2">
 <h2 class="hasAnchor">

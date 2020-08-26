@@ -70,9 +70,9 @@ format. Next choose which models from **rTPC** are going to be used.
 Here, a random assortment of four models were chosen. Then fit the
 models to data using **nls.multstart** and helper functions from
 **rTPC**. Models can then be visualised using the **tidyverse** suite of
-packages and common traits of TPCs can be estimated using
-**rTPC::est\_params()**. This simple pipeline can easily be scaled up to
-be used on multiple curves.
+packages and common traits of TPCs can be calculated using
+**rTPC::calc\_params()**. This simple pipeline can easily be scaled up
+to be used on multiple curves.
 
 ## Extensions to the pipeline
 

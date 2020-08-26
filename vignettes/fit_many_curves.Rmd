@@ -136,7 +136,7 @@ The traits of each thermal performance curve can also easily be calculated.
 ```{r params}
 # stack models and calculate extra params
 d_params <- pivot_longer(d_fits, names_to = 'model_name', values_to = 'fit', c(gaussian,sharpeschoolhigh)) %>%
-  mutate(params = map(fit, est_params)) %>%
+  mutate(params = map(fit, calc_params)) %>%
   select(curve_id, growth_temp, process, flux, model_name, params) %>%
   unnest(params)
 

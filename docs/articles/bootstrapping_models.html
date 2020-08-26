@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -215,12 +215,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2686948 0.8367401 2.320483 29.82743</span>
-<span class="co">#&gt; [2,] 0.2761858 0.6872480 2.533615 31.79252</span>
-<span class="co">#&gt; [3,] 0.2843381 0.7389890 2.218122 30.63250</span>
-<span class="co">#&gt; [4,] 0.2501379 0.8661805 2.452520 30.13892</span>
-<span class="co">#&gt; [5,] 0.2550320 0.9496408 2.196785 28.62783</span>
-<span class="co">#&gt; [6,] 0.2663846 0.7203996 2.440796 31.29260</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2746438 0.7347465 2.409259 31.26808</span>
+<span class="co">#&gt; [2,] 0.2524487 0.8682780 2.229905 29.62300</span>
+<span class="co">#&gt; [3,] 0.2955400 0.7007045 2.346481 31.08958</span>
+<span class="co">#&gt; [4,] 0.2604907 0.7632848 2.519216 31.23700</span>
+<span class="co">#&gt; [5,] 0.2233076 1.1029223 2.330097 27.94865</span>
+<span class="co">#&gt; [6,] 0.2955204 0.8030443 2.263635 29.61833</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -293,7 +293,7 @@
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 992 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 989 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>
@@ -415,7 +415,7 @@
 <li><a href="https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf" class="uri">https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf</a></li>
 </ul>
 </li>
-<li>A.C. Davison &amp; D.V. Hinkley (2003) Bootstrap Methods and their Application. <a href="https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A" class="uri">https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A</a>
+<li>A.C. Davison &amp; D.V. Hinkley (2003) Bootstrap Methods and their Application. - <a href="https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A" class="uri">https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A</a>
 </li>
 </ul>
 </div>

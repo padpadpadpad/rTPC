@@ -58,7 +58,7 @@ reference:
   - get_upper_lims
 - title: Estimating parameters
   contents:
-  - est_params
+  - calc_params
   - get_ctmax
   - get_ctmin
   - get_e

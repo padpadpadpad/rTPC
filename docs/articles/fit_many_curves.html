@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Fitting many curves using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_curves.Rmd</code></div>
@@ -228,7 +228,7 @@
 <p>The traits of each thermal performance curve can also easily be calculated.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># stack models and calculate extra params</span>
 <span class="no">d_params</span> <span class="kw">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="no">d_fits</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'model_name'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'fit'</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">gaussian</span>,<span class="no">sharpeschoolhigh</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">est_params</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">calc_params</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">select</span>(<span class="no">curve_id</span>, <span class="no">growth_temp</span>, <span class="no">process</span>, <span class="no">flux</span>, <span class="no">model_name</span>, <span class="no">params</span>) <span class="kw">%&gt;%</span>
   <span class="fu">unnest</span>(<span class="no">params</span>)
 

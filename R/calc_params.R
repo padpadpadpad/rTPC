@@ -1,4 +1,4 @@
-#' Estimate extra parameters of a thermal performance curve
+#' Calculate extra parameters of a thermal performance curve
 #'
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @details Currently estimates:
@@ -16,9 +16,9 @@
 #'
 #' If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 #' @md
-#' @export est_params
+#' @export calc_params
 
-est_params <- function(model){
+calc_params <- function(model){
   t <- data.frame(rmax = suppressWarnings(tryCatch(rTPC::get_rmax(model), error = function(err) NA)),
                   topt = suppressWarnings(tryCatch(rTPC::get_topt(model), error = function(err) NA)),
                   ctmin = suppressWarnings(tryCatch(rTPC::get_ctmin(model), error = function(err) NA)),

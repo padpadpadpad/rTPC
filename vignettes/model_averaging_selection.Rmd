@@ -245,12 +245,12 @@ ggplot(d_preds, aes(temp, .fitted)) +
 
 In this example, as is obvious from the model weights, the Sharpe-Schoolfield model is overwhelmingly the most supported. This plays out in the plot, with the predictions deviating very little from the predictions based on the Sharpe-Schoolfield model.
 
-Model averaging can also be applied to estimated extra parameters, such as optimum temperature and maximum rate.
+Model averaging can also be applied to calculated extra parameters, such as optimum temperature and maximum rate.
 
-```{r ave_est_params}
+```{r ave_calc_params}
 # calculate estimated parameters
 params <- d_stack %>%
-  mutate(., params = map(fit, est_params)) %>%
+  mutate(., params = map(fit, calc_params)) %>%
   select(-fit) %>%
   unnest(params)
 

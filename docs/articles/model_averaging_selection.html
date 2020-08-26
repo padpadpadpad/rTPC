@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Model selection and model averaging with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/model_averaging_selection.Rmd"><code>vignettes/model_averaging_selection.Rmd</code></a></small>
       <div class="hidden name"><code>model_averaging_selection.Rmd</code></div>
@@ -352,10 +352,10 @@
   <span class="fu">scale_color_brewer</span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">'qual'</span>, <span class="kw">palette</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p><img src="model_averaging_selection_files/figure-html/model_weights-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>In this example, as is obvious from the model weights, the Sharpe-Schoolfield model is overwhelmingly the most supported. This plays out in the plot, with the predictions deviating very little from the predictions based on the Sharpe-Schoolfield model.</p>
-<p>Model averaging can also be applied to estimated extra parameters, such as optimum temperature and maximum rate.</p>
+<p>Model averaging can also be applied to calculated extra parameters, such as optimum temperature and maximum rate.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># calculate estimated parameters</span>
 <span class="no">params</span> <span class="kw">&lt;-</span> <span class="no">d_stack</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">est_params</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">calc_params</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">select</span>(-<span class="no">fit</span>) <span class="kw">%&gt;%</span>
   <span class="fu">unnest</span>(<span class="no">params</span>)
 

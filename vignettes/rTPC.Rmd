@@ -97,11 +97,11 @@ fit <- nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tre
 fit
 ```
 
-To estimate additional parameters of interest, we can use **rTPC::est_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available  methods can be viewed by running `?est_params`. For example, we may be interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
+To estimate additional parameters of interest, we can use **rTPC::calc_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available  methods can be viewed by running `?calc_params`. For example, we may be interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
 
 ```{r}
 # estimate additional traits
-est_params(fit) %>%
+calc_params(fit) %>%
   # round for easy viewing
   mutate_all(round, 2)
 
