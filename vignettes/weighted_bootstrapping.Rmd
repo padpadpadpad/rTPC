@@ -29,12 +29,15 @@ knitr::opts_chunk$set(
   #tidy.opts=list(width.cutoff=60),
   #tidy=TRUE,
   fig.align = 'center',
-  warning=FALSE
+  warning=FALSE,
+  eval=FALSE
 )
 ```
 
 ```{r setup, message=FALSE}
 # load packages
+library(boot)
+library(car)
 library(rTPC)
 library(nls.multstart)
 library(broom)
@@ -108,11 +111,23 @@ This method re-samples new datasets where each point is sampled proportionally t
 First we will create the re-sampled bootstrapped datasets. We will use probability weighting for the re-sampled data according to the relative sizes of the standard deviation, $\sigma$. We calculate this for each data point, $i$, as
 
 $$\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}$$
-where $n$ is the number of data points. To keep the columns `temp`, `sd`, and `ave_rate` together, we group them together and then separate them after weighted re-sampling.
+where $n$ is the number of data points. We can pass an argument to **car::Boot()** for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using **nlsLM()** and their weights argument as in `vignette`
 
 ```{r weighted_resample}
-# number of boots
-n_boots <- 250
+# create column for probability of resampling
+d_ave <- mutate(d_ave, inv_sd = 1/sd,
+                prob = inv_sd/sum(inv_sd))
+
+# refit model using nlsLM
+fit_nlsLM <- minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
+                        data = d_ave,
+                        start = coef(d_fit$weighted[[1]]),
+                        lower = get_lower_lims(d_ave$temp, d_ave$ave_rate, model_name = 'lactin2_1995'),
+                        upper = get_upper_lims(d_ave$temp, d_ave$ave_rate, model_name = 'lactin2_1995'),
+                        weights = inv_sd)
+
+# bootstrap using weighted case resampling
+boot1 <- Boot(fit_nlsLM, method = 'case')
 
 # create new re-sampled datasets and prepare them for fitting
 d_boots <- d_ave %>%

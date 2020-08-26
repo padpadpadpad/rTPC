@@ -143,23 +143,13 @@
 </ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">boot</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">car</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">patchwork</span>)
-
-<span class="co"># edit nls_multstart to allow for a progress bar</span>
-<span class="no">nls_multstart_progress</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">formula</span>, <span class="no">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html">parent.frame</a></span>(), <span class="no">iter</span>, <span class="no">start_lower</span>,
-                                   <span class="no">start_upper</span>, <span class="no">supp_errors</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y"</span>, <span class="st">"N"</span>), <span class="no">convergence_count</span> <span class="kw">=</span> <span class="fl">100</span>,
-                                   <span class="no">control</span>, <span class="no">modelweights</span>, <span class="no">...</span>){
-  <span class="kw">if</span>(!<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="no">pb</span>)){
-    <span class="no">pb</span>$<span class="fu">tick</span>()
-  }
-  <span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">formula</span> <span class="kw">=</span> <span class="no">formula</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">data</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="no">iter</span>, <span class="kw">start_lower</span> <span class="kw">=</span> <span class="no">start_lower</span>,
-                <span class="kw">start_upper</span> <span class="kw">=</span> <span class="no">start_upper</span>, <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="no">supp_errors</span>, <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="no">convergence_count</span>,
-                <span class="kw">control</span> <span class="kw">=</span> <span class="no">control</span>, <span class="kw">modelweights</span> <span class="kw">=</span> <span class="no">modelweights</span>, <span class="no">...</span>)
-}</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">patchwork</span>)</pre></body></html></div>
 <p>When doing model weighting, as implemented in <code>vignette(model_weighting)</code>, the standard deviation of each point that can be used to account for measurement uncertainty and change the model fit of the thermal performance curve. However, how this approach can be combined with bootstrapping is unclear. Here, we provide three possible approaches to bootstrapping when using weighted non-linear regression to fit thermal performance curves. They all use the data re-sampling.</p>
 <ol style="list-style-type: decimal">
 <li>Re-sample each data point with a probability proportional to its weight and do weighted non-linear least squares regression on each bootstrapped dataset</li>
@@ -176,7 +166,6 @@
   <span class="fu">summarise</span>(<span class="no">.</span>, <span class="kw">sd</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(<span class="no">rate</span>),
             <span class="kw">ave_rate</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">rate</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>()
-<span class="co">#&gt; `summarise()` regrouping output by 'temp' (override with `.groups` argument)</span>
 
 <span class="no">d_fit</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d_ave</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">weighted</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
@@ -212,7 +201,6 @@
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))</pre></body></html></div>
-<p><img src="weighted_bootstrapping_files/figure-html/get_data-1.png" width="576" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="method-1-weighted-re-sampling-and-weighted-regression" class="section level1">
@@ -220,10 +208,21 @@
 <a href="#method-1-weighted-re-sampling-and-weighted-regression" class="anchor"></a>Method 1: Weighted re-sampling and weighted regression</h1>
 <p>This method re-samples new datasets where each point is sampled proportionally to its standard deviation. Weighted non-linear least squares regression is then implemented on each bootstrapped dataset.</p>
 <p>First we will create the re-sampled bootstrapped datasets. We will use probability weighting for the re-sampled data according to the relative sizes of the standard deviation, <span class="math inline">\(\sigma\)</span>. We calculate this for each data point, <span class="math inline">\(i\)</span>, as</p>
-<p><span class="math display">\[\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}\]</span></p>
-<p>where <span class="math inline">\(n\)</span> is the number of data points. To keep the columns <code>temp</code>, <code>sd</code>, and <code>ave_rate</code> together, we group them together and then separate them after weighted re-sampling.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># number of boots</span>
-<span class="no">n_boots</span> <span class="kw">&lt;-</span> <span class="fl">250</span>
+<p><span class="math display">\[\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}\]</span> where <span class="math inline">\(n\)</span> is the number of data points. We can pass an argument to <strong>car::Boot()</strong> for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using <strong>nlsLM()</strong> and their weights argument as in <code>vignette</code></p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># create column for probability of resampling</span>
+<span class="no">d_ave</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_ave</span>, <span class="kw">inv_sd</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>,
+                <span class="kw">prob</span> <span class="kw">=</span> <span class="no">inv_sd</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">inv_sd</span>))
+
+<span class="co"># refit model using nlsLM</span>
+<span class="no">fit_nlsLM</span> <span class="kw">&lt;-</span> <span class="kw pkg">minpack.lm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
+                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">d_ave</span>,
+                        <span class="kw">start</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">d_fit</span>$<span class="no">weighted</span><span class="kw">[[</span><span class="fl">1</span>]]),
+                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>, <span class="no">d_ave</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>, <span class="no">d_ave</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
+                        <span class="kw">weights</span> <span class="kw">=</span> <span class="no">inv_sd</span>)
+
+<span class="co"># bootstrap using weighted case resampling</span>
+<span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 
 <span class="co"># create new re-sampled datasets and prepare them for fitting</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="no">d_ave</span> <span class="kw">%&gt;%</span>
@@ -243,21 +242,7 @@
   <span class="fu">arrange</span>(<span class="no">boot_num</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
   <span class="fu">select</span>(<span class="no">.</span>, <span class="no">boot_num</span>, <span class="no">flux</span>, <span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)
 
-<span class="no">d_boots</span>
-<span class="co">#&gt; # A tibble: 2,750 x 5</span>
-<span class="co">#&gt;    boot_num flux            temp ave_rate     sd</span>
-<span class="co">#&gt;       &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  2        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  3        1 photosynthesis    16    0.237 0.0448</span>
-<span class="co">#&gt;  4        1 photosynthesis    19    0.378 0.112 </span>
-<span class="co">#&gt;  5        1 photosynthesis    19    0.378 0.112 </span>
-<span class="co">#&gt;  6        1 photosynthesis    28    1.13  0.0507</span>
-<span class="co">#&gt;  7        1 photosynthesis    28    1.13  0.0507</span>
-<span class="co">#&gt;  8        1 photosynthesis    28    1.13  0.0507</span>
-<span class="co">#&gt;  9        1 photosynthesis    31    1.52  0.132 </span>
-<span class="co">#&gt; 10        1 photosynthesis    31    1.52  0.132 </span>
-<span class="co">#&gt; # … with 2,740 more rows</span></pre></body></html></div>
+<span class="no">d_boots</span></pre></body></html></div>
 <p>We will now implement weighted regression on each bootstrap.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># start progress bar and estimate time it will take</span>
 <span class="no">number_of_models</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
@@ -285,7 +270,6 @@
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 247</span>
 
 <span class="co"># predict over temperature</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
@@ -298,7 +282,6 @@
   <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
          <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>()
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -337,7 +320,6 @@
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
-<p><img src="weighted_bootstrapping_files/figure-html/plot_bootstrap_1-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="method-2-unweighted-re-sampling-and-weighted-regression" class="section level1">
@@ -371,7 +353,6 @@
 <span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 250</span>
 
 <span class="co"># predict over temperature</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
@@ -384,7 +365,6 @@
   <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
          <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>()
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -423,7 +403,6 @@
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
-<p><img src="weighted_bootstrapping_files/figure-html/bootstrap2-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="method-3-weighted-re-sampling-and-standard-non-linear-least-squares-regression" class="section level1">
@@ -468,7 +447,6 @@
 <span class="co"># remove fits that are NA</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-<span class="co">#&gt; [1] 248</span>
 
 <span class="co"># predict over temperature</span>
 <span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
@@ -481,7 +459,6 @@
   <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
          <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>()
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="co"># unnest all predictions</span>
 <span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
@@ -520,7 +497,6 @@
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
-<p><img src="weighted_bootstrapping_files/figure-html/bootstrap3-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
   </div>
 
