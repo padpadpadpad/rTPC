@@ -124,7 +124,9 @@ fit_nlsLM <- minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, de
                         start = coef(d_fit$weighted[[1]]),
                         lower = get_lower_lims(d_ave$temp, d_ave$ave_rate, model_name = 'lactin2_1995'),
                         upper = get_upper_lims(d_ave$temp, d_ave$ave_rate, model_name = 'lactin2_1995'),
-                        weights = inv_sd)
+                        weights = 1/sd)
+
+mod2 <- update(fit_nlsLM)
 
 # bootstrap using weighted case resampling
 boot1 <- Boot(fit_nlsLM, method = 'case')

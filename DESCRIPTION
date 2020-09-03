@@ -13,10 +13,9 @@ BugReports: https://github.com/padpadpadpad/rTPC/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-Suggests: 
-    broom,
+Suggests:
     ggplot2,
-    grid,
+    broom,
     nls.multstart,
     MuMIn,
     minpack.lm,
@@ -27,10 +26,12 @@ Suggests:
     ggrepel,
     RColorBrewer,
     progress,
-    rsample,
-    modelr,
     patchwork,
     car,
-    boot
+    boot,
+    stringr,
+    nlstools,
+    MASS,
+    forcats
 Depends: R (>= 2.10)
 VignetteBuilder: knitr

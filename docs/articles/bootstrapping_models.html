@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-08-26</h4>
+            <h4 class="date">2020-09-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -136,11 +136,11 @@
 <a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li>Confidence intervals of model predictions can be produced for non-linear least squares regression models using bootstrapping.</li>
-<li>Bootstrapping can also allow differences between estimated and calculated parameters to be evaluated.</li>
+<li>Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated.</li>
 <li>Case resampling involves resampling the actual data with replacement and then refitting the model to the new, simulated datasets.</li>
 <li>When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some re-sampled datasets not having any points beyond the optimum temperature.</li>
-<li>Case resampling will be sensitive to the number of unique data points and the model being used.</li>
 <li>In these instances, residual sampling - creating new datasets from mean centred residuals of the original model fit - provides an alternative to case resampling.</li>
+<li>Both resampling methods will be sensitive to the number of unique data points and the model being used.</li>
 </ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
@@ -150,7 +150,8 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">patchwork</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">patchwork</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">minpack.lm</span>)</pre></body></html></div>
 </div>
 <div id="case-resampling-resampling-the-original-data-with-replacement" class="section level1">
 <h1 class="hasAnchor">
@@ -215,12 +216,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2762490 0.6849564 2.665632 31.74375</span>
-<span class="co">#&gt; [2,] 0.3045670 0.7124300 2.370647 30.86077</span>
-<span class="co">#&gt; [3,] 0.2811147 0.7487255 2.351662 30.71177</span>
-<span class="co">#&gt; [4,] 0.2606872 0.8038216 2.365297 30.47027</span>
-<span class="co">#&gt; [5,] 0.2359026 0.9981509 2.308118 28.77235</span>
-<span class="co">#&gt; [6,] 0.3166500 0.6180277 2.438426 31.87481</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2768424 0.6346997 2.600919 32.50854</span>
+<span class="co">#&gt; [2,] 0.2886270 0.6895516 2.388658 31.36959</span>
+<span class="co">#&gt; [3,] 0.2304775 1.0837795 2.377578 27.85005</span>
+<span class="co">#&gt; [4,] 0.2211972 0.9318925 2.424346 29.75261</span>
+<span class="co">#&gt; [5,] 0.2607113 0.8316133 2.418882 30.24069</span>
+<span class="co">#&gt; [6,] 0.2564411 0.8869014 2.400021 29.73173</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -284,16 +285,17 @@
          <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map2</span>(<span class="no">sharpeschoolhigh</span>, <span class="no">new_data</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">.y</span>)))
 
 <span class="co"># refit model using nlsLM</span>
-<span class="no">fit_nlsLM2</span> <span class="kw">&lt;-</span> <span class="kw pkg">minpack.lm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
+<span class="no">fit_nlsLM2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">d2</span>,
                         <span class="kw">start</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">d_fit</span>$<span class="no">sharpeschoolhigh</span><span class="kw">[[</span><span class="fl">1</span>]]),
                         <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">d2</span>$<span class="no">temp</span>, <span class="no">d2</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d2</span>$<span class="no">temp</span>, <span class="no">d2</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>))
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d2</span>$<span class="no">temp</span>, <span class="no">d2</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
+                        <span class="kw">control</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nls.lm.control.html">nls.lm.control</a></span>(<span class="kw">maxiter</span><span class="kw">=</span><span class="fl">500</span>))
 
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 992 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 991 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>
@@ -402,7 +404,153 @@
 <div id="calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="section level1">
 <h1 class="hasAnchor">
 <a href="#calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="anchor"></a>Calculating confidence intervals of estimated and calculated parameters</h1>
-<p>Bootstrapping can be used to estimate confidence intervals of estimated and calculated parameters.</p>
+<p>Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using <strong>confint-MASS</strong>) and asymptotic confidence intervals (using <strong>nlstools::confint2()</strong>). We will do this on the two models done previously in this vignette. First with the bacteria TPC.</p>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># First for the bacteria</span>
+
+<span class="co"># get parameters of fitted model</span>
+<span class="no">param_bact</span> <span class="kw">&lt;-</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">select</span>(<span class="kw">param</span> <span class="kw">=</span> <span class="no">term</span>, <span class="no">estimate</span>)
+
+<span class="co"># calculate confidence intervals of models</span>
+<span class="no">ci_bact1</span> <span class="kw">&lt;-</span> <span class="kw pkg">nlstools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>)
+<span class="no">ci_bact2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'profile'</span>)
+<span class="co">#&gt; Waiting for profiling to be done...</span>
+
+<span class="co"># CIs from case resampling</span>
+<span class="no">ci_bact3</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
+
+<span class="co"># CIs from residual resampling</span>
+<span class="no">ci_bact4</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual'</span>) <span class="kw">%&gt;%</span>
+  <span class="no">.</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual bootstrap'</span>)
+
+<span class="no">ci_bact</span> <span class="kw">&lt;-</span> <span class="fu">bind_rows</span>(<span class="no">ci_bact1</span>, <span class="no">ci_bact2</span>, <span class="no">ci_bact3</span>, <span class="no">ci_bact4</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">left_join</span>(<span class="no">.</span>, <span class="no">param_bact</span>)
+<span class="co">#&gt; Joining, by = "param"</span>
+
+<span class="co"># plot</span>
+<span class="fu">ggplot</span>(<span class="no">ci_bact</span>, <span class="fu">aes</span>(<span class="kw pkg">forcats</span><span class="kw ns">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span>(<span class="no">method</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'profile'</span>, <span class="st">'asymptotic'</span>)), <span class="no">estimate</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">method</span>)) +
+  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="no">conf_lower</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">ci_bact</span>, <span class="no">method</span> <span class="kw">==</span> <span class="st">'profile'</span>)) +
+  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">ci_bact</span>, <span class="no">method</span> <span class="kw">==</span> <span class="st">'profile'</span>)) +
+  <span class="fu">geom_point</span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
+  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>)) +
+  <span class="fu">theme_bw</span>() +
+  <span class="fu">facet_wrap</span>(~<span class="no">param</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">'free'</span>) +
+  <span class="fu">scale_x_discrete</span>(<span class="st">''</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="no">x</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">10</span>)) +
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,
+       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the bacteria TPC; dashed lines are CI of profiling method'</span>)</pre></body></html></div>
+<p><img src="bootstrapping_models_files/figure-html/confint_bact-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>The dashed lines represent the 95% intervals for the profiling method. The different bootstrap methods do a reasonable job at being close to these intervals, but not all parameters are the same. For example, <code>r_tref</code> and <code>e</code> give wider (and asymmetric) confidence intervals using the case resampling method. The residual method gives estimates that are closer to the ones calculated from profiling.</p>
+<p>Now for the TPC from the <em>Chlorella</em> dataset.</p>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># Second for Chlorella data</span>
+
+<span class="co"># get parameters of fitted model</span>
+<span class="no">param_chlor</span> <span class="kw">&lt;-</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">fit_nlsLM2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">select</span>(<span class="kw">param</span> <span class="kw">=</span> <span class="no">term</span>, <span class="no">estimate</span>)
+
+<span class="co"># calculate confidence intervals of models</span>
+<span class="no">ci_chlor1</span> <span class="kw">&lt;-</span> <span class="kw pkg">nlstools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>)
+<span class="no">ci_chlor2</span> <span class="kw">&lt;-</span> <span class="kw pkg">nlstools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'profile'</span>)
+<span class="co">#&gt; Waiting for profiling to be done...</span>
+<span class="co">#&gt; Error in prof$getProfile(): number of iterations exceeded maximum of 50</span>
+<span class="co"># profiling method fails</span>
+<span class="no">ci_chlor2</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">ci_chlor1</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'profile'</span>,
+                    <span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">NA</span>,
+                    <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">NA</span>)
+
+<span class="co"># CIs from case resampling</span>
+<span class="no">ci_chlor3</span> <span class="kw">&lt;-</span> <span class="no">boot2</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
+
+<span class="co"># CIs from residual resampling</span>
+<span class="no">ci_chlor4</span> <span class="kw">&lt;-</span> <span class="no">boot3</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual bootstrap'</span>)
+
+<span class="no">ci_chlor</span> <span class="kw">&lt;-</span> <span class="fu">bind_rows</span>(<span class="no">ci_chlor1</span>, <span class="no">ci_chlor2</span>, <span class="no">ci_chlor3</span>, <span class="no">ci_chlor4</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">full_join</span>(<span class="no">.</span>, <span class="no">param_chlor</span>)
+<span class="co">#&gt; Joining, by = "param"</span>
+
+<span class="fu">ggplot</span>(<span class="no">ci_chlor</span>, <span class="fu">aes</span>(<span class="kw pkg">forcats</span><span class="kw ns">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span>(<span class="no">method</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'profile'</span>, <span class="st">'asymptotic'</span>)), <span class="no">estimate</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">method</span>)) +
+  <span class="fu">geom_point</span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
+  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>)) +
+  <span class="fu">theme_bw</span>() +
+  <span class="fu">facet_wrap</span>(~<span class="no">param</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">'free'</span>) +
+  <span class="fu">scale_x_discrete</span>(<span class="st">''</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="no">x</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">10</span>)) +
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,
+       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span>)</pre></body></html></div>
+<p><img src="bootstrapping_models_files/figure-html/confint_chlor-1.png" width="672" style="display: block; margin: auto;"> For this curve, the profiling method failed and the asymptotic method has very wide confidence intervals for <code>eh</code>. Consequently, it is hard to know how the bootstrapping methods do as these would usually be benchmarked against the profiling method. Even so, we can see that the intervals for <code>eh</code> and <code>th</code> for the case resampling method are very wide (as can be seen from the plot of the model predictions earlier). Meanwhile, the residual resampling method again gives more symmetric estimates, but we don’t know if they are conservative which would increase the rate of false positives if used for inference.</p>
+<p>We can also bootstrap confidence intervals for the extra parameters calculated in <strong>calc_params()</strong>. We will do this for the bacteria TPC and the case resample.</p>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="kw">names_to</span> <span class="kw">=</span>  <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>)
+
+<span class="no">ci_extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">f</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">x</span>))}, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>)), <span class="kw">R</span> <span class="kw">=</span> <span class="fl">200</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>) <span class="kw">%&gt;%</span>
+  <span class="no">.</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
+
+<span class="no">ci_extra_params</span> <span class="kw">&lt;-</span> <span class="fu">left_join</span>(<span class="no">ci_extra_params</span>, <span class="no">extra_params</span>)
+<span class="co">#&gt; Joining, by = "param"</span>
+
+<span class="fu">ggplot</span>(<span class="no">ci_extra_params</span>, <span class="fu">aes</span>(<span class="no">param</span>, <span class="no">estimate</span>)) +
+  <span class="fu">geom_point</span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
+  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>)) +
+  <span class="fu">theme_bw</span>() +
+  <span class="fu">facet_wrap</span>(~<span class="no">param</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">'free'</span>) +
+  <span class="fu">scale_x_discrete</span>(<span class="st">''</span>) +
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Calculation of confidence intervals for extra parameters'</span>,
+       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the bacteria TPC; using case resampling'</span>)</pre></body></html></div>
+<p><img src="bootstrapping_models_files/figure-html/ci_calc_param-1.png" width="672" style="display: block; margin: auto;"> You can see that the confidence intervals around certain parameters, such as <code>e</code>, <code>eh</code>, <code>q10</code>, and <code>skewness</code> are very asymmetrical. This is because they are modelled from a subsample of the original dataset (for example, <code>e</code> is calculated from fitting a modified Boltzmann equation to all the points at or below the optimum temperature as calculated from the model predictions). If interested in these parameters, we recommend using mathematical models that contain them explicitly in the formulation.</p>
 <hr>
 <p>NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a>. Examples of using <strong>brms</strong> to model thermal performance curves can be found on the <a href="https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature">GitHub repository</a> of the paper</p>
 <hr>
