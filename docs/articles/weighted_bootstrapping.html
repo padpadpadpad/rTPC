@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping with weights using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-03</h4>
+            <h4 class="date">2020-09-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/weighted_bootstrapping.Rmd"><code>vignettes/weighted_bootstrapping.Rmd</code></a></small>
       <div class="hidden name"><code>weighted_bootstrapping.Rmd</code></div>
@@ -135,16 +135,14 @@
 <h2 class="hasAnchor">
 <a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
-<li><strong>This vignette is still a work in progress</strong></li>
 <li>Think carefully at about your level of replication</li>
-<li>We only implement this method for data re-sampling, not residual re-sampling</li>
+<li>Bootstrapping weighted regression models only makes sense using case resampling, not residual resampling</li>
 <li>See <code><a href="../articles/bootstrapping_models.html">vignette("bootstrapping_models")</a></code> for examples of bootstrapping without weights</li>
-<li>Different models will fit more or less easily based on the re-sampled data</li>
+<li>The outcomes of the different approaches outlined here are likely to change based on the data and the model used. Use this methods with caution and think critically about their output</li>
 </ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">boot</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">car</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
@@ -156,8 +154,8 @@
 <li>Re-sample each data point irrespective of its weight, but use weighted non-linear least squares regression on each bootstrapped dataset</li>
 <li>Re-sample each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset</li>
 </ol>
-<p>We will demonstrate these approaches using the example in <code><a href="../articles/model_weighting.html">vignette('model_weighting')</a></code>. This vignette uses the example dataset contained within <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. Instead of plotting a single curve, we average over the biological replicates, <code>rep</code>, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using <strong>ggplot2</strong>. Instead of fitting <strong>kamykowski_1985</strong>, we will instead fit <strong>lactin2</strong> because it remains easier to fit and will need less iterations for fitting.</p>
-<p>As we are only using 100 iterations, we also use 90% confidence intervals to evaluate the uncertainty and try and make the plots more readable in the examples.</p>
+<p>We will demonstrate these approaches using the example in <code><a href="../articles/model_weighting.html">vignette('model_weighting')</a></code>. This vignette uses the example dataset contained within <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. Instead of plotting a single curve, we average over the biological replicates, <code>rep</code>, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using <strong>ggplot2</strong>. Instead of fitting <strong>kamykowski_1985</strong>, we will instead fit <strong>lactin2_1995</strong> in this example.</p>
+<p>The use of weights in <strong>Boot()</strong> is currently not supported, so I shall demonstrate how to write a very simple function to pass directly to <strong>boot()</strong> for the bootstrapping approaches.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># get curve data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"chlorella_tpc"</span>)
 
@@ -166,6 +164,7 @@
   <span class="fu">summarise</span>(<span class="no">.</span>, <span class="kw">sd</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(<span class="no">rate</span>),
             <span class="kw">ave_rate</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">rate</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>()
+<span class="co">#&gt; `summarise()` regrouping output by 'temp' (override with `.groups` argument)</span>
 
 <span class="no">d_fit</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d_ave</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">weighted</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
@@ -201,6 +200,7 @@
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))</pre></body></html></div>
+<p><img src="weighted_bootstrapping_files/figure-html/get_data-1.png" width="576" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="method-1-weighted-re-sampling-and-weighted-regression" class="section level1">
@@ -208,7 +208,9 @@
 <a href="#method-1-weighted-re-sampling-and-weighted-regression" class="anchor"></a>Method 1: Weighted re-sampling and weighted regression</h1>
 <p>This method re-samples new datasets where each point is sampled proportionally to its standard deviation. Weighted non-linear least squares regression is then implemented on each bootstrapped dataset.</p>
 <p>First we will create the re-sampled bootstrapped datasets. We will use probability weighting for the re-sampled data according to the relative sizes of the standard deviation, <span class="math inline">\(\sigma\)</span>. We calculate this for each data point, <span class="math inline">\(i\)</span>, as</p>
-<p><span class="math display">\[\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}\]</span> where <span class="math inline">\(n\)</span> is the number of data points. We can pass an argument to <strong>car::Boot()</strong> for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using <strong>nlsLM()</strong> and their weights argument as in <code>vignette</code></p>
+<p><span class="math display">\[\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}\]</span> where <span class="math inline">\(n\)</span> is the number of data points. We can pass an argument to <strong>boot()</strong> for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using <strong>nlsLM()</strong> and their weights argument as in <code>vignette(bootstrapping_models)</code>. However, we will write our own function to pass to <strong>boot()</strong> as <strong>car::Boot()</strong> does not currently support non-linear least squares regression.</p>
+<p>The function just refits a model to resampled data. I wrapped the <strong>nlsLM()</strong> call in a <strong>tryCatch()</strong> argument so <strong>boot()</strong> does not fail when one of the bootstraps fails to converge. In these instances, we just return <code>NA</code>, so we can calculate how many samples fail to converge. A TRUE/FALSE argument controls whether we want to do weighted non-linear least squares regression or not.</p>
+<p>We can check to see whether the model is doing the correct thing on the actual data by asking it to refit the model on the original dataset.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># create column for probability of resampling</span>
 <span class="no">d_ave</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_ave</span>, <span class="kw">inv_sd</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>,
                 <span class="kw">prob</span> <span class="kw">=</span> <span class="no">inv_sd</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">inv_sd</span>))
@@ -221,78 +223,86 @@
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>, <span class="no">d_ave</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
                         <span class="kw">weights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>)
 
-<span class="no">mod2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="no">fit_nlsLM</span>)
+<span class="co"># write function to pass to boot</span>
+<span class="co"># doing weighted non-linear least squares regression</span>
+<span class="no">boot_nlsLM</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">sample_data</span>, <span class="no">indices</span>, <span class="no">start_vals</span>, <span class="no">weighted_nls</span> <span class="kw">=</span> <span class="fl">TRUE</span>){
 
-<span class="co"># bootstrap using weighted case resampling</span>
-<span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
+  <span class="co"># create subsampled data</span>
+  <span class="no">temp_data</span> <span class="kw">&lt;-</span> <span class="no">sample_data</span>[<span class="no">indices</span>, ]
 
-<span class="co"># create new re-sampled datasets and prepare them for fitting</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="no">d_ave</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="co"># creates nboot replicates of the dataset</span>
-  <span class="fu">slice</span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fu">n</span>(), <span class="kw">times</span> <span class="kw">=</span> <span class="no">n_boots</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">boot_num</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="no">n_boots</span>, <span class="kw">each</span> <span class="kw">=</span> <span class="fu">n</span>()/<span class="no">n_boots</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">arrange</span>(<span class="no">boot_num</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">boot_num</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">inv_sd</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>,
-         <span class="kw">prob</span> <span class="kw">=</span> <span class="no">inv_sd</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">inv_sd</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">unite</span>(<span class="no">.</span>, <span class="st">'resample'</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ave_rate</span>, <span class="no">sd</span>, <span class="no">temp</span>), <span class="kw">sep</span> <span class="kw">=</span> <span class="st">'_'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">resample</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">resample</span>, <span class="fu">n</span>(), <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">prob</span> <span class="kw">=</span> <span class="no">prob</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">separate</span>(<span class="no">.</span>, <span class="no">resample</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'ave_rate'</span>, <span class="st">'sd'</span>, <span class="st">'temp'</span>), <span class="kw">sep</span> <span class="kw">=</span> <span class="st">'_'</span>) <span class="kw">%&gt;%</span>
+  <span class="no">model</span> <span class="kw">=</span> <span class="kw">NULL</span>
+  <span class="no">output</span> <span class="kw">=</span> <span class="kw">NULL</span>
+
+  <span class="co"># re run model</span>
+  <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/Logic.html">isTRUE</a></span>(<span class="no">weighted_nls</span>)){
+    <span class="no">model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/warning.html">suppressWarnings</a></span>(<span class="kw pkg">minpack.lm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
+                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">temp_data</span>,
+                        <span class="kw">start</span> <span class="kw">=</span> <span class="no">start_vals</span>,
+                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">temp_data</span>$<span class="no">temp</span>, <span class="no">temp_data</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">temp_data</span>$<span class="no">temp</span>, <span class="no">temp_data</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
+                        <span class="kw">weights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>)),
+               <span class="kw">error</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">e</span>) <span class="kw">NULL</span>)
+  }
+
+  <span class="co"># re run model</span>
+  <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/Logic.html">isFALSE</a></span>(<span class="no">weighted_nls</span>)){
+    <span class="no">model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/warning.html">suppressWarnings</a></span>(<span class="kw pkg">minpack.lm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
+                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">temp_data</span>,
+                        <span class="kw">start</span> <span class="kw">=</span> <span class="no">start_vals</span>,
+                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">temp_data</span>$<span class="no">temp</span>, <span class="no">temp_data</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">temp_data</span>$<span class="no">temp</span>, <span class="no">temp_data</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>))),
+               <span class="kw">error</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">e</span>) <span class="kw">NULL</span>)
+  }
+
+  <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="no">model</span>)){
+    <span class="no">output</span> <span class="kw">&lt;-</span> <span class="no">start_vals</span>
+    <span class="no">output</span>[<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">output</span>)] <span class="kw">&lt;-</span> <span class="fl">NA</span>
+    }
+
+  <span class="kw">if</span>(!<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="no">model</span>)){
+    <span class="no">output</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">model</span>)
+    }
+
+  <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">output</span>)
+}
+
+<span class="co"># check to see it returns the same thing on the original data</span>
+<span class="fu">boot_nlsLM</span>(<span class="no">d_ave</span>, <span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_ave</span>), <span class="kw">start_vals</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>), <span class="kw">weighted_nls</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="co">#&gt;           a           b        tmax     delta_t </span>
+<span class="co">#&gt;  0.03539109 -1.52100117 47.20966961  2.60222769</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>)
+<span class="co">#&gt;           a           b        tmax     delta_t </span>
+<span class="co">#&gt;  0.03539109 -1.52100117 47.20966961  2.60222769</span>
+<span class="co"># yep this seems to work</span></pre></body></html></div>
+<p>The results are identical! We will use <strong>boot()</strong> to do the weighted case resampling bootstrap using weighted non-linear least squares regression. We include a <code>weights</code> argument to <strong>boot()</strong> to allow weighted resampling (the smaller the standard deviation of the point, the more likely it will be resampled). We can then create model predictions for each bootstrap and confidence intervals of model predictions using the methods implemented in <code>vignette(bootstrapping_models)</code></p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># bootstrap using weighted case resampling</span>
+<span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="kw pkg">boot</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">d_ave</span>, <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">boot_nlsLM</span>, <span class="kw">R</span> <span class="kw">=</span> <span class="fl">999</span>, <span class="kw">weights</span> <span class="kw">=</span> <span class="no">d_ave</span>$<span class="no">prob</span>, <span class="kw">start_vals</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>), <span class="kw">weighted_nls</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">boot1</span>$<span class="no">t</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>))
+
+<span class="co"># check how many samples converged</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">boot1</span>$<span class="no">t</span>))/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">boot1</span>$<span class="no">t</span>) * <span class="fl">100</span>
+<span class="co">#&gt; [1] 53.45345</span>
+
+<span class="co"># predict over new data</span>
+<span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by_all</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ave_rate</span>, <span class="no">sd</span>, <span class="no">temp</span>), <span class="no">as.numeric</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">arrange</span>(<span class="no">boot_num</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(<span class="no">.</span>, <span class="no">boot_num</span>, <span class="no">flux</span>, <span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)
-
-<span class="no">d_boots</span></pre></body></html></div>
-<p>We will now implement weighted regression on each bootstrap.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># start progress bar and estimate time it will take</span>
-<span class="no">number_of_models</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
-
-<span class="co"># setup progress bar</span>
-<span class="no">pb</span> <span class="kw">&lt;-</span> <span class="kw pkg">progress</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/progress/man/progress_bar.html">progress_bar</a></span>$<span class="fu">new</span>(<span class="kw">total</span> <span class="kw">=</span> <span class="no">n_boots</span>*<span class="no">number_of_models</span>,
-                                 <span class="kw">clear</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span><span class="st">"[:bar] :percent :elapsedfull"</span>)
-
-<span class="no">nls_multstart_safe</span> <span class="kw">&lt;-</span> <span class="fu">possibly</span>(<span class="no">nls_multstart_progress</span>, <span class="kw">otherwise</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-
-<span class="co"># fit each model</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d_boots</span>, <span class="kw">strap</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">nls_multstart_safe</span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                        <span class="kw">modelweights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">.x</span>$<span class="no">sd</span>)))</pre></body></html></div>
-<p>We can finally filter out any bootstrapped datasets that did not fit and plot them as before.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># remove fits that are NA</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-
-<span class="co"># predict over temperature</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
+  <span class="fu">mutate</span>(<span class="kw">pred</span> <span class="kw">=</span> <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
-<span class="no">d_conf</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">temp</span>, <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
-         <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>()
-
-<span class="co"># unnest all predictions</span>
-<span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>)
-
-<span class="co"># plot bootstrapped CIs</span>
+<span class="no">boot1_conf_preds</span> <span class="kw">&lt;-</span> <span class="fu">group_by</span>(<span class="no">boot1_preds</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)</pre></body></html></div>
+<p>We can then plot these predictions using <strong>ggplot2</strong>.</p>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># plot bootstrapped CIs</span>
 <span class="no">p1</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">d_conf</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
+  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">boot1_conf_preds</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -303,12 +313,12 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">1</span>, <span class="fl">3.5</span>))
 
 <span class="co"># plot bootstrapped predictions</span>
 <span class="no">p2</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">boot_num</span>), <span class="no">d_boot_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.03</span>) +
+  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">pred</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">iter</span>), <span class="no">boot1_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.007</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -319,63 +329,45 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">1</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
+<p><img src="weighted_bootstrapping_files/figure-html/bootstrap1_plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="method-2-unweighted-re-sampling-and-weighted-regression" class="section level1">
 <h1 class="hasAnchor">
 <a href="#method-2-unweighted-re-sampling-and-weighted-regression" class="anchor"></a>Method 2: Unweighted re-sampling and weighted regression</h1>
-<p>This method re-samples new datasets while ignoring the standard deviations of each point, but uses weighted regression on each re-sampled bootstrapped dataset.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># create new re-sampled datasets and prepare them for fitting</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="no">d_ave</span> <span class="kw">%&gt;%</span>
-  <span class="fu">do</span>(<span class="kw pkg">modelr</span><span class="kw ns">::</span><span class="fu"><a href="https://modelr.tidyverse.org/reference/bootstrap.html">bootstrap</a></span>(<span class="no">.</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="no">n_boots</span>, <span class="kw">id</span> <span class="kw">=</span> <span class="st">'boot_num'</span>)) <span class="kw">%&gt;%</span>
+<p>This method resamples new datasets while ignoring the standard deviations of each point, but uses weighted regression on each resampled bootstrapped dataset. So this time we just omit the <code>weights</code> argument from the call to <strong>boot()</strong>.</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># bootstrap using case resampling, but do weighted nls</span>
+<span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="kw pkg">boot</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">d_ave</span>, <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">boot_nlsLM</span>, <span class="kw">R</span> <span class="kw">=</span> <span class="fl">999</span>, <span class="kw">start_vals</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>), <span class="kw">weighted_nls</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">boot2</span>$<span class="no">t</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>))
+
+<span class="co"># check how many samples converged</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">boot2</span>$<span class="no">t</span>))/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">boot2</span>$<span class="no">t</span>) * <span class="fl">100</span>
+<span class="co">#&gt; [1] 68.16817</span>
+<span class="co"># 53% - not fantastic: can always run more</span>
+
+<span class="co"># predict over new data</span>
+<span class="no">boot2_preds</span> <span class="kw">&lt;-</span> <span class="no">boot2</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by_all</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">strap</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, <span class="no">data.frame</span>))
-
-<span class="co"># setup progress bar</span>
-<span class="no">pb</span> <span class="kw">&lt;-</span> <span class="kw pkg">progress</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/progress/man/progress_bar.html">progress_bar</a></span>$<span class="fu">new</span>(<span class="kw">total</span> <span class="kw">=</span> <span class="no">n_boots</span>*<span class="no">number_of_models</span>,
-                                 <span class="kw">clear</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span><span class="st">"[:bar] :percent :elapsedfull"</span>)
-
-<span class="co"># fit each model</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="no">d_boots</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">nls_multstart_safe</span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                        <span class="kw">modelweights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">.x</span>$<span class="no">sd</span>)))
-
-<span class="co"># remove fits that are NA</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-
-<span class="co"># predict over temperature</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
+  <span class="fu">mutate</span>(<span class="kw">pred</span> <span class="kw">=</span> <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
-<span class="no">d_conf</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">temp</span>, <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
-         <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>()
-
-<span class="co"># unnest all predictions</span>
-<span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>)
+<span class="no">boot2_conf_preds</span> <span class="kw">&lt;-</span> <span class="fu">group_by</span>(<span class="no">boot2_preds</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
 
 <span class="co"># plot bootstrapped CIs</span>
 <span class="no">p1</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">d_conf</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
+  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">boot2_conf_preds</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -386,12 +378,12 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">5</span>, <span class="fl">3.5</span>))
 
 <span class="co"># plot bootstrapped predictions</span>
 <span class="no">p2</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">boot_num</span>), <span class="no">d_boot_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.03</span>) +
+  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">pred</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">iter</span>), <span class="no">boot2_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.007</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -402,74 +394,45 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
+<p><img src="weighted_bootstrapping_files/figure-html/bootstrap2-1.png" width="768" style="display: block; margin: auto;"> In this instance, the unweighted case resampling method gives really wide confidence intervals for the model predictions at high temperatures. When the 49 ºC temperature is not present in the resampled data, the curve fits very differently. This is likely a problem with most models that allow for negative rates, whereas those that do not may not have the problem as much because the mathematical formulation forces rates to always be positive.</p>
 <hr>
 </div>
 <div id="method-3-weighted-re-sampling-and-standard-non-linear-least-squares-regression" class="section level1">
 <h1 class="hasAnchor">
 <a href="#method-3-weighted-re-sampling-and-standard-non-linear-least-squares-regression" class="anchor"></a>Method 3: Weighted re-sampling and standard non-linear least squares regression</h1>
-<p>This method re-samples each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># create new bootstraps</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="no">d_ave</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="co"># creates nboot replicates of the dataset</span>
-  <span class="fu">slice</span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fu">n</span>(), <span class="kw">times</span> <span class="kw">=</span> <span class="no">n_boots</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">boot_num</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="no">n_boots</span>, <span class="kw">each</span> <span class="kw">=</span> <span class="fu">n</span>()/<span class="no">n_boots</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">arrange</span>(<span class="no">boot_num</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">boot_num</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">inv_sd</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>,
-         <span class="kw">prob</span> <span class="kw">=</span> <span class="no">inv_sd</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">inv_sd</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">unite</span>(<span class="no">.</span>, <span class="st">'resample'</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ave_rate</span>, <span class="no">sd</span>, <span class="no">temp</span>), <span class="kw">sep</span> <span class="kw">=</span> <span class="st">'_'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">resample</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">resample</span>, <span class="fu">n</span>(), <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">prob</span> <span class="kw">=</span> <span class="no">prob</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">separate</span>(<span class="no">.</span>, <span class="no">resample</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'ave_rate'</span>, <span class="st">'sd'</span>, <span class="st">'temp'</span>), <span class="kw">sep</span> <span class="kw">=</span> <span class="st">'_'</span>) <span class="kw">%&gt;%</span>
+<p>This method re-samples each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset. We can do this easily by switched <code>weighted_nls</code> to <code>FALSE</code> inside our custom <strong>boot_nlsLM()</strong> function.</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># bootstrap using weighted case resampling, do standard nls</span>
+<span class="no">boot3</span> <span class="kw">&lt;-</span> <span class="kw pkg">boot</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">d_ave</span>, <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">boot_nlsLM</span>, <span class="kw">R</span> <span class="kw">=</span> <span class="fl">999</span>, <span class="kw">weights</span> <span class="kw">=</span> <span class="no">d_ave</span>$<span class="no">prob</span>, <span class="kw">start_vals</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>), <span class="kw">weighted_nls</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">boot3</span>$<span class="no">t</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit_nlsLM</span>))
+
+<span class="co"># check how many samples converged</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">boot3</span>$<span class="no">t</span>))/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">boot3</span>$<span class="no">t</span>) * <span class="fl">100</span>
+<span class="co">#&gt; [1] 59.65966</span>
+<span class="co"># 53% - not fantastic: can always run more</span>
+
+<span class="co"># predict over new data</span>
+<span class="no">boot3_preds</span> <span class="kw">&lt;-</span> <span class="no">boot3</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
+  <span class="fu">group_by_all</span>() <span class="kw">%&gt;%</span>
+  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))) <span class="kw">%&gt;%</span>
   <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ave_rate</span>, <span class="no">sd</span>, <span class="no">temp</span>), <span class="no">as.numeric</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">arrange</span>(<span class="no">boot_num</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(<span class="no">.</span>, <span class="no">boot_num</span>, <span class="no">flux</span>, <span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)
-
-<span class="co"># setup progress bar</span>
-<span class="no">pb</span> <span class="kw">&lt;-</span> <span class="kw pkg">progress</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/progress/man/progress_bar.html">progress_bar</a></span>$<span class="fu">new</span>(<span class="kw">total</span> <span class="kw">=</span> <span class="no">n_boots</span>*<span class="no">number_of_models</span>,
-                                 <span class="kw">clear</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                                 <span class="kw">format</span> <span class="kw">=</span><span class="st">"[:bar] :percent :elapsedfull"</span>)
-
-<span class="co"># fit each model</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d_boots</span>, <span class="kw">strap</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">refit</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">strap</span>, ~<span class="fu">nls_multstart_safe</span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)))
-
-<span class="co"># remove fits that are NA</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_boots</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">refit</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d_boots</span>)
-
-<span class="co"># predict over temperature</span>
-<span class="no">d_boots</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">d_boots</span>, <span class="kw">preds</span> <span class="kw">=</span>  <span class="fu">map</span>(<span class="no">refit</span>, ~<span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">augment</a></span>(<span class="no">.x</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)))
+  <span class="fu">mutate</span>(<span class="kw">pred</span> <span class="kw">=</span> <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
-<span class="no">d_conf</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">temp</span>, <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.05</span>),
-         <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">.fitted</span>, <span class="fl">0.95</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>()
-
-<span class="co"># unnest all predictions</span>
-<span class="no">d_boot_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_boots</span>, <span class="no">boot_num</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>)
+<span class="no">boot3_conf_preds</span> <span class="kw">&lt;-</span> <span class="fu">group_by</span>(<span class="no">boot3_preds</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.025</span>),
+            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.975</span>),
+            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
 
 <span class="co"># plot bootstrapped CIs</span>
 <span class="no">p1</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">d_conf</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
+  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">boot3_conf_preds</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -480,12 +443,12 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">5</span>, <span class="fl">3.5</span>))
 
 <span class="co"># plot bootstrapped predictions</span>
 <span class="no">p2</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">boot_num</span>), <span class="no">d_boot_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.03</span>) +
+  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">pred</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">iter</span>), <span class="no">boot3_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.007</span>) +
   <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
@@ -496,9 +459,10 @@
        <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
   <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
 
 <span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
+<p><img src="weighted_bootstrapping_files/figure-html/bootstrap3-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
   </div>
 

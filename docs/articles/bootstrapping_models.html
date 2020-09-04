@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-03</h4>
+            <h4 class="date">2020-09-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -216,12 +216,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2768424 0.6346997 2.600919 32.50854</span>
-<span class="co">#&gt; [2,] 0.2886270 0.6895516 2.388658 31.36959</span>
-<span class="co">#&gt; [3,] 0.2304775 1.0837795 2.377578 27.85005</span>
-<span class="co">#&gt; [4,] 0.2211972 0.9318925 2.424346 29.75261</span>
-<span class="co">#&gt; [5,] 0.2607113 0.8316133 2.418882 30.24069</span>
-<span class="co">#&gt; [6,] 0.2564411 0.8869014 2.400021 29.73173</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2537641 0.9727351 2.310997 28.72115</span>
+<span class="co">#&gt; [2,] 0.2189849 1.1748727 2.407904 27.47719</span>
+<span class="co">#&gt; [3,] 0.3075887 0.6043954 2.417556 32.18054</span>
+<span class="co">#&gt; [4,] 0.2791995 0.6914907 2.416096 31.37147</span>
+<span class="co">#&gt; [5,] 0.2675794 0.8856029 2.273785 29.05429</span>
+<span class="co">#&gt; [6,] 0.1949459 1.1639665 2.384497 28.03083</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -295,7 +295,7 @@
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 991 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 992 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>

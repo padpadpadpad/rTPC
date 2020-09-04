@@ -14,11 +14,10 @@ vignette: >
 ***
 ## Things to consider 
 
-- **This vignette is still a work in progress**
 - Think carefully at about your level of replication
-- We only implement this method for data re-sampling, not residual re-sampling
+- Bootstrapping weighted regression models only makes sense using case resampling, not residual resampling
 - See `vignette("bootstrapping_models")` for examples of bootstrapping without weights
-- Different models will fit more or less easily based on the re-sampled data
+- The outcomes of the different approaches outlined here are likely to change based on the data and the model used. Use this methods with caution and think critically about their output
 
 ***
 
@@ -29,15 +28,13 @@ knitr::opts_chunk$set(
   #tidy.opts=list(width.cutoff=60),
   #tidy=TRUE,
   fig.align = 'center',
-  warning=FALSE,
-  eval=FALSE
+  warning=FALSE
 )
 ```
 
 ```{r setup, message=FALSE}
 # load packages
 library(boot)
-library(car)
 library(rTPC)
 library(nls.multstart)
 library(broom)
@@ -52,9 +49,9 @@ When doing model weighting, as implemented in `vignette(model_weighting)`, the s
 2. Re-sample each data point irrespective of its weight, but use weighted non-linear least squares regression on each bootstrapped dataset
 3. Re-sample each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset
 
-We will demonstrate these approaches using the example in `vignette('model_weighting')`. This vignette uses  the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. Instead of fitting **kamykowski_1985**, we will instead fit **lactin2** because it remains easier to fit and will need less iterations for fitting.
+We will demonstrate these approaches using the example in `vignette('model_weighting')`. This vignette uses  the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. Instead of fitting **kamykowski_1985**, we will instead fit **lactin2_1995** in this example.
 
-As we are only using 100 iterations, we also use 90% confidence intervals to evaluate the uncertainty and try and make the plots more readable in the examples.
+The use of weights in **Boot()** is currently not supported, so I shall demonstrate how to write a very simple function to pass directly to **boot()** for the bootstrapping approaches.
 
 ```{r get_data, fig.height=4, fig.width = 6}
 # get curve data
@@ -111,9 +108,13 @@ This method re-samples new datasets where each point is sampled proportionally t
 First we will create the re-sampled bootstrapped datasets. We will use probability weighting for the re-sampled data according to the relative sizes of the standard deviation, $\sigma$. We calculate this for each data point, $i$, as
 
 $$\frac{\frac{1}{\sigma_i}}{\sum\limits_{i=1}^{n}\frac{1}{\sigma_i}}$$
-where $n$ is the number of data points. We can pass an argument to **car::Boot()** for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using **nlsLM()** and their weights argument as in `vignette`
+where $n$ is the number of data points. We can pass an argument to **boot()** for a vector of weights when resampling, so we will create this column and then feed it into our bootstrapping procedure. We will also refit the model using **nlsLM()** and their weights argument as in `vignette(bootstrapping_models)`. However, we will write our own function to pass to **boot()** as **car::Boot()** does not currently support non-linear least squares regression.
 
-```{r weighted_resample}
+The function just refits a model to resampled data. I wrapped the **nlsLM()** call in a **tryCatch()** argument so **boot()** does not fail when one of the bootstraps fails to converge. In these instances, we just return `NA`, so we can calculate how many samples fail to converge. A TRUE/FALSE argument controls whether we want to do weighted non-linear least squares regression or not.
+
+We can check to see whether the model is doing the correct thing on the actual data by asking it to refit the model on the original dataset.
+
+```{r weighted_nls_function}
 # create column for probability of resampling
 d_ave <- mutate(d_ave, inv_sd = 1/sd,
                 prob = inv_sd/sum(inv_sd))
@@ -126,86 +127,89 @@ fit_nlsLM <- minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, de
                         upper = get_upper_lims(d_ave$temp, d_ave$ave_rate, model_name = 'lactin2_1995'),
                         weights = 1/sd)
 
-mod2 <- update(fit_nlsLM)
+# write function to pass to boot
+# doing weighted non-linear least squares regression
+boot_nlsLM <- function(sample_data, indices, start_vals, weighted_nls = TRUE){
+  
+  # create subsampled data
+  temp_data <- sample_data[indices, ]      
+  
+  model = NULL
+  output = NULL
+  
+  # re run model
+  if(isTRUE(weighted_nls)){
+    model <- tryCatch(suppressWarnings(minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
+                        data = temp_data,
+                        start = start_vals,
+                        lower = get_lower_lims(temp_data$temp, temp_data$ave_rate, model_name = 'lactin2_1995'),
+                        upper = get_upper_lims(temp_data$temp, temp_data$ave_rate, model_name = 'lactin2_1995'),
+                        weights = 1/sd)),
+               error = function(e) NULL)
+  }
+  
+  # re run model
+  if(isFALSE(weighted_nls)){
+    model <- tryCatch(suppressWarnings(minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
+                        data = temp_data,
+                        start = start_vals,
+                        lower = get_lower_lims(temp_data$temp, temp_data$ave_rate, model_name = 'lactin2_1995'),
+                        upper = get_upper_lims(temp_data$temp, temp_data$ave_rate, model_name = 'lactin2_1995'))),
+               error = function(e) NULL)
+  }
+  
+  if(is.null(model)){
+    output <- start_vals
+    output[1:length(output)] <- NA
+    }
+  
+  if(!is.null(model)){
+    output <- coef(model)
+    }
+  
+  return(output)
+}
 
+# check to see it returns the same thing on the original data
+boot_nlsLM(d_ave, 1:nrow(d_ave), start_vals = coef(fit_nlsLM), weighted_nls = TRUE)
+coef(fit_nlsLM)
+# yep this seems to work
+```
+
+The results are identical! We will use **boot()** to do the weighted case resampling bootstrap using weighted non-linear least squares regression. We include a `weights` argument to **boot()** to allow weighted resampling (the smaller the standard deviation of the point, the more likely it will be resampled). We can then create model predictions for each bootstrap and confidence intervals of model predictions using the methods implemented in `vignette(bootstrapping_models)`
+
+```{r bootstrap1}
 # bootstrap using weighted case resampling
-boot1 <- Boot(fit_nlsLM, method = 'case')
+boot1 <- boot::boot(data = d_ave, statistic = boot_nlsLM, R = 999, weights = d_ave$prob, start_vals = coef(fit_nlsLM), weighted_nls = TRUE)
+colnames(boot1$t) <- names(coef(fit_nlsLM))
 
-# create new re-sampled datasets and prepare them for fitting
-d_boots <- d_ave %>%
-  mutate(., n = 1:n()) %>%
-  # creates nboot replicates of the dataset
-  slice(rep(1:n(), times = n_boots)) %>%
-  mutate(., boot_num = rep(1:n_boots, each = n()/n_boots)) %>%
-  arrange(boot_num, temp) %>%
-  group_by(boot_num) %>%
-  mutate(., inv_sd = 1/sd,
-         prob = inv_sd/sum(inv_sd)) %>%
-  unite(., 'resample', c(ave_rate, sd, temp), sep = '_') %>%
-  mutate(., resample = sample(resample, n(), replace = TRUE, prob = prob)) %>%
-  separate(., resample, c('ave_rate', 'sd', 'temp'), sep = '_') %>%
+# check how many samples converged
+sum(!is.na(boot1$t))/length(boot1$t) * 100
+
+# predict over new data
+boot1_preds <- boot1$t %>%
+  as.data.frame() %>%
+  drop_na() %>%
+  mutate(iter = 1:n()) %>%
+  group_by_all() %>%
+  do(data.frame(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100))) %>%
   ungroup() %>%
-  mutate(across(c(ave_rate, sd, temp), as.numeric)) %>%
-  arrange(boot_num, temp) %>%
-  select(., boot_num, flux, temp, ave_rate, sd)
-
-d_boots
-```
-We will now implement weighted regression on each bootstrap.
-
-```{r bootstrap_1}
-# start progress bar and estimate time it will take
-number_of_models <- 1
-
-# setup progress bar
-pb <- progress::progress_bar$new(total = n_boots*number_of_models,
-                                 clear = FALSE,
-                                 format ="[:bar] :percent :elapsedfull")
-
-nls_multstart_safe <- possibly(nls_multstart_progress, otherwise = NA, quiet = TRUE)
-
-# fit each model
-d_boots <- nest(d_boots, strap = c(temp, ave_rate, sd)) %>%
-  mutate(., refit = map(strap, ~nls_multstart_safe(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') + 10,
-                        lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE,
-                        modelweights = 1/.x$sd)))
-
-```
-
-We can finally filter out any bootstrapped datasets that did not fit and plot them as before.
-
-```{r plot_bootstrap_1, fig.height=3,fig.width=8}
-# remove fits that are NA
-d_boots <- filter(d_boots, !is.na(refit))
-nrow(d_boots)
-
-# predict over temperature
-d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
+  mutate(pred = lactin2_1995(temp, a, b, tmax, delta_t))
 
 # calculate bootstrapped confidence intervals
-d_conf <- select(d_boots, preds) %>%
-  unnest(preds) %>%
-  mutate(temp = round(temp, 1)) %>%
-  group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.05),
-         conf_upper = quantile(.fitted, 0.95)) %>%
-  ungroup()
+boot1_conf_preds <- group_by(boot1_preds, temp) %>%
+  summarise(conf_lower = quantile(pred, 0.025),
+            conf_upper = quantile(pred, 0.975),
+            .groups = 'drop')
+```
 
-# unnest all predictions
-d_boot_preds <- select(d_boots, boot_num, preds) %>%
-  unnest(preds)
+We can then plot these predictions using **ggplot2**.
 
+```{r bootstrap1_plot, fig.height=3,fig.width=8}
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot1_conf_preds, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -216,12 +220,12 @@ p1 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-1, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'black', alpha = 0.03) +
+  geom_line(aes(temp, pred, group = iter), boot1_preds, col = 'black', alpha = 0.007) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -232,7 +236,7 @@ p2 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-1, 3.5))
 
 p1 + p2
 
@@ -242,57 +246,37 @@ p1 + p2
 
 # Method 2: Unweighted re-sampling and weighted regression
 
-This method re-samples new datasets while ignoring the standard deviations of each point, but uses weighted regression on each re-sampled bootstrapped dataset.
+This method resamples new datasets while ignoring the standard deviations of each point, but uses weighted regression on each resampled bootstrapped dataset. So this time we just omit the `weights` argument from the call to **boot()**.
 
 ```{r bootstrap2, fig.height=3,fig.width=8}
-# create new re-sampled datasets and prepare them for fitting
-d_boots <- d_ave %>%
-  do(modelr::bootstrap(., n = n_boots, id = 'boot_num')) %>%
+# bootstrap using case resampling, but do weighted nls
+boot2 <- boot::boot(data = d_ave, statistic = boot_nlsLM, R = 999, start_vals = coef(fit_nlsLM), weighted_nls = TRUE)
+colnames(boot2$t) <- names(coef(fit_nlsLM))
+
+# check how many samples converged
+sum(!is.na(boot2$t))/length(boot2$t) * 100
+# 53% - not fantastic: can always run more
+
+# predict over new data
+boot2_preds <- boot2$t %>%
+  as.data.frame() %>%
+  drop_na() %>%
+  mutate(iter = 1:n()) %>%
+  group_by_all() %>%
+  do(data.frame(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100))) %>%
   ungroup() %>%
-  mutate(strap = map(strap, data.frame))
-
-# setup progress bar
-pb <- progress::progress_bar$new(total = n_boots*number_of_models,
-                                 clear = FALSE,
-                                 format ="[:bar] :percent :elapsedfull")
-
-# fit each model
-d_boots <- d_boots %>%
-  mutate(., refit = map(strap, ~nls_multstart_safe(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') + 10,
-                        lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE,
-                        modelweights = 1/.x$sd)))
-
-# remove fits that are NA
-d_boots <- filter(d_boots, !is.na(refit))
-nrow(d_boots)
-
-# predict over temperature
-d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
+  mutate(pred = lactin2_1995(temp, a, b, tmax, delta_t))
 
 # calculate bootstrapped confidence intervals
-d_conf <- select(d_boots, preds) %>%
-  unnest(preds) %>%
-  mutate(temp = round(temp, 1)) %>%
-  group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.05),
-         conf_upper = quantile(.fitted, 0.95)) %>%
-  ungroup()
-
-# unnest all predictions
-d_boot_preds <- select(d_boots, boot_num, preds) %>%
-  unnest(preds)
+boot2_conf_preds <- group_by(boot2_preds, temp) %>%
+  summarise(conf_lower = quantile(pred, 0.025),
+            conf_upper = quantile(pred, 0.975),
+            .groups = 'drop')
 
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -303,12 +287,12 @@ p1 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-5, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'black', alpha = 0.03) +
+  geom_line(aes(temp, pred, group = iter), boot2_preds, col = 'black', alpha = 0.007) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -319,78 +303,48 @@ p2 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-3, 3.5))
 
 p1 + p2
 
 ```
+In this instance, the unweighted case resampling method gives really wide confidence intervals for the model predictions at high temperatures. When the 49 ºC temperature is not present in the resampled data, the curve fits very differently. This is likely a problem with most models that allow for negative rates, whereas those that do not may not have the problem as much because the mathematical formulation forces rates to always be positive.
 
 ***
 
 # Method 3: Weighted re-sampling and standard non-linear least squares regression
 
-This method re-samples each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset.
+This method re-samples each data point with a probability proportional to its weight and use standard non-linear least regression on each bootstrapped dataset. We can do this easily by switched `weighted_nls` to `FALSE` inside our custom **boot_nlsLM()** function.
 
 ```{r bootstrap3, fig.height=3,fig.width=8}
-# create new bootstraps
-d_boots <- d_ave %>%
-  mutate(., n = 1:n()) %>%
-  # creates nboot replicates of the dataset
-  slice(rep(1:n(), times = n_boots)) %>%
-  mutate(., boot_num = rep(1:n_boots, each = n()/n_boots)) %>%
-  arrange(boot_num, temp) %>%
-  group_by(boot_num) %>%
-  mutate(., inv_sd = 1/sd,
-         prob = inv_sd/sum(inv_sd)) %>%
-  unite(., 'resample', c(ave_rate, sd, temp), sep = '_') %>%
-  mutate(., resample = sample(resample, n(), replace = TRUE, prob = prob)) %>%
-  separate(., resample, c('ave_rate', 'sd', 'temp'), sep = '_') %>%
+# bootstrap using weighted case resampling, do standard nls
+boot3 <- boot::boot(data = d_ave, statistic = boot_nlsLM, R = 999, weights = d_ave$prob, start_vals = coef(fit_nlsLM), weighted_nls = FALSE)
+colnames(boot3$t) <- names(coef(fit_nlsLM))
+
+# check how many samples converged
+sum(!is.na(boot3$t))/length(boot3$t) * 100
+# 53% - not fantastic: can always run more
+
+# predict over new data
+boot3_preds <- boot3$t %>%
+  as.data.frame() %>%
+  drop_na() %>%
+  mutate(iter = 1:n()) %>%
+  group_by_all() %>%
+  do(data.frame(temp = seq(min(d_ave$temp), max(d_ave$temp), length.out = 100))) %>%
   ungroup() %>%
-  mutate(across(c(ave_rate, sd, temp), as.numeric)) %>%
-  arrange(boot_num, temp) %>%
-  select(., boot_num, flux, temp, ave_rate, sd)
-
-# setup progress bar
-pb <- progress::progress_bar$new(total = n_boots*number_of_models,
-                                 clear = FALSE,
-                                 format ="[:bar] :percent :elapsedfull")
-
-# fit each model
-d_boots <- nest(d_boots, strap = c(temp, ave_rate, sd)) %>%
-  mutate(., refit = map(strap, ~nls_multstart_safe(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$ave_rate, model_name = 'lactin2_1995') + 10,
-                        lower = get_lower_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        upper = get_upper_lims(.x$temp, .x$ave_rate, model_name = 'lactin2_1995'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)))
-
-# remove fits that are NA
-d_boots <- filter(d_boots, !is.na(refit))
-nrow(d_boots)
-
-# predict over temperature
-d_boots <- mutate(d_boots, preds =  map(refit, ~augment(.x, newdata = newdata)))
+  mutate(pred = lactin2_1995(temp, a, b, tmax, delta_t))
 
 # calculate bootstrapped confidence intervals
-d_conf <- select(d_boots, preds) %>%
-  unnest(preds) %>%
-  mutate(temp = round(temp, 1)) %>%
-  group_by(temp) %>%
-  summarise(conf_lower = quantile(.fitted, 0.05),
-         conf_upper = quantile(.fitted, 0.95)) %>%
-  ungroup()
-
-# unnest all predictions
-d_boot_preds <- select(d_boots, boot_num, preds) %>%
-  unnest(preds)
+boot3_conf_preds <- group_by(boot3_preds, temp) %>%
+  summarise(conf_lower = quantile(pred, 0.025),
+            conf_upper = quantile(pred, 0.975),
+            .groups = 'drop')
 
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), d_conf, fill = 'black', alpha = 0.3) +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot3_conf_preds, fill = 'black', alpha = 0.3) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -401,12 +355,12 @@ p1 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-5, 3.5))
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'black') +
-  geom_line(aes(temp, .fitted, group = boot_num), d_boot_preds, col = 'black', alpha = 0.03) +
+  geom_line(aes(temp, pred, group = iter), boot3_preds, col = 'black', alpha = 0.007) +
   geom_linerange(aes(x = temp, ymin = ave_rate - sd, ymax = ave_rate + sd), d_ave) +
   geom_point(aes(temp, ave_rate), d_ave, size = 2, shape = 21, fill = 'green4') +
   theme_bw(base_size = 10) +
@@ -417,8 +371,9 @@ p2 <- ggplot() +
        y = 'Metabolic rate',
        title = 'Photosynthesis rates across temperatures') +
   geom_hline(aes(yintercept = 0), linetype = 2) +
-  ylim(c(-0.25, 3.5))
+  ylim(c(-3, 3.5))
 
 p1 + p2
 
 ```
+
