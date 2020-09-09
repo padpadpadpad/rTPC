@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-04</h4>
+            <h4 class="date">2020-09-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -136,11 +136,11 @@
 <a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
 <li>Confidence intervals of model predictions can be produced for non-linear least squares regression models using bootstrapping.</li>
-<li>Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated.</li>
+<li>Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated. If calculated properly, non-overlapping confidence intervals of parameters can indicate significant differences between curves.</li>
 <li>Case resampling involves resampling the actual data with replacement and then refitting the model to the new, simulated datasets.</li>
-<li>When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some re-sampled datasets not having any points beyond the optimum temperature.</li>
+<li>When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some resampled datasets not having any points beyond the optimum temperature.</li>
 <li>In these instances, residual sampling - creating new datasets from mean centred residuals of the original model fit - provides an alternative to case resampling.</li>
-<li>Both resampling methods will be sensitive to the number of unique data points and the model being used.</li>
+<li>Both resampling methods will be sensitive to the number of unique data points and the mathematical model being used.</li>
 </ul>
 <hr>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
@@ -208,7 +208,8 @@
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">d</span>,
                         <span class="kw">start</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">d_fit</span>$<span class="no">sharpeschoolhigh</span><span class="kw">[[</span><span class="fl">1</span>]]),
                         <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">d</span>$<span class="no">temp</span>, <span class="no">d</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d</span>$<span class="no">temp</span>, <span class="no">d</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>))
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d</span>$<span class="no">temp</span>, <span class="no">d</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
+                        <span class="kw">weights</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="kw">times</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d</span>)))
 
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
@@ -216,12 +217,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2537641 0.9727351 2.310997 28.72115</span>
-<span class="co">#&gt; [2,] 0.2189849 1.1748727 2.407904 27.47719</span>
-<span class="co">#&gt; [3,] 0.3075887 0.6043954 2.417556 32.18054</span>
-<span class="co">#&gt; [4,] 0.2791995 0.6914907 2.416096 31.37147</span>
-<span class="co">#&gt; [5,] 0.2675794 0.8856029 2.273785 29.05429</span>
-<span class="co">#&gt; [6,] 0.1949459 1.1639665 2.384497 28.03083</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2832400 0.8618627 2.262217 29.13901</span>
+<span class="co">#&gt; [2,] 0.2956109 0.6745183 2.446911 31.42086</span>
+<span class="co">#&gt; [3,] 0.3095786 0.6096064 2.409823 32.26380</span>
+<span class="co">#&gt; [4,] 0.3102542 0.6583811 2.345181 31.32593</span>
+<span class="co">#&gt; [5,] 0.2494630 0.9298062 2.331192 29.16557</span>
+<span class="co">#&gt; [6,] 0.2209697 1.0101208 2.274651 28.88740</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -290,7 +291,8 @@
                         <span class="kw">start</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">d_fit</span>$<span class="no">sharpeschoolhigh</span><span class="kw">[[</span><span class="fl">1</span>]]),
                         <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">d2</span>$<span class="no">temp</span>, <span class="no">d2</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d2</span>$<span class="no">temp</span>, <span class="no">d2</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
-                        <span class="kw">control</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nls.lm.control.html">nls.lm.control</a></span>(<span class="kw">maxiter</span><span class="kw">=</span><span class="fl">500</span>))
+                        <span class="kw">control</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nls.lm.control.html">nls.lm.control</a></span>(<span class="kw">maxiter</span><span class="kw">=</span><span class="fl">500</span>),
+                        <span class="kw">weights</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="kw">times</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">d2</span>)))
 
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
@@ -404,7 +406,7 @@
 <div id="calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="section level1">
 <h1 class="hasAnchor">
 <a href="#calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="anchor"></a>Calculating confidence intervals of estimated and calculated parameters</h1>
-<p>Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using <strong>confint-MASS</strong>) and asymptotic confidence intervals (using <strong>nlstools::confint2()</strong>). We will do this on the two models done previously in this vignette. First with the bacteria TPC.</p>
+<p>Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using <strong>confint-MASS</strong>) and asymptotic confidence intervals (using <strong>nlstools::confint2()</strong>). For the bootstrapped parameter distributions, <strong>confint.boot()</strong> supports the calculation of BCa, basic, normal, and percentile confidence intervals. We use BCa here, and we will calculate all CIs on the two models done previously in this vignette. First with the bacteria TPC.</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># First for the bacteria</span>
 
 <span class="co"># get parameters of fitted model</span>
@@ -425,28 +427,18 @@
 <span class="co">#&gt; Waiting for profiling to be done...</span>
 
 <span class="co"># CIs from case resampling</span>
-<span class="no">ci_bact3</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+<span class="no">ci_bact3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">boot1</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
 
 <span class="co"># CIs from residual resampling</span>
 <span class="no">ci_bact4</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual'</span>) <span class="kw">%&gt;%</span>
-  <span class="no">.</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">.</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual bootstrap'</span>)
 
 <span class="no">ci_bact</span> <span class="kw">&lt;-</span> <span class="fu">bind_rows</span>(<span class="no">ci_bact1</span>, <span class="no">ci_bact2</span>, <span class="no">ci_bact3</span>, <span class="no">ci_bact4</span>) <span class="kw">%&gt;%</span>
@@ -488,27 +480,17 @@
                     <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">NA</span>)
 
 <span class="co"># CIs from case resampling</span>
-<span class="no">ci_chlor3</span> <span class="kw">&lt;-</span> <span class="no">boot2</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+<span class="no">ci_chlor3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">boot2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
 
 <span class="co"># CIs from residual resampling</span>
-<span class="no">ci_chlor4</span> <span class="kw">&lt;-</span> <span class="no">boot3</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+<span class="no">ci_chlor4</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">boot3</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual bootstrap'</span>)
 
 <span class="no">ci_chlor</span> <span class="kw">&lt;-</span> <span class="fu">bind_rows</span>(<span class="no">ci_chlor1</span>, <span class="no">ci_chlor2</span>, <span class="no">ci_chlor3</span>, <span class="no">ci_chlor4</span>) <span class="kw">%&gt;%</span>
@@ -529,15 +511,11 @@
   <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="kw">names_to</span> <span class="kw">=</span>  <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>)
 
 <span class="no">ci_extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">f</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">x</span>))}, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>)), <span class="kw">R</span> <span class="kw">=</span> <span class="fl">200</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>) <span class="kw">%&gt;%</span>
-  <span class="no">.</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">.</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> -<span class="no">iter</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">estimate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">param</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">estimate</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
+  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
 
 <span class="no">ci_extra_params</span> <span class="kw">&lt;-</span> <span class="fu">left_join</span>(<span class="no">ci_extra_params</span>, <span class="no">extra_params</span>)
 <span class="co">#&gt; Joining, by = "param"</span>
@@ -565,6 +543,8 @@
 </li>
 <li>A.C. Davison &amp; D.V. Hinkley (2003) Bootstrap Methods and their Application. - <a href="https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A" class="uri">https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A</a>
 </li>
+<li>Schenker, N., &amp; Gentleman, J. F. (2001). On judging the significance of differences by examining the overlap between confidence intervals. The American Statistician, 55(3), 182-186.</li>
+<li>Puth, M. T., Neuhäuser, M., &amp; Ruxton, G. D. (2015). On the variety of methods for calculating confidence intervals by bootstrapping. Journal of Animal Ecology, 84(4), 892-897.</li>
 </ul>
 </div>
 </div>

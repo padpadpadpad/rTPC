@@ -14,11 +14,11 @@ vignette: >
 ## Things to consider 
 
 - Confidence intervals of model predictions can be produced for non-linear least squares regression models using bootstrapping.
-- Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated.
+- Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated. If calculated properly, non-overlapping confidence intervals of parameters can indicate significant differences between curves. 
 - Case resampling involves resampling the actual data with replacement and then refitting the model to the new, simulated datasets.
-- When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some re-sampled datasets not having any points beyond the optimum temperature.
+- When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some resampled datasets not having any points beyond the optimum temperature.
 - In these instances, residual sampling - creating new datasets from mean centred residuals of the original model fit - provides an alternative to case resampling.
-- Both resampling methods will be sensitive to the number of unique data points and the model being used.
+- Both resampling methods will be sensitive to the number of unique data points and the mathematical model being used.
 
 ***
 
@@ -112,7 +112,8 @@ fit_nlsLM <- minpack.lm::nlsLM(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,
                         data = d,
                         start = coef(d_fit$sharpeschoolhigh[[1]]),
                         lower = get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'))
+                        upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
+                        weights = rep(1, times = nrow(d)))
 
 # bootstrap using case resampling
 boot1 <- Boot(fit_nlsLM, method = 'case')
@@ -197,7 +198,8 @@ fit_nlsLM2 <- nlsLM(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref
                         start = coef(d_fit$sharpeschoolhigh[[1]]),
                         lower = get_lower_lims(d2$temp, d2$rate, model_name = 'sharpeschoolhigh_1981'),
                         upper = get_upper_lims(d2$temp, d2$rate, model_name = 'sharpeschoolhigh_1981'),
-                        control = nls.lm.control(maxiter=500))
+                        control = nls.lm.control(maxiter=500),
+                        weights = rep(1, times = nrow(d2)))
 
 # bootstrap using case resampling
 boot2 <- Boot(fit_nlsLM2, method = 'case')
@@ -320,7 +322,7 @@ This method seems to work a lot better, providing variation around the original 
 
 # Calculating confidence intervals of estimated and calculated parameters
 
-Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using **confint-MASS**) and asymptotic confidence intervals (using **nlstools::confint2()**). We will do this on the two models done previously in this vignette. First with the bacteria TPC.
+Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using **confint-MASS**) and asymptotic confidence intervals (using **nlstools::confint2()**). For the bootstrapped parameter distributions, **confint.boot()** supports the calculation of BCa, basic, normal, and percentile confidence intervals. We use BCa here, and we will calculate all CIs on the two models done previously in this vignette. First with the bacteria TPC.
 
 ```{r confint_bact, error=TRUE, fig.height = 5, fig.width = 7}
 # First for the bacteria
@@ -342,28 +344,18 @@ ci_bact2 <- confint(fit_nlsLM) %>%
   mutate(method = 'profile')
 
 # CIs from case resampling
-ci_bact3 <- boot1$t %>%
+ci_bact3 <- confint(boot1, method = 'bca') %>%
   as.data.frame() %>%
-  mutate(iter = 1:n()) %>%
-  pivot_longer(cols = -iter, names_to = 'param', values_to = 'estimate') %>%
-  filter(!is.na(estimate)) %>%
-  group_by(param) %>%
-  summarise(conf_lower = quantile(estimate, 0.025),
-            conf_upper = quantile(estimate, 0.975),
-            .groups = 'drop') %>%
+  rename(conf_lower = 1, conf_upper = 2) %>%
+  rownames_to_column(., var = 'param') %>%
   mutate(method = 'case bootstrap')
 
 # CIs from residual resampling
 ci_bact4 <- Boot(fit_nlsLM, method = 'residual') %>%
-  .$t %>%
+  confint(., method = 'bca') %>%
   as.data.frame() %>%
-  mutate(iter = 1:n()) %>%
-  pivot_longer(cols = -iter, names_to = 'param', values_to = 'estimate') %>%
-  filter(!is.na(estimate)) %>%
-  group_by(param) %>%
-  summarise(conf_lower = quantile(estimate, 0.025),
-            conf_upper = quantile(estimate, 0.975),
-            .groups = 'drop') %>%
+  rename(conf_lower = 1, conf_upper = 2) %>%
+  rownames_to_column(., var = 'param') %>%
   mutate(method = 'residual bootstrap')
 
 ci_bact <- bind_rows(ci_bact1, ci_bact2, ci_bact3, ci_bact4) %>%
@@ -408,27 +400,17 @@ ci_chlor2 <- mutate(ci_chlor1, method = 'profile',
                     conf_upper = NA)
 
 # CIs from case resampling
-ci_chlor3 <- boot2$t %>%
+ci_chlor3 <- confint(boot2, method = 'bca') %>%
   as.data.frame() %>%
-  mutate(iter = 1:n()) %>%
-  pivot_longer(cols = -iter, names_to = 'param', values_to = 'estimate') %>%
-  filter(!is.na(estimate)) %>%
-  group_by(param) %>%
-  summarise(conf_lower = quantile(estimate, 0.025),
-            conf_upper = quantile(estimate, 0.975),
-            .groups = 'drop') %>%
+  rename(conf_lower = 1, conf_upper = 2) %>%
+  rownames_to_column(., var = 'param') %>%
   mutate(method = 'case bootstrap')
 
 # CIs from residual resampling
-ci_chlor4 <- boot3$t %>%
+ci_chlor4 <- confint(boot3, method = 'bca') %>%
   as.data.frame() %>%
-  mutate(iter = 1:n()) %>%
-  pivot_longer(cols = -iter, names_to = 'param', values_to = 'estimate') %>%
-  filter(!is.na(estimate)) %>%
-  group_by(param) %>%
-  summarise(conf_lower = quantile(estimate, 0.025),
-            conf_upper = quantile(estimate, 0.975),
-            .groups = 'drop') %>%
+  rename(conf_lower = 1, conf_upper = 2) %>%
+  rownames_to_column(., var = 'param') %>%
   mutate(method = 'residual bootstrap')
 
 ci_chlor <- bind_rows(ci_chlor1, ci_chlor2, ci_chlor3, ci_chlor4) %>%
@@ -454,16 +436,12 @@ extra_params <- calc_params(fit_nlsLM) %>%
   pivot_longer(everything(), names_to =  'param', values_to = 'estimate')
 
 ci_extra_params <- Boot(fit_nlsLM, f = function(x){unlist(calc_params(x))}, labels = names(calc_params(fit_nlsLM)), R = 200, method = 'case') %>%
-  .$t %>%
+  confint(., method = 'bca') %>%
   as.data.frame() %>%
-  mutate(iter = 1:n()) %>%
-  pivot_longer(cols = -iter, names_to = 'param', values_to = 'estimate') %>%
-  filter(!is.na(estimate)) %>%
-  group_by(param) %>%
-  summarise(conf_lower = quantile(estimate, 0.025),
-            conf_upper = quantile(estimate, 0.975),
-            .groups = 'drop')
-
+  rename(conf_lower = 1, conf_upper = 2) %>%
+  rownames_to_column(., var = 'param') %>%
+  mutate(method = 'case bootstrap')
+  
 ci_extra_params <- left_join(ci_extra_params, extra_params)
 
 ggplot(ci_extra_params, aes(param, estimate)) +
@@ -487,3 +465,6 @@ NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit ther
 - John Fox (author of car) on bootstrapping regression models in R
     - https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their Application.         - https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A
+- Schenker, N., & Gentleman, J. F. (2001). On judging the significance of differences by examining the overlap between confidence intervals. The American Statistician, 55(3), 182-186.
+- Puth, M. T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of methods for calculating confidence intervals by bootstrapping. Journal of Animal Ecology, 84(4), 892-897.
+
