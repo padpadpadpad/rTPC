@@ -123,7 +123,13 @@ head(boot1$t)
 
 ```
 
-The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.
+The parameters of each bootstrapped refit are returned. All methods that are available for **boot()** and **Boot()** are supported for these objects. This includes the **hist.boot()** to look at the distribution of each parameter.
+
+```{r hist_boot, fig.height=7, fig.width=8}
+hist(boot1, layout = c(2,2))
+```
+
+We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.
 
 ```{r plot_boots, fig.height=3, fig.width=8, message=FALSE}
 # create predictions of each bootstrapped model

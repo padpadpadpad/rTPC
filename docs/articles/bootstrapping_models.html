@@ -217,14 +217,17 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2832400 0.8618627 2.262217 29.13901</span>
-<span class="co">#&gt; [2,] 0.2956109 0.6745183 2.446911 31.42086</span>
-<span class="co">#&gt; [3,] 0.3095786 0.6096064 2.409823 32.26380</span>
-<span class="co">#&gt; [4,] 0.3102542 0.6583811 2.345181 31.32593</span>
-<span class="co">#&gt; [5,] 0.2494630 0.9298062 2.331192 29.16557</span>
-<span class="co">#&gt; [6,] 0.2209697 1.0101208 2.274651 28.88740</span></pre></body></html></div>
-<p>The parameters of each bootstrapped refit are returned. We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
+<span class="co">#&gt; [1,] 0.2471119 0.9103155 2.337976 29.22173</span>
+<span class="co">#&gt; [2,] 0.2438938 0.9840795 2.297339 28.55377</span>
+<span class="co">#&gt; [3,] 0.3069007 0.8445653 2.091633 28.56272</span>
+<span class="co">#&gt; [4,] 0.2586314 0.7361194 2.658615 31.43460</span>
+<span class="co">#&gt; [5,] 0.2667145 0.8740707 2.310441 29.53166</span>
+<span class="co">#&gt; [6,] 0.2228814 0.9815515 2.338268 29.24579</span></pre></body></html></div>
+<p>The parameters of each bootstrapped refit are returned. All methods that are available for <strong>boot()</strong> and <strong>Boot()</strong> are supported for these objects. This includes the <strong>hist.boot()</strong> to look at the distribution of each parameter.</p>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(<span class="no">boot1</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>,<span class="fl">2</span>))</pre></body></html></div>
+<p><img src="bootstrapping_models_files/figure-html/hist_boot-1.png" width="768" style="display: block; margin: auto;"></p>
+<p>We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># create predictions of each bootstrapped model</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
@@ -264,7 +267,7 @@
 <p><img src="bootstrapping_models_files/figure-html/plot_boots-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>When there are many points beyond the optimum temperature and multiple points at each temperature, this method allows us to better quantify the uncertainty of out model fit.</p>
 <p>This method becomes more problematic when there is a small sample size. It is common for thermal performance curves to have only one or two measurements beyond the optimum temperature. This means that many of the bootstrapped models will not have any points beyond the optimum, which is problematic for mathematical models that expect a unimodal shape. The effect of this can be seen by case resampling a curve from the <code>chlorella_tpc</code> dataset used throughout these vignettes. Here we again fit the model using <strong>nls_multstart()</strong>, refit the model using <strong>nlsLM()</strong>, then bootstrap the model using <strong>Boot()</strong>.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># load in chlorella data</span>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># load in chlorella data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">'chlorella_tpc'</span>)
 
 <span class="no">d2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">chlorella_tpc</span>, <span class="no">curve_id</span> <span class="kw">==</span> <span class="fl">1</span>)
@@ -297,10 +300,10 @@
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 992 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 993 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>
 <span class="no">d_preds</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_fit</span>, <span class="no">preds</span>) <span class="kw">%&gt;%</span>
   <span class="fu">unnest</span>(<span class="no">preds</span>)
 
@@ -359,7 +362,7 @@
 </ol>
 <p>This method makes the assumption that the original model fit is a good representation of the data, and that the error terms in the model are normally distributed and independent. If the model is incorrectly specified – for example, if there is unmodelled non-linearity, non-constant error variance, or outliers – these characteristics will not carry over into the re-sampled data sets.</p>
 <p><strong>car::Boot()</strong> has an argument that allows us to easily use residual resampling instead of case resampling..</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># bootstrap using residual resampling</span>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># bootstrap using residual resampling</span>
 <span class="no">boot3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual'</span>)
 
 <span class="co"># predict over new data</span>
@@ -407,7 +410,7 @@
 <h1 class="hasAnchor">
 <a href="#calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="anchor"></a>Calculating confidence intervals of estimated and calculated parameters</h1>
 <p>Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using <strong>confint-MASS</strong>) and asymptotic confidence intervals (using <strong>nlstools::confint2()</strong>). For the bootstrapped parameter distributions, <strong>confint.boot()</strong> supports the calculation of BCa, basic, normal, and percentile confidence intervals. We use BCa here, and we will calculate all CIs on the two models done previously in this vignette. First with the bacteria TPC.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># First for the bacteria</span>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># First for the bacteria</span>
 
 <span class="co"># get parameters of fitted model</span>
 <span class="no">param_bact</span> <span class="kw">&lt;-</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
@@ -459,7 +462,7 @@
 <p><img src="bootstrapping_models_files/figure-html/confint_bact-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>The dashed lines represent the 95% intervals for the profiling method. The different bootstrap methods do a reasonable job at being close to these intervals, but not all parameters are the same. For example, <code>r_tref</code> and <code>e</code> give wider (and asymmetric) confidence intervals using the case resampling method. The residual method gives estimates that are closer to the ones calculated from profiling.</p>
 <p>Now for the TPC from the <em>Chlorella</em> dataset.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># Second for Chlorella data</span>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># Second for Chlorella data</span>
 
 <span class="co"># get parameters of fitted model</span>
 <span class="no">param_chlor</span> <span class="kw">&lt;-</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">fit_nlsLM2</span>) <span class="kw">%&gt;%</span>
@@ -507,7 +510,7 @@
        <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span>)</pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/confint_chlor-1.png" width="672" style="display: block; margin: auto;"> For this curve, the profiling method failed and the asymptotic method has very wide confidence intervals for <code>eh</code>. Consequently, it is hard to know how the bootstrapping methods do as these would usually be benchmarked against the profiling method. Even so, we can see that the intervals for <code>eh</code> and <code>th</code> for the case resampling method are very wide (as can be seen from the plot of the model predictions earlier). Meanwhile, the residual resampling method again gives more symmetric estimates, but we don’t know if they are conservative which would increase the rate of false positives if used for inference.</p>
 <p>We can also bootstrap confidence intervals for the extra parameters calculated in <strong>calc_params()</strong>. We will do this for the bacteria TPC and the case resample.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
   <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="kw">names_to</span> <span class="kw">=</span>  <span class="st">'param'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'estimate'</span>)
 
 <span class="no">ci_extra_params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">f</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">x</span>))}, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="fu"><a href="../reference/calc_params.html">calc_params</a></span>(<span class="no">fit_nlsLM</span>)), <span class="kw">R</span> <span class="kw">=</span> <span class="fl">200</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>) <span class="kw">%&gt;%</span>
