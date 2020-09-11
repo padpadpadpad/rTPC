@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Fitting many models with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-09</h4>
+            <h4 class="date">2020-09-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_models.Rmd"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_models.Rmd</code></div>
@@ -291,6 +291,15 @@
                         <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'oneill_1972'</span>),
                         <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
                         <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
+         <span class="kw">pawar</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/pawar_2018.html">pawar_2018</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>, <span class="no">e</span>, <span class="no">eh</span>, <span class="no">topt</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
+                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
+                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'pawar_2018'</span>) - <span class="fl">10</span>,
+                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'pawar_2018'</span>) + <span class="fl">10</span>,
+                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'pawar_2018'</span>),
+                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'pawar_2018'</span>),
+                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
+                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
          <span class="kw">quadratic</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/quadratic_2008.html">quadratic_2008</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">c</span>),
                         <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
                         <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
@@ -426,7 +435,7 @@
 <span class="fu">ggplot</span>(<span class="no">d_preds</span>, <span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>)) +
   <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>), <span class="no">d</span>) +
   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">'blue'</span>) +
-  <span class="fu">facet_wrap</span>(~<span class="no">model_name</span>, <span class="kw">labeller</span> <span class="kw">=</span> <span class="fu">labeller</span>(<span class="kw">model_name</span> <span class="kw">=</span> <span class="no">label_facets_num</span>), <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">4</span>) +
+  <span class="fu">facet_wrap</span>(~<span class="no">model_name</span>, <span class="kw">labeller</span> <span class="kw">=</span> <span class="fu">labeller</span>(<span class="kw">model_name</span> <span class="kw">=</span> <span class="no">label_facets_num</span>), <span class="kw">scales</span> <span class="kw">=</span> <span class="st">'free'</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">4</span>) +
   <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
   <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
         <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),

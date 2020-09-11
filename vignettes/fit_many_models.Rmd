@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   #tidy.opts=list(width.cutoff=60),
   #tidy=TRUE,
-  fig.align = 'center'
+  fig.align = 'center',
+  warning=FALSE
 )
 ```
 ## Things to consider
@@ -72,7 +73,7 @@ When fitting multiple models, we take advantage of list columns and functionalit
 
 For a single curve, we nest the dataframe, creating a list column which contains the temperature and rate values. We then create separate columns for each model fit using **purrr::map()**. Here, we use a gridstart approach when fitting models with **nls_multstart()**. This method creates a combination of start parameters, equally spaced across each of the starting parameter bounds. This can be specified with a vector of the same length as the number of parameters, c(5, 5, 5) for 3 estimated parameters will yield 125 iterations.
 
-```{r many_mods, warning=FALSE,message=FALSE}
+```{r many_mods, message=FALSE}
 # fit every model formulation in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
   mutate(beta = map(data, ~nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
@@ -190,6 +191,15 @@ d_fits <- nest(d, data = c(temp, rate)) %>%
                         start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') + 10,
                         lower = get_lower_lims(.x$temp, .x$rate, model_name = 'oneill_1972'),
                         upper = get_upper_lims(.x$temp, .x$rate, model_name = 'oneill_1972'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         pawar = map(data, ~nls_multstart(rate~pawar_2018(temp = temp, r_tref, e, eh, topt, tref = 15),
+                        data = .x,
+                        iter = c(4,4,4,4),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'pawar_2018') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'pawar_2018') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'pawar_2018'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'pawar_2018'),
                         supp_errors = 'Y',
                         convergence_count = FALSE)),
          quadratic = map(data, ~nls_multstart(rate~quadratic_2008(temp = temp, a, b, c),
@@ -322,7 +332,7 @@ d_preds <- d_stack %>%
 ggplot(d_preds, aes(temp, rate)) +
   geom_point(aes(temp, rate), d) +
   geom_line(aes(temp, .fitted), col = 'blue') +
-  facet_wrap(~model_name, labeller = labeller(model_name = label_facets_num), ncol = 4) +
+  facet_wrap(~model_name, labeller = labeller(model_name = label_facets_num), scales = 'free', ncol = 4) +
   theme_bw(base_size = 12) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),

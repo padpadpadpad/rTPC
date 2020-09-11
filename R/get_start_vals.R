@@ -119,8 +119,8 @@ get_start_vals <- function(x, y, model_name) {
     c =  14.45
     eb = 0.58
     ef = 2.215
-    fit <- stats::lm(log(y) ~ x+I(x^2), post_topt)
-    roots <- polyroot(stats::coef(fit))
+    fit <- suppressWarnings(stats::lm(log(y) ~ x+I(x^2), post_topt))
+    roots <- suppressWarnings(polyroot(stats::coef(fit)))
     tm = suppressWarnings(as.numeric(max(Re(roots))))
     ehc = 0.085
 

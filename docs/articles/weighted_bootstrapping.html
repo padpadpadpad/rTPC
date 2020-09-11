@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping with weights using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-09</h4>
+            <h4 class="date">2020-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/weighted_bootstrapping.Rmd"><code>vignettes/weighted_bootstrapping.Rmd</code></a></small>
       <div class="hidden name"><code>weighted_bootstrapping.Rmd</code></div>
@@ -216,7 +216,7 @@
 <span class="co"># perform case bootstrap</span>
 <span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 668 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 648 out of 999 attempted</span></pre></body></html></div>
 <p>We can also create model predictions for each bootstrap and confidence intervals of model predictions using the methods implemented in <code>vignette(bootstrapping_models)</code>. These can then be plotted using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># predict over new data</span>
 <span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
@@ -377,7 +377,7 @@
   <span class="fu">scale_x_discrete</span>(<span class="st">''</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="no">x</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">10</span>)) +
   <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,
        <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span>)</pre></body></html></div>
-<p><img src="weighted_bootstrapping_files/figure-html/conf_int-1.png" width="700" style="display: block; margin: auto;"> Here the profiling approach fails, and the residual method returns values that are narrower than those created from asymptotic intervals. The case bootstrap does not work well. The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in <code>vignette(bootstrapping_models)</code>.</p>
+<p><img src="weighted_bootstrapping_files/figure-html/conf_int-1.png" width="672" style="display: block; margin: auto;"> Here the profiling approach fails, and the residual method returns values that are narrower than those created from asymptotic intervals. The case bootstrap does not work well. The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in <code>vignette(bootstrapping_models)</code>.</p>
 <div id="further-reading" class="section level4">
 <h4 class="hasAnchor">
 <a href="#further-reading" class="anchor"></a>Further reading</h4>

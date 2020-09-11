@@ -15,7 +15,7 @@ pawar_2018(temp, r_tref, e, eh, topt, tref)
 
 \item{eh}{high temperature de-activation energy (eV)}
 
-\item{topt}{optimum temperatute (ºC)}
+\item{topt}{optimum temperature (ºC)}
 
 \item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures}
 }

@@ -115,8 +115,6 @@ fit_nlsLM <- minpack.lm::nlsLM(ave_rate~lactin2_1995(temp = temp, a, b, tmax, de
 
 # perform case bootstrap
 boot1 <- Boot(fit_nlsLM, method = 'case')
-
-
 ```
 
 We can also create model predictions for each bootstrap and confidence intervals of model predictions using the methods implemented in `vignette(bootstrapping_models)`. These can then be plotted using **ggplot2**.
@@ -242,7 +240,7 @@ p1 + p2
 
 As for standard non-linear regression, bootstrapping can estimate confidence intervals of the parameters explicitly modelled in the weighted regression. We can compare this approach to profiled confidence intervals (using **confint-MASS**) and asymptotic confidence intervals (using **nlstools::confint2()**).
 
-```{r conf_int, error=TRUE}
+```{r conf_int, error=TRUE, fig.height = 5, fig.width = 7}
 # get parameters of fitted model
 param <- broom::tidy(fit_nlsLM) %>%
   select(param = term, estimate)

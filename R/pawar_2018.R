@@ -4,7 +4,7 @@
 #' @param r_tref rate at the standardised temperature, tref
 #' @param e activation energy (eV)
 #' @param eh high temperature de-activation energy (eV)
-#' @param topt optimum temperatute (ºC)
+#' @param topt optimum temperature (ºC)
 #' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures
 #' @author Daniel Padfield
 #' @references Kontopoulos, Dimitrios - Georgios, Bernardo García-Carreras, Sofía Sal, Thomas P. Smith, and Samraat Pawar. Use and Misuse of Temperature Normalisation in Meta-Analyses of Thermal Responses of Biological Traits. PeerJ. 6 (2018),
