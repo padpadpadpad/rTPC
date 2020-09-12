@@ -25,4 +25,4 @@ r_packages:
   - forcats
 
 before_install:
-  - R -e 'install.packages("car", repos=c("http://R-Forge.R-project.org"))
+  - R -e 'install.packages("car", repos = c("http://R-Forge.R-project.org"), dep = FALSE)'
