@@ -1,4 +1,4 @@
-#' Modified gaussian function for TPC
+#' Modified gaussian model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax maximum rate at optimum temperature

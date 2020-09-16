@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Jöhnk 2008 model for fitting thermal performance curves — joehnk_2008 • rTPC</title>
+<title>Jöhnk model for fitting thermal performance curves — joehnk_2008 • rTPC</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Jöhnk 2008 model for fitting thermal performance curves — joehnk_2008" />
-<meta property="og:description" content="Jöhnk 2008 model for fitting thermal performance curves" />
+<meta property="og:title" content="Jöhnk model for fitting thermal performance curves — joehnk_2008" />
+<meta property="og:description" content="Jöhnk model for fitting thermal performance curves" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -160,13 +160,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Jöhnk 2008 model for fitting thermal performance curves</h1>
+    <h1>Jöhnk model for fitting thermal performance curves</h1>
     <small class="dont-index">Source: <a href='https://github.com/padpadpadpad/rTPC/blob/master/R/joehnk_2008.R'><code>R/joehnk_2008.R</code></a></small>
     <div class="hidden name"><code>joehnk_2008.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Jöhnk 2008 model for fitting thermal performance curves</p>
+    <p>Jöhnk model for fitting thermal performance curves</p>
     </div>
 
     <pre class="usage"><span class='fu'>joehnk_2008</span>(<span class='no'>temp</span>, <span class='no'>rmax</span>, <span class='no'>topt</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>)</pre>
@@ -232,493 +232,8 @@ $$rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{
 <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'joehnk_2008'</span>),
 <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'joehnk_2008'</span>),
 <span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
-<span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 1: iteration = 1.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 1: iteration = 1.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 2: iteration = 2.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 2: iteration = 2.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 3: iteration = 3.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 3: iteration = 3.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 4: iteration = 4.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 4: iteration = 4.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 5: iteration = 5.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 5: iteration = 5.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 6: iteration = 6.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 6: iteration = 6.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 7: iteration = 7.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 7: iteration = 7.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 8: iteration = 8.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 8: iteration = 8.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 9: iteration = 9.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 9: iteration = 9.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 10: iteration = 10.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 10: iteration = 10.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 11: iteration = 11.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 11: iteration = 11.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 12: iteration = 12.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 12: iteration = 12.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 13: iteration = 13.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 13: iteration = 13.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 14: iteration = 14.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 14: iteration = 14.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 15: iteration = 15.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 15: iteration = 15.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 16: iteration = 16.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 16: iteration = 16.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 17: iteration = 17.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 17: iteration = 17.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 18: iteration = 18.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 18: iteration = 18.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 19: iteration = 19.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 19: iteration = 19.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 20: iteration = 20.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 20: iteration = 20.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 21: iteration = 21.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 21: iteration = 21.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 22: iteration = 22.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 22: iteration = 22.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 23: iteration = 23.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 23: iteration = 23.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 24: iteration = 24.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 24: iteration = 24.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 25: iteration = 25.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 25: iteration = 25.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 26: iteration = 26.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 26: iteration = 26.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 27: iteration = 27.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 27: iteration = 27.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 28: iteration = 28.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 29: iteration = 29.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 30: iteration = 30.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 31: iteration = 31.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 32: iteration = 32.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 33: iteration = 33.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 34: iteration = 34.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 35: iteration = 35.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 36: iteration = 36.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 37: iteration = 37.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 38: iteration = 38.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 39: iteration = 39.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 40: iteration = 40.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 41: iteration = 41.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 42: iteration = 42.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 43: iteration = 43.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 44: iteration = 44.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 45: iteration = 45.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 46: iteration = 46.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 47: iteration = 47.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 48: iteration = 48.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 49: iteration = 49.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 50: iteration = 50.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 51: iteration = 51.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 52: iteration = 52.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 53: iteration = 53.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 54: iteration = 54.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 55: iteration = 55.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 56: iteration = 56.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 57: iteration = 57.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 58: iteration = 58.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 59: iteration = 59.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 60: iteration = 60.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 61: iteration = 61.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 62: iteration = 62.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 63: iteration = 63.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 64: iteration = 64.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 65: iteration = 65.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 66: iteration = 66.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 67: iteration = 67.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 68: iteration = 68.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 69: iteration = 69.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 70: iteration = 70.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 71: iteration = 71.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 72: iteration = 72.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 73: iteration = 73.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 74: iteration = 74.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 75: iteration = 75.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 76: iteration = 76.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 77: iteration = 77.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 78: iteration = 78.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 79: iteration = 79.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 80: iteration = 80.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 81: iteration = 81.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 82: iteration = 82.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 83: iteration = 83.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 84: iteration = 84.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 85: iteration = 85.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 86: iteration = 86.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 87: iteration = 87.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 88: iteration = 88.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 89: iteration = 89.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 90: iteration = 90.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 91: iteration = 91.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 92: iteration = 92.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 93: iteration = 93.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 94: iteration = 94.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 95: iteration = 95.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 96: iteration = 96.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 97: iteration = 97.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 98: iteration = 98.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 99: iteration = 99.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 100: iteration = 100.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 101: iteration = 101.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 102: iteration = 102.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 103: iteration = 103.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 104: iteration = 104.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 105: iteration = 105.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 106: iteration = 106.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 107: iteration = 107.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 108: iteration = 108.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 163: iteration = 163.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 164: iteration = 164.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 165: iteration = 165.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 166: iteration = 166.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 167: iteration = 167.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 168: iteration = 168.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 169: iteration = 169.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 170: iteration = 170.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 171: iteration = 171.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 172: iteration = 172.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 173: iteration = 173.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 174: iteration = 174.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 175: iteration = 175.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 176: iteration = 176.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 177: iteration = 177.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 178: iteration = 178.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 179: iteration = 179.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 180: iteration = 180.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 181: iteration = 181.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 182: iteration = 182.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 183: iteration = 183.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 184: iteration = 184.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 185: iteration = 185.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 186: iteration = 186.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 187: iteration = 187.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 188: iteration = 188.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `AICval`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> NaNs produced</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `AICval` is `purrr::map_dbl(startpars, ~fit_aic(startpars))`.</span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> The error occurred in group 189: iteration = 189.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='input'>
+<span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
 <span class='co'># look at model fit</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
 #&gt; Formula: rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c)
@@ -748,7 +263,7 @@ $$rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>), <span class='no'>d</span>) +
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>.fitted</span>), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'blue'</span>) +
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='joehnk_2008-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

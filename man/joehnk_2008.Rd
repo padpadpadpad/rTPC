@@ -2,7 +2,7 @@
 % Please edit documentation in R/joehnk_2008.R
 \name{joehnk_2008}
 \alias{joehnk_2008}
-\title{Jöhnk 2008 model for fitting thermal performance curves}
+\title{Jöhnk model for fitting thermal performance curves}
 \usage{
 joehnk_2008(temp, rmax, topt, a, b, c)
 }
@@ -20,7 +20,7 @@ joehnk_2008(temp, rmax, topt, a, b, c)
 \item{c}{parameter with no biological meaning}
 }
 \description{
-Jöhnk 2008 model for fitting thermal performance curves
+Jöhnk model for fitting thermal performance curves
 }
 \details{
 Equation:

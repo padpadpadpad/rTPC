@@ -2,7 +2,7 @@
 % Please edit documentation in R/delong_2017.R
 \name{delong_2017}
 \alias{delong_2017}
-\title{deLong enzyme-assisted Arrhenius model for fitting thermal performance curves}
+\title{DeLong enzyme-assisted Arrhenius model for fitting thermal performance curves}
 \usage{
 delong_2017(temp, c, eb, ef, tm, ehc)
 }
@@ -20,7 +20,7 @@ delong_2017(temp, c, eb, ef, tm, ehc)
 \item{ehc}{temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature (eV)}
 }
 \description{
-deLong enzyme-assisted Arrhenius model for fitting thermal performance curves
+DeLong enzyme-assisted Arrhenius model for fitting thermal performance curves
 }
 \details{
 Equation:

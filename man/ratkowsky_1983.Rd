@@ -2,7 +2,7 @@
 % Please edit documentation in R/ratkowsky_1983.R
 \name{ratkowsky_1983}
 \alias{ratkowsky_1983}
-\title{Ratkowsky 1983 model}
+\title{Ratkowsky model for fitting thermal performance curves}
 \usage{
 ratkowsky_1983(temp, tmin, tmax, a, b)
 }
@@ -18,7 +18,7 @@ ratkowsky_1983(temp, tmin, tmax, a, b)
 \item{b}{empirical parameter needed to fit the data for temperatures beyond the optimum temperature}
 }
 \description{
-Ratkowsky 1983 model
+Ratkowsky model for fitting thermal performance curves
 }
 \details{
 Equation:

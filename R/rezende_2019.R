@@ -1,4 +1,4 @@
-#' Rezende 2019 model for fitting thermal performance curves
+#' Rezende model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param q10 defines the fold change in performance as a result of increasing the temperature by 10 ºC
@@ -7,9 +7,9 @@
 #' @param c parameter controlling the rate of decline beyond the threshold temperature, b
 #' @references Rezende, Enrico L., and Francisco Bozinovic. Thermal performance across levels of biological organization. Philosophical Transactions of the Royal Society B 374.1778 (2019): 20180549.
 #' @details Equation:
-#' \deqn{\textrm{if} \quad temp < t_{max}: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}}}{%
+#' \deqn{\textrm{if} \quad temp < b: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}}}{%
 #' rate = (a.10^(log10(q10)/(10/temp)))}
-#' \deqn{\textrm{if} \quad temp > t_{max}: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}} \cdot \bigg(1-d(temp-t_{max})^2 \bigg)}{%
+#' \deqn{\textrm{if} \quad temp > b: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}} \cdot \bigg(1-c \cdot (b-temp)^2 \bigg)}{%
 #' rate = (a.10^(log10(q10)/(10/temp))).(1-c.(b - temp)^2))}
 #'
 #' Start values in \code{get_start_vals} are derived from the data and previous values in the literature.

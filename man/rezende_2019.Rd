@@ -2,7 +2,7 @@
 % Please edit documentation in R/rezende_2019.R
 \name{rezende_2019}
 \alias{rezende_2019}
-\title{Rezende 2019 model for fitting thermal performance curves}
+\title{Rezende model for fitting thermal performance curves}
 \usage{
 rezende_2019(temp, q10, a, b, c)
 }
@@ -18,13 +18,13 @@ rezende_2019(temp, q10, a, b, c)
 \item{c}{parameter controlling the rate of decline beyond the threshold temperature, b}
 }
 \description{
-Rezende 2019 model for fitting thermal performance curves
+Rezende model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{\textrm{if} \quad temp < t_{max}: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}}}{%
+\deqn{\textrm{if} \quad temp < b: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}}}{%
 rate = (a.10^(log10(q10)/(10/temp)))}
-\deqn{\textrm{if} \quad temp > t_{max}: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}} \cdot \bigg(1-d(temp-t_{max})^2 \bigg)}{%
+\deqn{\textrm{if} \quad temp > b: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}} \cdot \bigg(1-c \cdot (b-temp)^2 \bigg)}{%
 rate = (a.10^(log10(q10)/(10/temp))).(1-c.(b - temp)^2))}
 
 Start values in \code{get_start_vals} are derived from the data and previous values in the literature.

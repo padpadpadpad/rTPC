@@ -1,4 +1,4 @@
-#' deLong enzyme-assisted Arrhenius model for fitting thermal performance curves
+#' DeLong enzyme-assisted Arrhenius model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param c potential reaction rate

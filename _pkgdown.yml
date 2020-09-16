@@ -57,7 +57,7 @@ reference:
   - get_start_vals
   - get_lower_lims
   - get_upper_lims
-- title: Estimating parameters
+- title: Calculating parameters
   contents:
   - calc_params
   - get_ctmax

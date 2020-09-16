@@ -2,7 +2,7 @@
 % Please edit documentation in R/spain_1982.R
 \name{spain_1982}
 \alias{spain_1982}
-\title{Spain model}
+\title{Spain model for fitting thermal performance curves}
 \usage{
 spain_1982(temp, a, b, c, r0)
 }
@@ -18,7 +18,7 @@ spain_1982(temp, a, b, c, r0)
 \item{r0}{the apparent rate at 0 ºC}
 }
 \description{
-Spain model
+Spain model for fitting thermal performance curves
 }
 \details{
 Equation:

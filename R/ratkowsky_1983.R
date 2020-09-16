@@ -1,4 +1,4 @@
-#' Ratkowsky 1983 model
+#' Ratkowsky model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param tmin low temperature (ºC) at which rates become negative

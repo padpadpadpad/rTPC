@@ -2,7 +2,7 @@
 % Please edit documentation in R/modifiedgaussian_2006.R
 \name{modifiedgaussian_2006}
 \alias{modifiedgaussian_2006}
-\title{Modified gaussian function for TPC}
+\title{Modified gaussian model for fitting thermal performance curves}
 \usage{
 modifiedgaussian_2006(temp, rmax, topt, a, b)
 }
@@ -18,7 +18,7 @@ modifiedgaussian_2006(temp, rmax, topt, a, b)
 \item{b}{allows for asymmetry in the curve fit}
 }
 \description{
-Modified gaussian function for TPC
+Modified gaussian model for fitting thermal performance curves
 }
 \details{
 Equation:

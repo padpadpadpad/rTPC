@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-09</h4>
+            <h4 class="date">2020-09-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -217,12 +217,12 @@
 <span class="co"># look at the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">boot1</span>$<span class="no">t</span>)
 <span class="co">#&gt;         r_tref         e       eh       th</span>
-<span class="co">#&gt; [1,] 0.2471119 0.9103155 2.337976 29.22173</span>
-<span class="co">#&gt; [2,] 0.2438938 0.9840795 2.297339 28.55377</span>
-<span class="co">#&gt; [3,] 0.3069007 0.8445653 2.091633 28.56272</span>
-<span class="co">#&gt; [4,] 0.2586314 0.7361194 2.658615 31.43460</span>
-<span class="co">#&gt; [5,] 0.2667145 0.8740707 2.310441 29.53166</span>
-<span class="co">#&gt; [6,] 0.2228814 0.9815515 2.338268 29.24579</span></pre></body></html></div>
+<span class="co">#&gt; [1,] 0.2728860 0.7608141 2.345626 30.87483</span>
+<span class="co">#&gt; [2,] 0.2604026 0.8051360 2.419833 30.59125</span>
+<span class="co">#&gt; [3,] 0.2348046 1.1719977 2.326470 26.95410</span>
+<span class="co">#&gt; [4,] 0.2751756 0.8989575 2.302518 28.88942</span>
+<span class="co">#&gt; [5,] 0.2678136 0.8592392 2.227433 29.40471</span>
+<span class="co">#&gt; [6,] 0.2725866 0.7876812 2.287981 30.47755</span></pre></body></html></div>
 <p>The parameters of each bootstrapped refit are returned. All methods that are available for <strong>boot()</strong> and <strong>Boot()</strong> are supported for these objects. This includes the <strong>hist.boot()</strong> to look at the distribution of each parameter.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(<span class="no">boot1</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>,<span class="fl">2</span>))</pre></body></html></div>
 <p><img src="bootstrapping_models_files/figure-html/hist_boot-1.png" width="768" style="display: block; margin: auto;"></p>
@@ -300,7 +300,7 @@
 <span class="co"># bootstrap using case resampling</span>
 <span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 993 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 988 out of 999 attempted</span></pre></body></html></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don’t fit and return <code>NA</code> for the parameter estimates are dropped.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># unnest predictions of original model fit</span>

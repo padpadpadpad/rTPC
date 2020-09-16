@@ -1,4 +1,4 @@
-#' Jöhnk 2008 model for fitting thermal performance curves
+#' Jöhnk model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax the rate at optimum temperature
