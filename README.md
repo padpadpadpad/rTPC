@@ -10,7 +10,7 @@ status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://trav
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
-(TPCs) in R. **rTPC** contains 23 model formulations previously used to
+(TPCs) in R. **rTPC** contains 24 model formulations previously used to
 fit TPCs and has helper functions to help set sensible start parameters,
 upper and lower parameter limits and estimate parameters useful in
 downstream analyses, such as cardinal temperatures, maximum rate and
@@ -18,10 +18,10 @@ optimum temperature.
 
 The idea behind **rTPC** is to make fitting thermal performance curves
 easier, to provide workflows and examples of fitting TPCs without saying
-which models work best. Which model and which workflow is “best” is
+which model works best. Which model and which workflow is “best” is
 going to be down to the question that is being asked. Throughout the
-vignettes, *Things to consider* sections give ideas of what need to be
-considered about *before* the analysis takes place.
+vignettes, *Things to consider* sections give some key considerations
+about what to consider *before* and *during* the analysis.
 
 When developing **rTPC**, we made a conscious decision not to repeat
 code and methods that are already optimised and available in the R
@@ -29,14 +29,16 @@ ecosystem. Consequently, the workflows take advantage of
 [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for
 fitting non-linear least squares regression and packages from the
 [**tidyverse**](https://www.tidyverse.org) for data manipulation,
-fitting multiple models, and visualisation.
+fitting multiple models, and visualisation. The R package
+[**car**](https://cran.r-project.org/web/packages/car/car.pdf) is used
+extensively for the bootstrapping approaches.
 
 **rTPC** and the pipelines outlined in the vignettes are in the process
 of being written up into a methods paper. In the meantime, please cite
 as:
 
 Daniel Padfield and Hannah O’Sullivan (2020). rTPC: an R package for
-helping fit thermal performance curves. R package version 0.1.0.
+helping fit thermal performance curves. R package version 1.0.0.
 
 ## Bugs and suggestions
 
@@ -69,7 +71,7 @@ using rTPC**. First, Collect, check, and manipulate data into long
 format. Next choose which models from **rTPC** are going to be used.
 Here, a random assortment of four models were chosen. Then fit the
 models to data using **nls.multstart** and helper functions from
-**rTPC**. Models can then be visualised using the **tidyverse** suite of
+**rTPC**. Models can be visualised using the **tidyverse** suite of
 packages and common traits of TPCs can be calculated using
 **rTPC::calc\_params()**. This simple pipeline can easily be scaled up
 to be used on multiple curves.
@@ -83,13 +85,13 @@ incorporating model weights and bootstrapping of model fits.
 <img src="man/figures/rTPC_pipeline_extensions.png" width="1000" align="center" />
 
 **Figure 2. Potential applications for fitting thermal performance
-curves using rTPC**. The pipeline can be easily extended to do model
-selection or model averaging by calculating AIC or BIC. If there is
-information measurement variation (e.g. when fitting TPCs to means and
-standard deviations), the pipeline can incorporate model weights that
-can drastically change the value of estimated parameters. After the best
-model has been selected, bootstrapping approaches can help visualise and
-calculate model uncertainty.
+curves using rTPC**. (1) AIC, BIC or other metrics of model fit can be
+calculated to help to allow model selection or model averaging. (2) If
+TPCs are being fit to averages of multiple replicates, then the pipeline
+can incorporate model weights (1/standard deviation) that can change the
+model fit and the value of estimated parameters. (3) After the model has
+been fitted, bootstrapping approaches can help visualise and calculate
+model uncertainty.
 
 ## Getting started
 

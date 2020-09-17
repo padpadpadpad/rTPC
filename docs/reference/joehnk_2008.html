@@ -169,7 +169,7 @@
     <p>Jöhnk model for fitting thermal performance curves</p>
     </div>
 
-    <pre class="usage"><span class='fu'>joehnk_2008</span>(<span class='no'>temp</span>, <span class='no'>rmax</span>, <span class='no'>topt</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>)</pre>
+    <pre class="usage"><span class='fu'>joehnk_2008</span>(<span class='kw'>temp</span>, <span class='kw'>rmax</span>, <span class='kw'>topt</span>, <span class='kw'>a</span>, <span class='kw'>b</span>, <span class='kw'>c</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -215,27 +215,28 @@ $$rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load in ggplot</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span>)
 
 <span class='co'># subset for the first TPC curve</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'chlorella_tpc'</span>)
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>chlorella_tpc</span>, <span class='no'>curve_id</span> <span class='kw'>==</span> <span class='fl'>1</span>)
+<span class='kw'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>chlorella_tpc</span>, <span class='kw'>curve_id</span> <span class='op'>==</span> <span class='fl'>1</span>)
 
 <span class='co'># get start values and fit model</span>
-<span class='no'>start_vals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'joehnk_2008'</span>)
+<span class='kw'>start_vals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'joehnk_2008'</span>)
 <span class='co'># fit model</span>
-<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nls.multstart</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='no'>rate</span>~<span class='fu'>joehnk_2008</span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='no'>rmax</span>, <span class='no'>topt</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>c</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d</span>,
-<span class='kw'>iter</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>),
-<span class='kw'>start_lower</span> <span class='kw'>=</span> <span class='no'>start_vals</span> - <span class='fl'>10</span>,
-<span class='kw'>start_upper</span> <span class='kw'>=</span> <span class='no'>start_vals</span> + <span class='fl'>10</span>,
-<span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'joehnk_2008'</span>),
-<span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>, <span class='no'>d</span>$<span class='no'>rate</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>'joehnk_2008'</span>),
-<span class='kw'>supp_errors</span> <span class='kw'>=</span> <span class='st'>'Y'</span>,
-<span class='kw'>convergence_count</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='kw'>mod</span> <span class='op'>&lt;-</span> <span class='kw'>nls.multstart</span>::<span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='kw'>rate</span><span class='op'>~</span><span class='fu'>joehnk_2008</span>(temp = <span class='kw'>temp</span>, <span class='kw'>rmax</span>, <span class='kw'>topt</span>, <span class='kw'>a</span>, <span class='kw'>b</span>, <span class='kw'>c</span>),
+data = <span class='kw'>d</span>,
+iter = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>3</span>),
+start_lower = <span class='kw'>start_vals</span> <span class='op'>-</span> <span class='fl'>10</span>,
+start_upper = <span class='kw'>start_vals</span> <span class='op'>+</span> <span class='fl'>10</span>,
+lower = <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'joehnk_2008'</span>),
+upper = <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'joehnk_2008'</span>),
+supp_errors = <span class='st'>'Y'</span>,
+convergence_count = <span class='fl'>FALSE</span>)
 
 <span class='co'># look at model fit</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='kw'>mod</span>)
+</div><div class='output co'>#&gt; 
 #&gt; Formula: rate ~ joehnk_2008(temp = temp, rmax, topt, a, b, c)
 #&gt; 
 #&gt; Parameters:
@@ -255,14 +256,15 @@ $$rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{
 #&gt; Reason stopped: Number of calls to `fcn' has reached or exceeded `maxfev' == 600.
 #&gt; </div><div class='input'>
 <span class='co'># get predictions</span>
-<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>temp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>d</span>$<span class='no'>temp</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
-<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>broom</span><span class='kw ns'>::</span><span class='fu'><a href='https://broom.tidymodels.org/reference/reexports.html'>augment</a></span>(<span class='no'>mod</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='no'>preds</span>)
+<span class='kw'>preds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(temp = <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>), length.out = <span class='fl'>100</span>))
+<span class='kw'>preds</span> <span class='op'>&lt;-</span> <span class='kw'>broom</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/augment.html'>augment</a></span>(<span class='kw'>mod</span>, newdata = <span class='kw'>preds</span>)
 
 <span class='co'># plot</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>preds</span>) +
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>rate</span>), <span class='no'>d</span>) +
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>temp</span>, <span class='no'>.fitted</span>), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'blue'</span>) +
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()</div><div class='img'><img src='joehnk_2008-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='kw'>preds</span>) <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>temp</span>, <span class='kw'>rate</span>), <span class='kw'>d</span>) <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>temp</span>, <span class='kw'>.fitted</span>), col = <span class='st'>'blue'</span>) <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()
+</div><div class='img'><img src='joehnk_2008-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -279,7 +281,7 @@ $$rate=r_{max} \bigg(1 + a \bigg(\bigg(b^{temp-t_{opt}} -1\bigg) - \frac{ln(b)}{
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Bootstrapping with weights using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-16</h4>
+            <h4 class="date">2020-09-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/weighted_bootstrapping.Rmd"><code>vignettes/weighted_bootstrapping.Rmd</code></a></small>
       <div class="hidden name"><code>weighted_bootstrapping.Rmd</code></div>
@@ -142,62 +142,66 @@
 <li>The outcomes of the different approaches outlined here are likely to change based on the data and the model used. Use this methods with caution and think critically about their output</li>
 </ul>
 <hr>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">boot</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">car</span>) <span class="co"># to install development version of car install.packages("car", repos = c("http://R-Forge.R-project.org"), dep = FALSE)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">patchwork</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># load packages</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">boot</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://r-forge.r-project.org/projects/car">car</a></span>) <span class="co"># to install development version of car install.packages("car", repos = c("http://R-Forge.R-project.org"), dep = FALSE)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/padpadpadpad/rTPC">rTPC</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">nls.multstart</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://broom.tidymodels.org">broom</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://patchwork.data-imaginist.com">patchwork</a></span>)
+</pre></div>
 <p>When doing model weighting, as implemented in <code>vignette(model_weighting)</code>, the standard deviation of each point can be used to account for measurement uncertainty and can improve the model fit and reduce biases in parameter estimates. As in <code>vignette(bootstrapping_models</code>)`, <strong>car::Boot()</strong> can be used to do both case and residual resampling on the weighted regression model.</p>
 <p>In case resampling, each iteration re-samples the original data with replacement (where each rate, temperature and measurement error value are linked) and uses weighted weighted non-linear least squares regression on each bootstrapped dataset.</p>
 <p>In residual resampling of weighted non-linear regression, the weights are used as a correction to the Pearson residuals. The whole function can be viewed by using <code><a href="https://rdrr.io/r/utils/getAnywhere.html">getAnywhere(Boot.nls)</a></code>. For large samples the residual method must be ok, but the small sample properties are less clear. Ideally one would be inclined not to use the case resampling bootstrap when possible because the theory is more certain.</p>
 <p>We will demonstrate both approaches using the example in <code><a href="../articles/model_weighting.html">vignette('model_weighting')</a></code>. This vignette uses the example dataset contained within <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. Instead of plotting a single curve, we average over the biological replicates, <code>rep</code>, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using <strong>ggplot2</strong>. Instead of fitting <strong>kamykowski_1985</strong>, we will instead fit <strong>lactin2_1995</strong> in this example.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># get curve data</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># get curve data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"chlorella_tpc"</span>)
 
-<span class="no">d_ave</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">chlorella_tpc</span>, <span class="no">process</span> <span class="kw">==</span> <span class="st">'adaptation'</span>, <span class="no">growth_temp</span> <span class="kw">==</span> <span class="fl">33</span>, <span class="no">flux</span> <span class="kw">==</span> <span class="st">'photosynthesis'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">temp</span>, <span class="no">flux</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="no">.</span>, <span class="kw">sd</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(<span class="no">rate</span>),
-            <span class="kw">ave_rate</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">rate</span>)) <span class="kw">%&gt;%</span>
+<span class="kw">d_ave</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">chlorella_tpc</span>, <span class="kw">process</span> <span class="op">==</span> <span class="st">'adaptation'</span>, <span class="kw">growth_temp</span> <span class="op">==</span> <span class="fl">33</span>, <span class="kw">flux</span> <span class="op">==</span> <span class="st">'photosynthesis'</span>) <span class="op">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="kw">temp</span>, <span class="kw">flux</span>) <span class="op">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">.</span>, sd = <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(<span class="kw">rate</span>),
+            ave_rate = <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="kw">rate</span>)) <span class="op">%&gt;%</span>
   <span class="fu">ungroup</span>()
 <span class="co">#&gt; `summarise()` regrouping output by 'temp' (override with `.groups` argument)</span>
 
-<span class="no">d_fit</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d_ave</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">ave_rate</span>, <span class="no">sd</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">weighted</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
+<span class="kw">d_fit</span> <span class="op">&lt;-</span> <span class="fu">nest</span>(<span class="kw">d_ave</span>, data = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>, <span class="kw">sd</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(weighted = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(temp = <span class="kw">temp</span>, <span class="kw">a</span>, <span class="kw">b</span>, <span class="kw">tmax</span>, <span class="kw">delta_t</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>,
                         <span class="co"># include weights here!</span>
-                        <span class="kw">modelweights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>)))
+                        modelweights = <span class="fl">1</span><span class="op">/</span><span class="kw">sd</span>)))
 
 <span class="co"># get predictions using augment</span>
-<span class="no">newdata</span> <span class="kw">&lt;-</span> <span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))
-<span class="no">d_preds</span> <span class="kw">&lt;-</span> <span class="no">d_fit</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">preds</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">weighted</span>, <span class="no">augment</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(-<span class="no">weighted</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>)
+<span class="kw">newdata</span> <span class="op">&lt;-</span> <span class="fu">tibble</span>(temp = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), length.out = <span class="fl">100</span>))
+<span class="kw">d_preds</span> <span class="op">&lt;-</span> <span class="kw">d_fit</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">.</span>, preds = <span class="fu">map</span>(<span class="kw">weighted</span>, <span class="kw">augment</span>, newdata = <span class="kw">newdata</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(<span class="op">-</span><span class="kw">weighted</span>) <span class="op">%&gt;%</span>
+  <span class="fu">unnest</span>(<span class="kw">preds</span>)
 
 <span class="co"># plot</span>
-<span class="fu">ggplot</span>() +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
-        <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),
-        <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu">element_blank</span>()) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span><span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">0.25</span>, <span class="fl">3.5</span>))</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), <span class="kw">d_preds</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">temp</span>, ymin = <span class="kw">ave_rate</span> <span class="op">-</span> <span class="kw">sd</span>, ymax = <span class="kw">ave_rate</span> <span class="op">+</span> <span class="kw">sd</span>), <span class="kw">d_ave</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>), <span class="kw">d_ave</span>, size = <span class="fl">2</span>, shape = <span class="fl">21</span>, fill = <span class="st">'green4'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x =<span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Photosynthesis rates across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="fl">3.5</span>))
+</pre></div>
 <p><img src="weighted_bootstrapping_files/figure-html/get_data-1.png" width="576" style="display: block; margin: auto;"></p>
 <hr>
 </div>
@@ -205,68 +209,72 @@
 <h1 class="hasAnchor">
 <a href="#method-1-case-resampling-weighted-non-linear-regression-" class="anchor"></a>Method 1: Case resampling weighted non-linear regression.</h1>
 <p>In this method, each iteration re-samples the original data with replacement (where each rate, temperature and measurement error value are linked) and uses weighted weighted non-linear least squares regression on each bootstrapped dataset.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># refit model using nlsLM</span>
-<span class="no">fit_nlsLM</span> <span class="kw">&lt;-</span> <span class="kw pkg">minpack.lm</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="no">ave_rate</span>~<span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">d_ave</span>,
-                        <span class="kw">start</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">d_fit</span>$<span class="no">weighted</span><span class="kw">[[</span><span class="fl">1</span>]]),
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>, <span class="no">d_ave</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>, <span class="no">d_ave</span>$<span class="no">ave_rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'lactin2_1995'</span>),
-                        <span class="kw">weights</span> <span class="kw">=</span> <span class="fl">1</span>/<span class="no">sd</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># refit model using nlsLM</span>
+<span class="kw">fit_nlsLM</span> <span class="op">&lt;-</span> <span class="kw">minpack.lm</span>::<span class="fu"><a href="https://rdrr.io/pkg/minpack.lm/man/nlsLM.html">nlsLM</a></span>(<span class="kw">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(temp = <span class="kw">temp</span>, <span class="kw">a</span>, <span class="kw">b</span>, <span class="kw">tmax</span>, <span class="kw">delta_t</span>),
+                        data = <span class="kw">d_ave</span>,
+                        start = <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="kw">d_fit</span><span class="op">$</span><span class="kw">weighted</span>[[<span class="fl">1</span>]]),
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">d_ave</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">d_ave</span><span class="op">$</span><span class="kw">ave_rate</span>, model_name = <span class="st">'lactin2_1995'</span>),
+                        weights = <span class="fl">1</span><span class="op">/</span><span class="kw">sd</span>)
 
 <span class="co"># perform case bootstrap</span>
-<span class="no">boot1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'case'</span>)
+<span class="kw">boot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="kw">fit_nlsLM</span>, method = <span class="st">'case'</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 664 out of 999 attempted</span></pre></body></html></div>
+<span class="co">#&gt;  Number of bootstraps was 644 out of 999 attempted</span>
+</pre></div>
 <p>We can also create model predictions for each bootstrap and confidence intervals of model predictions using the methods implemented in <code>vignette(bootstrapping_models)</code>. These can then be plotted using <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># predict over new data</span>
-<span class="no">boot1_preds</span> <span class="kw">&lt;-</span> <span class="no">boot1</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by_all</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">pred</span> <span class="kw">=</span> <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>))
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># predict over new data</span>
+<span class="kw">boot1_preds</span> <span class="op">&lt;-</span> <span class="kw">boot1</span><span class="op">$</span><span class="kw">t</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu">drop_na</span>() <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(iter = <span class="fl">1</span><span class="op">:</span><span class="fu">n</span>()) <span class="op">%&gt;%</span>
+  <span class="fu">group_by_all</span>() <span class="op">%&gt;%</span>
+  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(temp = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), length.out = <span class="fl">100</span>))) <span class="op">%&gt;%</span>
+  <span class="fu">ungroup</span>() <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(pred = <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span>, <span class="kw">a</span>, <span class="kw">b</span>, <span class="kw">tmax</span>, <span class="kw">delta_t</span>))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
-<span class="no">boot1_conf_preds</span> <span class="kw">&lt;-</span> <span class="fu">group_by</span>(<span class="no">boot1_preds</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
+<span class="kw">boot1_conf_preds</span> <span class="op">&lt;-</span> <span class="fu">group_by</span>(<span class="kw">boot1_preds</span>, <span class="kw">temp</span>) <span class="op">%&gt;%</span>
+  <span class="fu">summarise</span>(conf_lower = <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="kw">pred</span>, <span class="fl">0.025</span>),
+            conf_upper = <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="kw">pred</span>, <span class="fl">0.975</span>),
+            .groups = <span class="st">'drop'</span>)
 
 <span class="co"># plot bootstrapped CIs</span>
-<span class="no">p1</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">boot1_conf_preds</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
-        <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),
-        <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu">element_blank</span>()) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span><span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
+<span class="kw">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), <span class="kw">d_preds</span>, col = <span class="st">'black'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, ymin = <span class="kw">conf_lower</span>, ymax = <span class="kw">conf_upper</span>), <span class="kw">boot1_conf_preds</span>, fill = <span class="st">'black'</span>, alpha = <span class="fl">0.3</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">temp</span>, ymin = <span class="kw">ave_rate</span> <span class="op">-</span> <span class="kw">sd</span>, ymax = <span class="kw">ave_rate</span> <span class="op">+</span> <span class="kw">sd</span>), <span class="kw">d_ave</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>), <span class="kw">d_ave</span>, size = <span class="fl">2</span>, shape = <span class="fl">21</span>, fill = <span class="st">'green4'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">10</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x =<span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Photosynthesis rates across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span>))
 
 <span class="co"># plot bootstrapped predictions</span>
-<span class="no">p2</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">pred</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">iter</span>), <span class="no">boot1_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.007</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
-        <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),
-        <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu">element_blank</span>()) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span><span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
+<span class="kw">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), <span class="kw">d_preds</span>, col = <span class="st">'black'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">pred</span>, group = <span class="kw">iter</span>), <span class="kw">boot1_preds</span>, col = <span class="st">'black'</span>, alpha = <span class="fl">0.007</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">temp</span>, ymin = <span class="kw">ave_rate</span> <span class="op">-</span> <span class="kw">sd</span>, ymax = <span class="kw">ave_rate</span> <span class="op">+</span> <span class="kw">sd</span>), <span class="kw">d_ave</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>), <span class="kw">d_ave</span>, size = <span class="fl">2</span>, shape = <span class="fl">21</span>, fill = <span class="st">'green4'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">10</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x =<span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Photosynthesis rates across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span>))
 
-<span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
+<span class="kw">p1</span> <span class="op">+</span> <span class="kw">p2</span>
+</pre></div>
 <p><img src="weighted_bootstrapping_files/figure-html/bootstrap1-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>For this model formulation, the case resampling method gives really wide confidence intervals for the model predictions at high temperatures. In some of the bootstrapped datasets, the rate value at 49 ºC is not present, which results in a drastically different fit which predicts extremely negative rates for 49 ºC in those instances. As such, this is likely a bigger problem with models that allow for negative rates. Those that do not allow negative rates may not suffer so much from this issue as the mathematical formulation forces rates to always be positive, limiting the wide variation in negative rate values. However these models are also likely to have other disadvantages.</p>
 <hr>
@@ -275,110 +283,112 @@
 <h1 class="hasAnchor">
 <a href="#method-2-residual-resampling-weighted-non-linear-regression-" class="anchor"></a>Method 2: Residual resampling weighted non-linear regression.</h1>
 <p>In this method, the weights are used as a correction to the Pearson residuals of the original model fit. These modified residuals are then added onto the fitted model predictions, mimicking the methods used for weighted linear regression (Algorithm 6.3 in Davison and Hinkley (2003)). The implementation in <strong>Boot()</strong> can be viewed by using <code><a href="https://rdrr.io/r/utils/getAnywhere.html">getAnywhere(Boot.nls)</a></code>.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># perform residual bootstrap</span>
-<span class="no">boot2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual'</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Number of bootstraps was 998 out of 999 attempted</span>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># perform residual bootstrap</span>
+<span class="kw">boot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html">Boot</a></span>(<span class="kw">fit_nlsLM</span>, method = <span class="st">'residual'</span>)
 
 <span class="co"># predict over new data</span>
-<span class="no">boot2_preds</span> <span class="kw">&lt;-</span> <span class="no">boot2</span>$<span class="no">t</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">drop_na</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">iter</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by_all</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d_ave</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">pred</span> <span class="kw">=</span> <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">tmax</span>, <span class="no">delta_t</span>))
+<span class="kw">boot2_preds</span> <span class="op">&lt;-</span> <span class="kw">boot2</span><span class="op">$</span><span class="kw">t</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu">drop_na</span>() <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(iter = <span class="fl">1</span><span class="op">:</span><span class="fu">n</span>()) <span class="op">%&gt;%</span>
+  <span class="fu">group_by_all</span>() <span class="op">%&gt;%</span>
+  <span class="fu">do</span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(temp = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">d_ave</span><span class="op">$</span><span class="kw">temp</span>), length.out = <span class="fl">100</span>))) <span class="op">%&gt;%</span>
+  <span class="fu">ungroup</span>() <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(pred = <span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span>(<span class="kw">temp</span>, <span class="kw">a</span>, <span class="kw">b</span>, <span class="kw">tmax</span>, <span class="kw">delta_t</span>))
 
 <span class="co"># calculate bootstrapped confidence intervals</span>
-<span class="no">boot2_conf_preds</span> <span class="kw">&lt;-</span> <span class="fu">group_by</span>(<span class="no">boot2_preds</span>, <span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.025</span>),
-            <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">pred</span>, <span class="fl">0.975</span>),
-            <span class="kw">.groups</span> <span class="kw">=</span> <span class="st">'drop'</span>)
+<span class="kw">boot2_conf_preds</span> <span class="op">&lt;-</span> <span class="fu">group_by</span>(<span class="kw">boot2_preds</span>, <span class="kw">temp</span>) <span class="op">%&gt;%</span>
+  <span class="fu">summarise</span>(conf_lower = <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="kw">pred</span>, <span class="fl">0.025</span>),
+            conf_upper = <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="kw">pred</span>, <span class="fl">0.975</span>),
+            .groups = <span class="st">'drop'</span>)
 
 <span class="co"># plot bootstrapped CIs</span>
-<span class="no">p1</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>), <span class="no">boot2_conf_preds</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
-        <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),
-        <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu">element_blank</span>()) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span><span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
+<span class="kw">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), <span class="kw">d_preds</span>, col = <span class="st">'black'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, ymin = <span class="kw">conf_lower</span>, ymax = <span class="kw">conf_upper</span>), <span class="kw">boot2_conf_preds</span>, fill = <span class="st">'black'</span>, alpha = <span class="fl">0.3</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">temp</span>, ymin = <span class="kw">ave_rate</span> <span class="op">-</span> <span class="kw">sd</span>, ymax = <span class="kw">ave_rate</span> <span class="op">+</span> <span class="kw">sd</span>), <span class="kw">d_ave</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>), <span class="kw">d_ave</span>, size = <span class="fl">2</span>, shape = <span class="fl">21</span>, fill = <span class="st">'green4'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">10</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x =<span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Photosynthesis rates across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span>))
 
 <span class="co"># plot bootstrapped predictions</span>
-<span class="no">p2</span> <span class="kw">&lt;-</span> <span class="fu">ggplot</span>() +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>), <span class="no">d_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">pred</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">iter</span>), <span class="no">boot2_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'black'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.007</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="no">ave_rate</span> - <span class="no">sd</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">ave_rate</span> + <span class="no">sd</span>), <span class="no">d_ave</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">ave_rate</span>), <span class="no">d_ave</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="fl">21</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'green4'</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">10</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>,
-        <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu">element_text</span>(<span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">0</span>),
-        <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu">element_blank</span>()) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span><span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Photosynthesis rates across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">3</span>, <span class="fl">3.5</span>))
+<span class="kw">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), <span class="kw">d_preds</span>, col = <span class="st">'black'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">pred</span>, group = <span class="kw">iter</span>), <span class="kw">boot2_preds</span>, col = <span class="st">'black'</span>, alpha = <span class="fl">0.007</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">temp</span>, ymin = <span class="kw">ave_rate</span> <span class="op">-</span> <span class="kw">sd</span>, ymax = <span class="kw">ave_rate</span> <span class="op">+</span> <span class="kw">sd</span>), <span class="kw">d_ave</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">ave_rate</span>), <span class="kw">d_ave</span>, size = <span class="fl">2</span>, shape = <span class="fl">21</span>, fill = <span class="st">'green4'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">10</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x =<span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Photosynthesis rates across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span>))
 
-<span class="no">p1</span> + <span class="no">p2</span></pre></body></html></div>
+<span class="kw">p1</span> <span class="op">+</span> <span class="kw">p2</span>
+</pre></div>
 <p><img src="weighted_bootstrapping_files/figure-html/bootstrap2-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div id="calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="section level1">
 <h1 class="hasAnchor">
 <a href="#calculating-confidence-intervals-of-estimated-and-calculated-parameters" class="anchor"></a>Calculating confidence intervals of estimated and calculated parameters</h1>
 <p>As for standard non-linear regression, bootstrapping can estimate confidence intervals of the parameters explicitly modelled in the weighted regression. We can compare this approach to profiled confidence intervals (using <strong>confint-MASS</strong>) and asymptotic confidence intervals (using <strong>nlstools::confint2()</strong>).</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># get parameters of fitted model</span>
-<span class="no">param</span> <span class="kw">&lt;-</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">fit_nlsLM</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(<span class="kw">param</span> <span class="kw">=</span> <span class="no">term</span>, <span class="no">estimate</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># get parameters of fitted model</span>
+<span class="kw">param</span> <span class="op">&lt;-</span> <span class="kw">broom</span>::<span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span>(<span class="kw">fit_nlsLM</span>) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(param = <span class="kw">term</span>, <span class="kw">estimate</span>)
 
 <span class="co"># calculate confidence intervals of models</span>
-<span class="no">ci1</span> <span class="kw">&lt;-</span> <span class="kw pkg">nlstools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'asymptotic'</span>)
-<span class="no">ci2</span> <span class="kw">&lt;-</span> <span class="kw pkg">nlstools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="no">fit_nlsLM</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'profile'</span>)
+<span class="kw">ci1</span> <span class="op">&lt;-</span> <span class="kw">nlstools</span>::<span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="kw">fit_nlsLM</span>, method = <span class="st">'asymptotic'</span>) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu">rename</span>(conf_lower = <span class="fl">1</span>, conf_upper = <span class="fl">2</span>) <span class="op">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="kw">.</span>, var = <span class="st">'param'</span>) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(method = <span class="st">'asymptotic'</span>)
+<span class="kw">ci2</span> <span class="op">&lt;-</span> <span class="kw">nlstools</span>::<span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html">confint2</a></span>(<span class="kw">fit_nlsLM</span>, method = <span class="st">'profile'</span>)
 <span class="co">#&gt; Waiting for profiling to be done...</span>
 <span class="co">#&gt; Error in prof$getProfile(): number of iterations exceeded maximum of 50</span>
 <span class="co"># profiling method fails</span>
-<span class="no">ci2</span> <span class="kw">&lt;-</span> <span class="fu">mutate</span>(<span class="no">ci1</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'profile'</span>,
-                    <span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">NA</span>,
-                    <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">NA</span>)
+<span class="kw">ci2</span> <span class="op">&lt;-</span> <span class="fu">mutate</span>(<span class="kw">ci1</span>, method = <span class="st">'profile'</span>,
+                    conf_lower = <span class="fl">NA</span>,
+                    conf_upper = <span class="fl">NA</span>)
 
 <span class="co"># CIs from case resampling</span>
-<span class="no">ci3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">boot1</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'case bootstrap'</span>)
+<span class="kw">ci3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="kw">boot1</span>, method = <span class="st">'bca'</span>) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu">rename</span>(conf_lower = <span class="fl">1</span>, conf_upper = <span class="fl">2</span>) <span class="op">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="kw">.</span>, var = <span class="st">'param'</span>) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(method = <span class="st">'case bootstrap'</span>)
 
 <span class="co"># CIs from residual resampling</span>
-<span class="no">ci4</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="no">boot2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">'bca'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">rename</span>(<span class="kw">conf_lower</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">conf_upper</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">rownames_to_column</span>(<span class="no">.</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">'param'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">'residual bootstrap'</span>)
+<span class="kw">ci4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span>(<span class="kw">boot2</span>, method = <span class="st">'bca'</span>) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu">rename</span>(conf_lower = <span class="fl">1</span>, conf_upper = <span class="fl">2</span>) <span class="op">%&gt;%</span>
+  <span class="fu">rownames_to_column</span>(<span class="kw">.</span>, var = <span class="st">'param'</span>) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(method = <span class="st">'residual bootstrap'</span>)
 
-<span class="no">ci</span> <span class="kw">&lt;-</span> <span class="fu">bind_rows</span>(<span class="no">ci1</span>, <span class="no">ci2</span>, <span class="no">ci3</span>, <span class="no">ci4</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">full_join</span>(<span class="no">.</span>, <span class="no">param</span>)
+<span class="kw">ci</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span>(<span class="kw">ci1</span>, <span class="kw">ci2</span>, <span class="kw">ci3</span>, <span class="kw">ci4</span>) <span class="op">%&gt;%</span>
+  <span class="fu">full_join</span>(<span class="kw">.</span>, <span class="kw">param</span>)
 <span class="co">#&gt; Joining, by = "param"</span>
 
-<span class="fu">ggplot</span>(<span class="no">ci</span>, <span class="fu">aes</span>(<span class="kw pkg">forcats</span><span class="kw ns">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span>(<span class="no">method</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'profile'</span>, <span class="st">'asymptotic'</span>)), <span class="no">estimate</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">method</span>)) +
-  <span class="fu">geom_point</span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
-  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="kw">ymin</span> <span class="kw">=</span> <span class="no">conf_lower</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="no">conf_upper</span>)) +
-  <span class="fu">theme_bw</span>() +
-  <span class="fu">facet_wrap</span>(~<span class="no">param</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">'free'</span>) +
-  <span class="fu">scale_x_discrete</span>(<span class="st">''</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="no">x</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">10</span>)) +
-  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,
-       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span>)</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">ci</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">forcats</span>::<span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span>(<span class="kw">method</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'profile'</span>, <span class="st">'asymptotic'</span>)), <span class="kw">estimate</span>, col = <span class="kw">method</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(size = <span class="fl">4</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(ymin = <span class="kw">conf_lower</span>, ymax = <span class="kw">conf_upper</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">param</span>, scales = <span class="st">'free'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="st">''</span>, labels = <span class="fu">function</span>(<span class="kw">x</span>) <span class="kw">stringr</span>::<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="kw">x</span>, width = <span class="fl">10</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(title = <span class="st">'Calculation of confidence intervals for model parameters'</span>,
+       subtitle = <span class="st">'For the chlorella TPC; profile method failes'</span>)
+</pre></div>
 <p><img src="weighted_bootstrapping_files/figure-html/conf_int-1.png" width="672" style="display: block; margin: auto;"> Here the profiling approach fails, and the residual method returns values that are narrower than those created from asymptotic intervals. The case bootstrap does not work well. The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in <code>vignette(bootstrapping_models)</code>.</p>
 <div id="further-reading" class="section level4">
 <h4 class="hasAnchor">
@@ -413,7 +423,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

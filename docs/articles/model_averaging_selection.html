@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Model selection and model averaging with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-16</h4>
+            <h4 class="date">2020-09-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/model_averaging_selection.Rmd"><code>vignettes/model_averaging_selection.Rmd</code></a></small>
       <div class="hidden name"><code>model_averaging_selection.Rmd</code></div>
@@ -145,126 +145,135 @@
 </li>
 </ul>
 <hr>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># load packages</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rTPC</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nls.multstart</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggrepel</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># load packages</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/padpadpadpad/rTPC">rTPC</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">nls.multstart</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://broom.tidymodels.org">broom</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/slowkow/ggrepel">ggrepel</a></span>)
+</pre></div>
 <p>The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in <strong>rTPC</strong>, <strong>nls_multstart()</strong>, and <strong>purrr</strong>.</p>
 <p>Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see <a href="fit_many_models.html">this vignette</a>): <strong>boatman_2017()</strong>, <strong>gaussian_1987()</strong>, <strong>oneill_1972()</strong>, <strong>quadratic_2008()</strong>, <strong>rezende_2019()</strong>, and <strong>sharpeschoolhigh_1981()</strong></p>
 <p>We can demonstrate the model averaging process for these model formulations by taking a single curve from the example dataset <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. We can plot the data using <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># load in data</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># load in data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"chlorella_tpc"</span>)
 
 <span class="co"># keep just a single curve</span>
-<span class="no">d</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">chlorella_tpc</span>, <span class="no">curve_id</span> <span class="kw">==</span> <span class="fl">1</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">chlorella_tpc</span>, <span class="kw">curve_id</span> <span class="op">==</span> <span class="fl">1</span>)
 
 <span class="co"># show the data</span>
-<span class="fu">ggplot</span>(<span class="no">d</span>, <span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>)) +
-  <span class="fu">geom_point</span>() +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Respiration across temperatures'</span>)</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Respiration across temperatures'</span>)
+</pre></div>
 <p><img src="model_averaging_selection_files/figure-html/first_plot-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>The 5 models can then be fitted using the same approach as in the <a href="fitting_multiple_models_to_a_TPC.html">previous vignette</a>, using list columns <strong>purrr::map()</strong> to fit and store multiple models in a data frame.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># fit five chosen model formulation in rTPC</span>
-<span class="no">d_fits</span> <span class="kw">&lt;-</span> <span class="fu">nest</span>(<span class="no">d</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">temp</span>, <span class="no">rate</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">boatman</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/boatman_2017.html">boatman_2017</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">rmax</span>, <span class="no">tmin</span>, <span class="no">tmax</span>, <span class="no">a</span>,<span class="no">b</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'boatman_2017'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'boatman_2017'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'boatman_2017'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'boatman_2017'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-         <span class="kw">gaussian</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/gaussian_1987.html">gaussian_1987</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">rmax</span>, <span class="no">topt</span>, <span class="no">a</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'gaussian_1987'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'gaussian_1987'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'gaussian_1987'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'gaussian_1987'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-         <span class="kw">oneill</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/oneill_1972.html">oneill_1972</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">rmax</span>, <span class="no">ctmax</span>, <span class="no">topt</span>, <span class="no">q10</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'oneill_1972'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'oneill_1972'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'oneill_1972'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'oneill_1972'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-         <span class="kw">quadratic</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/quadratic_2008.html">quadratic_2008</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">a</span>, <span class="no">b</span>, <span class="no">c</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'quadratic_2008'</span>) - <span class="fl">0.5</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'quadratic_2008'</span>) + <span class="fl">0.5</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'quadratic_2008'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'quadratic_2008'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-         <span class="kw">rezende</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/rezende_2019.html">rezende_2019</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">q10</span>, <span class="no">a</span>,<span class="no">b</span>,<span class="no">c</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'rezende_2019'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'rezende_2019'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'rezende_2019'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'rezende_2019'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)),
-         <span class="kw">sharpeschoolhigh</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">data</span>, ~<span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="no">rate</span>~<span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="no">r_tref</span>,<span class="no">e</span>,<span class="no">eh</span>,<span class="no">th</span>, <span class="kw">tref</span> <span class="kw">=</span> <span class="fl">15</span>),
-                        <span class="kw">data</span> <span class="kw">=</span> <span class="no">.x</span>,
-                        <span class="kw">iter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
-                        <span class="kw">start_lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>) - <span class="fl">10</span>,
-                        <span class="kw">start_upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>) + <span class="fl">10</span>,
-                        <span class="kw">lower</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
-                        <span class="kw">upper</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="no">.x</span>$<span class="no">temp</span>, <span class="no">.x</span>$<span class="no">rate</span>, <span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'sharpeschoolhigh_1981'</span>),
-                        <span class="kw">supp_errors</span> <span class="kw">=</span> <span class="st">'Y'</span>,
-                        <span class="kw">convergence_count</span> <span class="kw">=</span> <span class="fl">FALSE</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># fit five chosen model formulation in rTPC</span>
+<span class="kw">d_fits</span> <span class="op">&lt;-</span> <span class="fu">nest</span>(<span class="kw">d</span>, data = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(boatman = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/boatman_2017.html">boatman_2017</a></span>(temp = <span class="kw">temp</span>, <span class="kw">rmax</span>, <span class="kw">tmin</span>, <span class="kw">tmax</span>, <span class="kw">a</span>,<span class="kw">b</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'boatman_2017'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'boatman_2017'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'boatman_2017'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'boatman_2017'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)),
+         gaussian = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/gaussian_1987.html">gaussian_1987</a></span>(temp = <span class="kw">temp</span>, <span class="kw">rmax</span>, <span class="kw">topt</span>, <span class="kw">a</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'gaussian_1987'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'gaussian_1987'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'gaussian_1987'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'gaussian_1987'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)),
+         oneill = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/oneill_1972.html">oneill_1972</a></span>(temp = <span class="kw">temp</span>, <span class="kw">rmax</span>, <span class="kw">ctmax</span>, <span class="kw">topt</span>, <span class="kw">q10</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'oneill_1972'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'oneill_1972'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'oneill_1972'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'oneill_1972'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)),
+         quadratic = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/quadratic_2008.html">quadratic_2008</a></span>(temp = <span class="kw">temp</span>, <span class="kw">a</span>, <span class="kw">b</span>, <span class="kw">c</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'quadratic_2008'</span>) <span class="op">-</span> <span class="fl">0.5</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'quadratic_2008'</span>) <span class="op">+</span> <span class="fl">0.5</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'quadratic_2008'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'quadratic_2008'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)),
+         rezende = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/rezende_2019.html">rezende_2019</a></span>(temp = <span class="kw">temp</span>, <span class="kw">q10</span>, <span class="kw">a</span>,<span class="kw">b</span>,<span class="kw">c</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'rezende_2019'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'rezende_2019'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'rezende_2019'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'rezende_2019'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)),
+         sharpeschoolhigh = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span>(<span class="kw">rate</span><span class="op">~</span><span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span>(temp = <span class="kw">temp</span>, <span class="kw">r_tref</span>,<span class="kw">e</span>,<span class="kw">eh</span>,<span class="kw">th</span>, tref = <span class="fl">15</span>),
+                        data = <span class="kw">.x</span>,
+                        iter = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>),
+                        start_lower = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'sharpeschoolhigh_1981'</span>) <span class="op">-</span> <span class="fl">10</span>,
+                        start_upper = <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'sharpeschoolhigh_1981'</span>) <span class="op">+</span> <span class="fl">10</span>,
+                        lower = <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'sharpeschoolhigh_1981'</span>),
+                        upper = <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>, <span class="kw">.x</span><span class="op">$</span><span class="kw">rate</span>, model_name = <span class="st">'sharpeschoolhigh_1981'</span>),
+                        supp_errors = <span class="st">'Y'</span>,
+                        convergence_count = <span class="fl">FALSE</span>)))
+</pre></div>
 <p>The predictions of each model can be estimated using <strong>broom::augment()</strong>. This can be done on all models at once after the models are stacked into long format. To create a smooth curve fit, the predictions are done on a new temperature vector that has 100 points over the temperature range. The predictions for each model formulation are then visualised in <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># stack models</span>
-<span class="no">d_stack</span> <span class="kw">&lt;-</span> <span class="fu">select</span>(<span class="no">d_fits</span>, -<span class="no">data</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="no">.</span>, <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">'model_name'</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'fit'</span>, <span class="no">boatman</span>:<span class="no">sharpeschoolhigh</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># stack models</span>
+<span class="kw">d_stack</span> <span class="op">&lt;-</span> <span class="fu">select</span>(<span class="kw">d_fits</span>, <span class="op">-</span><span class="kw">data</span>) <span class="op">%&gt;%</span>
+  <span class="fu">pivot_longer</span>(<span class="kw">.</span>, names_to = <span class="st">'model_name'</span>, values_to = <span class="st">'fit'</span>, <span class="kw">boatman</span><span class="op">:</span><span class="kw">sharpeschoolhigh</span>)
 
 <span class="co"># get predictions using augment</span>
-<span class="no">newdata</span> <span class="kw">&lt;-</span> <span class="fu">tibble</span>(<span class="kw">temp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">d</span>$<span class="no">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">d</span>$<span class="no">temp</span>), <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">100</span>))
-<span class="no">d_preds</span> <span class="kw">&lt;-</span> <span class="no">d_stack</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">preds</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">augment</span>, <span class="kw">newdata</span> <span class="kw">=</span> <span class="no">newdata</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(-<span class="no">fit</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">preds</span>)
+<span class="kw">newdata</span> <span class="op">&lt;-</span> <span class="fu">tibble</span>(temp = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">temp</span>), length.out = <span class="fl">100</span>))
+<span class="kw">d_preds</span> <span class="op">&lt;-</span> <span class="kw">d_stack</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">.</span>, preds = <span class="fu">map</span>(<span class="kw">fit</span>, <span class="kw">augment</span>, newdata = <span class="kw">newdata</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(<span class="op">-</span><span class="kw">fit</span>) <span class="op">%&gt;%</span>
+  <span class="fu">unnest</span>(<span class="kw">preds</span>)
 
 <span class="co"># take a random point from each model for labelling</span>
-<span class="no">d_labs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_preds</span>, <span class="no">temp</span> <span class="kw">&lt;</span> <span class="fl">30</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">.</span>, <span class="no">model_name</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">sample_n</span>(<span class="no">.</span>, <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+<span class="kw">d_labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">d_preds</span>, <span class="kw">temp</span> <span class="op">&lt;</span> <span class="fl">30</span>) <span class="op">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="kw">.</span>, <span class="kw">model_name</span>) <span class="op">%&gt;%</span>
+  <span class="fu">sample_n</span>(<span class="kw">.</span>, <span class="fl">1</span>) <span class="op">%&gt;%</span>
   <span class="fu">ungroup</span>()
 
 <span class="co"># plot</span>
-<span class="fu">ggplot</span>(<span class="no">d_preds</span>, <span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>)) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">col</span> <span class="kw">=</span> <span class="no">model_name</span>)) +
-  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="no">model_name</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">model_name</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'white'</span>, <span class="kw">nudge_y</span> <span class="kw">=</span> <span class="fl">0.8</span>, <span class="kw">segment.size</span> <span class="kw">=</span> <span class="fl">0.2</span>, <span class="kw">segment.colour</span> <span class="kw">=</span> <span class="st">'grey50'</span>, <span class="no">d_labs</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>), <span class="no">d</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Respiration across temperatures'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu">scale_color_brewer</span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">'qual'</span>, <span class="kw">palette</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(col = <span class="kw">model_name</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, label = <span class="kw">model_name</span>, col = <span class="kw">model_name</span>), fill = <span class="st">'white'</span>, nudge_y = <span class="fl">0.8</span>, segment.size = <span class="fl">0.2</span>, segment.colour = <span class="st">'grey50'</span>, <span class="kw">d_labs</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Respiration across temperatures'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>)
+</pre></div>
 <p><img src="model_averaging_selection_files/figure-html/preds_and_plot-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using measures of relative model fit - such as AIC, BIC, and AICc (AICc correcting for small sample size). Which measure is most appropriate is going to be determined by the question being answered. AIC and BIC are both returned by <strong>broom::glance()</strong>, and AICc can be added using <strong>MuMIn::AICc()</strong></p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">d_ic</span> <span class="kw">&lt;-</span> <span class="no">d_stack</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">info</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">glance</span>),
-         <span class="kw">AICc</span> <span class="kw">=</span>  <span class="fu">map_dbl</span>(<span class="no">fit</span>, <span class="kw pkg">MuMIn</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/MuMIn/man/AICc.html">AICc</a></span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(-<span class="no">fit</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">info</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(<span class="no">model_name</span>, <span class="no">sigma</span>, <span class="no">AIC</span>, <span class="no">AICc</span>, <span class="no">BIC</span>, <span class="no">df.residual</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="kw">d_ic</span> <span class="op">&lt;-</span> <span class="kw">d_stack</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">.</span>, info = <span class="fu">map</span>(<span class="kw">fit</span>, <span class="kw">glance</span>),
+         AICc =  <span class="fu">map_dbl</span>(<span class="kw">fit</span>, <span class="kw">MuMIn</span>::<span class="kw"><a href="https://rdrr.io/pkg/MuMIn/man/AICc.html">AICc</a></span>)) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(<span class="op">-</span><span class="kw">fit</span>) <span class="op">%&gt;%</span>
+  <span class="fu">unnest</span>(<span class="kw">info</span>) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(<span class="kw">model_name</span>, <span class="kw">sigma</span>, <span class="kw">AIC</span>, <span class="kw">AICc</span>, <span class="kw">BIC</span>, <span class="kw">df.residual</span>)
 
-<span class="no">d_ic</span>
+<span class="kw">d_ic</span>
 <span class="co">#&gt; # A tibble: 6 x 6</span>
 <span class="co">#&gt;   model_name       sigma    AIC  AICc   BIC df.residual</span>
 <span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;int&gt;</span>
@@ -273,47 +282,51 @@
 <span class="co">#&gt; 3 oneill           0.266  7.38   17.4  9.81           8</span>
 <span class="co">#&gt; 4 quadratic        0.408 17.1    22.8 19.0            9</span>
 <span class="co">#&gt; 5 rezende          0.362 14.8    24.8 17.2            8</span>
-<span class="co">#&gt; 6 sharpeschoolhigh 0.198  0.350  10.3  2.77           8</span></pre></body></html></div>
+<span class="co">#&gt; 6 sharpeschoolhigh 0.198  0.350  10.3  2.77           8</span>
+</pre></div>
 </div>
 <div id="model-selection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-selection" class="anchor"></a>Model selection</h2>
 <p>In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># filter for best model</span>
-<span class="no">best_model</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_ic</span>, <span class="no">AICc</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">AICc</span>)) <span class="kw">%&gt;%</span> <span class="fu">pull</span>(<span class="no">model_name</span>)
-<span class="no">best_model</span>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># filter for best model</span>
+<span class="kw">best_model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">d_ic</span>, <span class="kw">AICc</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">AICc</span>)) <span class="op">%&gt;%</span> <span class="fu">pull</span>(<span class="kw">model_name</span>)
+<span class="kw">best_model</span>
 <span class="co">#&gt; [1] "sharpeschoolhigh"</span>
 
 <span class="co"># get colour code</span>
-<span class="no">col_best_mod</span> <span class="kw">=</span> <span class="kw pkg">RColorBrewer</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="kw">n</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"Dark2"</span>)[<span class="fl">6</span>]
+<span class="kw">col_best_mod</span> <span class="op">=</span> <span class="kw">RColorBrewer</span>::<span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(n = <span class="fl">6</span>, name = <span class="st">"Dark2"</span>)[<span class="fl">6</span>]
 
 <span class="co"># plot</span>
-<span class="fu">ggplot</span>(<span class="no">d_preds</span>, <span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>)) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">group</span> <span class="kw">=</span> <span class="no">model_name</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">'grey50'</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.5</span>) +
-  <span class="fu">geom_line</span>(<span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_preds</span>, <span class="no">model_name</span> <span class="kw">==</span> <span class="no">best_model</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="no">col_best_mod</span>) +
-  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="no">model_name</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'white'</span>, <span class="kw">nudge_y</span> <span class="kw">=</span> <span class="fl">0.8</span>, <span class="kw">segment.size</span> <span class="kw">=</span> <span class="fl">0.2</span>, <span class="kw">segment.colour</span> <span class="kw">=</span> <span class="st">'grey50'</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">d_labs</span>, <span class="no">model_name</span> <span class="kw">==</span> <span class="no">best_model</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="no">col_best_mod</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>), <span class="no">d</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Respiration across temperatures'</span>,
-       <span class="kw">subtitle</span><span class="kw">=</span> <span class="st">'The Sharpe-Schoolfield model is the best model'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(group = <span class="kw">model_name</span>), col = <span class="st">'grey50'</span>, alpha = <span class="fl">0.5</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(data = <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">d_preds</span>, <span class="kw">model_name</span> <span class="op">==</span> <span class="kw">best_model</span>), col = <span class="kw">col_best_mod</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, label = <span class="kw">model_name</span>), fill = <span class="st">'white'</span>, nudge_y = <span class="fl">0.8</span>, segment.size = <span class="fl">0.2</span>, segment.colour = <span class="st">'grey50'</span>, data = <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">d_labs</span>, <span class="kw">model_name</span> <span class="op">==</span> <span class="kw">best_model</span>), col = <span class="kw">col_best_mod</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Respiration across temperatures'</span>,
+       subtitle= <span class="st">'The Sharpe-Schoolfield model is the best model'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) 
+</pre></div>
 <p><img src="model_averaging_selection_files/figure-html/model_selection-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="model-averaging" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-averaging" class="anchor"></a>Model averaging</h2>
 <p>For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model’s weighting. The best supported model’s predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in whatever information criterion metric is being used. A common approach is to only keep models within <span class="math inline">\(\Delta 2 AIC\)</span> of the best model.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># get model weights</span>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># get model weights</span>
 <span class="co"># filtering on AIC score is hashtagged out in this example</span>
-<span class="no">d_ic</span> <span class="kw">&lt;-</span> <span class="no">d_ic</span> <span class="kw">%&gt;%</span>
+<span class="kw">d_ic</span> <span class="op">&lt;-</span> <span class="kw">d_ic</span> <span class="op">%&gt;%</span>
   <span class="co"># filter(d_ic, aic - min(aic) &lt;= 2) %&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">weight</span> <span class="kw">=</span> <span class="kw pkg">MuMIn</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/MuMIn/man/Weights.html">Weights</a></span>(<span class="no">AICc</span>))
+  <span class="fu">mutate</span>(<span class="kw">.</span>, weight = <span class="kw">MuMIn</span>::<span class="fu"><a href="https://rdrr.io/pkg/MuMIn/man/Weights.html">Weights</a></span>(<span class="kw">AICc</span>))
 
-<span class="fu">select</span>(<span class="no">d_ic</span>, <span class="no">model_name</span>, <span class="no">weight</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">arrange</span>(<span class="no">.</span>, <span class="fu">desc</span>(<span class="no">weight</span>))
+<span class="fu">select</span>(<span class="kw">d_ic</span>, <span class="kw">model_name</span>, <span class="kw">weight</span>) <span class="op">%&gt;%</span>
+  <span class="fu">arrange</span>(<span class="kw">.</span>, <span class="fu">desc</span>(<span class="kw">weight</span>))
 <span class="co">#&gt; # A tibble: 6 x 2</span>
 <span class="co">#&gt;   model_name       weight      </span>
 <span class="co">#&gt;   &lt;chr&gt;            &lt;mdl.wght&gt;  </span>
@@ -325,49 +338,51 @@
 <span class="co">#&gt; 6 boatman          0.0002482372</span>
 
 <span class="co"># calculate average prediction</span>
-<span class="no">ave_preds</span> <span class="kw">&lt;-</span> <span class="fu">left_join</span>(<span class="no">d_preds</span>, <span class="fu">select</span>(<span class="no">d_ic</span>, <span class="no">model_name</span>, <span class="no">weight</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">temp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="no">.</span>, <span class="kw">.fitted</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">.fitted</span>*<span class="no">weight</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">ungroup</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'model average'</span>)
+<span class="kw">ave_preds</span> <span class="op">&lt;-</span> <span class="fu">left_join</span>(<span class="kw">d_preds</span>, <span class="fu">select</span>(<span class="kw">d_ic</span>, <span class="kw">model_name</span>, <span class="kw">weight</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="kw">temp</span>) <span class="op">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">.</span>, .fitted = <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">.fitted</span><span class="op">*</span><span class="kw">weight</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">ungroup</span>() <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(model_name = <span class="st">'model average'</span>)
 <span class="co">#&gt; Joining, by = "model_name"</span>
 <span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="co"># create label for averaged predictions</span>
-<span class="no">d_labs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">ave_preds</span>, <span class="no">temp</span> <span class="kw">&lt;</span> <span class="fl">30</span>) <span class="kw">%&gt;%</span> <span class="fu">sample_n</span>(<span class="no">.</span>, <span class="fl">1</span>)
+<span class="kw">d_labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">ave_preds</span>, <span class="kw">temp</span> <span class="op">&lt;</span> <span class="fl">30</span>) <span class="op">%&gt;%</span> <span class="fu">sample_n</span>(<span class="kw">.</span>, <span class="fl">1</span>)
 
 <span class="co"># plot these</span>
-<span class="fu">ggplot</span>(<span class="no">d_preds</span>, <span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">.fitted</span>)) +
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">col</span> <span class="kw">=</span> <span class="no">model_name</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>) +
-  <span class="fu">geom_line</span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">ave_preds</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'blue'</span>) +
-  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu">aes</span>(<span class="kw">label</span> <span class="kw">=</span> <span class="no">model_name</span>), <span class="kw">fill</span> <span class="kw">=</span> <span class="st">'white'</span>, <span class="kw">nudge_y</span> <span class="kw">=</span> <span class="fl">0.8</span>, <span class="kw">segment.size</span> <span class="kw">=</span> <span class="fl">0.2</span>, <span class="kw">segment.colour</span> <span class="kw">=</span> <span class="st">'grey50'</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">d_labs</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">'blue'</span>) +
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="no">temp</span>, <span class="no">rate</span>), <span class="no">d</span>) +
-  <span class="fu">theme_bw</span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">12</span>) +
-  <span class="fu">theme</span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">'none'</span>) +
-  <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">'Temperature (ºC)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Metabolic rate'</span>,
-       <span class="kw">title</span> <span class="kw">=</span> <span class="st">'Respiration across temperatures'</span>,
-       <span class="kw">subtitle</span><span class="kw">=</span> <span class="st">'Model averaged predictions'</span>) +
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="fl">0</span>), <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu">scale_color_brewer</span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">'qual'</span>, <span class="kw">palette</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(col = <span class="kw">model_name</span>), alpha = <span class="fl">0.3</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(data = <span class="kw">ave_preds</span>, col = <span class="st">'blue'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(label = <span class="kw">model_name</span>), fill = <span class="st">'white'</span>, nudge_y = <span class="fl">0.8</span>, segment.size = <span class="fl">0.2</span>, segment.colour = <span class="st">'grey50'</span>, data = <span class="kw">d_labs</span>, col = <span class="st">'blue'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+       y = <span class="st">'Metabolic rate'</span>,
+       title = <span class="st">'Respiration across temperatures'</span>,
+       subtitle= <span class="st">'Model averaged predictions'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>)
+</pre></div>
 <p><img src="model_averaging_selection_files/figure-html/model_weights-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>In this example, as is obvious from the model weights, the Sharpe-Schoolfield model is overwhelmingly the most supported. This plays out in the plot, with the predictions deviating very little from the predictions based on the Sharpe-Schoolfield model.</p>
 <p>Model averaging can also be applied to calculated extra parameters, such as optimum temperature and maximum rate.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># calculate estimated parameters</span>
-<span class="no">params</span> <span class="kw">&lt;-</span> <span class="no">d_stack</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="no">.</span>, <span class="kw">params</span> <span class="kw">=</span> <span class="fu">map</span>(<span class="no">fit</span>, <span class="no">calc_params</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(-<span class="no">fit</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="no">params</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># calculate estimated parameters</span>
+<span class="kw">params</span> <span class="op">&lt;-</span> <span class="kw">d_stack</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">.</span>, params = <span class="fu">map</span>(<span class="kw">fit</span>, <span class="kw">calc_params</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">select</span>(<span class="op">-</span><span class="kw">fit</span>) <span class="op">%&gt;%</span>
+  <span class="fu">unnest</span>(<span class="kw">params</span>)
 
 <span class="co"># get averaged parameters based on model weights</span>
-<span class="no">ave_params</span> <span class="kw">&lt;-</span> <span class="fu">left_join</span>(<span class="no">params</span>, <span class="fu">select</span>(<span class="no">d_ic</span>, <span class="no">model_name</span>, <span class="no">weight</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">summarise</span>(<span class="no">.</span>, <span class="fu">across</span>(<span class="no">rmax</span>:<span class="no">skewness</span>, <span class="kw">function</span>(<span class="no">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">x</span>*<span class="no">.</span>$<span class="no">weight</span>)})) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">model_name</span> <span class="kw">=</span> <span class="st">'model average'</span>)
+<span class="kw">ave_params</span> <span class="op">&lt;-</span> <span class="fu">left_join</span>(<span class="kw">params</span>, <span class="fu">select</span>(<span class="kw">d_ic</span>, <span class="kw">model_name</span>, <span class="kw">weight</span>)) <span class="op">%&gt;%</span>
+  <span class="fu">summarise</span>(<span class="kw">.</span>, <span class="fu">across</span>(<span class="kw">rmax</span><span class="op">:</span><span class="kw">skewness</span>, <span class="fu">function</span>(<span class="kw">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">x</span><span class="op">*</span><span class="kw">.</span><span class="op">$</span><span class="kw">weight</span>)})) <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span>(model_name = <span class="st">'model average'</span>)
 <span class="co">#&gt; Joining, by = "model_name"</span>
 
 <span class="co"># show them</span>
-<span class="fu">bind_rows</span>(<span class="fu">select</span>(<span class="no">params</span>, <span class="no">model_name</span>, <span class="no">rmax</span>:<span class="no">skewness</span>), <span class="no">ave_params</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate_if</span>(<span class="no">is.numeric</span>, <span class="no">round</span>, <span class="fl">2</span>)
+<span class="fu">bind_rows</span>(<span class="fu">select</span>(<span class="kw">params</span>, <span class="kw">model_name</span>, <span class="kw">rmax</span><span class="op">:</span><span class="kw">skewness</span>), <span class="kw">ave_params</span>) <span class="op">%&gt;%</span>
+  <span class="fu">mutate_if</span>(<span class="kw">is.numeric</span>, <span class="kw">round</span>, <span class="fl">2</span>)
 <span class="co">#&gt; # A tibble: 7 x 12</span>
 <span class="co">#&gt;   model_name  rmax  topt ctmin ctmax     e    eh   q10 thermal_safety_…</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;</span>
@@ -379,7 +394,8 @@
 <span class="co">#&gt; 6 sharpesch…  1.81  41.6  2.54  45.6 0.580 11.5   2.06             3.91</span>
 <span class="co">#&gt; 7 model ave…  1.8   41.4  3.26  45.8 0.59  10.9   2.08             4.47</span>
 <span class="co">#&gt; # … with 3 more variables: thermal_tolerance &lt;dbl&gt;, breadth &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   skewness &lt;dbl&gt;</span></pre></body></html></div>
+<span class="co">#&gt; #   skewness &lt;dbl&gt;</span>
+</pre></div>
 <hr>
 </div>
 <div id="further-reading" class="section level2">
@@ -410,7 +426,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
