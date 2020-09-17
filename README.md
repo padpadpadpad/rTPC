@@ -67,13 +67,12 @@ performance curves.
 <img src="man/figures/rTPC_pipeline.png" width="1000" align="center" />
 
 **Figure 1. General pipeline for fitting thermal performance curves
-using rTPC**. First, Collect, check, and manipulate data into long
-format. Next choose which models from **rTPC** are going to be used.
-Here, a random assortment of four models were chosen. Then fit the
-models to data using **nls.multstart** and helper functions from
-**rTPC**. Models can be visualised using the **tidyverse** suite of
-packages and common traits of TPCs can be calculated using
-**rTPC::calc\_params()**. This simple pipeline can easily be scaled up
+using rTPC**. (1) Collect, check, and manipulate data into long format.
+(2) Choose which models from rTPC are going to be used. Here, a random
+assortment of four models were chosen. (3) Fit the models to data using
+nls.multstart and helper functions from rTPC. (4) Models can be
+visualised and (5) common traits of TPCs can be estimated using
+rTPC::calc\_params(). (6) This simple pipeline can easily be scaled up
 to be used on multiple curves.
 
 ## Extensions to the pipeline
@@ -87,11 +86,10 @@ incorporating model weights and bootstrapping of model fits.
 **Figure 2. Potential applications for fitting thermal performance
 curves using rTPC**. (1) AIC, BIC or other metrics of model fit can be
 calculated to help to allow model selection or model averaging. (2) If
-TPCs are being fit to averages of multiple replicates, then the pipeline
-can incorporate model weights (1/standard deviation) that can change the
-model fit and the value of estimated parameters. (3) After the model has
-been fitted, bootstrapping approaches can help visualise and calculate
-model uncertainty.
+TPCs are being fit to averages of multiple replicates, then weighted
+NLLS can be used that reduce parameter bias. (3) After the model has
+been fitted, non-parametric bootstrapping approaches can help estimate
+model uncertainty and calculate confidence intervals of parameters.
 
 ## Getting started
 

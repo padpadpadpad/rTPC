@@ -24,8 +24,8 @@ knitr::opts_chunk$set(
 ```
 ## Things to consider
 
-- How many data points do you have for each curve? To fit all of the 23 models in **rTPC**, there needs to be a minimum of 7 points per curve.
-- If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.
+- How many data points do you have for each curve? To fit all of the 24 models in **rTPC**, there needs to be a minimum of 7 points per curve.
+- If there are multiple individual curves to be fit, it makes sense to have your data in long format, where grouping variables (e.g. unique curve identifier), temperature and rate have their own columns.
 - Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.
 - Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.
 
@@ -46,11 +46,11 @@ label_facets_num <- function(string){
 }
 ```
 
-After searching the literature, __rTPC__ contains 23 different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all 23 model formulations.
+After searching the literature, __rTPC__ contains 24 different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all 24 model formulations.
 
-**DISCLAIMER Although we fit all 23 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend ever doing model selection on 23 model formulations.**
+**DISCLAIMER Although we fit all 24 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on 24 model formulations.**
 
-We can demonstrate the fitting procedure of the 23 model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
+We can demonstrate the fitting procedure of the 24 model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
 
 ```{r first_plot, fig.width=6, fig.height = 4}
 # load in data
@@ -347,9 +347,9 @@ ggplot(d_preds, aes(temp, rate)) +
 ***
 ## Troubleshooting curve fits
 
-If any of the fits do not look like they have converged properly, there are things you can try:
+If any of the fits do not converge properly, there are things you can try:
 
-- Some functions may produce warnings (for example: `NaNs produced`). This is likely due to a specific set of start parameters and does not necessarily mean **nls_multstart()** has failed. Wrap **nls_multstart()** in **suppressWarnings()** to turn this behaviour off.
+- Turning errors and warnings on using `supp_errors = 'N'` inside **nls_multstart()** should help identify potential problems.
 - Change from the gridstart approach to the shotgun approach of fitting models with **nls_multstart()**
 - Change the boundaries of `start_lower` and `start_upper`. In most of these fits, we just +/- 10 from the output of **get_start_vals()**. Sometimes we had to change this value to +/- 1 to get reproducible fits.
 - Remove `lower` and `upper` arguments from the fitting process.

@@ -135,8 +135,8 @@
 <h2 class="hasAnchor">
 <a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
 <ul>
-<li>How many data points do you have for each curve? To fit all of the 23 models in <strong>rTPC</strong>, there needs to be a minimum of 7 points per curve.</li>
-<li>If you have multiple curves, it makes sense to have your data in long format, where grouping variables, temperature and rate have their own columns.</li>
+<li>How many data points do you have for each curve? To fit all of the 24 models in <strong>rTPC</strong>, there needs to be a minimum of 7 points per curve.</li>
+<li>If there are multiple individual curves to be fit, it makes sense to have your data in long format, where grouping variables (e.g. unique curve identifier), temperature and rate have their own columns.</li>
 <li>Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.</li>
 <li>Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.</li>
 </ul>
@@ -155,9 +155,9 @@
   <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="kw">string</span>)
 }
 </pre></div>
-<p>After searching the literature, <strong>rTPC</strong> contains 23 different model formulations previously used. The <a href="rTPC.html">first vignette</a>, demonstrated how to easily fit a single model to a single curve, here we will fit all 23 model formulations.</p>
-<p><strong>DISCLAIMER Although we fit all 23 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend ever doing model selection on 23 model formulations.</strong></p>
-<p>We can demonstrate the fitting procedure of the 23 model formulations by taking a single curve from the example dataset <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. We can plot the data using <strong>ggplot2</strong></p>
+<p>After searching the literature, <strong>rTPC</strong> contains 24 different model formulations previously used. The <a href="rTPC.html">first vignette</a>, demonstrated how to easily fit a single model to a single curve, here we will fit all 24 model formulations.</p>
+<p><strong>DISCLAIMER Although we fit all 24 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on 24 model formulations.</strong></p>
+<p>We can demonstrate the fitting procedure of the 24 model formulations by taking a single curve from the example dataset <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. We can plot the data using <strong>ggplot2</strong></p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># load in data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"chlorella_tpc"</span>)
@@ -166,10 +166,10 @@
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">chlorella_tpc</span>, <span class="kw">curve_id</span> <span class="op">==</span> <span class="fl">1</span>)
 
 <span class="co"># show the data</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu">ggplot</span>(<span class="kw">d</span>, <span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
+  <span class="fu">geom_point</span>() <span class="op">+</span>
+  <span class="fu">theme_bw</span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'Respiration across temperatures'</span>)
 </pre></div>
@@ -443,18 +443,18 @@
   <span class="fu">unnest</span>(<span class="kw">preds</span>)
 
 <span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), col = <span class="st">'blue'</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">model_name</span>, labeller = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html">labeller</a></span>(model_name = <span class="kw">label_facets_num</span>), scales = <span class="st">'free'</span>, ncol = <span class="fl">4</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
-        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
-        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu">ggplot</span>(<span class="kw">d_preds</span>, <span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
+  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), col = <span class="st">'blue'</span>) <span class="op">+</span>
+  <span class="fu">facet_wrap</span>(<span class="op">~</span><span class="kw">model_name</span>, labeller = <span class="fu">labeller</span>(model_name = <span class="kw">label_facets_num</span>), scales = <span class="st">'free'</span>, ncol = <span class="fl">4</span>) <span class="op">+</span>
+  <span class="fu">theme_bw</span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu">theme</span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu">element_text</span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu">element_blank</span>()) <span class="op">+</span>
+  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'Fits of every model available in rTPC'</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>)
+  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>)
 </pre></div>
 <p><img src="fit_many_models_files/figure-html/preds_and_plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
@@ -462,9 +462,9 @@
 <div id="troubleshooting-curve-fits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#troubleshooting-curve-fits" class="anchor"></a>Troubleshooting curve fits</h2>
-<p>If any of the fits do not look like they have converged properly, there are things you can try:</p>
+<p>If any of the fits do not converge properly, there are things you can try:</p>
 <ul>
-<li>Some functions may produce warnings (for example: <code>NaNs produced</code>). This is likely due to a specific set of start parameters and does not necessarily mean <strong>nls_multstart()</strong> has failed. Wrap <strong>nls_multstart()</strong> in <strong>suppressWarnings()</strong> to turn this behaviour off.</li>
+<li>Turning errors and warnings on using <code>supp_errors = 'N'</code> inside <strong>nls_multstart()</strong> should help identify potential problems.</li>
 <li>Change from the gridstart approach to the shotgun approach of fitting models with <strong>nls_multstart()</strong>
 </li>
 <li>Change the boundaries of <code>start_lower</code> and <code>start_upper</code>. In most of these fits, we just +/- 10 from the output of <strong>get_start_vals()</strong>. Sometimes we had to change this value to +/- 1 to get reproducible fits.</li>

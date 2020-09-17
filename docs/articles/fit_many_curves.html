@@ -137,9 +137,9 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://broom.tidymodels.org">broom</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
 </pre></div>
-<p>In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 23 model formulations to demonstrate this approach, we will use only 2 models in this example: <strong>gaussian_1987()</strong> and <strong>sharpeschoolhigh_1981()</strong>.</p>
+<p>In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 24 model formulations to demonstrate this approach, we will use only 2 models in this example: <strong>gaussian_1987()</strong> and <strong>sharpeschoolhigh_1981()</strong>.</p>
 <p>We can demonstrate the fitting of multiple curves by modelling all 60 TPCs from the example dataset of <strong>rTPC</strong> curve from the example dataset <strong>rTPC</strong>. These TPCs are of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. These algae differed in their growth temperature, <code>growth_temp</code>, and how long they had been grown at that temperature, <code>process</code>, either for ~100 or ~10 generations.</p>
-<p>Using a similar approach to the <a href="fitting_multiple_models_to_a_TPC.html">previous vignette</a>, models can be fitted to each individual curve using list columns <strong>purrr::map()</strong> to fit and store multiple models in a data frame.</p>
+<p>Using a similar approach to <code><a href="../articles/fit_many_models.html">vignette('fit_many_models')</a></code>, models can be fitted to each curve using list columns and <strong>purrr::map()</strong> to fit and store multiple models in a data frame.</p>
 <p>When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run. We can create a progress bar using the <a href="https://github.com/r-lib/progress/blob/master/README.md"><strong>progress</strong></a> package. In order to do this, I create a new function <strong>nls_multstart_progress()</strong> that contains a <strong>pb$tick()</strong> call. This means every time the function is called, it will add one tick onto the progress bar. The progress bar is created using <strong>progress_bar$new()</strong>, where we set the total length of the progress bar is set by the number of models in total being fit.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># load in data</span>
@@ -190,7 +190,7 @@
                         convergence_count = <span class="fl">FALSE</span>)))
 </pre></div>
 <pre><code>[=========================================================] 100% 00:00:40</code></pre>
-<p>Like previous vignettes, the predictions of each model can be estimated using <strong>broom::augment()</strong>. To achieve this, we first create a new list column containing high resolution temperature values by taking the <code>min</code> and <code>max</code> of each curve. Next we stack the models and finally we get the new predictions using the <strong>map2()</strong>, which allows us to use both <code>fit</code> and <code>new_data</code> list columns. After unnesting the <code>preds</code> column, we are then left with high resolution predictions for each curve. As this is a lot, each line of the code is commented.</p>
+<p>Like previous vignettes, the predictions of each model can be estimated using <strong>broom::augment()</strong>. To do this, we first create a new list column containing high resolution temperature values by taking the <code>min</code> and <code>max</code> of each curve. Next we stack the models and finally we get the new predictions using the <strong>map2()</strong>, which allows us to use both <code>fit</code> and <code>new_data</code> list columns. After unnesting the <code>preds</code> column, we are then left with high resolution predictions for each curve. As this code covers a lot of steps, each line of the code is commented.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># create new list column of for high resolution data</span>
 <span class="kw">d_preds</span> <span class="op">&lt;-</span> <span class="fu">mutate</span>(<span class="kw">d_fits</span>, new_data = <span class="fu">map</span>(<span class="kw">data</span>, <span class="op">~</span><span class="fu">tibble</span>(temp = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">.x</span><span class="op">$</span><span class="kw">temp</span>), length.out = <span class="fl">100</span>)))) <span class="op">%&gt;%</span>
@@ -220,14 +220,14 @@
 <p>We can then plot the predictions of each curve using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, col = <span class="kw">model_name</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">curve_id</span>, scales = <span class="st">'free_y'</span>, ncol = <span class="fl">6</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu">ggplot</span>(<span class="kw">d_preds</span>) <span class="op">+</span>
+  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, col = <span class="kw">model_name</span>)) <span class="op">+</span>
+  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu">facet_wrap</span>(<span class="op">~</span><span class="kw">curve_id</span>, scales = <span class="st">'free_y'</span>, ncol = <span class="fl">6</span>) <span class="op">+</span>
+  <span class="fu">theme_bw</span>() <span class="op">+</span>
+  <span class="fu">theme</span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
+  <span class="fu">scale_color_brewer</span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'All fitted thermal performance curves'</span>,
        subtitle = <span class="st">'gaussian in green; sharpeschoolhigh in orange'</span>)

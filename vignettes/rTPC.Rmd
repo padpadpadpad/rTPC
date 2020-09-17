@@ -32,7 +32,7 @@ library(broom)
 library(tidyverse)
 ```
 
-__rTPC__ provides a suite of functions to help fit thermal performance curves to empirical data. After searching the literature, __rTPC__ contains 23 different model formulations previously used. These functions can be easily applied to methods in R that use non-linear least squares regression to estimate thermal performance curves.
+__rTPC__ provides a suite of functions to help fit thermal performance curves to empirical data. After searching the literature, __rTPC__ contains 24 different model formulations that have been used previously. These functions can be easily applied to methods in R that use non-linear least squares regression to estimate thermal performance curves.
 
 The available model formulations can be accessed using __get_model_names()__.
 
@@ -40,7 +40,7 @@ The available model formulations can be accessed using __get_model_names()__.
 get_model_names()
 ```
 
-They are generally named after the author of the paper (and hence the name of the model within the literature) and the year at which I found the model to be first used, separated by a __"\_"__. Some original model formulations have been altered so that all models take temperature in degrees centigrade raw rate values as input.
+They are generally named after the author of the paper (and hence the name of the model within the literature) and the year at which I found the model to be first used, separated by a __"\_"__. Some original model formulations have been altered so that all models take temperature in degrees centigrade and raw rate values as input.
 
 We can demonstrate the fitting procedure by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
 
@@ -60,7 +60,7 @@ ggplot(d, aes(temp, rate)) +
        title = 'Respiration across temperatures')
 
 ```
-For each model, **rTPC** has helper functions that can estimate sensible start values (**get_start_vals()**), lower (**get_lower_lims()**) and upper (**get_upper_lims()**) limits. To demonstrate this, we shall use the sharpe-schoolfield model for high temperature inactivation only.
+For each model, **rTPC** has helper functions that estimate sensible start values (**get_start_vals()**), lower (**get_lower_lims()**) and upper (**get_upper_lims()**) limits. To demonstrate this, we shall use the sharpe-schoolfield model for high temperature inactivation only.
 
 ```{r}
 # choose model
@@ -80,11 +80,12 @@ upper_lims
 
 One problem with most methods of fitting models in R using non-linear least squares regression is that they are sensitive to the choice of starting parameters. This problem also occurs in previous specialist R packages that help fit thermal performance curves, such as [devRate](https://github.com/frareb/devRate/) and [temperatureresponse](https://github.com/low-decarie/temperatureresponse). These methods can fail entirely or give different parameter estimates between multiple runs of the same code.
 
-To overcome this, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()** but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked on AIC score.
+To overcome this, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()**, but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked using AIC scores.
 
-In __nls_multstart__, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to FALSE, **nls_multstart()** will try and fit all iterations.
+Using __nls_multstart__, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to `FALSE`, **nls_multstart()** will try and fit all iterations.
 
 ```{r fit_model}
+# fit model
 fit <- nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
                                                      data = d,
                                                      iter = 500,
@@ -97,14 +98,13 @@ fit <- nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tre
 fit
 ```
 
-To estimate additional parameters of interest, we can use **rTPC::calc_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a single thermal performance curve. The currently available  methods can be viewed by running `?calc_params`. For example, we may be interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
+To calculate additional parameters of interest, we can use **rTPC::calc_params()**. This function uses high resolution predictions of the fitted model to estimate traits associated with a thermal performance curve. The currently available methods can be viewed by running `?calc_params`. For example, we may be interested in variation in the optimum temperature, $T_{opt}$, given that we adapted algae to different temperatures.
 
 ```{r}
-# estimate additional traits
+# calculate additional traits
 calc_params(fit) %>%
   # round for easy viewing
   mutate_all(round, 2)
-
 ```
 
 Finally for this introduction, we can get predictions of our model using **broom::augment()**, which is similar to **predict()**. These are then plotted over our original data.
