@@ -15,10 +15,10 @@ vignette: >
 ## Things to consider 
 
 - Think carefully about your level of replication
-- Bootstrapping weighted non-linear least squares is implemented using **car::Boot()**
-- See `vignette("bootstrapping_models")` for examples of bootstrapping without weights
-- The outcomes of the different approaches outlined here are likely to change based on the data and the model used. Use this methods with caution and think critically about their output
-
+- (Non-parametric) bootstrapping is a robust way of computing parameter and model prediction confidence intervals.
+- Bootstrapping weighted non-linear least squares is implemented using **car::Boot()**, and both case and residual resampling is supported
+- The outcomes of the different approaches outlined here are likely to change based on the data and the model used. Use these methods with caution and think critically about their output.
+ 
 ***
 
 ```{r, include = FALSE}
@@ -48,7 +48,7 @@ When doing model weighting, as implemented in `vignette(model_weighting)`, the s
 
 In case resampling, each iteration re-samples the original data with replacement (where each rate, temperature and measurement error value are linked) and uses weighted weighted non-linear least squares regression on each bootstrapped dataset.
 
-In residual resampling of weighted non-linear regression, the weights are used as a correction to the Pearson residuals. The whole function can be viewed by using `getAnywhere(Boot.nls)`. For large samples the residual method must be ok, but the small sample properties are less clear. Ideally one would be inclined not to use the case resampling bootstrap when possible because the theory is more certain.
+In residual resampling of weighted non-linear regression, the weights are used as a correction to the Pearson residuals. The whole function can be viewed by using `getAnywhere(Boot.nls)`. For large samples the residual method must be ok, but the small sample properties are less clear. Where possible, we would recommend using the case resampling bootstrap where possible because the theory is more certain.
 
 We will demonstrate both approaches using the example in `vignette('model_weighting')`. This vignette uses  the example dataset contained within **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. Instead of plotting a single curve, we average over the biological replicates, `rep`, within a growth temperature (here photosynthesis from cultures adapted to 33 ºC), to get mean rate values at each assay temperature and their standard deviation. These are then plotted using **ggplot2**. Instead of fitting **kamykowski_1985**, we will instead fit **lactin2_1995** in this example.
 
@@ -59,8 +59,8 @@ data("chlorella_tpc")
 d_ave <- filter(chlorella_tpc, process == 'adaptation', growth_temp == 33, flux == 'photosynthesis') %>%
   group_by(temp, flux) %>%
   summarise(., sd = sd(rate),
-            ave_rate = mean(rate)) %>%
-  ungroup()
+            ave_rate = mean(rate),
+            groups = 'drop')
 
 d_fit <- nest(d_ave, data = c(temp, ave_rate, sd)) %>%
   mutate(weighted = map(data, ~nls_multstart(ave_rate~lactin2_1995(temp = temp, a, b, tmax, delta_t),
@@ -102,7 +102,7 @@ ggplot() +
 
 # Method 1: Case resampling weighted non-linear regression.
 
-In this method, each iteration re-samples the original data with replacement (where each rate, temperature and measurement error value are linked) and uses weighted weighted non-linear least squares regression on each bootstrapped dataset.
+In this method, each iteration re-samples the original data with replacement (where each rate, temperature and measurement error value are linked) and uses weighted non-linear least squares regression on each bootstrapped dataset.
 
 ```{r case_boot}
 # refit model using nlsLM
@@ -172,7 +172,7 @@ p1 + p2
 
 ```
 
-For this model formulation, the case resampling method gives really wide confidence intervals for the model predictions at high temperatures. In some of the bootstrapped datasets, the rate value at 49 ºC is not present, which results in a drastically different fit which predicts extremely negative rates for 49 ºC in those instances. As such, this is likely a bigger problem with models that allow for negative rates. Those that do not allow negative rates may not suffer so much from this issue as the mathematical formulation forces rates to always be positive, limiting the wide variation in negative rate values. However these models are also likely to have other disadvantages.
+For this model formulation, the case resampling method gives extremely wide confidence intervals for the model predictions at high temperatures. In some of the bootstrapped datasets, the  rate value at 49 ºC was not sampled, which results in a drastically different fit which predicts extremely negative rates for 49 ºC. This is likely to be a problem with models that allow negative rates, when datasets are small and there are only single points at each temperature.
 
 ***
 
@@ -284,7 +284,9 @@ ggplot(ci, aes(forcats::fct_relevel(method, c('profile', 'asymptotic')), estimat
        subtitle = 'For the chlorella TPC; profile method failes')
 
 ```
-Here the profiling approach fails, and the residual method returns values that are narrower than those created from asymptotic intervals. The case bootstrap does not work well. The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in `vignette(bootstrapping_models)`.
+Here the profiling approach fails, and the residual method returns values that are narrower than those created from asymptotic intervals. The case bootstrap does not work well in this instance. As can be seen, these methods have their pros and cons and we leave it to the user to decide whether these approaches are sensible in each individual use-case.
+
+The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in `vignette(bootstrapping_models)`.
 
 #### Further reading
 

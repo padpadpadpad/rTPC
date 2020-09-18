@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Fitting many curves using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-17</h4>
+            <h4 class="date">2020-09-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_curves.Rmd</code></div>
@@ -220,14 +220,14 @@
 <p>We can then plot the predictions of each curve using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># plot</span>
-<span class="fu">ggplot</span>(<span class="kw">d_preds</span>) <span class="op">+</span>
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, col = <span class="kw">model_name</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
-  <span class="fu">facet_wrap</span>(<span class="op">~</span><span class="kw">curve_id</span>, scales = <span class="st">'free_y'</span>, ncol = <span class="fl">6</span>) <span class="op">+</span>
-  <span class="fu">theme_bw</span>() <span class="op">+</span>
-  <span class="fu">theme</span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>) <span class="op">+</span>
-  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>, col = <span class="kw">model_name</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">curve_id</span>, scales = <span class="st">'free_y'</span>, ncol = <span class="fl">6</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(type = <span class="st">'qual'</span>, palette = <span class="fl">2</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'All fitted thermal performance curves'</span>,
        subtitle = <span class="st">'gaussian in green; sharpeschoolhigh in orange'</span>)

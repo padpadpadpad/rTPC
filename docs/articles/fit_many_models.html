@@ -117,7 +117,7 @@
       <h1 data-toc-skip>Fitting many models with rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-09-17</h4>
+            <h4 class="date">2020-09-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_models.Rmd"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_models.Rmd</code></div>
@@ -166,10 +166,10 @@
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">chlorella_tpc</span>, <span class="kw">curve_id</span> <span class="op">==</span> <span class="fl">1</span>)
 
 <span class="co"># show the data</span>
-<span class="fu">ggplot</span>(<span class="kw">d</span>, <span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>() <span class="op">+</span>
-  <span class="fu">theme_bw</span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
-  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'Respiration across temperatures'</span>)
 </pre></div>
@@ -443,18 +443,18 @@
   <span class="fu">unnest</span>(<span class="kw">preds</span>)
 
 <span class="co"># plot</span>
-<span class="fu">ggplot</span>(<span class="kw">d_preds</span>, <span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
-  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), col = <span class="st">'blue'</span>) <span class="op">+</span>
-  <span class="fu">facet_wrap</span>(<span class="op">~</span><span class="kw">model_name</span>, labeller = <span class="fu">labeller</span>(model_name = <span class="kw">label_facets_num</span>), scales = <span class="st">'free'</span>, ncol = <span class="fl">4</span>) <span class="op">+</span>
-  <span class="fu">theme_bw</span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
-  <span class="fu">theme</span>(legend.position = <span class="st">'none'</span>,
-        strip.text = <span class="fu">element_text</span>(hjust = <span class="fl">0</span>),
-        strip.background = <span class="fu">element_blank</span>()) <span class="op">+</span>
-  <span class="fu">labs</span>(x = <span class="st">'Temperature (ºC)'</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">d_preds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">rate</span>), <span class="kw">d</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">temp</span>, <span class="kw">.fitted</span>), col = <span class="st">'blue'</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">model_name</span>, labeller = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html">labeller</a></span>(model_name = <span class="kw">label_facets_num</span>), scales = <span class="st">'free'</span>, ncol = <span class="fl">4</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(base_size = <span class="fl">12</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(legend.position = <span class="st">'none'</span>,
+        strip.text = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(hjust = <span class="fl">0</span>),
+        strip.background = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(x = <span class="st">'Temperature (ºC)'</span>,
        y = <span class="st">'Metabolic rate'</span>,
        title = <span class="st">'Fits of every model available in rTPC'</span>) <span class="op">+</span>
-  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>)
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="fl">0</span>), linetype = <span class="fl">2</span>)
 </pre></div>
 <p><img src="fit_many_models_files/figure-html/preds_and_plot-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>

@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-#### A brief example of how model selection or model averaging can be used when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
+#### A brief example using model selection or model averaging when fitting multiple models to a single TPC using rTPC, nls.multstart, and the tidyverse. 
 
 ***
 
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 - Think carefully about which models to fit **before** any fitting takes place.
 - Should models be weighted when doing model averaging? 
     - It seems illogical to allow a poor model to ruin the prediction, so it makes sense to down-weight it. This is the advice much of ecology takes: only average models within $\Delta 2 AIC$ of the best model.
-    -  If we have already pre-selected sensible models from the 23, it may often be wiser not to compute model weights. This is the common procedure in economics and with the IPCC earth-system-models.
+    -  If we have already pre-selected sensible models from the 24, it may often be wiser not to compute model weights. This is the common procedure in economics and with the IPCC earth-system-models.
 
 ***
 
@@ -40,11 +40,13 @@ library(tidyverse)
 library(ggrepel)
 ```
 
-The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and **purrr**.
+The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in **rTPC**, **nls_multstart()**, and the **tidyverse**.
 
-Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, weighted by how well they fit to the data. Instead of picking all 23 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see [this vignette](fit_many_models.html)): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
+Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, usually by weighting each model by how well they fit to the data. 
 
-We can demonstrate the model averaging process for these model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
+Instead of picking all 24 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see `vignette('fit_many_models')`): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
+
+First, we fit each of these model formulations to a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
 
 ```{r first_plot, fig.width=6, fig.height = 4}
 # load in data
@@ -63,10 +65,10 @@ ggplot(d, aes(temp, rate)) +
 
 ```
 
-The 5 models can then be fitted using the same approach as in the [previous vignette](fitting_multiple_models_to_a_TPC.html), using list columns **purrr::map()** to fit and store multiple models in a data frame.
+The 5 models are then be fitted using the same approach as in the `vignette('fit_many_models')`, using list columns **purrr::map()** to fit and store multiple models in a data frame.
 
 ```{r fit_multiple_models, warning=FALSE}
-# fit five chosen model formulation in rTPC
+# fit five chosen model formulations in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
   mutate(boatman = map(data, ~nls_multstart(rate~boatman_2017(temp = temp, rmax, tmin, tmax, a,b),
                         data = .x,
@@ -124,7 +126,7 @@ d_fits <- nest(d, data = c(temp, rate)) %>%
                         convergence_count = FALSE)))
 ```
 
-The predictions of each model can be estimated using **broom::augment()**. This can be done on all models at once after the models are stacked into long format. To create a smooth curve fit, the predictions are done on a new temperature vector that has 100 points over the temperature range. The predictions for each model formulation are then visualised in **ggplot2**.
+The predictions of each model can be estimated using **broom::augment()**. By stacking the models into long format, this can be done on all models at once. To create a smooth curve fit, the predictions are done on a new temperature vector that has 100 points over the temperature range. The predictions for each model formulation are then visualised in **ggplot2**.
 
 ```{r preds_and_plot, fig.width = 6, fig.height = 4}
 # stack models
@@ -159,7 +161,7 @@ ggplot(d_preds, aes(temp, .fitted)) +
 
 ```
 
-As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using  measures of relative model fit - such as AIC, BIC, and AICc (AICc correcting for small sample size). Which measure is most appropriate is going to be determined by the question being answered. AIC and BIC are both returned by **broom::glance()**, and AICc can be added using **MuMIn::AICc()**
+As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using  measures of relative model fit - such as AIC, BIC, and AICc (AIC correcting for small sample size). AIC and BIC are both returned by **broom::glance()**, and AICc can be added using **MuMIn::AICc()**
 
 ```{r calculate_fit_measures}
 d_ic <- d_stack %>%
@@ -175,7 +177,7 @@ d_ic
 
 ## Model selection
 
-In this instance, AICc score will be used to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model.
+In this instance, we will use AICc score to compare between models. For a model selection approach, the model with the lowest AICc score is chosen as the model that best supports the data. In this instance, it is the Sharpe-Schoolfield model.
 
 ```{r model_selection, fig.width=6, fig.height = 4}
 # filter for best model
@@ -203,7 +205,7 @@ ggplot(d_preds, aes(temp, .fitted)) +
 
 ## Model averaging
 
-For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model's weighting. The best supported model's predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in whatever information criterion metric is being used. A common approach is to only keep models within $\Delta 2 AIC$ of the best model.
+For a model averaging approach, predictions and parameters from the models are averaged. In ecology, this is usually done based on each model's weighting. The best supported model's predictions are taken into account more than the least supported. Often the number of models is reduced by setting a cut-off for the difference in the information criterion metric being used. A common approach is to only keep models within $\Delta 2 AIC$ of the best model.
 
 ```{r model_weights, fig.width=6, fig.height = 4}
 # get model weights

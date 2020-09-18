@@ -13,12 +13,12 @@ vignette: >
 ***
 ## Things to consider 
 
-- Confidence intervals of model predictions can be produced for non-linear least squares regression models using bootstrapping.
-- Bootstrapping can also allow differences between explicitly modelled and calculated parameters to be evaluated. If calculated properly, non-overlapping confidence intervals of parameters can indicate significant differences between curves. 
+- (Non-parametric) bootstrapping is a robust way of computing parameter and model prediction confidence intervals. 
 - Case resampling involves resampling the actual data with replacement and then refitting the model to the new, simulated datasets.
-- When there are fewer data points-per-curve, re-sampling the whole dataset with replacement may result in some resampled datasets not having any points beyond the optimum temperature.
+- When there are fewer data points-per-curve, resampling the whole dataset with replacement may result in some resampled datasets not having any points beyond the optimum temperature.
 - In these instances, residual sampling - creating new datasets from mean centred residuals of the original model fit - provides an alternative to case resampling.
 - Both resampling methods will be sensitive to the number of unique data points and the mathematical model being used.
+- Bootstrapping can allow differences between explicitly modelled and calculated parameters to be evaluated. If calculated properly, non-overlapping confidence intervals of parameters can indicate significant differences between curves.
 
 ***
 
@@ -50,7 +50,7 @@ library(minpack.lm)
 
 Bootstrapping involves simulating “new” datasets produced from the existing data by sampling with replacement. The same model is then fitted separately on each individual bootstrapped dataset. Doing this over and over allows us to visualise uncertainty of predictions and produce confidence intervals of estimated parameters.
 
-First, we will demonstrate this case resampling approach using data from a recent paper by Padfield _et al._ (2020), that measures the thermal performance of the bacteria, _Pseudomonas fluorescens_, in the presence and absence of its phage, $\phi 2$. In this study, each single growth rate estimate is a technical replicate, coming from an isogenic strain of bacteria either inoculated with, or without, the phage. As such, all the data points within each phage treatment can be used to estimate the same curve. This becomes obvious as there is no `rep` column as in the `chlorella_tpc` dataset, but we can visualise one of the curves (bacteria in the absence of phage), using **ggplot2**.
+First, we will demonstrate this case resampling approach using data from a recent paper by Padfield _et al._ (2020), that measures the thermal performance of the bacteria, _Pseudomonas fluorescens_, in the presence and absence of its phage, $\phi 2$. In this study, each single growth rate estimate is a technical replicate, coming from an isogenic strain of bacteria either inoculated with, or without, the phage. As such, all the data points within each phage treatment can be used to estimate the same curve and there is no `rep` column as in the `chlorella_tpc` dataset. We can visualise one of the curves (bacteria in the absence of phage), using **ggplot2**.
 
 ```{r load_data, fig.height=4, fig.width=6}
 # load in data
@@ -102,9 +102,9 @@ ggplot() +
        title = 'Growth rate across temperatures')
 
 ```
-Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. The R package **car** has the function **Boot** that provides a wrapper for the widely used function **boot::boot()** that is tailored to bootstrapping regression models.
+Here we have the best fit to the data. If we want confidence bands around this prediction, we can get those by resampling the data a number of times. The R package **car** contains the function **Boot()** that provides a wrapper for the widely used function **boot::boot()** that is tailored to bootstrapping regression models.
 
-_nls_multstart()__ is designed to fit models across a wide possible parameter space, but because of it samples multiple start parameters for each model, using it with bootstrapping becomes computationally expensive. Instead, we refit the model using **minpack.lm::nlsLM()** and pass the coefficients from the previous model fit to be start values. The **Boot** function then refits the model 999 times and stores the model coefficients.
+**nls_multstart()** is designed to fit models across a wide possible parameter space, but as it samples multiple start parameters for each model, using it with bootstrapping becomes computationally expensive. Instead, we refit the model using **minpack.lm::nlsLM()**, using the coefficients of **nls_multstart()** as the start values. The **Boot()** function then refits the model 999 times and stores the model coefficients.
 
 ```{r bootstrap_models1}
 # refit model using nlsLM
@@ -129,7 +129,7 @@ The parameters of each bootstrapped refit are returned. All methods that are ava
 hist(boot1, layout = c(2,2))
 ```
 
-We can easily create predictions for each of these models and then create confidence intervals around the original fitted predictions. We can then plot both some of the bootstrapped fits and the confidence regions around the model predictions.
+We can easily create predictions for each of these models and through this confidence intervals around the original fitted predictions. We can then plot (1) the bootstrapped fits and (2) the confidence regions around the model predictions.
 
 ```{r plot_boots, fig.height=3, fig.width=8, message=FALSE}
 # create predictions of each bootstrapped model
@@ -172,9 +172,9 @@ p1 + p2
 
 ```
 
-When there are many points beyond the optimum temperature and multiple points at each temperature, this method allows us to better quantify the uncertainty of out model fit. 
+This method works well here, because there are many points beyond the optimum temperature and multiple independent points at each temperature. 
 
-This method becomes more problematic when there is a small sample size. It is common for thermal performance curves to have only one or two measurements beyond the optimum temperature. This means that many of the bootstrapped models will not have any points beyond the optimum, which is problematic for mathematical models that expect a unimodal shape. The effect of this can be seen by case resampling a curve from the `chlorella_tpc` dataset used throughout these vignettes. Here we again fit the model using **nls_multstart()**, refit the model using **nlsLM()**, then bootstrap the model using **Boot()**.
+This method becomes more problematic when there is a small sample size and the coverage of temperature values beyond the optimum temperature is small. This means that many of the bootstrapped models will not have any points beyond the optimum, which is problematic for mathematical models that expect a unimodal shape. The effect of this can be seen by case resampling a curve from the `chlorella_tpc` dataset used throughout these vignettes. Here we again fit the model using **nls_multstart()**, refit the model using **nlsLM()**, then bootstrap the model using **Boot()**.
 
 ```{r bootstrap_case2, message=FALSE}
 # load in chlorella data
@@ -214,8 +214,7 @@ boot2 <- Boot(fit_nlsLM2, method = 'case')
 Number of bootstraps was 994 out of 999 attempted 
 ```
 
-We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don't fit and return `NA`
-for the parameter estimates are dropped.
+We can then create predictions for each bootstrapped model and calculate 95% confidence intervals around the predictions. Models that don't fit and return `NA` for the parameter estimates are dropped.
 
 ```{r bootstrap_case2_plot, fig.height=3,fig.width=8}
 # unnest predictions of original model fit
@@ -241,7 +240,7 @@ boot2_conf_preds <- group_by(boot2_preds, temp) %>%
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'blue', alpha = 0.3) +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'blue') +
   geom_point(aes(temp, rate), d2, size = 2, alpha = 0.5) +
   theme_bw(base_size = 12) +
   labs(x = 'Temperature (ºC)',
@@ -252,7 +251,7 @@ p1 <- ggplot() +
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
   geom_line(aes(temp, pred, group = iter), boot2_preds, col = 'blue', alpha = 0.007) +
-  geom_point(aes(temp, rate), d2, size = 2, alpha = 0.5) +
+  geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
   labs(x = 'Temperature (ºC)',
        y = 'Growth rate',
@@ -263,7 +262,7 @@ p1 + p2
 
 ```
 
-As can be seen, bootstrapping-with-replacement with only a single point at each temperature can lead to a large variety of fits. In the second panel, we can see the variation of the curve fits, clustering around 4 possible paths for the decrease in rate beyond the optimum temperature. This is because in many instances there are no points sampled at the very high temperatures, leading to this clustering in curve fits. This is obviously not the ideal way of bootstrapping in such instances.
+As can be seen, bootstrapping-with-replacement with only a single point at each temperature can lead to a large variety of fits. In the second panel, we can see the variation of the curve fits, clustering around 4 possible paths for the decrease in rate beyond the optimum temperature. This occurs because in many instances there are no points sampled at the very high temperatures, leading to this clustering in curve fits.
 
 # Residual resampling
 
@@ -278,7 +277,7 @@ Re-sampling residuals, at its heart, follows a simple set of steps:
 
 This method makes the assumption that the original model fit is a good representation of the data, and that the error terms in the model are normally distributed and independent. If the model is incorrectly specified – for example, if there is unmodelled non-linearity, non-constant error variance, or outliers – these characteristics will not carry over into the re-sampled data sets.
 
-**car::Boot()** has an argument that allows us to easily use residual resampling instead of case resampling..
+**car::Boot()** has an argument that allows us to easily implement residual resampling instead of case resampling.
 
 ```{r residual_resample_data, fig.height=3,fig.width=8}
 # bootstrap using residual resampling
@@ -324,11 +323,9 @@ p1 + p2
 
 ```
 
-This method seems to work a lot better, providing variation around the original curve fit without clustering around certain model fits.
-
 # Calculating confidence intervals of estimated and calculated parameters
 
-Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare this approach to profiled confidence intervals (using **confint-MASS**) and asymptotic confidence intervals (using **nlstools::confint2()**). For the bootstrapped parameter distributions, **confint.boot()** supports the calculation of BCa, basic, normal, and percentile confidence intervals. We use BCa here, and we will calculate all CIs on the two models done previously in this vignette. First with the bacteria TPC.
+Bootstrapping can be used to estimate confidence intervals of the parameters explicitly modelled in the regression. We can compare these approaches to profiled confidence intervals (using **confint-MASS**) and asymptotic confidence intervals (using **nlstools::confint2()**). For the bootstrapped parameter distributions, **confint.boot()** supports the calculation of BCa, basic, normal, and percentile confidence intervals. We use BCa here, and we will calculate all CIs on the two models done previously in this vignette. First with the bacteria TPC.
 
 ```{r confint_bact, error=TRUE, fig.height = 5, fig.width = 7}
 # First for the bacteria
@@ -382,7 +379,7 @@ ggplot(ci_bact, aes(forcats::fct_relevel(method, c('profile', 'asymptotic')), es
 
 ```
 
-The dashed lines represent the 95% intervals for the profiling method. The different bootstrap methods do a reasonable job at being close to these intervals, but not all parameters are the same. For example, `r_tref` and `e` give wider (and asymmetric) confidence intervals using the case resampling method. The residual method gives estimates that are closer to the ones calculated from profiling.
+Each panel is a different explicitly modelled parameter. The dashed lines represent the 95% intervals for the profiling method. In general, the different bootstrap methods are similar to the profiled intervals, but not all parameters are the same. For example, `r_tref` and `e` give wider (and asymmetric) confidence intervals using the case resampling method. The residual method gives estimates that are more similar to those calculated from profiling.
 
 Now for the TPC from the _Chlorella_ dataset.
 
@@ -433,7 +430,7 @@ ggplot(ci_chlor, aes(forcats::fct_relevel(method, c('profile', 'asymptotic')), e
 
 
 ```
-For this curve, the profiling method failed and the asymptotic method has very wide confidence intervals for `eh`. Consequently, it is hard to know how the bootstrapping methods do as these would usually be benchmarked against the profiling method. Even so, we can see that the intervals for `eh` and `th` for the case resampling method are very wide (as can be seen from the plot of the model predictions earlier). Meanwhile, the residual resampling method again gives more symmetric estimates, but we don't know if they are conservative which would increase the rate of false positives if used for inference.
+For this curve, the profiling method failed and the asymptotic method has very wide confidence intervals for `eh`. Consequently, it is hard to know how the bootstrapping methods do as these cannot be benchmarked against the profiling method. Even so, we can see that the intervals for `eh` and `th` for the case resampling method are very wide (as can be seen from the plot of the model predictions earlier). Meanwhile, the residual resampling method again gives more symmetric estimates, but we don't know if they are conservative (give narrower CIs) which would increase the rate of false positives if used for inference.
 
 We can also bootstrap confidence intervals for the extra parameters calculated in **calc_params()**. We will do this for the bacteria TPC and the case resample.
 
