@@ -5,8 +5,8 @@
 
 <!-- badges: start -->
 
-[![Build
-status](https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master)](https://travis-ci.org/padpadpadpad/rTPC)
+[![R build
+status](https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg)](https://github.com/padpadpadpad/rTPC/actions)
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
@@ -72,8 +72,8 @@ using rTPC**. (1) Collect, check, and manipulate data into long format.
 assortment of four models were chosen. (3) Fit the models to data using
 nls.multstart and helper functions from rTPC. (4) Models can be
 visualised and (5) common traits of TPCs can be estimated using
-rTPC::calc\_params(). (6) This simple pipeline can easily be scaled up
-to be used on multiple curves.
+**rTPC::calc\_params()**. (6) This simple pipeline can easily be scaled
+up to be used on multiple curves.
 
 ## Extensions to the pipeline
 

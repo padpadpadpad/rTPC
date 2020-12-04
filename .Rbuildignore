@@ -11,3 +11,4 @@
 ^docs$
 ^pkgdown$
 ^\.httr-oauth$
+^\.github$

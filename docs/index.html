@@ -133,10 +133,9 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p><strong>rTPC</strong> can easily be downloaded from GitHub using the <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The vignettes are all available online, but if you would like to build them locally, add <code>build_vignettes = TRUE</code> into your <code>install_github()</code> command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install package from GitHub</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"padpadpadpad/rTPC"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install package from GitHub</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"padpadpadpad/rTPC"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="general-pipeline" class="section level2">
 <h2 class="hasAnchor">
@@ -144,7 +143,7 @@
 <p><strong>rTPC</strong> makes it easy to fit multiple models to multiple thermal performance curves.</p>
 <p><img src="reference/figures/rTPC_pipeline.png" width="1000" align="center"></p>
 <p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. (1) Collect, check, and manipulate data into long format.</p>
-<p>(2) Choose which models from rTPC are going to be used. Here, a random assortment of four models were chosen. (3) Fit the models to data using nls.multstart and helper functions from rTPC. (4) Models can be visualised and (5) common traits of TPCs can be estimated using rTPC::calc_params(). (6) This simple pipeline can easily be scaled up to be used on multiple curves.</p>
+<p>(2) Choose which models from rTPC are going to be used. Here, a random assortment of four models were chosen. (3) Fit the models to data using nls.multstart and helper functions from rTPC. (4) Models can be visualised and (5) common traits of TPCs can be estimated using <strong>rTPC::calc_params()</strong>. (6) This simple pipeline can easily be scaled up to be used on multiple curves.</p>
 </div>
 <div id="extensions-to-the-pipeline" class="section level2">
 <h2 class="hasAnchor">
@@ -193,7 +192,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/padpadpadpad/rTPC"><img src="https://travis-ci.org/padpadpadpad/rTPC.svg?branch=master" alt="Build status"></a></li>
+<li><a href="https://github.com/padpadpadpad/rTPC/actions"><img src="https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
 </div>

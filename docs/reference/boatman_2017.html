@@ -169,7 +169,7 @@
     <p>Boatman model for fitting thermal performance curves</p>
     </div>
 
-    <pre class="usage"><span class='fu'>boatman_2017</span>(<span class='kw'>temp</span>, <span class='kw'>rmax</span>, <span class='kw'>tmin</span>, <span class='kw'>tmax</span>, <span class='kw'>a</span>, <span class='kw'>b</span>)</pre>
+    <pre class="usage"><span class='fu'>boatman_2017</span><span class='op'>(</span><span class='va'>temp</span>, <span class='va'>rmax</span>, <span class='va'>tmin</span>, <span class='va'>tmax</span>, <span class='va'>a</span>, <span class='va'>b</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -215,27 +215,27 @@ $$rate= r_{max} \cdot \left(sin\bigg(\pi\left(\frac{temp-t_{min}}{t_{max} - t_{m
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load in ggplot</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
 <span class='co'># subset for the first TPC curve</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'chlorella_tpc'</span>)
-<span class='kw'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>chlorella_tpc</span>, <span class='kw'>curve_id</span> <span class='op'>==</span> <span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>'chlorella_tpc'</span><span class='op'>)</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>chlorella_tpc</span>, <span class='va'>curve_id</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># get start values and fit model</span>
-<span class='kw'>start_vals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'boatman_2017'</span>)
+<span class='va'>start_vals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='get_start_vals.html'>get_start_vals</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>temp</span>, <span class='va'>d</span><span class='op'>$</span><span class='va'>rate</span>, model_name <span class='op'>=</span> <span class='st'>'boatman_2017'</span><span class='op'>)</span>
 <span class='co'># fit model</span>
-<span class='kw'>mod</span> <span class='op'>&lt;-</span> <span class='kw'>nls.multstart</span>::<span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span>(<span class='kw'>rate</span><span class='op'>~</span><span class='fu'>boatman_2017</span>(temp = <span class='kw'>temp</span>, <span class='kw'>rmax</span>, <span class='kw'>tmin</span>, <span class='kw'>tmax</span>, <span class='kw'>a</span>, <span class='kw'>b</span>),
-data = <span class='kw'>d</span>,
-iter = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>),
-start_lower = <span class='kw'>start_vals</span> <span class='op'>-</span> <span class='fl'>10</span>,
-start_upper = <span class='kw'>start_vals</span> <span class='op'>+</span> <span class='fl'>10</span>,
-lower = <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'boatman_2017'</span>),
-upper = <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>, <span class='kw'>d</span><span class='op'>$</span><span class='kw'>rate</span>, model_name = <span class='st'>'boatman_2017'</span>),
-supp_errors = <span class='st'>'Y'</span>,
-convergence_count = <span class='fl'>FALSE</span>)
+<span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'>nls.multstart</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html'>nls_multstart</a></span><span class='op'>(</span><span class='va'>rate</span><span class='op'>~</span><span class='fu'>boatman_2017</span><span class='op'>(</span>temp <span class='op'>=</span> <span class='va'>temp</span>, <span class='va'>rmax</span>, <span class='va'>tmin</span>, <span class='va'>tmax</span>, <span class='va'>a</span>, <span class='va'>b</span><span class='op'>)</span>,
+data <span class='op'>=</span> <span class='va'>d</span>,
+iter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>4</span><span class='op'>)</span>,
+start_lower <span class='op'>=</span> <span class='va'>start_vals</span> <span class='op'>-</span> <span class='fl'>10</span>,
+start_upper <span class='op'>=</span> <span class='va'>start_vals</span> <span class='op'>+</span> <span class='fl'>10</span>,
+lower <span class='op'>=</span> <span class='fu'><a href='get_lower_lims.html'>get_lower_lims</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>temp</span>, <span class='va'>d</span><span class='op'>$</span><span class='va'>rate</span>, model_name <span class='op'>=</span> <span class='st'>'boatman_2017'</span><span class='op'>)</span>,
+upper <span class='op'>=</span> <span class='fu'><a href='get_upper_lims.html'>get_upper_lims</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>temp</span>, <span class='va'>d</span><span class='op'>$</span><span class='va'>rate</span>, model_name <span class='op'>=</span> <span class='st'>'boatman_2017'</span><span class='op'>)</span>,
+supp_errors <span class='op'>=</span> <span class='st'>'Y'</span>,
+convergence_count <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># look at model fit</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='kw'>mod</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Formula: rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b)
 #&gt; 
@@ -256,14 +256,14 @@ convergence_count = <span class='fl'>FALSE</span>)
 #&gt; Reason stopped: Number of calls to `fcn' has reached or exceeded `maxfev' == 600.
 #&gt; </div><div class='input'>
 <span class='co'># get predictions</span>
-<span class='kw'>preds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(temp = <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw'>d</span><span class='op'>$</span><span class='kw'>temp</span>), length.out = <span class='fl'>100</span>))
-<span class='kw'>preds</span> <span class='op'>&lt;-</span> <span class='kw'>broom</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/augment.html'>augment</a></span>(<span class='kw'>mod</span>, newdata = <span class='kw'>preds</span>)
+<span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>temp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>temp</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>temp</span><span class='op'>)</span>, length.out <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/augment.html'>augment</a></span><span class='op'>(</span><span class='va'>mod</span>, newdata <span class='op'>=</span> <span class='va'>preds</span><span class='op'>)</span>
 
 <span class='co'># plot</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='kw'>preds</span>) <span class='op'>+</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>temp</span>, <span class='kw'>rate</span>), <span class='kw'>d</span>) <span class='op'>+</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>temp</span>, <span class='kw'>.fitted</span>), col = <span class='st'>'blue'</span>) <span class='op'>+</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>()
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span> <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>temp</span>, <span class='va'>rate</span><span class='op'>)</span>, <span class='va'>d</span><span class='op'>)</span> <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>temp</span>, <span class='va'>.fitted</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='st'>'blue'</span><span class='op'>)</span> <span class='op'>+</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='img'><img src='boatman_2017-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
