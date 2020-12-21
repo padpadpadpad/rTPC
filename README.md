@@ -33,12 +33,15 @@ fitting multiple models, and visualisation. The R package
 [**car**](https://cran.r-project.org/web/packages/car/car.pdf) is used
 extensively for the bootstrapping approaches.
 
-**rTPC** and the pipelines outlined in the vignettes are in the process
-of being written up into a methods paper. In the meantime, please cite
-as:
+**rTPC** and the pipelines outlined in the vignettes are now published
+as a preprint on
+[bioRxiv](https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1).
+If this R package helps you, please cite us using the following
+citation:
 
-Daniel Padfield and Hannah O’Sullivan (2020). rTPC: an R package for
-helping fit thermal performance curves. R package version 1.0.0.
+Daniel Padfield, Hannah O’Sullivan, & Samraat Pawar (2020). rTPC and
+nls.multstart: a new pipeline to fit thermal performance curves in R.
+bioRxiv. <https://doi.org/10.1101/2020.12.16.423089>
 
 ## Bugs and suggestions
 

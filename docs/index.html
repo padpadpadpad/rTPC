@@ -122,8 +122,8 @@
 <p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
 <p>The idea behind <strong>rTPC</strong> is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which model works best. Which model and which workflow is “best” is going to be down to the question that is being asked. Throughout the vignettes, <em>Things to consider</em> sections give some key considerations about what to consider <em>before</em> and <em>during</em> the analysis.</p>
 <p>When developing <strong>rTPC</strong>, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation. The R package <a href="https://cran.r-project.org/web/packages/car/car.pdf"><strong>car</strong></a> is used extensively for the bootstrapping approaches.</p>
-<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are in the process of being written up into a methods paper. In the meantime, please cite as:</p>
-<p>Daniel Padfield and Hannah O’Sullivan (2020). rTPC: an R package for helping fit thermal performance curves. R package version 1.0.0.</p>
+<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are now published as a preprint on <a href="https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1">bioRxiv</a>. If this R package helps you, please cite us using the following citation:</p>
+<p>Daniel Padfield, Hannah O’Sullivan, &amp; Samraat Pawar (2020). rTPC and nls.multstart: a new pipeline to fit thermal performance curves in R. bioRxiv. <a href="https://doi.org/10.1101/2020.12.16.423089" class="uri">https://doi.org/10.1101/2020.12.16.423089</a></p>
 <div id="bugs-and-suggestions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bugs-and-suggestions" class="anchor"></a>Bugs and suggestions</h2>
@@ -172,6 +172,8 @@
 <li>Browse source code at <br><a href="https://github.com/padpadpadpad/rTPC/">https://​github.com/​padpadpadpad/​rTPC/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/padpadpadpad/rTPC/issues">https://​github.com/​padpadpadpad/​rTPC/​issues</a>
+</li>
+<li>Read preprint at <br><a href="https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1">https://​www.biorxiv.org/​content/​10.1101/​2020.12.16.423089v1</a>
 </li>
 </ul>
 </div>
