@@ -240,7 +240,7 @@ boot2_conf_preds <- group_by(boot2_preds, temp) %>%
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'blue', 0.3) +
+  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'blue', alpha = 0.3) +
   geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
   labs(x = 'Temperature (ºC)',
