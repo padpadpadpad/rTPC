@@ -35,7 +35,7 @@ Daniel Padfield, Hannah O'Sullivan, & Samraat Pawar (2020). rTPC and nls.multsta
 
 ## Bugs and suggestions
 
-Please report any bugs and suggestions to the [Issues](https://github.com/padpadpadpad/rTPC/issues) or email d.padfield@exeter.ac.uk.
+Please report any bugs and suggestions to the [Issues](https://github.com/padpadpadpad/rTPC/issues) or email d.padfield@exeter.ac.uk. This could be requests for the inclusion of a new mathematical model formulation.
 
 ## Installation
 

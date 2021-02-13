@@ -47,7 +47,8 @@ bioRxiv. <https://doi.org/10.1101/2020.12.16.423089>
 
 Please report any bugs and suggestions to the
 [Issues](https://github.com/padpadpadpad/rTPC/issues) or email
-<d.padfield@exeter.ac.uk>.
+<d.padfield@exeter.ac.uk>. This could be requests for the inclusion of a
+new mathematical model formulation.
 
 ## Installation
 

@@ -52,7 +52,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -97,7 +97,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/padpadpadpad/rTPC/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -111,14 +111,13 @@
 
       
 
-      </header><script src="rTPC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="rTPC_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="rTPC_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="rTPC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2020-12-04</h4>
+            <h4 class="date">2021-02-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/rTPC.Rmd"><code>vignettes/rTPC.Rmd</code></a></small>
       <div class="hidden name"><code>rTPC.Rmd</code></div>
@@ -208,7 +207,7 @@
 <span class="co">#&gt;  0.2595  0.5826 14.2031 43.5531 </span>
 <span class="co">#&gt;  residual sum-of-squares: 0.3144</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Number of iterations to convergence: 20 </span>
+<span class="co">#&gt; Number of iterations to convergence: 24 </span>
 <span class="co">#&gt; Achieved convergence tolerance: 1.49e-08</span></code></pre></div>
 <p>To calculate additional parameters of interest, we can use <strong>rTPC::calc_params()</strong>. This function uses high resolution predictions of the fitted model to estimate traits associated with a thermal performance curve. The currently available methods can be viewed by running <code><a href="../reference/calc_params.html">?calc_params</a></code>. For example, we may be interested in variation in the optimum temperature, <span class="math inline">\(T_{opt}\)</span>, given that we adapted algae to different temperatures.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">

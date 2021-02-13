@@ -145,8 +145,9 @@ d_stack <- gather(d_models, 'model', 'output', 2:ncol(d_models))
 # preds
 newdata <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100),
                   K = seq(min(d$K), max(d$K), length.out = 100))
-d_preds <- d_stack %>%
-  unnest(., output %>% map(broom::augment, newdata = newdata)) %>%
+d_preds <- filter(d_stack, !is.null(output)) %>%
+  mutate(preds = map(output, broom::augment, newdata = newdata)) %>%
+  unnest(preds) %>%
   mutate(., temp = ifelse(model == 'sharpeschoolhigh', K - 273.15, temp))
 
 # calculate AICc score and weight models
@@ -173,7 +174,8 @@ plot_1 <- ggplot() +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank(),
-        axis.text = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
         axis.line = element_blank(),
         panel.border = element_blank(),
         axis.ticks = element_blank(),
@@ -203,5 +205,5 @@ sticker(plot_1,
         h_color = '#edd90efe',
         p_color = '#edd90efe',
         p_family = "Anton",
-        filename="logos/hex_sticker.png",
-        white_around_sticker = TRUE)
+        filename="~/google_drive/rTPC_hex_sticker.png",
+        white_around_sticker = FALSE)
