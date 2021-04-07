@@ -194,10 +194,10 @@ sysfonts::font_families()
 
 sticker(plot_1,
         package="rTPC",
-        p_size = 8,
+        p_size = 7,
         s_x = 0.95,
-        s_y = 0.8,
-        s_width = 1.3,
+        s_y = 0.85,
+        s_width = 1.19,
         s_height = 1,
         p_x = 1,
         p_y = 1.5,

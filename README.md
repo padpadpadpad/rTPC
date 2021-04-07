@@ -33,15 +33,16 @@ fitting multiple models, and visualisation. The R package
 [**car**](https://cran.r-project.org/web/packages/car/car.pdf) is used
 extensively for the bootstrapping approaches.
 
-**rTPC** and the pipelines outlined in the vignettes are now published
-as a preprint on
-[bioRxiv](https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1).
+**rTPC** and the pipelines outlined in the vignettes are published in
+[Methods in Ecology and
+Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access.
 If this R package helps you, please cite us using the following
 citation:
 
-Daniel Padfield, Hannah O’Sullivan, & Samraat Pawar (2020). rTPC and
-nls.multstart: a new pipeline to fit thermal performance curves in R.
-bioRxiv. <https://doi.org/10.1101/2020.12.16.423089>
+Daniel Padfield, Hannah O’Sullivan, & Samraat Pawar (2021). rTPC and
+nls.multstart: A new pipeline to fit thermal performance curves in R.
+Methods in Ecology and Evolution.
+<https://doi.org/10.1111/2041-210X.13585>
 
 ## Bugs and suggestions
 
@@ -97,10 +98,10 @@ model uncertainty and calculate confidence intervals of parameters.
 
 ## Getting started
 
-  - For an introduction to **rTPC**, see `vignette("rTPC")`
-  - To follow the general pipeline, see `vignette("fit_many_models")`
+-   For an introduction to **rTPC**, see `vignette("rTPC")`
+-   To follow the general pipeline, see `vignette("fit_many_models")`
     and `vignette("fit_many_curves")`.
-  - For examples of extensions to this pipeline, see the
+-   For examples of extensions to this pipeline, see the
     `vignette("model_averaging_selection")`,
     `vignette("model_weighting")`, `vignette("bootstrapping_models")`
     and `vignette("weighted_bootstrapping")`.

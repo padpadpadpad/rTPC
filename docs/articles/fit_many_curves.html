@@ -111,13 +111,13 @@
 
       
 
-      </header><script src="fit_many_curves_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="fit_many_curves_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fitting many curves using rTPC</h1>
                         <h4 class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2021-02-13</h4>
+            <h4 class="date">2021-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_curves.Rmd</code></div>
@@ -207,13 +207,13 @@
 <span class="fu">glimpse</span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 12,000</span>
 <span class="co">#&gt; Columns: 7</span>
-<span class="co">#&gt; $ curve_id    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span>
-<span class="co">#&gt; $ growth_temp &lt;dbl&gt; 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 2…</span>
-<span class="co">#&gt; $ process     &lt;chr&gt; "acclimation", "acclimation", "acclimation", "acclimation…</span>
-<span class="co">#&gt; $ flux        &lt;chr&gt; "respiration", "respiration", "respiration", "respiration…</span>
-<span class="co">#&gt; $ model_name  &lt;chr&gt; "gaussian", "gaussian", "gaussian", "gaussian", "gaussian…</span>
-<span class="co">#&gt; $ temp        &lt;dbl&gt; 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.6666…</span>
-<span class="co">#&gt; $ .fitted     &lt;dbl&gt; 0.02790076, 0.03175769, 0.03607053, 0.04088150, 0.0462351…</span></code></pre></div>
+<span class="co">#&gt; $ curve_id    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span>
+<span class="co">#&gt; $ growth_temp &lt;dbl&gt; 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20…</span>
+<span class="co">#&gt; $ process     &lt;chr&gt; "acclimation", "acclimation", "acclimation", "acclimation"…</span>
+<span class="co">#&gt; $ flux        &lt;chr&gt; "respiration", "respiration", "respiration", "respiration"…</span>
+<span class="co">#&gt; $ model_name  &lt;chr&gt; "gaussian", "gaussian", "gaussian", "gaussian", "gaussian"…</span>
+<span class="co">#&gt; $ temp        &lt;dbl&gt; 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.66667…</span>
+<span class="co">#&gt; $ .fitted     &lt;dbl&gt; 0.02790076, 0.03175769, 0.03607053, 0.04088150, 0.04623512…</span></code></pre></div>
 <p>We can then plot the predictions of each curve using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># plot</span>
@@ -240,22 +240,22 @@
 <span class="fu">glimpse</span><span class="op">(</span><span class="va">d_params</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 120</span>
 <span class="co">#&gt; Columns: 16</span>
-<span class="co">#&gt; $ curve_id              &lt;dbl&gt; 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8,…</span>
-<span class="co">#&gt; $ growth_temp           &lt;dbl&gt; 20, 20, 20, 20, 23, 23, 27, 27, 27, 27, 30, 30,…</span>
-<span class="co">#&gt; $ process               &lt;chr&gt; "acclimation", "acclimation", "acclimation", "a…</span>
-<span class="co">#&gt; $ flux                  &lt;chr&gt; "respiration", "respiration", "respiration", "r…</span>
-<span class="co">#&gt; $ model_name            &lt;chr&gt; "gaussian", "sharpeschoolhigh", "gaussian", "sh…</span>
-<span class="co">#&gt; $ rmax                  &lt;dbl&gt; 1.4972473, 1.8127063, 1.7935416, 1.9798352, 0.9…</span>
-<span class="co">#&gt; $ topt                  &lt;dbl&gt; 36.338, 41.646, 35.554, 39.007, 34.615, 35.170,…</span>
-<span class="co">#&gt; $ ctmin                 &lt;dbl&gt; 18.695, 2.539, 18.835, 6.086, 17.368, 11.970, 1…</span>
-<span class="co">#&gt; $ ctmax                 &lt;dbl&gt; 53.981, 45.558, 52.272, 47.680, 51.861, 53.064,…</span>
-<span class="co">#&gt; $ e                     &lt;dbl&gt; 0.6758954, 0.5802496, 0.8427748, 0.6621701, 1.0…</span>
-<span class="co">#&gt; $ eh                    &lt;dbl&gt; 1.0767824, 11.4840311, 1.0954099, 2.4774826, 1.…</span>
-<span class="co">#&gt; $ q10                   &lt;dbl&gt; 2.373766, 2.063147, 2.927011, 2.305129, 3.72211…</span>
-<span class="co">#&gt; $ thermal_safety_margin &lt;dbl&gt; 17.643, 3.912, 16.718, 8.673, 17.246, 17.894, 1…</span>
-<span class="co">#&gt; $ thermal_tolerance     &lt;dbl&gt; 35.286, 43.019, 33.437, 41.594, 34.493, 41.094,…</span>
-<span class="co">#&gt; $ breadth               &lt;dbl&gt; 9.651, 5.371, 9.165, 6.495, 9.442, 7.714, 10.35…</span>
-<span class="co">#&gt; $ skewness              &lt;dbl&gt; -4.008871e-01, -1.090378e+01, -2.526351e-01, -1…</span></code></pre></div>
+<span class="co">#&gt; $ curve_id              &lt;dbl&gt; 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, …</span>
+<span class="co">#&gt; $ growth_temp           &lt;dbl&gt; 20, 20, 20, 20, 23, 23, 27, 27, 27, 27, 30, 30, …</span>
+<span class="co">#&gt; $ process               &lt;chr&gt; "acclimation", "acclimation", "acclimation", "ac…</span>
+<span class="co">#&gt; $ flux                  &lt;chr&gt; "respiration", "respiration", "respiration", "re…</span>
+<span class="co">#&gt; $ model_name            &lt;chr&gt; "gaussian", "sharpeschoolhigh", "gaussian", "sha…</span>
+<span class="co">#&gt; $ rmax                  &lt;dbl&gt; 1.4972473, 1.8127063, 1.7935416, 1.9798352, 0.94…</span>
+<span class="co">#&gt; $ topt                  &lt;dbl&gt; 36.338, 41.646, 35.554, 39.007, 34.615, 35.170, …</span>
+<span class="co">#&gt; $ ctmin                 &lt;dbl&gt; 18.695, 2.539, 18.835, 6.086, 17.368, 11.970, 15…</span>
+<span class="co">#&gt; $ ctmax                 &lt;dbl&gt; 53.981, 45.558, 52.272, 47.680, 51.861, 53.064, …</span>
+<span class="co">#&gt; $ e                     &lt;dbl&gt; 0.6758954, 0.5802496, 0.8427748, 0.6621701, 1.02…</span>
+<span class="co">#&gt; $ eh                    &lt;dbl&gt; 1.0767824, 11.4840311, 1.0954099, 2.4774826, 1.1…</span>
+<span class="co">#&gt; $ q10                   &lt;dbl&gt; 2.373766, 2.063147, 2.927011, 2.305129, 3.722119…</span>
+<span class="co">#&gt; $ thermal_safety_margin &lt;dbl&gt; 17.643, 3.912, 16.718, 8.673, 17.246, 17.894, 18…</span>
+<span class="co">#&gt; $ thermal_tolerance     &lt;dbl&gt; 35.286, 43.019, 33.437, 41.594, 34.493, 41.094, …</span>
+<span class="co">#&gt; $ breadth               &lt;dbl&gt; 9.651, 5.371, 9.165, 6.495, 9.442, 7.714, 10.354…</span>
+<span class="co">#&gt; $ skewness              &lt;dbl&gt; -4.008871e-01, -1.090378e+01, -2.526351e-01, -1.…</span></code></pre></div>
 </div>
   </div>
 
