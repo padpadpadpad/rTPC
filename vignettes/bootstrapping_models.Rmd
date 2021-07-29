@@ -460,7 +460,7 @@ ggplot(ci_extra_params, aes(param, estimate)) +
 You can see that the confidence intervals around certain parameters, such as `e`, `eh`, `q10`, and `skewness` are very asymmetrical. This is because they are modelled from a subsample of the original dataset (for example, `e` is calculated from fitting a modified Boltzmann equation to all the points at or below the optimum temperature as calculated from the model predictions). If interested in these parameters, we recommend using mathematical models that contain them explicitly in the formulation.
 
 ***
-NB The Padfield _et al.__ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package [**brms**](https://github.com/paul-buerkner/brms). Examples of using **brms** to model thermal performance curves can be found on the [GitHub repository](https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature) of the paper
+NB The Padfield _et al._ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package [**brms**](https://github.com/paul-buerkner/brms). Examples of using **brms** to model thermal performance curves can be found on the [GitHub repository](https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature) of the paper
 
 *** 
 #### Further reading

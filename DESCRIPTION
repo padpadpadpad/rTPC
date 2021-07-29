@@ -1,7 +1,7 @@
 Package: rTPC
 Type: Package
 Title: Functions for fitting thermal performance curves
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person("Daniel", "Padfield", email = "d.padfield@exeter.ac.uk", role = c("aut", "cre")),
     person("Hannah", "O'Sullivan", email = "hjosullivan123@gmail.com", role = c("aut")))

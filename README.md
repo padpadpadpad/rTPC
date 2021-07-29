@@ -103,5 +103,6 @@ model uncertainty and calculate confidence intervals of parameters.
     and `vignette("fit_many_curves")`.
 -   For examples of extensions to this pipeline, see the
     `vignette("model_averaging_selection")`,
-    `vignette("model_weighting")`, `vignette("bootstrapping_models")`
-    and `vignette("weighted_bootstrapping")`.
+    `vignette("model_weighting")`, `vignette("bootstrapping_models")`,
+    `vignette("weighted_bootstrapping")`, and
+    `vignette("bootstrapping_many_curves")`.

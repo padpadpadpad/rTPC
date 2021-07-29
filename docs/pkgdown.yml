@@ -2,6 +2,7 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  bootstrapping_many_curves: bootstrapping_many_curves.html
   bootstrapping_models: bootstrapping_models.html
   fit_many_curves: fit_many_curves.html
   fit_many_models: fit_many_models.html
@@ -9,5 +10,5 @@ articles:
   model_weighting: model_weighting.html
   rTPC: rTPC.html
   weighted_bootstrapping: weighted_bootstrapping.html
-last_built: 2021-05-13T15:49Z
+last_built: 2021-07-29T21:23Z
 

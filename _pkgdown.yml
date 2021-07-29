@@ -30,6 +30,7 @@ articles:
   navbar: Fitting many curves
   contents:
   - fit_many_curves
+  - bootstrapping_many_curves
 
 reference:
 - title: Models
