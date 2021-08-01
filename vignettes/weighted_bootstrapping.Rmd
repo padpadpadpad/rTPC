@@ -35,7 +35,7 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 # load packages
 library(boot)
-library(car) # to install development version of car install.packages("car", repos = c("http://R-Forge.R-project.org"), dep = FALSE)
+library(car) # to install development version of car install.packages("car", repos = c("https://r-forge.r-project.org"), dep = FALSE)
 library(rTPC)
 library(nls.multstart)
 library(broom)

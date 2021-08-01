@@ -30,7 +30,7 @@ ecosystem. Consequently, the workflows take advantage of
 fitting non-linear least squares regression and packages from the
 [**tidyverse**](https://www.tidyverse.org) for data manipulation,
 fitting multiple models, and visualisation. The R package
-[**car**](https://cran.r-project.org/web/packages/car/car.pdf) is used
+[**car**](https://CRAN.R-project.org/package=car/car.pdf) is used
 extensively for the bootstrapping approaches.
 
 **rTPC** and the pipelines outlined in the vignettes are published in

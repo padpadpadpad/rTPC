@@ -12,3 +12,5 @@
 ^pkgdown$
 ^\.httr-oauth$
 ^\.github$
+^cran-comments\.md$
+^logo\.png$
