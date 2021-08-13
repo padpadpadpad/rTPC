@@ -6,7 +6,6 @@
 
 0 errors | 0 warnings | 0 notes
 
-* One note is: Non-standard file/directory found at top level: ‘logo.png’. 
 * This is a new release.
 
 ## Test environments
