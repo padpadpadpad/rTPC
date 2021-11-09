@@ -226,4 +226,13 @@ get_upper_lims <- function(x, y, model_name) {
     topt = max(d$x)
     return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
   }
+
+  if(model_name == 'thomas_2012'){
+    a = 10
+    b = 10
+    c = (max(d$x) - min(d$x)) * 5
+    topt = max(d$x)
+    return(c(a=a, b=b, c=c, topt=topt))
+  }
+
 }
