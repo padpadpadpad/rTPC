@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Functions for fitting thermal performance curves • rTPC</title>
+<title>Functions for Fitting Thermal Performance Curves • rTPC</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,8 +17,8 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Functions for fitting thermal performance curves">
-<meta property="og:description" content="Package to help fit thermal performance curves to physiological data.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Functions for Fitting Thermal Performance Curves">
+<meta property="og:description" content="rTPC helps fit thermal performance curves (TPCs). rTPC contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -32,6 +32,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,18 +46,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/rTPC.html">Get started</a>
 </li>
@@ -70,7 +66,8 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li class="divider">
-    <li class="dropdown-header">Fitting a single curve</li>
+    </li>
+<li class="dropdown-header">Fitting a single curve</li>
     <li>
       <a href="articles/fit_many_models.html">Fitting many models with rTPC</a>
     </li>
@@ -87,7 +84,8 @@
       <a href="articles/weighted_bootstrapping.html">Bootstrapping with weights using rTPC</a>
     </li>
     <li class="divider">
-    <li class="dropdown-header">Fitting many curves</li>
+    </li>
+<li class="dropdown-header">Fitting many curves</li>
     <li>
       <a href="articles/fit_many_curves.html">Fitting many curves using rTPC</a>
     </li>
@@ -102,7 +100,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/padpadpadpad/rTPC/">
+  <a href="https://github.com/padpadpadpad/rTPC/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -119,48 +117,47 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rtpc-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rtpc-" class="anchor"></a><strong>rTPC</strong> <img src="logo.png" width="250" align="right">
+<div class="section level1">
+<div class="page-header"><h1 id="rtpc-">
+<strong>rTPC</strong> <img src="logo.png" width="250" align="right"><a class="anchor" aria-label="anchor" href="#rtpc-"></a>
 </h1></div>
 <!-- badges: start -->
 
 <p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
 <p>The idea behind <strong>rTPC</strong> is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which model works best. Which model and which workflow is “best” is going to be down to the question that is being asked. Throughout the vignettes, <em>Things to consider</em> sections give some key considerations about what to consider <em>before</em> and <em>during</em> the analysis.</p>
-<p>When developing <strong>rTPC</strong>, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation. The R package <a href="https://cran.r-project.org/web/packages/car/car.pdf"><strong>car</strong></a> is used extensively for the bootstrapping approaches.</p>
-<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585">Methods in Ecology and Evolution</a> and are open access. If this R package helps you, please cite us using the following citation:</p>
-<p>Daniel Padfield, Hannah O’Sullivan, &amp; Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <a href="https://doi.org/10.1111/2041-210X.13585" class="uri">https://doi.org/10.1111/2041-210X.13585</a></p>
-<div id="bugs-and-suggestions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bugs-and-suggestions" class="anchor"></a>Bugs and suggestions</h2>
-<p>Please report any bugs and suggestions to the <a href="https://github.com/padpadpadpad/rTPC/issues">Issues</a> or email <a href="mailto:d.padfield@exeter.ac.uk" class="email">d.padfield@exeter.ac.uk</a>. This could be requests for the inclusion of a new mathematical model formulation.</p>
+<p>When developing <strong>rTPC</strong>, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart" class="external-link"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org" class="external-link"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation. The R package <a href="https://CRAN.R-project.org/package=car/car.pdf" class="external-link"><strong>car</strong></a> is used extensively for the bootstrapping approaches.</p>
+<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Methods in Ecology and Evolution</a> and are open access. If this R package helps you, please cite us using the following citation:</p>
+<p>Daniel Padfield, Hannah O’Sullivan, &amp; Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link uri">https://doi.org/10.1111/2041-210X.13585</a></p>
+<div class="section level2">
+<h2 id="bugs-and-suggestions">Bugs and suggestions<a class="anchor" aria-label="anchor" href="#bugs-and-suggestions"></a>
+</h2>
+<p>Please report any bugs and suggestions to the <a href="https://github.com/padpadpadpad/rTPC/issues" class="external-link">Issues</a> or email <a href="mailto:d.padfield@exeter.ac.uk" class="email">d.padfield@exeter.ac.uk</a>. This could be requests for the inclusion of a new mathematical model formulation.</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p><strong>rTPC</strong> can easily be downloaded from GitHub using the <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The vignettes are all available online, but if you would like to build them locally, add <code>build_vignettes = TRUE</code> into your <code>install_github()</code> command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p><strong>rTPC</strong> can easily be downloaded from GitHub using the <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">remotes::install_github()</a></code>. The vignettes are all available online, but if you would like to build them locally, add <code>build_vignettes = TRUE</code> into your <code>install_github()</code> command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install package from GitHub</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"padpadpadpad/rTPC"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"padpadpadpad/rTPC"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="general-pipeline" class="section level2">
-<h2 class="hasAnchor">
-<a href="#general-pipeline" class="anchor"></a>General pipeline</h2>
+<div class="section level2">
+<h2 id="general-pipeline">General pipeline<a class="anchor" aria-label="anchor" href="#general-pipeline"></a>
+</h2>
 <p><strong>rTPC</strong> makes it easy to fit multiple models to multiple thermal performance curves.</p>
 <p><img src="reference/figures/rTPC_pipeline.png" width="1000" align="center"></p>
-<p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. (1) Collect, check, and manipulate data into long format.</p>
-<p>(2) Choose which models from rTPC are going to be used. Here, a random assortment of four models were chosen. (3) Fit the models to data using nls.multstart and helper functions from rTPC. (4) Models can be visualised and (5) common traits of TPCs can be estimated using <strong>rTPC::calc_params()</strong>. (6) This simple pipeline can easily be scaled up to be used on multiple curves.</p>
+<p><strong>Figure 1. General pipeline for fitting thermal performance curves using rTPC</strong>. (1) Collect, check, and manipulate data into long format. (2) Choose which models from rTPC are going to be used. Here, a random assortment of four models were chosen. (3) Fit the models to data using nls.multstart and helper functions from rTPC. (4) Models can be visualised and (5) common traits of TPCs can be estimated using <strong>rTPC::calc_params()</strong>. (6) This simple pipeline can easily be scaled up to be used on multiple curves.</p>
 </div>
-<div id="extensions-to-the-pipeline" class="section level2">
-<h2 class="hasAnchor">
-<a href="#extensions-to-the-pipeline" class="anchor"></a>Extensions to the pipeline</h2>
+<div class="section level2">
+<h2 id="extensions-to-the-pipeline">Extensions to the pipeline<a class="anchor" aria-label="anchor" href="#extensions-to-the-pipeline"></a>
+</h2>
 <p><strong>rTPC</strong> can also be easily used to do a number of common tasks needed when fitting TPCs, such as model selection, model averaging, incorporating model weights and bootstrapping of model fits.</p>
 <p><img src="reference/figures/rTPC_pipeline_extensions.png" width="1000" align="center"></p>
 <p><strong>Figure 2. Potential applications for fitting thermal performance curves using rTPC</strong>. (1) AIC, BIC or other metrics of model fit can be calculated to help to allow model selection or model averaging. (2) If TPCs are being fit to averages of multiple replicates, then weighted NLLS can be used that reduce parameter bias. (3) After the model has been fitted, non-parametric bootstrapping approaches can help estimate model uncertainty and calculate confidence intervals of parameters.</p>
 </div>
-<div id="getting-started" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting started</h2>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
 <ul>
 <li>For an introduction to <strong>rTPC</strong>, see <code><a href="articles/rTPC.html">vignette("rTPC")</a></code>
 </li>
@@ -173,48 +170,57 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/padpadpadpad/rTPC/">https://​github.com/​padpadpadpad/​rTPC/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/padpadpadpad/rTPC/issues">https://​github.com/​padpadpadpad/​rTPC/​issues</a>
-</li>
-<li>Read paper at <br><a href="https://doi.org/10.1111/2041-210X.13585">https://​doi.org/​10.1111/​2041-210X.13585</a>
-</li>
-<li>Read preprint at <br><a href="https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1">https://​www.biorxiv.org/​content/​10.1101/​2020.12.16.423089v1</a>
-</li>
+<li><a href="https://github.com/padpadpadpad/rTPC/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/padpadpadpad/rTPC/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Read paper</a></li>
+<li><a href="https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1" class="external-link">Read preprint</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing rTPC</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Daniel Padfield <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Hannah O'Sullivan <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/padpadpadpad/rTPC/actions"><img src="https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://github.com/padpadpadpad/rTPC/actions" class="external-link"><img src="https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Daniel Padfield, Hannah O'Sullivan.</p>
+  <p></p>
+<p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -222,6 +228,8 @@
 
   
 
+
+  
 
   </body>
 </html>

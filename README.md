@@ -98,10 +98,10 @@ model uncertainty and calculate confidence intervals of parameters.
 
 ## Getting started
 
--   For an introduction to **rTPC**, see `vignette("rTPC")`
--   To follow the general pipeline, see `vignette("fit_many_models")`
+  - For an introduction to **rTPC**, see `vignette("rTPC")`
+  - To follow the general pipeline, see `vignette("fit_many_models")`
     and `vignette("fit_many_curves")`.
--   For examples of extensions to this pipeline, see the
+  - For examples of extensions to this pipeline, see the
     `vignette("model_averaging_selection")`,
     `vignette("model_weighting")`, `vignette("bootstrapping_models")`,
     `vignette("weighted_bootstrapping")`, and

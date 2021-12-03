@@ -10,7 +10,7 @@
 
 get_start_vals <- function(x, y, model_name) {
 
-  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017', 'beta_2012', 'modifiedgaussian_2006', 'pawar_2018')
+  mod_names <- c('sharpeschoolhigh_1981', 'sharpeschoollow_1981', 'sharpeschoolfull_1981', 'johnsonlewin_1946', 'lactin2_1995', 'oneill_1972', 'quadratic_2008', 'ratkowsky_1983', 'rezende_2019', 'spain_1982', 'thomas_2012', 'thomas_2017', 'weibull_1995', 'kamykowski_1985', 'joehnk_2008', 'hinshelwood_1947', 'gaussian_1987', 'flinn_1991', 'delong_2017', 'briere2_1999', 'boatman_2017', 'beta_2012', 'modifiedgaussian_2006', 'pawar_2018', 'lrf_1991')
 
   if (model_name %in% mod_names == FALSE){
     stop("supplied model_name is not an available model in rTPC. Please check the spelling of model_name.")
@@ -246,6 +246,15 @@ get_start_vals <- function(x, y, model_name) {
     eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
     topt = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
     return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
+  }
+
+  if(model_name == 'lrf_1991'){
+    rmax = max(d$y, na.rm = TRUE)
+    topt = mean(d$x[d$y == rmax])
+    tmin = min(d$x, na.rm = TRUE)
+    tmax = max(d$x, na.rm = TRUE)
+
+    return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
   }
 
 }

@@ -32,6 +32,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,18 +46,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/rTPC.html">Get started</a>
 </li>
@@ -70,7 +66,8 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li class="divider">
-    <li class="dropdown-header">Fitting a single curve</li>
+    </li>
+<li class="dropdown-header">Fitting a single curve</li>
     <li>
       <a href="../articles/fit_many_models.html">Fitting many models with rTPC</a>
     </li>
@@ -87,7 +84,8 @@
       <a href="../articles/weighted_bootstrapping.html">Bootstrapping with weights using rTPC</a>
     </li>
     <li class="divider">
-    <li class="dropdown-header">Fitting many curves</li>
+    </li>
+<li class="dropdown-header">Fitting many curves</li>
     <li>
       <a href="../articles/fit_many_curves.html">Fitting many curves using rTPC</a>
     </li>
@@ -102,7 +100,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/padpadpadpad/rTPC/">
+  <a href="https://github.com/padpadpadpad/rTPC/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -117,29 +115,29 @@
 
       
 
-      </header><script src="model_weighting_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="model_weighting_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Model weighting with rTPC</h1>
-                        <h4 class="author">Daniel Padfield</h4>
+                        <h4 data-toc-skip class="author">Daniel Padfield</h4>
             
-            <h4 class="date">2021-07-29</h4>
+            <h4 data-toc-skip class="date">2021-12-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/model_weighting.Rmd"><code>vignettes/model_weighting.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/model_weighting.Rmd" class="external-link"><code>vignettes/model_weighting.Rmd</code></a></small>
       <div class="hidden name"><code>model_weighting.Rmd</code></div>
 
     </div>
 
     
     
-<div id="a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-" class="section level4">
-<h4 class="hasAnchor">
-<a href="#a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-" class="anchor"></a>A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.</h4>
+<div class="section level4">
+<h4 id="a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-">A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.<a class="anchor" aria-label="anchor" href="#a-brief-example-of-how-model-weighting-can-be-used-to-help-account-for-measurement-uncertainty-when-fitting-models-to-tpcs-using-rtpc-nls-multstart-and-the-tidyverse-"></a>
+</h4>
 <hr>
 </div>
-<div id="things-to-consider" class="section level2">
-<h2 class="hasAnchor">
-<a href="#things-to-consider" class="anchor"></a>Things to consider</h2>
+<div class="section level2">
+<h2 id="things-to-consider">Things to consider<a class="anchor" aria-label="anchor" href="#things-to-consider"></a>
+</h2>
 <ul>
 <li>The optimal weighting is <span class="math inline">\(\frac{1}{\sigma}\)</span>. The standard deviation is easy to calculate when calculating the means of the rate data.</li>
 <li>Carefully consider your level of replication before undertaking your statistical analysis.
@@ -153,60 +151,60 @@
 <hr>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load packages</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC">rTPC</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel">ggrepel</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel" class="external-link">ggrepel</a></span><span class="op">)</span></code></pre></div>
 <p>The general pipeline demonstrates how models can be fitted, parameters extracted, and predictions plotted to single or multiple curves using functions in <strong>rTPC</strong>, <strong>nls_multstart()</strong>, and <strong>purrr</strong>.</p>
 </div>
-<div id="using-model-weights" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-model-weights" class="anchor"></a>Using model weights</h2>
+<div class="section level2">
+<h2 id="using-model-weights">Using model weights<a class="anchor" aria-label="anchor" href="#using-model-weights"></a>
+</h2>
 <p>Here, we demonstrate how this pipeline can easily be extended to incorporate measurement uncertainty by using the <code>weights</code> argument of <strong>nls_multstart()</strong>. Methods of fitting TPCs in the literature often fit models to averaged rate values at each temperature. This fits a model on the mean rate value, but often the variation around this calculated mean value is ignored. However, there may be more spread in the rate data at the extreme temperatures (very hot or very cold). Ignoring the homoscedasticity in the data may alter the model fit.</p>
 <p>Instead, we can incorporate measurement uncertainty using the <strong>weights</strong> argument within <strong>nls_multstart()</strong>, to perform a weighted non-linear least squares regression. The optimal weight for each data point is the standard deviation, <span class="math inline">\(1/\sigma\)</span>, which easily be calculated when averaging over technical or biological replicates.</p>
 <p>We can demonstrate weighted non-linear least squares regression by using the example dataset contained within <strong>rTPC</strong> - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, <em>Chlorella vulgaris</em>. Instead of plotting a single curve, we average over the biological replicates, <code>rep</code>, within a growth temperature, to get mean rate values at each assay temperature and their standard deviation. These are then plotted using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get curve data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"chlorella_tpc"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"chlorella_tpc"</span><span class="op">)</span>
 
-<span class="va">d_ave</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">chlorella_tpc</span>, <span class="va">process</span> <span class="op">==</span> <span class="st">'adaptation'</span>, <span class="va">growth_temp</span> <span class="op">==</span> <span class="fl">33</span>, <span class="va">flux</span> <span class="op">==</span> <span class="st">'photosynthesis'</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">temp</span>, <span class="va">flux</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">summarise</span><span class="op">(</span><span class="va">.</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span>,
-            ave_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span>
+<span class="va">d_ave</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">chlorella_tpc</span>, <span class="va">process</span> <span class="op">==</span> <span class="st">'adaptation'</span>, <span class="va">growth_temp</span> <span class="op">==</span> <span class="fl">33</span>, <span class="va">flux</span> <span class="op">==</span> <span class="st">'photosynthesis'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">flux</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span>,
+            ave_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; `summarise()` has grouped output by 'temp'. You can override using the `.groups` argument.</span>
 
 <span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, ymin <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">-</span> <span class="va">sd</span>, ymax <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">+</span> <span class="va">sd</span><span class="op">)</span>, <span class="va">d_ave</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span><span class="op">)</span>, <span class="va">d_ave</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">21</span>, fill <span class="op">=</span> <span class="st">'green4'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-        strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span><span class="st">'Temperature (ºC)'</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, ymin <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">-</span> <span class="va">sd</span>, ymax <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">+</span> <span class="va">sd</span><span class="op">)</span>, <span class="va">d_ave</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span><span class="op">)</span>, <span class="va">d_ave</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">21</span>, fill <span class="op">=</span> <span class="st">'green4'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span>,
+        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+        strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span><span class="st">'Temperature (ºC)'</span>,
        y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,
        title <span class="op">=</span> <span class="st">'Photosynthesis rates across temperatures'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p><img src="model_weighting_files/figure-html/get_data-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>In this example, the standard deviation in our rates are actually smallest at the extreme temperatures, counter to what we previously expected.</p>
 <p>We will use the workflows outlined in the previous vignettes on <a href="fit_many_models.html">fitting many models</a> and <a href="fit_many_curves.html">fitting many curves</a> to fit both weighted and standard non-linear least squares regression, and we will use the <strong>kamykowski_1985()</strong> in this example - purely because it has not been used in previous vignettes as of yet.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># fit kamykowski model using rTPC with and without weights</span>
-<span class="va">d_fits</span> <span class="op">&lt;-</span> <span class="fu">nest</span><span class="op">(</span><span class="va">d_ave</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span>standard <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span><span class="op">(</span><span class="va">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/kamykowski_1985.html">kamykowski_1985</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span><span class="op">)</span>,
+<span class="va">d_fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="va">d_ave</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>standard <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/kamykowski_1985.html">kamykowski_1985</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span><span class="op">)</span>,
                         data <span class="op">=</span> <span class="va">.x</span>,
-                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,
+                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,
                         start_lower <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span>,
                         start_upper <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span> <span class="op">+</span> <span class="fl">10</span>,
                         lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span>,
                         upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span>,
                         supp_errors <span class="op">=</span> <span class="st">'Y'</span>,
                         convergence_count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,
-         weighted <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart</a></span><span class="op">(</span><span class="va">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/kamykowski_1985.html">kamykowski_1985</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span><span class="op">)</span>,
+         weighted <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/kamykowski_1985.html">kamykowski_1985</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span><span class="op">)</span>,
                         data <span class="op">=</span> <span class="va">.x</span>,
-                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,
+                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,
                         start_lower <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span>,
                         start_upper <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span> <span class="op">+</span> <span class="fl">10</span>,
                         lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">ave_rate</span>, model_name <span class="op">=</span> <span class="st">'kamykowski_1985'</span><span class="op">)</span>,
@@ -217,49 +215,49 @@
                         modelweights <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="va">sd</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">d_fits</span>
-<span class="co">#&gt; # A tibble: 1 x 4</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
 <span class="co">#&gt;   flux           data              standard weighted</span>
-<span class="co">#&gt;   &lt;chr&gt;          &lt;list&gt;            &lt;list&gt;   &lt;list&gt;  </span>
-<span class="co">#&gt; 1 photosynthesis &lt;tibble [11 × 3]&gt; &lt;nls&gt;    &lt;nls&gt;</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> photosynthesis <span style="color: #949494;">&lt;tibble [11 × 3]&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;nls&gt;</span></span></code></pre></div>
 <p>We can then get the predictions and plot them as before.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># stack models</span>
-<span class="va">d_stack</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">d_fits</span>, <span class="op">-</span><span class="va">data</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">pivot_longer</span><span class="op">(</span><span class="va">.</span>, names_to <span class="op">=</span> <span class="st">'model_name'</span>, values_to <span class="op">=</span> <span class="st">'fit'</span>, <span class="va">standard</span><span class="op">:</span><span class="va">weighted</span><span class="op">)</span>
+<span class="va">d_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">d_fits</span>, <span class="op">-</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">.</span>, names_to <span class="op">=</span> <span class="st">'model_name'</span>, values_to <span class="op">=</span> <span class="st">'fit'</span>, <span class="va">standard</span><span class="op">:</span><span class="va">weighted</span><span class="op">)</span>
 
 <span class="co"># get predictions using augment</span>
-<span class="va">newdata</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">d_ave</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">d_ave</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>
-<span class="va">d_preds</span> <span class="op">&lt;-</span> <span class="va">d_stack</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span><span class="va">.</span>, preds <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">fit</span>, <span class="va">augment</span>, newdata <span class="op">=</span> <span class="va">newdata</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">unnest</span><span class="op">(</span><span class="va">preds</span><span class="op">)</span>
+<span class="va">newdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">d_ave</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">d_ave</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_preds</span> <span class="op">&lt;-</span> <span class="va">d_stack</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">.</span>, preds <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">augment</span>, newdata <span class="op">=</span> <span class="va">newdata</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">preds</span><span class="op">)</span>
 
 <span class="co"># take a random point from each model for labelling</span>
-<span class="va">d_labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">d_preds</span>, <span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">.</span>, <span class="va">model_name</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">sample_n</span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span>
+<span class="va">d_labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">d_preds</span>, <span class="va">temp</span> <span class="op">&lt;</span> <span class="fl">30</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">model_name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html" class="external-link">sample_n</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># get topt for each model</span>
-<span class="va">d_topt</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span><span class="va">d_stack</span>, topt <span class="op">=</span> <span class="fu">map_dbl</span><span class="op">(</span><span class="va">fit</span>, <span class="va">get_topt</span><span class="op">)</span>, rmax <span class="op">=</span> <span class="fu">map_dbl</span><span class="op">(</span><span class="va">fit</span>, <span class="va">get_rmax</span><span class="op">)</span>,
-                 topt_text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">topt</span>, <span class="st">'ºC'</span>, sep <span class="op">=</span> <span class="st">' '</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_topt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d_stack</span>, topt <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">get_topt</span><span class="op">)</span>, rmax <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">get_rmax</span><span class="op">)</span>,
+                 topt_text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">topt</span>, <span class="st">'ºC'</span>, sep <span class="op">=</span> <span class="st">' '</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># plot</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, label <span class="op">=</span> <span class="va">model_name</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_labs</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_linerange</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, ymin <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">-</span> <span class="va">sd</span>, ymax <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">+</span> <span class="va">sd</span><span class="op">)</span>, <span class="va">d_ave</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span><span class="op">)</span>, <span class="va">d_ave</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">21</span>, fill <span class="op">=</span> <span class="st">'green4'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, label <span class="op">=</span> <span class="va">topt_text</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">4</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, label <span class="op">=</span> <span class="va">model_name</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_labs</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, ymin <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">-</span> <span class="va">sd</span>, ymax <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">+</span> <span class="va">sd</span><span class="op">)</span>, <span class="va">d_ave</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span><span class="op">)</span>, <span class="va">d_ave</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">21</span>, fill <span class="op">=</span> <span class="st">'green4'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, label <span class="op">=</span> <span class="va">topt_text</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">4</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,
        y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,
        title <span class="op">=</span> <span class="st">'Photosynthesis rates across temperatures'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">'qual'</span>, palette <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">'qual'</span>, palette <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="model_weighting_files/figure-html/preds_and_plot-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Here, we can see that weighting the regression by the standard deviation of the average rate value at each temperature increases the optimum temperature by approximately 2 ºC. This is a big relative shift, and could have big consequences for any downstream analyses that might be applied. The model weighting approach can easily be combined with <a href="model_averaging_selection.html">model selection/averaging</a>.</p>
 </div>
@@ -276,11 +274,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Daniel Padfield, Hannah O'Sullivan.</p>
+  <p></p>
+<p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -288,6 +288,8 @@
 
   
 
+
+  
 
   </body>
 </html>

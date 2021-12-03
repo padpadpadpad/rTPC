@@ -1,5 +1,5 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1
+pandoc: 2.7.3
+pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
   bootstrapping_many_curves: bootstrapping_many_curves.html
@@ -10,5 +10,5 @@ articles:
   model_weighting: model_weighting.html
   rTPC: rTPC.html
   weighted_bootstrapping: weighted_bootstrapping.html
-last_built: 2021-07-29T21:23Z
+last_built: 2021-12-03T15:42Z
 

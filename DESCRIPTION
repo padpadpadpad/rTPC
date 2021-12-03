@@ -1,7 +1,7 @@
 Type: Package
 Package: rTPC
 Title: Functions for Fitting Thermal Performance Curves
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     c(person(given = "Daniel",
              family = "Padfield",
@@ -43,4 +43,4 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
