@@ -7,9 +7,9 @@
 #' @param a related to the full curve width
 #' @references Deutsch, C. A., Tewksbury, J. J., Huey, R. B., Sheldon, K. S., Ghalambor, C. K., Haak, D. C., & Martin, P. R. Impacts of climate warming on terrestrial ectotherms across latitude. Proceedings of the National Academy of Sciences, 105(18), 6668-6672. (2008)
 #' @details Equation:
-#' \deqn{\textrm{if} \quad temp < topt: rate = rmax \cdot exp^{-\bigg(\frac{temp-t_{opt}}{2a}\bigg)^2}}{%
+#' \deqn{\textrm{if} \quad temp < t_{opt}: rate = r_{max} \cdot exp^{-\bigg(\frac{temp-t_{opt}}{2a}\bigg)^2}}{%
 #' rate = rmax.exp(-((temp - topt)/(2a))^2)}
-#' \deqn{\textrm{if} \quad temp > topt: rate = rmax \cdot \left(1 - \bigg(\frac{temp - t_{opt}}{t_{opt} - ct_{max}}\bigg)^2\right)}{%
+#' \deqn{\textrm{if} \quad temp > t_{opt}: rate = r_{max} \cdot \left(1 - \bigg(\frac{temp - t_{opt}}{t_{opt} - ct_{max}}\bigg)^2\right)}{%
 #' rate = rmax.(1 - ((temp - topt)/(topt - ctmax))^2)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data.

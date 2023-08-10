@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2023-02-26</h4>
+            <h4 data-toc-skip class="date">2023-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/bootstrapping_many_curves.Rmd" class="external-link"><code>vignettes/bootstrapping_many_curves.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_many_curves.Rmd</code></div>
@@ -228,9 +228,9 @@ need to be stored in the list column within <code>d_fits</code>.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span></span>
 <span><span class="co">#&gt;   curve_id growth_temp process     flux        data     gaussian coefs  nls_fit</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimation respiration &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>    &lt;dbl&gt;  <span style="color: #949494;">&lt;nls&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2          20 acclimation respiration &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>    &lt;dbl&gt;  <span style="color: #949494;">&lt;nls&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3          23 acclimation respiration &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>    &lt;dbl&gt;  <span style="color: #949494;">&lt;nls&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span>  <span style="color: #949494;">&lt;nls&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2          20 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span>  <span style="color: #949494;">&lt;nls&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3          23 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span>  <span style="color: #949494;">&lt;nls&gt;</span></span></span>
 <span></span>
 <span><span class="va">d_fits</span><span class="op">$</span><span class="va">nls_fit</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Nonlinear regression model</span></span>
@@ -252,7 +252,7 @@ error.</p>
 <span><span class="co">#&gt;   "residual"))`.</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `map()`:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `nlsLM()`:</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> object '.x' not found</span></span></code></pre></div>
 <p>The error, that the object <code>.x</code> cannot be found, likely
 means that <strong>car::Boot()</strong> is incompatible with the
@@ -294,12 +294,11 @@ approach and have found it powerful numerous times now.</p>
 <span></span>
 <span><span class="va">d_fits</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
-<span><span class="co">#&gt;   curve_id growth_temp process     flux   data     gauss…¹ coefs nls_fit boots…²</span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimation respi… &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>   &lt;dbl&gt; <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2          20 acclimation respi… &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>   &lt;dbl&gt; <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3          23 acclimation respi… &lt;tibble&gt; <span style="color: #949494;">&lt;nls&gt;</span>   &lt;dbl&gt; <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​gaussian, ²​bootstrap</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   curve_id growth_temp process   flux  data     gaussian coefs nls_fit bootstrap</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimat… resp… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2          20 acclimat… resp… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3          23 acclimat… resp… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>    <span style="color: #949494;">&lt;dbl&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>   <span style="color: #949494;">&lt;boot&gt;</span></span></span></code></pre></div>
 <p>Voila! There is now a list column of the bootstrapped parameter
 estimates for each model.</p>
 <p>It is now possible to do all the other things in the pipeline.
@@ -398,7 +397,7 @@ included in the model formula anyway.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Number of bootstraps was 15 out of 20 attempted </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 15 out of 20 attempted </span></span>
+<span><span class="co">#&gt;  Number of bootstraps was 18 out of 20 attempted </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Number of bootstraps was 15 out of 20 attempted</span></span>
 <span></span>
