@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg)](https://github.com/padpadpadpad/rTPC/actions)
 [![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
