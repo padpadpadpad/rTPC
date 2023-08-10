@@ -267,12 +267,12 @@ stores the model coefficients.</p>
 <span><span class="co"># look at the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">boot1</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         r_tref         e       eh       th</span></span>
-<span><span class="co">#&gt; [1,] 0.2784449 0.6151630 2.847837 32.87477</span></span>
-<span><span class="co">#&gt; [2,] 0.2887849 0.7680538 2.232039 30.33047</span></span>
-<span><span class="co">#&gt; [3,] 0.1967939 1.2448381 2.351105 26.94648</span></span>
-<span><span class="co">#&gt; [4,] 0.2653476 0.9137619 2.346021 28.90090</span></span>
-<span><span class="co">#&gt; [5,] 0.1867005 1.1431271 2.463036 28.33343</span></span>
-<span><span class="co">#&gt; [6,] 0.2249780 0.8972005 2.455578 30.21309</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.1949923 1.2320266 2.361406 27.24612</span></span>
+<span><span class="co">#&gt; [2,] 0.2951844 0.7786487 2.291370 30.03024</span></span>
+<span><span class="co">#&gt; [3,] 0.2621351 0.9638345 2.227214 28.32330</span></span>
+<span><span class="co">#&gt; [4,] 0.2625521 0.8418778 2.351318 29.99080</span></span>
+<span><span class="co">#&gt; [5,] 0.2726132 0.7553671 2.504629 31.00384</span></span>
+<span><span class="co">#&gt; [6,] 0.2487596 0.8765192 2.386948 29.94614</span></span></code></pre></div>
 <p>The parameters of each bootstrapped refit are returned. All methods
 that are available for <strong>boot()</strong> and
 <strong>Boot()</strong> are supported for these objects. This includes
@@ -371,7 +371,7 @@ using <strong>nls_multstart()</strong>, refit the model using
 <span><span class="co"># bootstrap using case resampling</span></span>
 <span><span class="va">boot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html" class="external-link">Boot</a></span><span class="op">(</span><span class="va">fit_nlsLM2</span>, method <span class="op">=</span> <span class="st">'case'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 991 out of 999 attempted</span></span></code></pre></div>
+<span><span class="co">#&gt;  Number of bootstraps was 990 out of 999 attempted</span></span></code></pre></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and
 calculate 95% confidence intervals around the predictions. Models that
