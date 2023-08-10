@@ -7,6 +7,7 @@
 
 [![R build
 status](https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg)](https://github.com/padpadpadpad/rTPC/actions)
+[![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
@@ -77,7 +78,7 @@ using rTPC**. (1) Collect, check, and manipulate data into long format.
 assortment of four models were chosen. (3) Fit the models to data using
 nls.multstart and helper functions from rTPC. (4) Models can be
 visualised and (5) common traits of TPCs can be estimated using
-**rTPC::calc\_params()**. (6) This simple pipeline can easily be scaled
+**rTPC::calc_params()**. (6) This simple pipeline can easily be scaled
 up to be used on multiple curves.
 
 ## Extensions to the pipeline
@@ -98,11 +99,11 @@ model uncertainty and calculate confidence intervals of parameters.
 
 ## Getting started
 
-  - For an introduction to **rTPC**, see `vignette("rTPC")`
-  - To follow the general pipeline, see `vignette("fit_many_models")`
-    and `vignette("fit_many_curves")`.
-  - For examples of extensions to this pipeline, see the
-    `vignette("model_averaging_selection")`,
-    `vignette("model_weighting")`, `vignette("bootstrapping_models")`,
-    `vignette("weighted_bootstrapping")`, and
-    `vignette("bootstrapping_many_curves")`.
+- For an introduction to **rTPC**, see `vignette("rTPC")`
+- To follow the general pipeline, see `vignette("fit_many_models")` and
+  `vignette("fit_many_curves")`.
+- For examples of extensions to this pipeline, see the
+  `vignette("model_averaging_selection")`,
+  `vignette("model_weighting")`, `vignette("bootstrapping_models")`,
+  `vignette("weighted_bootstrapping")`, and
+  `vignette("bootstrapping_many_curves")`.

@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R build status](https://github.com/padpadpadpad/rTPC/workflows/R-CMD-check/badge.svg)](https://github.com/padpadpadpad/rTPC/actions)
+[![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. __rTPC__ contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
