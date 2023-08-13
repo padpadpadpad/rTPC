@@ -395,11 +395,11 @@ included in the model formula anyway.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'temp_fit'</span>, <span class="st">'temp_data'</span>, <span class="st">'boot'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 17 out of 20 attempted </span></span>
+<span><span class="co">#&gt;  Number of bootstraps was 12 out of 20 attempted </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 17 out of 20 attempted </span></span>
+<span><span class="co">#&gt;  Number of bootstraps was 11 out of 20 attempted </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 16 out of 20 attempted</span></span>
+<span><span class="co">#&gt;  Number of bootstraps was 14 out of 20 attempted</span></span>
 <span></span>
 <span><span class="co"># calculate extra params for each model and put in long format to begin with</span></span>
 <span><span class="va">d_fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d_fits</span>, extra_params <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">nls_fit</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="../reference/calc_params.html">calc_params</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, names_to <span class="op">=</span>  <span class="st">'param'</span>, values_to <span class="op">=</span> <span class="st">'estimate'</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
@@ -419,7 +419,7 @@ included in the model formula anyway.</p>
 <ul>
 <li>John Fox (author of car) on bootstrapping regression models in R
 <ul>
-<li><a href="https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf" class="external-link uri">https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf</a></li>
+<li><a href="https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf" class="external-link uri">https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf</a></li>
 </ul>
 </li>
 <li>A.C. Davison &amp; D.V. Hinkley (2003) Bootstrap Methods and their

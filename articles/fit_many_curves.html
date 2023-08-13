@@ -159,15 +159,14 @@ models can be fitted to each curve using list columns and
 <strong>purrr::map()</strong> to fit and store multiple models in a data
 frame.</p>
 <p>When fitting lots of models at once, it is useful to know the
-progress the code as it may take a long time to run. We can create a
-progress bar using the <a href="https://github.com/r-lib/progress/blob/master/README.md" class="external-link"><strong>progress</strong></a>
-package. In order to do this, I create a new function
-<strong>nls_multstart_progress()</strong> that contains a
-<strong>pb$tick()</strong> call. This means every time the function is
-called, it will add one tick onto the progress bar. The progress bar is
-created using <strong>progress_bar$new()</strong>, where we set the
-total length of the progress bar is set by the number of models in total
-being fit.</p>
+progress the code as it may take a long time to run.The R package
+<strong>purrr</strong> does now has progress bars built in; you can add
+a progress bar to the <strong>map()</strong> function using the argument
+<em>.progress</em>. However, when fitting multiple models with multiple
+<strong>map()</strong> calls a new progress bar each time, so currently
+I have not found a way to have a single progress bar for multiple
+<strong>map()</strong> calls, so we will keep with what we have at the
+moment.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load in data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"chlorella_tpc"</span><span class="op">)</span></span>
