@@ -241,7 +241,7 @@ left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(e
 #### Further reading
 
 - John Fox (author of car) on bootstrapping regression models in R
-    - https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf
+    - https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their Application.         - https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A
 - Schenker, N., & Gentleman, J. F. (2001). On judging the significance of differences by examining the overlap between confidence intervals. The American Statistician, 55(3), 182-186.
 - Puth, M. T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of methods for calculating confidence intervals by bootstrapping. Journal of Animal Ecology, 84(4), 892-897.

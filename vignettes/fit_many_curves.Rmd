@@ -36,7 +36,7 @@ We can demonstrate the fitting of multiple curves by modelling all 60 TPCs from 
 
 Using a similar approach to `vignette('fit_many_models')`, models can be fitted to each curve using list columns and **purrr::map()** to fit and store multiple models in a data frame.
 
-When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run. We can create a progress bar using the [**progress**](https://github.com/r-lib/progress/blob/master/README.md) package. In order to do this, I create a new function **nls_multstart_progress()** that contains a **pb\$tick()** call. This means every time the function is called, it will add one tick onto the progress bar. The progress bar is created using **progress_bar\$new()**, where we set the total length of the progress bar is set by the number of models in total being fit.
+When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run.The R package **purrr** does now has progress bars built in; you can add a progress bar to the **map()** function using the argument *.progress*. However, when fitting multiple models with multiple **map()** calls a new progress bar each time, so currently I have not found a way to have a single progress bar for multiple **map()** calls, so we will keep with what we have at the moment.
 
 ```{r fit_multiple_models, warning=FALSE}
 # load in data
