@@ -4,7 +4,10 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 notes
+
+- Possibly misspelled words in DESCRIPTION: Padfield (15:348), TPCs (15:55, 15:123), al (15:360), et (15:357)
+- These are not misspelled and are consistent with uses I found in other R packages
 
 ## Test environments
 
