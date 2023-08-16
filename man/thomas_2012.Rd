@@ -17,6 +17,9 @@ thomas_2012(temp, a, b, c, topt)
 
 \item{topt}{determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Thomas model (2012) for fitting thermal performance curves
 }

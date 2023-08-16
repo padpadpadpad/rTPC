@@ -6,6 +6,7 @@
 #' @param b parameter threshold temperature (ºC) beyond which the downward curve starts
 #' @param c parameter controlling the rate of decline beyond the threshold temperature, b
 #' @references Rezende, Enrico L., and Francisco Bozinovic. Thermal performance across levels of biological organization. Philosophical Transactions of the Royal Society B 374.1778 (2019): 20180549.
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{\textrm{if} \quad temp < b: rate = a \cdot 10 ^{\frac{\log_{10} (q_{10})}{(\frac{10}{temp})}}}{%
 #' rate = (a.10^(log10(q10)/(10/temp)))}

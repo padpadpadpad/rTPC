@@ -5,6 +5,7 @@
 #' @param topt optimum temperature (ºC)
 #' @param ctmax critical thermal maximum (ºC)
 #' @param a related to the full curve width
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Deutsch, C. A., Tewksbury, J. J., Huey, R. B., Sheldon, K. S., Ghalambor, C. K., Haak, D. C., & Martin, P. R. Impacts of climate warming on terrestrial ectotherms across latitude. Proceedings of the National Academy of Sciences, 105(18), 6668-6672. (2008)
 #' @details Equation:
 #' \deqn{\textrm{if} \quad temp < t_{opt}: rate = r_{max} \cdot exp^{-\bigg(\frac{temp-t_{opt}}{2a}\bigg)^2}}{%

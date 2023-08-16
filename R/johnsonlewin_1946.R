@@ -6,6 +6,7 @@
 #' @param eh high temperature de-activation energy (eV)
 #' @param topt optimum temperature (ºC)
 #' @param r0 scaling parameter
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Johnson, Frank H., and Isaac Lewin. The growth rate of E. coli in relation to temperature, quinine and coenzyme. Journal of Cellular and Comparative Physiology 28.1 (1946): 47-75.
 #' @details Equation:
 #' \deqn{rate= \frac{r_0 \cdot exp^{\frac{-e}{k\cdot (temp + 273.15)}}}{1 + exp^{-\frac{e_h -\big(\frac{e_h}{(t_{opt} + 273.15)} + k \cdot ln\big(\frac{e}{e_h - e}\big) \big) \cdot (temp + 273.15)}{k \cdot (temp + 273.15)}}}}{%

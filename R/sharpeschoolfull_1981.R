@@ -9,6 +9,7 @@
 #' @param eh high temperature de-activation energy (eV)
 #' @param th temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to high temperatures
 #' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @author Daniel Padfield
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
 #' @details Equation:

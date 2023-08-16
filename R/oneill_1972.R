@@ -5,6 +5,7 @@
 #' @param ctmax high temperature (ºC) at which rates become negative
 #' @param topt optimum temperature (ºC)
 #' @param q10 defines the fold change in performance as a result of increasing the temperature by 10 ºC
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{rate = r_{max} \cdot \bigg(\frac{ct_{max} - temp}{ct_{max} - t_{opt}}\bigg)^{x} \cdot exp^{x \cdot \frac{temp - t_{opt}}{ct_{max} - t_{opt}}}}{%
 #' rate = rmax.(ctmax - temp / ctmax - topt)^2.exp(x.(temp-topt/ctmax-topt))}

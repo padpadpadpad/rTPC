@@ -17,6 +17,9 @@ weibull_1995(temp, a, topt, b, c)
 
 \item{c}{defines the curve shape}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Weibull model for fitting thermal performance curves
 }

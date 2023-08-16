@@ -19,6 +19,9 @@ pawar_2018(temp, r_tref, e, eh, topt, tref)
 
 \item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Pawar model for fitting thermal performance curves
 }

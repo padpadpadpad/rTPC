@@ -6,6 +6,7 @@
 #' @param c temperature-independent mortality term
 #' @param d along with e controls the exponential increase in mortality rates with temperature
 #' @param e along with d controls the exponential increase in mortality rates with temperature
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Thomas, Mridul K., et al. Temperature–nutrient interactions exacerbate sensitivity to warming in phytoplankton. Global change biology 23.8 (2017): 3269-3280.
 #' @details Equation:
 #' \deqn{rate = a \cdot exp^{b \cdot temp} - (c + d \cdot exp^{e \cdot temp})}{%

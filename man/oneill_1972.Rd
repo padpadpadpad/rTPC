@@ -17,6 +17,9 @@ oneill_1972(temp, rmax, ctmax, topt, q10)
 
 \item{q10}{defines the fold change in performance as a result of increasing the temperature by 10 ºC}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 O'Neill model for fitting thermal performance curves
 }

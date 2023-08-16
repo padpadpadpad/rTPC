@@ -5,6 +5,7 @@
 #' @param topt optimum temperature
 #' @param a related to full curve width
 #' @param b allows for asymmetry in the curve fit
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{rate = r_{max} \cdot exp^{\bigg[-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^b\bigg]}}{%
 #' rate = rmax.exp(-0.5.(abs(temp - topt)/a)^b)}

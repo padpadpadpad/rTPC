@@ -6,6 +6,7 @@
 #' @param ef temperature dependence of folding the enzymes used in the metabolic reaction, relative to the melting temperature (eV)
 #' @param tm melting temperature in degrees centigrade
 #' @param ehc temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature (eV)
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references DeLong, John P., et al. The combined effects of reactant kinetics and enzyme stability explain the temperature dependence of metabolic rates. Ecology and evolution 7.11 (2017): 3940-3950.
 #' @details Equation:
 #' \deqn{rate = c \cdot exp\frac{-(e_b-(e_f(1-\frac{temp + 273.15}{t_m})+e_{hc} \cdot ((temp + 273.15) - t_m - (temp + 273.15) \cdot ln(\frac{temp + 273.15}{t_m}))))}{k \cdot (temp + 273.15)}}{%

@@ -5,6 +5,7 @@
 #' @param topt optimum temperature (ºC)
 #' @param tmin low temperature (ºC) at which rates become negative
 #' @param tmax high temperature (ºC) at which rates become negative
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @author Daniel Padfield
 #' @references Rosso, L., Lobry, J. R., & Flandrois, J. P.  An unexpected correlation between cardinal temperatures of microbial growth highlighted by a new model. Journal of Theoretical Biology, 162(4), 447-463. (1993)
 #' @details Equation:

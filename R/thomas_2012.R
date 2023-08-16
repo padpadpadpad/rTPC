@@ -5,6 +5,7 @@
 #' @param b arbitrary constant
 #' @param c the range of temperatures over which growth rate is positive, or the thermal niche width (ºC)
 #' @param topt determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Thomas, Mridul K., et al. A global pattern of thermal adaptation in marine phytoplankton. Science 338.6110, 1085-1088 (2012)
 #' @details Equation:
 #' \deqn{rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg)}{%

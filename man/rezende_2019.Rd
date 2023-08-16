@@ -17,6 +17,9 @@ rezende_2019(temp, q10, a, b, c)
 
 \item{c}{parameter controlling the rate of decline beyond the threshold temperature, b}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Rezende model for fitting thermal performance curves
 }

@@ -6,6 +6,7 @@
 #' @param a parameter with no biological meaning
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{rate= a \cdot \big( 1 - exp^{-b\cdot \big(temp-t_{min}\big)}\big) \cdot \big( 1-exp^{-c \cdot \big(t_{max}-temp\big)}\big)}{%
 #' rate =  a.(1 - exp(-b.(temp - tmin))).(1 - exp(-c.(tmax - temp)))}

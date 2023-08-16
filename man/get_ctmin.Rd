@@ -10,7 +10,7 @@ get_ctmin(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-Estimate of critical thermal minimum (ºC)
+Numeric estimate of critical thermal minimum (ºC)
 }
 \description{
 Estimate the critical thermal minimum of a thermal performance curve

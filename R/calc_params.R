@@ -1,6 +1,7 @@
 #' Calculate extra parameters of a thermal performance curve
 #'
 #' @param model nls model object that contains a model of a thermal performance curve
+#' @return a dataframe containing the estimates of key TPC traits for a given model object. If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 #' @details Currently estimates:
 #' * maximum rate (rmax) using [get_rmax()]
 #' * optimum temperature (topt) using [get_topt()]
@@ -14,7 +15,6 @@
 #' * thermal performance breadth using [get_breadth()]
 #' * skewness using [get_skewness()]
 #'
-#' If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 #' @md
 #' @export calc_params
 

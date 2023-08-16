@@ -19,6 +19,9 @@ joehnk_2008(temp, rmax, topt, a, b, c)
 
 \item{c}{parameter with no biological meaning}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Jöhnk model for fitting thermal performance curves
 }

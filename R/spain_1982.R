@@ -6,7 +6,7 @@
 #' @param c constant that determines the steepness of the decreasing part of the curve
 #' @param r0 the apparent rate at 0 ºC
 #' @references BASIC Microcomputer Models in Biology. Addison-Wesley, Reading, MA. 1982
-#'
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{rate = r_0 \cdot exp^{a \cdot temp} \cdot (1-b \cdot exp^{c \cdot temp})}{%
 #' rate = est = r0 . exp(a.temp) . (1 - b.exp(c.temp))}

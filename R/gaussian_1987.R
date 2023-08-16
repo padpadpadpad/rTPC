@@ -4,6 +4,7 @@
 #' @param rmax maximum rate at optimum temperature
 #' @param topt optimum temperature (ºC)
 #' @param a related to the full curve width
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Lynch, M., Gabriel, W., Environmental tolerance. The American Naturalist. 129, 283–303. (1987)
 #' @details Equation:
 #' \deqn{rate = r_{max} \cdot exp^{\bigg(-0.5 \left(\frac{|temp-t_{opt}|}{a}\right)^2\bigg)}}{%

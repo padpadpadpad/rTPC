@@ -17,6 +17,9 @@ deutsch_2008(temp, rmax, topt, ctmax, a)
 
 \item{a}{related to the full curve width}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Modified deutsch model for fitting thermal performance curves
 }

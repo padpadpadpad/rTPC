@@ -10,7 +10,7 @@ get_ctmax(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-Estimate of critical thermal maximum (ºC)
+Numeric estimate of critical thermal maximum (ºC)
 }
 \description{
 Estimate the critical thermal maximum of a thermal performance curve

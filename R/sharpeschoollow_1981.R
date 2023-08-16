@@ -7,6 +7,7 @@
 #' @param tl temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures
 #' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures
 #' @author Daniel Padfield
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. J. Theor. Biol. 88, 719-731 (1981)
 #' @details Equation:
 #' \deqn{rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}{t_{ref} + 273.15})}}{1 + exp^{\frac{e_l}{k}(\frac{1}{t_l} - \frac{1}{temp + 273.15})}}}{%

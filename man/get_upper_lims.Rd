@@ -13,6 +13,9 @@ get_upper_lims(x, y, model_name)
 
 \item{model_name}{the name of the model being fitted}
 }
+\value{
+Named list of upper limits given the data and model being fitted
+}
 \description{
 Sets wide upper limits on parameter values for each TPC model
 }

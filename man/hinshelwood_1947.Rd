@@ -17,6 +17,9 @@ hinshelwood_1947(temp, a, e, b, eh)
 
 \item{eh}{de-activation energy (eV)}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Hinshelwood model for fitting thermal performance curves
 }

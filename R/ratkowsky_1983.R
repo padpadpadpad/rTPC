@@ -5,6 +5,7 @@
 #' @param tmax high temperature (ºC) at which rates become negative
 #' @param a parameter defined as sqrt(rate)/(temp - tmin)
 #' @param b empirical parameter needed to fit the data for temperatures beyond the optimum temperature
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @details Equation:
 #' \deqn{rate = (a \cdot (temp-t_{min}))^2 \cdot (1-exp(b \cdot (temp-t_{max})))^2}{%
 #' rate = ((a.(temp - tmin)).(1 - exp(b.(temp - tmax))))^2}

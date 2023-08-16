@@ -17,6 +17,9 @@ lrf_1991(temp, rmax, topt, tmin, tmax)
 
 \item{tmax}{high temperature (ºC) at which rates become negative}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Lobry-Rosso-Flandros (LRF) model for fitting thermal performance curves
 }

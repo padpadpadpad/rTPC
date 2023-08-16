@@ -6,6 +6,7 @@
 #' @param tmax high temperature (ºC) at which rates become negative
 #' @param a shape parameter to adjust the skewness of the curve
 #' @param b shape  parameter to adjust the kurtosis of the curve
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Boatman, T. G., Lawson, T., & Geider, R. J. A key marine diazotroph in a changing ocean: The interacting effects of temperature, CO2 and light on the growth of Trichodesmium erythraeum IMS101. PLoS ONE, 12, e0168796 (2017)
 #' @details Equation:
 #' \deqn{rate= r_{max} \cdot \left(sin\bigg(\pi\left(\frac{temp-t_{min}}{t_{max} - t_{min}}\right)^{a}\bigg)\right)^{b}}{%

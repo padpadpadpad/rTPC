@@ -4,6 +4,7 @@
 #' @param a parameter that controls the height of the curve
 #' @param b parameter that controls the slope of the initial increase of the curve
 #' @param c parameter that controls the position and steepness of the decline of the curve
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Flinn PW Temperature-dependent functional response of the parasitoid Cephalonomia waterstoni (Gahan) (Hymenoptera, Bethylidae) attacking rusty grain beetle larvae (Coleoptera, Cucujidae). Environmental Entomology, 20, 872–876, (1991)
 #' @details Equation:
 #' \deqn{rate= \frac{1}{1+a+b \cdot temp+c \cdot temp^2}}{%

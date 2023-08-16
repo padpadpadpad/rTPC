@@ -9,6 +9,9 @@ calc_params(model)
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
+\value{
+a dataframe containing the estimates of key TPC traits for a given model object. If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
+}
 \description{
 Calculate extra parameters of a thermal performance curve
 }
@@ -27,6 +30,4 @@ Currently estimates:
 \item thermal performance breadth using \code{\link[=get_breadth]{get_breadth()}}
 \item skewness using \code{\link[=get_skewness]{get_skewness()}}
 }
-
-If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
 }

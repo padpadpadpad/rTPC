@@ -17,6 +17,9 @@ lactin2_1995(temp, a, b, tmax, delta_t)
 
 \item{delta_t}{thermal safety margin (ºC)}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Lactin2 model for fitting thermal performance curves
 }

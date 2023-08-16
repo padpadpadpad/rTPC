@@ -5,7 +5,7 @@
 #' @param y vector of rate values
 #' @param model_name the name of the model being fitted
 #' @author Daniel Padfield
-#'
+#' @return Named list of upper limits given the data and model being fitted
 #' @export get_upper_lims
 
 get_upper_lims <- function(x, y, model_name) {

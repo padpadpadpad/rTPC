@@ -7,6 +7,7 @@
 #' @param d dimensionless parameter
 #' @param e dimensionless parameter
 #' @author Daniel Padfield
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Niehaus, Amanda C., et al. Predicting the physiological performance of ectotherms in fluctuating thermal environments. Journal of Experimental Biology 215.4: 694-701 (2012)
 #' @details Equation:
 #' \deqn{rate=\frac{a\left(\frac{temp-b+\frac{c(d-1)}{d+e-2}}{c}\right)^{d-1}  \cdot \left(1-\frac{temp-b+\frac{c(d-1)}{d+e-2}}{c}\right)^{e-1}}{{\left(\frac{d-1}{d+e-2}\right)}^{d-1}\cdot \left(\frac{e-1}{d+e-2}\right)^{e-1}}}{%

@@ -17,6 +17,9 @@ johnsonlewin_1946(temp, r0, e, eh, topt)
 
 \item{topt}{optimum temperature (ºC)}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Johnson-Lewin model for fitting thermal performance curves
 }

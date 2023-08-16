@@ -17,6 +17,9 @@ ratkowsky_1983(temp, tmin, tmax, a, b)
 
 \item{b}{empirical parameter needed to fit the data for temperatures beyond the optimum temperature}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Ratkowsky model for fitting thermal performance curves
 }

@@ -5,6 +5,7 @@
 #' @param b constant that determines the height of the overall curve
 #' @param tmax the temperature at which the curve begins to decelerate beyond the optimum (ºC)
 #' @param delta_t thermal safety margin (ºC)
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environmental Entomology 24, 69-75 (1995)
 #' @details Equation:
 #' \deqn{rate= = exp^{a \cdot temp} - exp^{a \cdot t_{max} - \bigg(\frac{t_{max} - temp}{\delta _{t}}\bigg)} + b}{%

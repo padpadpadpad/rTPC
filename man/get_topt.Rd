@@ -10,7 +10,7 @@ get_topt(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-Optimum temperature (in ºC)
+Numeric estimate of optimum temperature (in ºC)
 }
 \description{
 Estimate optimum temperature of a thermal performance curve

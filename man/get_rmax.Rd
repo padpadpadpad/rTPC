@@ -10,7 +10,7 @@ get_rmax(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-maximum rate value
+Numeric estimate of maximum rate
 }
 \description{
 Estimate maximum rate of a thermal performance curve

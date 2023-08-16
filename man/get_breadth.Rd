@@ -12,7 +12,7 @@ get_breadth(model, level = 0.8)
 \item{level}{proportion of maximum rate over which thermal performance breadth is calculated}
 }
 \value{
-Thermal performance breadth (in ºC)
+Numeric estimate of thermal performance breadth (in ºC)
 }
 \description{
 Estimate thermal performance breadth of a thermal performance curve

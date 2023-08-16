@@ -10,7 +10,7 @@ get_e(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-Estimate of activation energy (eV)
+Numeric estimate of activation energy (eV)
 }
 \description{
 Estimate the activation energy of a thermal performance curve

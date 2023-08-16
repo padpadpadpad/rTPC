@@ -19,6 +19,9 @@ delong_2017(temp, c, eb, ef, tm, ehc)
 
 \item{ehc}{temperature dependence of the heat capacity between the folded and unfolded state of the enzymes, relative to the melting temperature (eV)}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 DeLong enzyme-assisted Arrhenius model for fitting thermal performance curves
 }

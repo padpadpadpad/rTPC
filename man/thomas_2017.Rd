@@ -19,6 +19,9 @@ thomas_2017(temp, a, b, c, d, e)
 
 \item{e}{along with d controls the exponential increase in mortality rates with temperature}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Thomas model (2017) for fitting thermal performance curves
 }

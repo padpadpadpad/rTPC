@@ -4,6 +4,7 @@
 #' @param a parameter that defines the rate at 0 ºC
 #' @param b parameter with no biological meaning
 #' @param c parameter with no biological meaning
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Montagnes, David JS, et al. Short‐term temperature change may impact freshwater carbon flux: a microbial perspective. Global Change Biology 14.12: 2823-2838. (2008)
 #' @details Equation:
 #' \deqn{rate = a + b \cdot temp + c \cdot temp^2}{%

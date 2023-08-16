@@ -5,6 +5,7 @@
 #' @param tmax high temperature (ºC) at which rates become negative
 #' @param a scale parameter to adjust maximum rate of the curve
 #' @param b shape parameter to adjust the asymmetry of the curve
+#' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthropods. Environmental Entomololgy, 28, 22–29 (1999)
 #' @details Equation:
 #' \deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{b}}}{%

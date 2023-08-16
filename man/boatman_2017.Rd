@@ -19,6 +19,9 @@ boatman_2017(temp, rmax, tmin, tmax, a, b)
 
 \item{b}{shape  parameter to adjust the kurtosis of the curve}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Boatman model for fitting thermal performance curves
 }

@@ -10,7 +10,7 @@ get_thermalsafetymargin(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-Thermal safety margin (in ºC)
+Numeric estimate of thermal safety margin (in ºC)
 }
 \description{
 Estimate thermal safety margin of a thermal performance curve

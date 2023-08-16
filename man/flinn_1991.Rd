@@ -15,6 +15,9 @@ flinn_1991(temp, a, b, c)
 
 \item{c}{parameter that controls the position and steepness of the decline of the curve}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Flinn model for fitting thermal performance curves
 }

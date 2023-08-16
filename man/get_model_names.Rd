@@ -7,8 +7,11 @@
 get_model_names()
 }
 \value{
-list of thermal performance curves available in rTPC
+character vector of thermal performance curves available in rTPC
 }
 \description{
 Lists the models available in rTPC
+}
+\examples{
+get_model_names()
 }

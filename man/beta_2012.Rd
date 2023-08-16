@@ -19,6 +19,9 @@ beta_2012(temp, a, b, c, d, e)
 
 \item{e}{dimensionless parameter}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Beta model for fitting thermal performance curves
 }

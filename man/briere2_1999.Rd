@@ -17,6 +17,9 @@ briere2_1999(temp, tmin, tmax, a, b)
 
 \item{b}{shape parameter to adjust the asymmetry of the curve}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Briere2 model for fitting thermal performance curves
 }

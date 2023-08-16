@@ -1,7 +1,8 @@
 #' Lists the models available in rTPC
 #'
-#' @return list of thermal performance curves available in rTPC
-#'
+#' @return character vector of thermal performance curves available in rTPC
+#' @examples
+#' get_model_names()
 #' @export get_model_names
 
 get_model_names <- function(){

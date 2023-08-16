@@ -17,6 +17,9 @@ spain_1982(temp, a, b, c, r0)
 
 \item{r0}{the apparent rate at 0 ºC}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Spain model for fitting thermal performance curves
 }

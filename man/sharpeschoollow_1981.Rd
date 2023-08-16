@@ -19,6 +19,9 @@ sharpeschoollow_1981(temp, r_tref, e, el, tl, tref)
 
 \item{tref}{standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Sharpe-Schoolfield model (low temperature inactivation only) for fitting thermal performance curves
 }

@@ -13,6 +13,9 @@ get_start_vals(x, y, model_name)
 
 \item{model_name}{the name of the model being fitted}
 }
+\value{
+Named list of start parameters given the data and model being fitted
+}
 \description{
 Estimates sensible start values for fitting thermal performance curves
 }

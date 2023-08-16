@@ -10,7 +10,7 @@ get_q10(model)
 \item{model}{nls model object that contains a model of a thermal performance curve}
 }
 \value{
-q10 value
+Numeric estimate of q10 value
 }
 \description{
 Estimate the q10 value of a thermal performance curve

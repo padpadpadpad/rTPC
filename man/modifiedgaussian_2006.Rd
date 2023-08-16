@@ -17,6 +17,9 @@ modifiedgaussian_2006(temp, rmax, topt, a, b)
 
 \item{b}{allows for asymmetry in the curve fit}
 }
+\value{
+a numeric vector of rate values based on the temperatures and parameter values provided to the function
+}
 \description{
 Modified gaussian model for fitting thermal performance curves
 }
