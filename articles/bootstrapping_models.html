@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
       </span>
     </div>
 
@@ -267,12 +267,12 @@ stores the model coefficients.</p>
 <span><span class="co"># look at the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">boot1</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         r_tref         e       eh       th</span></span>
-<span><span class="co">#&gt; [1,] 0.2867049 0.8170719 2.251013 29.79253</span></span>
-<span><span class="co">#&gt; [2,] 0.2390943 0.9426732 2.384255 29.28234</span></span>
-<span><span class="co">#&gt; [3,] 0.2773228 0.6485769 2.702692 32.54002</span></span>
-<span><span class="co">#&gt; [4,] 0.3017062 0.6733600 2.393759 31.49604</span></span>
-<span><span class="co">#&gt; [5,] 0.2625043 0.7277860 2.634182 31.66611</span></span>
-<span><span class="co">#&gt; [6,] 0.2372961 1.0646843 2.257470 27.75111</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.2856880 0.7731792 2.327474 30.36818</span></span>
+<span><span class="co">#&gt; [2,] 0.2471950 0.8213812 2.435067 30.62876</span></span>
+<span><span class="co">#&gt; [3,] 0.2783173 0.6575210 2.568429 32.00772</span></span>
+<span><span class="co">#&gt; [4,] 0.2906748 0.7753219 2.288920 30.22437</span></span>
+<span><span class="co">#&gt; [5,] 0.2268648 0.9647285 2.362438 29.40946</span></span>
+<span><span class="co">#&gt; [6,] 0.3032264 0.7655478 2.239484 30.09108</span></span></code></pre></div>
 <p>The parameters of each bootstrapped refit are returned. All methods
 that are available for <strong>boot()</strong> and
 <strong>Boot()</strong> are supported for these objects. This includes
@@ -371,7 +371,7 @@ using <strong>nls_multstart()</strong>, refit the model using
 <span><span class="co"># bootstrap using case resampling</span></span>
 <span><span class="va">boot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html" class="external-link">Boot</a></span><span class="op">(</span><span class="va">fit_nlsLM2</span>, method <span class="op">=</span> <span class="st">'case'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 984 out of 999 attempted</span></span></code></pre></div>
+<span><span class="co">#&gt;  Number of bootstraps was 983 out of 999 attempted</span></span></code></pre></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and
 calculate 95% confidence intervals around the predictions. Models that

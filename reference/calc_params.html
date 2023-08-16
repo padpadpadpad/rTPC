@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
       </span>
     </div>
 
@@ -103,6 +103,12 @@
 <dd><p>nls model object that contains a model of a thermal performance curve</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p>a dataframe containing the estimates of key TPC traits for a given model object. If any parameters cannot be calculated for a thermal performance curve, they will return <code>NA</code>.</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>Currently estimates:</p><ul><li><p>maximum rate (rmax) using <code><a href="get_rmax.html">get_rmax()</a></code></p></li>
@@ -116,8 +122,7 @@
 <li><p>thermal tolerance using <code><a href="get_thermaltolerance.html">get_thermaltolerance()</a></code></p></li>
 <li><p>thermal performance breadth using <code><a href="get_breadth.html">get_breadth()</a></code></p></li>
 <li><p>skewness using <code><a href="get_skewness.html">get_skewness()</a></code></p></li>
-</ul><p>If any parameters cannot be calculated for a thermal performance curve, they will return <code>NA</code>.</p>
-    </div>
+</ul></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
