@@ -1,14 +1,10 @@
-## New submission
+## Resubmission
 
-- This is a new submission.
+- This is a resubmission but the . CRAN maintainers suggested changes to the Description file and to add return values to functions. We have done all of the suggestions and are resubmitting.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
-
-* This is a new release.
-* Note is:
-  - "Possibly misspelled words in DESCRIPTION: TPCs (15:52, 15:118) rTPC (15:59)". These are not misspelled words these are correct uses.
+0 errors | 0 warnings | 0 notes
 
 ## Test environments
 
