@@ -1,6 +1,6 @@
 Type: Package
 Package: rTPC
-Title: Functions for Fitting Thermal Performance Curves
+Title: Fitting and Analysing Thermal Performance Curves
 Version: 1.0.3
 Authors@R: 
     c(person(given = "Daniel",
@@ -12,7 +12,7 @@ Authors@R:
              role = "aut",
              email = "hjosullivan123@gmail.com"))
 Maintainer: Daniel Padfield <d.padfield@exeter.ac.uk>
-Description: Helps fit thermal performance curves (TPCs). rTPC contains 26 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
+Description: Helps to fit thermal performance curves (TPCs). 'rTPC' contains 26 model formulations previously used to fit TPCs and has helper functions to set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature. See Padfield et al. (2021) <doi:10.1111/2041-210X.13585>.
 License: GPL-3
 URL: https://github.com/padpadpadpad/rTPC
 BugReports: https://github.com/padpadpadpad/rTPC/issues
