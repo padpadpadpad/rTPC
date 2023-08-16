@@ -1,6 +1,6 @@
 ## Resubmission
 
-- This is a resubmission but the . CRAN maintainers suggested changes to the Description file and to add return values to functions. We have done all of the suggestions and are resubmitting.
+- This is a resubmission of a package not currently on CRAN. On the previous submission, CRAN maintainers suggested changes to the Description file and to add return values to functions. We have done all of the suggestions and are resubmitting.
 
 ## R CMD check results
 
