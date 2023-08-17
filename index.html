@@ -136,8 +136,12 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><strong>rTPC</strong> can easily be downloaded from GitHub using the <code>remotes::install_github()</code>. The vignettes are all available online, but if you would like to build them locally, add <code>build_vignettes = TRUE</code> into your <code>install_github()</code> command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.</p>
+<p><strong>rTPC</strong> can easily be downloaded from CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install package from CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'rTPC'</span><span class="op">)</span></span></code></pre></div>
+<p><strong>rTPC</strong> can also be installed from GitHub using the <code>remotes::install_github()</code>. The vignettes are all available online, but if you would like to build them locally, add <code>build_vignettes = TRUE</code> into your <code>install_github()</code> command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install package from GitHub</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"padpadpadpad/rTPC"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -206,6 +210,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=rTPC" class="external-link"><img src="https://www.r-pkg.org/badges/version/rTPC" alt="CRAN status"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/rTPC" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/rTPC" alt="Downloads from Rstudio mirror"></a></li>
 </ul>
 </div>
 
