@@ -21,6 +21,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/rTPC)](https://CRAN.R-project.org/package=rTPC)
+[![Downloads from Rstudio
+mirror](https://cranlogs.r-pkg.org/badges/grand-total/rTPC)](https://www.r-pkg.org/pkg/rTPC)
 <!-- badges: end -->
 
 __rTPC__ is an R package that helps fit thermal performance curves (TPCs) in R. __rTPC__ contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
@@ -39,7 +42,13 @@ Please report any bugs and suggestions to the [Issues](https://github.com/padpad
 
 ## Installation
 
-__rTPC__ can easily be downloaded from GitHub using the `remotes::install_github()`. The vignettes are all available online, but if you would like to build them locally, add `build_vignettes = TRUE` into your `install_github()` command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.
+__rTPC__ can easily be downloaded from CRAN. 
+
+```{r install_cran, eval = FALSE}
+# install package from CRAN
+install.packages('rTPC')
+```
+__rTPC__ can also be installed from GitHub using the `remotes::install_github()`. The vignettes are all available online, but if you would like to build them locally, add `build_vignettes = TRUE` into your `install_github()` command. However, we do not recommend doing this due to the number of extra R packages utilised in the vignettes.
 
 ```{r install, eval = FALSE}
 # install package from GitHub

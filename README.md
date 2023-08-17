@@ -6,6 +6,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rTPC)](https://CRAN.R-project.org/package=rTPC)
+[![Downloads from Rstudio
+mirror](https://cranlogs.r-pkg.org/badges/grand-total/rTPC)](https://www.r-pkg.org/pkg/rTPC)
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
@@ -52,7 +56,14 @@ new mathematical model formulation.
 
 ## Installation
 
-**rTPC** can easily be downloaded from GitHub using the
+**rTPC** can easily be downloaded from CRAN.
+
+``` r
+# install package from CRAN
+install.packages('rTPC')
+```
+
+**rTPC** can also be installed from GitHub using the
 `remotes::install_github()`. The vignettes are all available online, but
 if you would like to build them locally, add `build_vignettes = TRUE`
 into your `install_github()` command. However, we do not recommend doing

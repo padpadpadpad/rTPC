@@ -1,6 +1,7 @@
 # rTPC 1.0.4 - 16/08/2023
 
 * Updated documentation to include return value information
+* Accepted onto CRAN
 
 # rTPC 1.0.3 - 10/08/2023
 
