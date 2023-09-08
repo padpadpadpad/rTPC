@@ -71,11 +71,11 @@ get_lower_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'thomas_2012'){
-    topt = min(d$x, na.rm = TRUE)
+    tref = min(d$x) - 150
     c = 0
     a = -10
     b = -10
-    return(c(a = a, b = b, c = c, topt = topt))
+    return(c(a = a, b = b, c = c, tref = tref))
   }
 
   if(model_name == 'thomas_2017'){

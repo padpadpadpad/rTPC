@@ -1,7 +1,7 @@
 Type: Package
 Package: rTPC
 Title: Fitting and Analysing Thermal Performance Curves
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: 
     c(person(given = "Daniel",
              family = "Padfield",

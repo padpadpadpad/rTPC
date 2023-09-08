@@ -283,7 +283,7 @@ d_fits <- nest(d, data = c(temp, rate)) %>%
                         upper = get_upper_lims(.x$temp, .x$rate, model_name = 'spain_1982'),
                         supp_errors = 'Y',
                         convergence_count = FALSE)),
-         thomas1 = map(data, ~nls_multstart(rate~thomas_2012(temp = temp, a,b,c,topt),
+         thomas1 = map(data, ~nls_multstart(rate~thomas_2012(temp = temp, a,b,c,tref),
                         data = .x,
                         iter = c(4,4,4,4),
                         start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'thomas_2012') - 1,

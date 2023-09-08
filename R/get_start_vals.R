@@ -67,9 +67,9 @@ get_start_vals <- function(x, y, model_name) {
   if(model_name == 'thomas_2012'){
     c = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
     b = 0
-    topt = mean(d$x[d$y==max(d$y, na.rm = TRUE)])
-    a = max(d$y)/max(exp(b*d$x)*(1-((d$x-topt)/(c/2))^2))
-    return(c(a = a, b = b, c = c, topt = topt))
+    tref = mean(d$x[d$y==max(d$y, na.rm = TRUE)])
+    a = max(d$y)/max(exp(b*d$x)*(1-((d$x-tref)/(c/2))^2))
+    return(c(a = a, b = b, c = c, tref = tref))
   }
 
   if(model_name == 'ratkowsky_1983'){

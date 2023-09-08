@@ -4,11 +4,11 @@
 #' @param a arbitrary constant
 #' @param b arbitrary constant
 #' @param c the range of temperatures over which growth rate is positive, or the thermal niche width (ºC)
-#' @param topt determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt
+#' @param tref determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt
 #' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Thomas, Mridul K., et al. A global pattern of thermal adaptation in marine phytoplankton. Science 338.6110, 1085-1088 (2012)
 #' @details Equation:
-#' \deqn{rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg)}{%
+#' \deqn{rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{ref}}{c/2}\bigg)^2\bigg)}{%
 #' rate = a . exp(b . temp) . (1 - ((temp - topt)/(c/2))^2)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data.
@@ -26,7 +26,7 @@
 #' # get start values and fit model
 #' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'thomas_2012')
 #' # fit model
-#' mod <- nls.multstart::nls_multstart(rate~thomas_2012(temp = temp, a, b, c, topt),
+#' mod <- nls.multstart::nls_multstart(rate~thomas_2012(temp = temp, a, b, c, tref),
 #' data = d,
 #' iter = c(4,4,4,4),
 #' start_lower = start_vals - 1,
@@ -51,8 +51,8 @@
 #'
 #' @export thomas_2012
 
-thomas_2012 <- function(temp, a, b, c, topt){
-  est <-  a * exp(b * temp) * (1 - ((temp - topt)/(c/2))^2)
+thomas_2012 <- function(temp, a, b, c, tref){
+  est <-  a * exp(b * temp) * (1 - ((temp - tref)/(c/2))^2)
   return(est)
 }
 

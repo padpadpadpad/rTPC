@@ -1,3 +1,8 @@
+# rTPC 1.0.5 - 08/09/2023
+
+* Updated thomas_2012() to have better lower and upper limits for tref. Relabelled topt to be tref as it rarely reflect the optimum temperature
+* Re-rendered website in its entirety
+
 # rTPC 1.0.4 - 16/08/2023
 
 * Updated documentation to include return value information
