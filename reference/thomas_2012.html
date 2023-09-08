@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">thomas_2012</span><span class="op">(</span><span class="va">temp</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span>, <span class="va">topt</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">thomas_2012</span><span class="op">(</span><span class="va">temp</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span>, <span class="va">tref</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -115,7 +115,7 @@
 <dd><p>the range of temperatures over which growth rate is positive, or the thermal niche width (ºC)</p></dd>
 
 
-<dt>topt</dt>
+<dt>tref</dt>
 <dd><p>determines the location of the maximum of the quadratic portion of this function. When b = 0, tref would equal topt</p></dd>
 
 </dl></div>
@@ -128,7 +128,7 @@
     <div id="details">
     <h2>Details</h2>
     <p>Equation:
-$$rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)^2\bigg)$$</p>
+$$rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{ref}}{c/2}\bigg)^2\bigg)$$</p>
 <p>Start values in <code>get_start_vals</code> are derived from the data.</p>
 <p>Limits in <code>get_lower_lims</code> and <code>get_upper_lims</code> are derived from the data or based on extreme values that are unlikely to occur in ecological settings.</p>
     </div>
@@ -153,7 +153,7 @@ $$rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)
 <span class="r-in"><span><span class="co"># get start values and fit model</span></span></span>
 <span class="r-in"><span><span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'thomas_2012'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># fit model</span></span></span>
-<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu">thomas_2012</span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span>, <span class="va">topt</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu">thomas_2012</span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span>, <span class="va">tref</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>data <span class="op">=</span> <span class="va">d</span>,</span></span>
 <span class="r-in"><span>iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>start_lower <span class="op">=</span> <span class="va">start_vals</span> <span class="op">-</span> <span class="fl">1</span>,</span></span>
@@ -166,14 +166,14 @@ $$rate = a \cdot exp^{b \cdot temp} \bigg(1-\bigg(\frac{temp - t_{opt}}{c}\bigg)
 <span class="r-in"><span><span class="co"># look at model fit</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: rate ~ thomas_2012(temp = temp, a, b, c, topt)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: rate ~ thomas_2012(temp = temp, a, b, c, tref)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Estimate Std. Error t value Pr(&gt;|t|)    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> a     0.20859    0.20466   1.019 0.337937    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> b     0.05296    0.02782   1.904 0.093414 .  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> c    33.30540    4.79114   6.951 0.000118 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> topt 32.08003    2.47486  12.962 1.19e-06 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> tref 32.08003    2.47486  12.962 1.19e-06 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
