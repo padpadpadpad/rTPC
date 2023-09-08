@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rTPC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2023-08-13</h4>
+            <h4 data-toc-skip class="date">2023-09-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/fit_many_models.Rmd" class="external-link"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="hidden name"><code>fit_many_models.Rmd</code></div>
@@ -418,7 +418,7 @@ number of parameters, c(5, 5, 5) for 3 estimated parameters will yield
 <span>                        upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'spain_1982'</span><span class="op">)</span>,</span>
 <span>                        supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
 <span>                        convergence_count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>         thomas1 <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/thomas_2012.html">thomas_2012</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span>,<span class="va">topt</span><span class="op">)</span>,</span>
+<span>         thomas1 <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/thomas_2012.html">thomas_2012</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">a</span>,<span class="va">b</span>,<span class="va">c</span>,<span class="va">tref</span><span class="op">)</span>,</span>
 <span>                        data <span class="op">=</span> <span class="va">.x</span>,</span>
 <span>                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,</span>
 <span>                        start_lower <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'thomas_2012'</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,</span>
