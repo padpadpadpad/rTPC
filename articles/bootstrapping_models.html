@@ -122,7 +122,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2023-09-08</h4>
+            <h4 data-toc-skip class="date">2024-01-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/bootstrapping_models.Rmd" class="external-link"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="hidden name"><code>bootstrapping_models.Rmd</code></div>
@@ -267,12 +267,12 @@ stores the model coefficients.</p>
 <span><span class="co"># look at the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">boot1</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         r_tref         e       eh       th</span></span>
-<span><span class="co">#&gt; [1,] 0.2868386 0.7327209 2.509772 30.76273</span></span>
-<span><span class="co">#&gt; [2,] 0.2688717 0.7686224 2.391387 30.82351</span></span>
-<span><span class="co">#&gt; [3,] 0.2871223 0.5924690 2.812391 33.18699</span></span>
-<span><span class="co">#&gt; [4,] 0.2906926 0.7300896 2.386071 30.86421</span></span>
-<span><span class="co">#&gt; [5,] 0.2792782 0.7926863 2.260814 29.92348</span></span>
-<span><span class="co">#&gt; [6,] 0.2771924 0.7146070 2.257987 31.04037</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.3006062 0.5548084 2.740535 33.41678</span></span>
+<span><span class="co">#&gt; [2,] 0.3095165 0.6070683 2.589139 32.40601</span></span>
+<span><span class="co">#&gt; [3,] 0.2930638 0.7577023 2.342112 30.27032</span></span>
+<span><span class="co">#&gt; [4,] 0.2786535 0.7605502 2.467523 30.64806</span></span>
+<span><span class="co">#&gt; [5,] 0.2773223 0.8492671 2.232509 29.46755</span></span>
+<span><span class="co">#&gt; [6,] 0.2814403 0.8338909 2.214058 29.36211</span></span></code></pre></div>
 <p>The parameters of each bootstrapped refit are returned. All methods
 that are available for <strong>boot()</strong> and
 <strong>Boot()</strong> are supported for these objects. This includes
@@ -371,7 +371,7 @@ using <strong>nls_multstart()</strong>, refit the model using
 <span><span class="co"># bootstrap using case resampling</span></span>
 <span><span class="va">boot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Boot.html" class="external-link">Boot</a></span><span class="op">(</span><span class="va">fit_nlsLM2</span>, method <span class="op">=</span> <span class="st">'case'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Number of bootstraps was 989 out of 999 attempted</span></span></code></pre></div>
+<span><span class="co">#&gt;  Number of bootstraps was 992 out of 999 attempted</span></span></code></pre></div>
 <pre><code>Number of bootstraps was 994 out of 999 attempted </code></pre>
 <p>We can then create predictions for each bootstrapped model and
 calculate 95% confidence intervals around the predictions. Models that
