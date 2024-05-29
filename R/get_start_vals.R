@@ -119,6 +119,12 @@ get_start_vals <- function(x, y, model_name) {
     c =  14.45
     eb = 0.58
     ef = 2.215
+
+    # if post topt is only 2 rows, then add another point in the middle just for getting a start value
+    if(nrow(post_topt) == 2){
+      post_topt <- rbind(post_topt, c(mean(post_topt$x), mean(post_topt$y)))
+    }
+
     fit <- suppressWarnings(stats::lm(log(y) ~ x+I(x^2), post_topt))
     roots <- suppressWarnings(polyroot(stats::coef(fit)))
     tm = suppressWarnings(as.numeric(max(Re(roots))))
