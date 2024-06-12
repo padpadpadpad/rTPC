@@ -37,7 +37,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'sharpeschoolhigh_1981'){
     r_tref = max(d$y, na.rm = TRUE)
     e = 10
-    eh = 20
+    eh = 40
     th = max(d$x)
     return(c(r_tref = r_tref, e = e, eh = eh, th = th))
   }
@@ -45,10 +45,10 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'sharpeschoolfull_1981'){
     r_tref = max(d$y, na.rm = TRUE)
     e = 10
-    eh = 20
+    eh = 40
     th = max(d$x, na.rm = TRUE)
     tl = mean(d[d$y == max(d$y, na.rm = TRUE),]$x)
-    el = 20
+    el = 40
 
     return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
   }
@@ -57,7 +57,7 @@ get_upper_lims <- function(x, y, model_name) {
     r_tref = max(d$y, na.rm = TRUE)
     e = 10
     tl = mean(d[d$y == max(d$y, na.rm = TRUE),]$x)
-    el = 20
+    el = 40
     return(c(r_tref = r_tref, e = e, el = el, tl = tl))
   }
 
@@ -65,13 +65,13 @@ get_upper_lims <- function(x, y, model_name) {
     rmax = max(d$y, na.rm = TRUE) * 10
     tmin = max(d$x, na.rm = TRUE)
     tmax = max(d$x, na.rm = TRUE) * 10
-    a = 10
+    a = 50
     b = 10
     return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
   }
 
   if(model_name == 'thomas_2017'){
-    a = 100
+    a = 1000
     b = 100
     c = 100
     d = 100
@@ -84,7 +84,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'briere2_1999'){
     tmin = max(d$x, na.rm = TRUE)
     tmax = max(d$x, na.rm = TRUE) * 10
-    b = 10
+    b = 30
     a = 10^-2
     return(c(tmin = tmin, tmax = tmax, a = a, b = b))
   }
@@ -102,7 +102,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'flinn_1991'){
 
     b = 100
-    a = 100
+    a = 500
     c = 10
     return(c(a = a, b = b, c = c))
   }
@@ -119,7 +119,7 @@ get_upper_lims <- function(x, y, model_name) {
     rmax = max(d$y, na.rm = TRUE) * 10
     topt = max(d$x, na.rm = TRUE)
     a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
-    b = 10
+    b = 100
 
     return(c(rmax = rmax, topt = topt, a = a, b=b))
   }
@@ -128,9 +128,9 @@ get_upper_lims <- function(x, y, model_name) {
 
     rmax = max(d$y, na.rm = TRUE) * 10
     topt = max(d$x, na.rm = TRUE)
-    a = 100
+    a = 1000
     b = 10
-    c = 10
+    c = 100
 
     return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
   }
@@ -157,7 +157,7 @@ get_upper_lims <- function(x, y, model_name) {
 
     tmin = max(d$x, na.rm = TRUE)
     tmax = max(d$x, na.rm = TRUE) * 10
-    a = 20
+    a = 100
     b = 20
     c = 20
 
@@ -174,9 +174,9 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'beta_2012'){
     a = a = max(d$y, na.rm = TRUE) *100
     b = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
-    c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
-    d = 100
-    e = 100
+    c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*100
+    d = 1000
+    e = 1000
     return(c(a=a, b=b, c=c, d=d, e=e))}
 
   if(model_name == 'weibull_1995'){
@@ -187,7 +187,7 @@ get_upper_lims <- function(x, y, model_name) {
     return(c(a=a, topt = topt, b=b, c=c))}
 
   if(model_name == 'delong_2017'){
-    c =  14.45 * 100
+    c =  14.45 * 500
     eb = 0.58 * 100
     ef = 2.215 * 100
     ehc = 0.085 * 100
@@ -214,7 +214,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'spain_1982'){
     r0 = max(d$y, na.rm = TRUE)
     a = 2
-    b = 2
+    b = 20
     c = 2
     return(c(a = a, b = b, c = c, r0 = r0))
   }
@@ -222,7 +222,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'pawar_2018'){
     r_tref = max(d$y, na.rm = TRUE)
     e = 10
-    eh = 20
+    eh = 40
     topt = max(d$x)
     return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
   }
@@ -230,7 +230,7 @@ get_upper_lims <- function(x, y, model_name) {
   if(model_name == 'thomas_2012'){
     a = 10
     b = 10
-    c = (max(d$x) - min(d$x)) * 5
+    c = (max(d$x) - min(d$x)) * 10
     tref = max(d$x) + 100
     return(c(a=a, b=b, c=c, tref=tref))
   }

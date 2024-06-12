@@ -26,7 +26,7 @@
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
-#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981')
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'lrf_1991')
 #' # fit model
 #' mod <- nls_multstart(rate~lrf_1991(temp = temp, rmax, topt, tmin, tmax),
 #' data = d,

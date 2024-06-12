@@ -26,7 +26,7 @@ get_lower_lims <- function(x, y, model_name) {
   pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
 
   if(model_name == 'rezende_2019'){
-    b = 0
+    b = -30
     q10 = 0
     a = 0
     c = 0
@@ -63,7 +63,7 @@ get_lower_lims <- function(x, y, model_name) {
 
   if(model_name == 'boatman_2017'){
     rmax = min(d$y, na.rm = TRUE)
-    tmin = 0
+    tmin = -50
     tmax = min(d$x, na.rm = TRUE)
     a = 0
     b = 0
@@ -88,7 +88,7 @@ get_lower_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'briere2_1999'){
-    tmin = 0
+    tmin = -50
     tmax = min(d$x, na.rm = TRUE)
     b = 0
     a = 0
@@ -152,7 +152,7 @@ get_lower_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'ratkowsky_1983'){
-    tmin = 0
+    tmin = -50
     tmax = min(d$x, na.rm = TRUE)
     a = 0
     b = 0
@@ -161,7 +161,7 @@ get_lower_lims <- function(x, y, model_name) {
 
   if(model_name == 'kamykowski_1985'){
 
-    tmin = min(d$x, na.rm = TRUE) * 0.1
+    tmin = min(d$x, na.rm = TRUE) - 50
     tmax = min(d$x, na.rm = TRUE)
     a = 0
     b = 0
@@ -218,7 +218,7 @@ get_lower_lims <- function(x, y, model_name) {
   }
 
   if(model_name == 'spain_1982'){
-    r0 = abs(min(d$y, na.rm = TRUE))*-10
+    r0 = abs(min(d$y, na.rm = TRUE))*-100
     a = -2
     b = -2
     c = -2
