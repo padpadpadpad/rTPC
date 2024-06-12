@@ -123,7 +123,7 @@ rTPC</h1>
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2024-05-29</h4>
+            <h4 data-toc-skip class="date">2024-06-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/model_averaging_selection.Rmd" class="external-link"><code>vignettes/model_averaging_selection.Rmd</code></a></small>
       <div class="hidden name"><code>model_averaging_selection.Rmd</code></div>
@@ -320,7 +320,7 @@ small sample size). AIC and BIC are both returned by
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
 <span><span class="co">#&gt;   model_name       sigma    AIC  AICc   BIC df.residual</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> boatman          0.292 10.0    26.8 12.9            7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> boatman          0.274  8.51   25.3 11.4            7</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gaussian         0.327 11.8    17.5 13.7            9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> oneill           0.266  7.38   17.4  9.81           8</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> quadratic        0.408 17.1    22.8 19.0            9</span></span>
@@ -382,12 +382,12 @@ model.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
 <span><span class="co">#&gt;   model_name       weight      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;mdl.wght&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> sharpeschoolhigh 0.9424218661</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> oneill           0.0280227559</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gaussian         0.0267589370</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> quadratic        0.0018576632</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> rezende          0.0006905407</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> boatman          0.0002482371</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> sharpeschoolhigh 0.9421542691</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> oneill           0.0280147990</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gaussian         0.0267513389</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> quadratic        0.0018571357</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> rezende          0.0006903446</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> boatman          0.0005321127</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># calculate average prediction</span></span>
@@ -443,13 +443,13 @@ such as optimum temperature and maximum rate.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 12</span></span></span>
 <span><span class="co">#&gt;   model_name      rmax  topt ctmin ctmax     e    eh   q10 thermal_safety_margin</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> boatman         1.56  38    0     48.1  0.72  1.74  2.48                 10.1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> boatman         1.58  38.4 13.7   47.9  0.72  1.74  2.48                  9.48</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gaussian        1.5   36.3 18.7   54.0  0.68  1.08  2.37                 17.6 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> oneill          1.55  37.7 12.1   47.4  0.72  1.74  2.48                  9.69</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> quadratic       1.22  34.3 17.4   51.3  0.68  1.08  2.37                 16.9 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> rezende         1.35  39.5 -<span style="color: #BB0000;">3.41</span>  48.7  0.72  1.74  2.48                  9.14</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> sharpeschoolh…  1.81  41.6  2.54  45.6  0.58 11.5   2.06                  3.91</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> model average   1.8   41.4  3.26  45.8  0.59 10.9   2.08                  4.47</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> model average   1.8   41.4  3.27  45.8  0.59 10.9   2.08                  4.47</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: thermal_tolerance &lt;dbl&gt;, breadth &lt;dbl&gt;, skewness &lt;dbl&gt;</span></span></span></code></pre></div>
 <hr>
 </div>
