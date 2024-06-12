@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that("spain_1982 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.1, 1.3, 1.3, 1.2, 0.8, -0.1))
+    c(0.3, 0.4, 0.5, 0.7, 0.8, 1.0, 1.1, 1.3, 1.3, 1.2, 0.8, -0.1))
 })

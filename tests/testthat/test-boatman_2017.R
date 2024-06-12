@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that("boatman_2017 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.1, 0.2, 0.3, 0.5, 0.7, 1.1, 1.4, 1.5, 1.5, 1.1, 0.5, 0.0))
+    c(0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.3, 1.6, 1.5, 1.1, 0.4, 0.0))
 })

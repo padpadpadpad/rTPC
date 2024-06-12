@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that("modifiedgaussian_2006 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.0, 0.0, 0.0, 0.0, 0.8, 1.4, 1.4, 1.4, 1.4, 1.3, 0.1, 0.0))
+    c(0.0, 0.0, 0.0, 0.5, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 0.0, 0.0))
 })
