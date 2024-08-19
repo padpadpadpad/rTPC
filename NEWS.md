@@ -1,3 +1,9 @@
+# rTPC 1.0.6 19/08/2024
+
+* Added ashrafi1_2018() to the package
+* Added a ... argument to calc_params() to allow users to change the level of the calculation of get_breadth()
+* Re-rendered the website in its entirety.
+
 # rTPC 1.0.5 - 08/09/2023
 
 * Updated thomas_2012() to have better lower and upper limits for tref. Relabelled topt to be tref as it rarely reflect the optimum temperature
