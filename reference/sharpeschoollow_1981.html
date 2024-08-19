@@ -9,7 +9,7 @@
 
   gtag('config', 'UA-74093873-3');
 </script></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -37,7 +37,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li class="divider">
@@ -72,20 +72,20 @@
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/padpadpadpad/rTPC/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Sharpe-Schoolfield model (low temperature inactivation only) for fitting thermal performance curves</h1>
-    <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/R/sharpeschoollow_1981.R" class="external-link"><code>R/sharpeschoollow_1981.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/R/sharpeschoollow_1981.R" class="external-link"><code>R/sharpeschoollow_1981.R</code></a></small>
     <div class="hidden name"><code>sharpeschoollow_1981.Rd</code></div>
     </div>
 
@@ -99,35 +99,35 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>temp</dt>
+
+
+<dl><dt id="arg-temp">temp<a class="anchor" aria-label="anchor" href="#arg-temp"></a></dt>
 <dd><p>temperature in degrees centigrade</p></dd>
 
 
-<dt>r_tref</dt>
+<dt id="arg-r-tref">r_tref<a class="anchor" aria-label="anchor" href="#arg-r-tref"></a></dt>
 <dd><p>rate at the standardised temperature, tref</p></dd>
 
 
-<dt>e</dt>
+<dt id="arg-e">e<a class="anchor" aria-label="anchor" href="#arg-e"></a></dt>
 <dd><p>activation energy (eV)</p></dd>
 
 
-<dt>el</dt>
+<dt id="arg-el">el<a class="anchor" aria-label="anchor" href="#arg-el"></a></dt>
 <dd><p>low temperature de-activation energy (eV)</p></dd>
 
 
-<dt>tl</dt>
+<dt id="arg-tl">tl<a class="anchor" aria-label="anchor" href="#arg-tl"></a></dt>
 <dd><p>temperature (ºC) at which enzyme is 1/2 active and 1/2 suppressed due to low temperatures</p></dd>
 
 
-<dt>tref</dt>
+<dt id="arg-tref">tref<a class="anchor" aria-label="anchor" href="#arg-tref"></a></dt>
 <dd><p>standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by high temperatures</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>a numeric vector of rate values based on the temperatures and parameter values provided to the function</p>
+    <p>a numeric vector of rate values based on the temperatures and parameter values provided to the function</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -218,15 +218,15 @@ $$rate= \frac{r_{tref} \cdot exp^{\frac{-e}{k} (\frac{1}{temp + 273.15}-\frac{1}
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 
