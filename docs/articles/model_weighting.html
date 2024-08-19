@@ -12,14 +12,12 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Model weighting with rTPC">
-<meta property="og:description" content="rTPC">
-<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +30,7 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -61,7 +59,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -102,7 +100,7 @@
 <li>
   <a href="https://github.com/padpadpadpad/rTPC/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -113,7 +111,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -122,7 +120,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2023-09-08</h4>
+            <h4 data-toc-skip class="date">2024-08-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/model_weighting.Rmd" class="external-link"><code>vignettes/model_weighting.Rmd</code></a></small>
       <div class="hidden name"><code>model_weighting.Rmd</code></div>
@@ -142,8 +140,10 @@ nls.multstart, and the tidyverse.<a class="anchor" aria-label="anchor" href="#a-
 <h2 id="things-to-consider">Things to consider<a class="anchor" aria-label="anchor" href="#things-to-consider"></a>
 </h2>
 <ul>
-<li>The optimal weighting is <span class="math inline">\(\frac{1}{\sigma}\)</span>. The standard deviation
-is easy to calculate when calculating the means of the rate data.</li>
+<li>The optimal weighting is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mn>1</mn><mi>σ</mi></mfrac><annotation encoding="application/x-tex">\frac{1}{\sigma}</annotation></semantics></math>.
+The standard deviation is easy to calculate when calculating the means
+of the rate data.</li>
 <li>Carefully consider your level of replication before undertaking your
 statistical analysis.
 <ul>
@@ -160,7 +160,7 @@ statistical analysis.
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel" class="external-link">ggrepel</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggrepel.slowkow.com/" class="external-link">ggrepel</a></span><span class="op">)</span></span></code></pre></div>
 <p>The general pipeline demonstrates how models can be fitted,
 parameters extracted, and predictions plotted to single or multiple
 curves using functions in <strong>rTPC</strong>,
@@ -182,8 +182,9 @@ the model fit.</p>
 <strong>weights</strong> argument within
 <strong>nls_multstart()</strong>, to perform a weighted non-linear least
 squares regression. The optimal weight for each data point is the
-standard deviation, <span class="math inline">\(1/\sigma\)</span>, which
-easily be calculated when averaging over technical or biological
+standard deviation,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mi>σ</mi></mrow><annotation encoding="application/x-tex">1/\sigma</annotation></semantics></math>,
+which easily be calculated when averaging over technical or biological
 replicates.</p>
 <p>We can demonstrate weighted non-linear least squares regression by
 using the example dataset contained within <strong>rTPC</strong> - a
@@ -280,10 +281,10 @@ has not been used in previous vignettes as of yet.</p>
 <span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, label <span class="op">=</span> <span class="va">model_name</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_labs</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, label <span class="op">=</span> <span class="va">model_name</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_labs</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_linerange</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, ymin <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">-</span> <span class="va">sd</span>, ymax <span class="op">=</span> <span class="va">ave_rate</span> <span class="op">+</span> <span class="va">sd</span><span class="op">)</span>, <span class="va">d_ave</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span><span class="op">)</span>, <span class="va">d_ave</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">21</span>, fill <span class="op">=</span> <span class="st">'green4'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, label <span class="op">=</span> <span class="va">topt_text</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, label <span class="op">=</span> <span class="va">topt_text</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'white'</span>, nudge_y <span class="op">=</span> <span class="fl">0.8</span>, segment.size <span class="op">=</span> <span class="fl">0.2</span>, segment.colour <span class="op">=</span> <span class="st">'grey50'</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">topt</span>, <span class="va">rmax</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">4</span>, <span class="va">d_topt</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span> <span class="op">+</span></span>
@@ -304,9 +305,7 @@ be applied. The model weighting approach can easily be combined with <a href="mo
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -319,16 +318,16 @@ be applied. The model weighting approach can easily be combined with <a href="mo
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

@@ -4,10 +4,12 @@
 \alias{calc_params}
 \title{Calculate extra parameters of a thermal performance curve}
 \usage{
-calc_params(model)
+calc_params(model, ...)
 }
 \arguments{
 \item{model}{nls model object that contains a model of a thermal performance curve}
+
+\item{...}{additional arguments to pass to any of the functions used to estimate the traits. For example you can change the level argument of \code{\link[=get_breadth]{get_breadth()}}.}
 }
 \value{
 a dataframe containing the estimates of key TPC traits for a given model object. If any parameters cannot be calculated for a thermal performance curve, they will return \code{NA}.
