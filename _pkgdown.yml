@@ -1,7 +1,15 @@
 template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    font_scale: 1
   params:
-    bootswatch: cosmo
     ganalytics: UA-74093873-3
+
+navbar:
+  bg: dark
+
+url: https://padpadpadpad.github.io/rTPC/
 
 toc:
   depth: 2
