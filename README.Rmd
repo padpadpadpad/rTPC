@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# __rTPC__ <img src="logo.png" width="400" align="right" />
+# rTPC <img src="man/figures/logo.png" height="138" align="right" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/padpadpadpad/rTPC/actions/workflows/R-CMD-check.yaml)

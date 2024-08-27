@@ -8,8 +8,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+
 #### A brief example of how model weighting can be used to help account for measurement uncertainty when fitting models to TPCs using rTPC, nls.multstart, and the tidyverse.
+
 ***
+
 ## Things to consider 
 
 - The optimal weighting is $\frac{1}{\sigma}$. The standard deviation is easy to calculate when calculating the means of the rate data.
@@ -19,6 +23,7 @@ vignette: >
     - Do you have non-independence in your dataset?
 
 ***
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
