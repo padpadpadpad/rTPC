@@ -1,6 +1,7 @@
 template:
   bootstrap: 5
   bootswatch: cosmo
+  math-rendering: mathjax
   bslib:
     font_scale: 1
   params:

@@ -10,9 +10,10 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 #### An introduction to rTPC and how it can be used to fit thermal performance curves using nls.multstart.
 
-***
+------------------------------------------------------------------------
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -32,15 +33,15 @@ library(broom)
 library(tidyverse)
 ```
 
-__rTPC__ provides a suite of functions to help fit thermal performance curves to empirical data. After searching the literature, __rTPC__ contains 25 different model formulations that have been used previously. These functions can be easily applied to methods in R that use non-linear least squares regression to estimate thermal performance curves.
+**rTPC** provides a suite of functions to help fit thermal performance curves to empirical data. After searching the literature, **rTPC** contains `r length(rTPC::get_model_names())` different model formulations that have been used previously. These functions can be easily applied to methods in R that use non-linear least squares regression to estimate thermal performance curves.
 
-The available model formulations can be accessed using __get_model_names()__.
+The available model formulations can be accessed using **get_model_names()**.
 
 ```{r get_mod_names}
 get_model_names()
 ```
 
-They are generally named after the author of the paper (and hence the name of the model within the literature) and the year at which I found the model to be first used, separated by a __"\_"__. Some original model formulations have been altered so that all models take temperature in degrees centigrade and raw rate values as input.
+They are generally named after the author of the paper (and hence the name of the model within the literature) and the year at which I found the model to be first used, separated by a **"\_"**. Some original model formulations have been altered so that all models take temperature in degrees centigrade and raw rate values as input.
 
 We can demonstrate the fitting procedure by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
 
@@ -60,6 +61,7 @@ ggplot(d, aes(temp, rate)) +
        title = 'Respiration across temperatures')
 
 ```
+
 For each model, **rTPC** has helper functions that estimate sensible start values (**get_start_vals()**), lower (**get_lower_lims()**) and upper (**get_upper_lims()**) limits. To demonstrate this, we shall use the sharpe-schoolfield model for high temperature inactivation only.
 
 ```{r}
@@ -82,7 +84,7 @@ One problem with most methods of fitting models in R using non-linear least squa
 
 To overcome this, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()**, but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked using AIC scores.
 
-Using __nls_multstart__, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to `FALSE`, **nls_multstart()** will try and fit all iterations.
+Using **nls_multstart**, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to `FALSE`, **nls_multstart()** will try and fit all iterations.
 
 ```{r fit_model}
 # fit model

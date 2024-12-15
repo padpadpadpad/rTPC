@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Bootstrapping using rTPC">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-74093873-3"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rTPC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2024-08-27</h4>
+            <h4 data-toc-skip class="date">2024-12-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/bootstrapping_models.Rmd" class="external-link"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="d-none name"><code>bootstrapping_models.Rmd</code></div>
@@ -143,15 +143,13 @@ produce confidence intervals of estimated parameters.</p>
 <p>First, we will demonstrate this case resampling approach using data
 from a recent paper by Padfield <em>et al.</em> (2020), that measures
 the thermal performance of the bacteria, <em>Pseudomonas
-fluorescens</em>, in the presence and absence of its phage,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\phi 2</annotation></semantics></math>.
-In this study, each single growth rate estimate is a technical
-replicate, coming from an isogenic strain of bacteria either inoculated
-with, or without, the phage. As such, all the data points within each
-phage treatment can be used to estimate the same curve and there is no
-<code>rep</code> column as in the <code>chlorella_tpc</code> dataset. We
-can visualise one of the curves (bacteria in the absence of phage),
-using <strong>ggplot2</strong>.</p>
+fluorescens</em>, in the presence and absence of its phage, <span class="math inline">\(\phi 2\)</span>. In this study, each single growth
+rate estimate is a technical replicate, coming from an isogenic strain
+of bacteria either inoculated with, or without, the phage. As such, all
+the data points within each phage treatment can be used to estimate the
+same curve and there is no <code>rep</code> column as in the
+<code>chlorella_tpc</code> dataset. We can visualise one of the curves
+(bacteria in the absence of phage), using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load in data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"bacteria_tpc"</span><span class="op">)</span></span>
@@ -404,32 +402,13 @@ measuring thermal performance curves.</p>
 <p>Re-sampling residuals, at its heart, follows a simple set of
 steps:</p>
 <ol style="list-style-type: decimal">
-<li>Fit the model and for each data point,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
-retain the fitted values
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><msub><mi>y</mi><mi>i</mi></msub><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{y_{i}}</annotation></semantics></math>
-and the residuals,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><msub><mi>e</mi><mi>i</mi></msub><mo accent="true">̂</mo></mover><mo>=</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mover><msub><mi>y</mi><mi>i</mi></msub><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{e_{i}} = y_{i} - \hat{y_{i}}</annotation></semantics></math>
+<li>Fit the model and for each data point, <span class="math inline">\(i\)</span>, retain the fitted values <span class="math inline">\(\hat{y_{i}}\)</span> and the residuals, <span class="math inline">\(\hat{e_{i}} = y_{i} - \hat{y_{i}}\)</span>
 </li>
-<li>For each data pair,
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>),
-where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>
-is the measured temperature value, we add a randomly re-sampled
-residual,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>e</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{e}</annotation></semantics></math>
-to the fitted value
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><msub><mi>y</mi><mi>i</mi></msub><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{y_i}</annotation></semantics></math>.
-This becomes the new
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>
-value, such that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mover><msub><mi>y</mi><mi>i</mi></msub><mo accent="true">̂</mo></mover><mo>+</mo><mover><mi>e</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">y_i = \hat{y_i} + \hat{e}</annotation></semantics></math>.
-The new response variable is created based on the random re-allocation
-of the variation around the original model fit</li>
-<li>The model is refit using the newly created
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>
-response variable</li>
+<li>For each data pair, (<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>), where <span class="math inline">\(x_i\)</span> is the measured temperature value, we
+add a randomly re-sampled residual, <span class="math inline">\(\hat{e}\)</span> to the fitted value <span class="math inline">\(\hat{y_i}\)</span>. This becomes the new <span class="math inline">\(y_i\)</span> value, such that <span class="math inline">\(y_i = \hat{y_i} + \hat{e}\)</span>. The new
+response variable is created based on the random re-allocation of the
+variation around the original model fit</li>
+<li>The model is refit using the newly created <span class="math inline">\(y_i\)</span> response variable</li>
 <li>Repeat steps 2 and 3 a number of times</li>
 </ol>
 <p>This method makes the assumption that the original model fit is a
@@ -686,11 +665,11 @@ bootstrapping. Journal of Animal Ecology, 84(4), 892-897.</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
+  <p>Developed by Daniel Padfield, Hannah O’Sullivan, Francis Windram.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

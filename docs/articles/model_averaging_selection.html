@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Model selection and model averaging with rTPC">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-74093873-3"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rTPC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2024-08-27</h4>
+            <h4 data-toc-skip class="date">2024-12-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/model_averaging_selection.Rmd" class="external-link"><code>vignettes/model_averaging_selection.Rmd</code></a></small>
       <div class="d-none name"><code>model_averaging_selection.Rmd</code></div>
@@ -111,9 +111,8 @@ any fitting takes place.</li>
 <ul>
 <li>It seems illogical to allow a poor model to ruin the prediction, so
 it makes sense to down-weight it. This is the advice much of ecology
-takes: only average models within
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mn>2</mn><mi>A</mi><mi>I</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">\Delta 2 AIC</annotation></semantics></math>
-of the best model.</li>
+takes: only average models within <span class="math inline">\(\Delta 2
+AIC\)</span> of the best model.</li>
 <li>If we have already pre-selected sensible models from the 24, it may
 often be wiser not to compute model weights. This is the common
 procedure in economics and with the IPCC earth-system-models.</li>
@@ -276,6 +275,9 @@ small sample size). AIC and BIC are both returned by
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="va">sigma</span>, <span class="va">AIC</span>, <span class="va">AICc</span>, <span class="va">BIC</span>, <span class="va">df.residual</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'MuMIn':</span></span>
+<span><span class="co">#&gt;   method        from </span></span>
+<span><span class="co">#&gt;   nobs.multinom broom</span></span>
 <span></span>
 <span><span class="va">d_ic</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
@@ -328,9 +330,8 @@ model’s weighting. The best supported model’s predictions are taken into
 account more than the least supported. Often the number of models is
 reduced by setting a cut-off for the difference in the information
 criterion metric being used. A common approach is to only keep models
-within
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mn>2</mn><mi>A</mi><mi>I</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">\Delta 2 AIC</annotation></semantics></math>
-of the best model.</p>
+within <span class="math inline">\(\Delta 2 AIC\)</span> of the best
+model.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get model weights</span></span>
 <span><span class="co"># filtering on AIC score is hashtagged out in this example</span></span>
@@ -437,11 +438,11 @@ Applications, 27(1), 78-93. <a href="https://doi.org/10.1002/eap.1419" class="ex
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
+  <p>Developed by Daniel Padfield, Hannah O’Sullivan, Francis Windram.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

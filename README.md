@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# **rTPC** <img src="logo.png" width="250" align="right" />
+# rTPC <img src="man/figures/logo.png" height="138" align="right"/>
 
 <!-- badges: start -->
 
@@ -10,10 +10,11 @@
 status](https://www.r-pkg.org/badges/version/rTPC)](https://CRAN.R-project.org/package=rTPC)
 [![Downloads from Rstudio
 mirror](https://cranlogs.r-pkg.org/badges/grand-total/rTPC)](https://www.r-pkg.org/pkg/rTPC)
+
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
-(TPCs) in R. **rTPC** contains 24 model formulations previously used to
+(TPCs) in R. **rTPC** contains 29 model formulations previously used to
 fit TPCs and has helper functions to help set sensible start parameters,
 upper and lower parameter limits and estimate parameters useful in
 downstream analyses, such as cardinal temperatures, maximum rate and
@@ -39,6 +40,8 @@ extensively for the bootstrapping approaches.
 **rTPC** and the pipelines outlined in the vignettes are published in
 [Methods in Ecology and
 Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access.
+\## Citation
+
 If this R package helps you, please cite us using the following
 citation:
 
@@ -46,6 +49,13 @@ Daniel Padfield, Hannah O’Sullivan, & Samraat Pawar (2021). rTPC and
 nls.multstart: A new pipeline to fit thermal performance curves in R.
 Methods in Ecology and Evolution.
 <https://doi.org/10.1111/2041-210X.13585>
+
+And cite the R package itself:
+
+Padfield D, O’Sullivan H, Windram F (2024). *rTPC: Fitting and Analysing
+Thermal Performance Curves*. R package version 1.0.7,
+<https://padpadpadpad.github.io/rTPC/>,
+<https://github.com/padpadpadpad/rTPC>
 
 ## Bugs and suggestions
 
@@ -79,7 +89,7 @@ remotes::install_github("padpadpadpad/rTPC")
 **rTPC** makes it easy to fit multiple models to multiple thermal
 performance curves.
 
-<img src="man/figures/rTPC_pipeline.png" width="1000" align="center" />
+<img src="man/figures/rTPC_pipeline.png" width="1000" align="center"/>
 
 **Figure 1. General pipeline for fitting thermal performance curves
 using rTPC**. (1) Collect, check, and manipulate data into long format.
@@ -96,7 +106,7 @@ up to be used on multiple curves.
 when fitting TPCs, such as model selection, model averaging,
 incorporating model weights and bootstrapping of model fits.
 
-<img src="man/figures/rTPC_pipeline_extensions.png" width="1000" align="center" />
+<img src="man/figures/rTPC_pipeline_extensions.png" width="1000" align="center"/>
 
 **Figure 2. Potential applications for fitting thermal performance
 curves using rTPC**. (1) AIC, BIC or other metrics of model fit can be

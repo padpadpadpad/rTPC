@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><script src="deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Fitting and Analysing Thermal Performance Curves">
 <meta name="description" content="Helps to fit thermal performance curves (TPCs). rTPC contains 26 model formulations previously used to fit TPCs and has helper functions to set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature. See Padfield et al. (2021) &lt;doi:10.1111/2041-210X.13585&gt;.">
 <meta property="og:description" content="Helps to fit thermal performance curves (TPCs). rTPC contains 26 model formulations previously used to fit TPCs and has helper functions to set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature. See Padfield et al. (2021) &lt;doi:10.1111/2041-210X.13585&gt;.">
@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rTPC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,17 +80,20 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="rtpc-">
-<strong>rTPC</strong> <a class="anchor" aria-label="anchor" href="#rtpc-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="rtpc-">rTPC <a class="anchor" aria-label="anchor" href="#rtpc-"></a>
 </h1>
 </div>
 <!-- badges: start -->
 
-<p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 24 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
+<!-- badges: end -->
+<p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 29 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
 <p>The idea behind <strong>rTPC</strong> is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which model works best. Which model and which workflow is “best” is going to be down to the question that is being asked. Throughout the vignettes, <em>Things to consider</em> sections give some key considerations about what to consider <em>before</em> and <em>during</em> the analysis.</p>
 <p>When developing <strong>rTPC</strong>, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart" class="external-link"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org" class="external-link"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation. The R package <a href="https://CRAN.R-project.org/package=car/car.pdf" class="external-link"><strong>car</strong></a> is used extensively for the bootstrapping approaches.</p>
-<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Methods in Ecology and Evolution</a> and are open access. If this R package helps you, please cite us using the following citation:</p>
+<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Methods in Ecology and Evolution</a> and are open access. ## Citation</p>
+<p>If this R package helps you, please cite us using the following citation:</p>
 <p>Daniel Padfield, Hannah O’Sullivan, &amp; Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link uri">https://doi.org/10.1111/2041-210X.13585</a></p>
+<p>And cite the R package itself:</p>
+<p>Padfield D, O’Sullivan H, Windram F (2024). <em>rTPC: Fitting and Analysing Thermal Performance Curves</em>. R package version 1.0.7, <a href="https://padpadpadpad.github.io/rTPC/" class="uri">https://padpadpadpad.github.io/rTPC/</a>, <a href="https://github.com/padpadpadpad/rTPC" class="external-link uri">https://github.com/padpadpadpad/rTPC</a></p>
 <div class="section level2">
 <h2 id="bugs-and-suggestions">Bugs and suggestions<a class="anchor" aria-label="anchor" href="#bugs-and-suggestions"></a>
 </h2>
@@ -164,6 +167,7 @@
 <ul class="list-unstyled">
 <li>Daniel Padfield <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Hannah O'Sullivan <br><small class="roles"> Author </small>  </li>
+<li>Francis Windram <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -181,11 +185,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
+  <p>Developed by Daniel Padfield, Hannah O’Sullivan, Francis Windram.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
