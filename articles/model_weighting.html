@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Model weighting with rTPC">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-74093873-3"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rTPC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,10 +103,8 @@ nls.multstart, and the tidyverse.<a class="anchor" aria-label="anchor" href="#a-
 <h2 id="things-to-consider">Things to consider<a class="anchor" aria-label="anchor" href="#things-to-consider"></a>
 </h2>
 <ul>
-<li>The optimal weighting is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mn>1</mn><mi>σ</mi></mfrac><annotation encoding="application/x-tex">\frac{1}{\sigma}</annotation></semantics></math>.
-The standard deviation is easy to calculate when calculating the means
-of the rate data.</li>
+<li>The optimal weighting is <span class="math inline">\(\frac{1}{\sigma}\)</span>. The standard deviation
+is easy to calculate when calculating the means of the rate data.</li>
 <li>Carefully consider your level of replication before undertaking your
 statistical analysis.
 <ul>
@@ -145,9 +143,8 @@ the model fit.</p>
 <strong>weights</strong> argument within
 <strong>nls_multstart()</strong>, to perform a weighted non-linear least
 squares regression. The optimal weight for each data point is the
-standard deviation,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mi>σ</mi></mrow><annotation encoding="application/x-tex">1/\sigma</annotation></semantics></math>,
-which easily be calculated when averaging over technical or biological
+standard deviation, <span class="math inline">\(1/\sigma\)</span>, which
+easily be calculated when averaging over technical or biological
 replicates.</p>
 <p>We can demonstrate weighted non-linear least squares regression by
 using the example dataset contained within <strong>rTPC</strong> - a
@@ -271,7 +268,7 @@ be applied. The model weighting approach can easily be combined with <a href="mo
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
+  <p>Developed by Daniel Padfield, Hannah O’Sullivan, Francis Windram.</p>
 </div>
 
 <div class="pkgdown-footer-right">

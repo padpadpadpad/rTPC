@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Bootstrapping many curves using rTPC">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-74093873-3"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rTPC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -328,16 +328,13 @@ parameters explicitly modelled in the regression.</p>
 <p><img src="bootstrapping_many_curves_files/figure-html/get_params_and_plot-1.png" width="864" style="display: block; margin: auto;"></p>
 <p>Finally, we can redo our <strong>car::Boot()</strong> procedure, but
 this time use <strong>calc_params()</strong> to bootstrap confidence
-intervals for the extra parameters such as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mrow><mi>o</mi><mi>p</mi><mi>t</mi></mrow></msub><annotation encoding="application/x-tex">T_{opt}</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">r_{max}</annotation></semantics></math>.
-For reasons that I currently do not understand, <strong>Boot()</strong>
-and <strong>calc_params()</strong> only calculates the activation
-energy, deactivation energy, and q10 when using
-<code>method = case</code> not <code>method = residual</code>, but
-actually it is not recommended to bootstrap these parameters from models
-where they are not explicitly included in the model formula anyway.</p>
+intervals for the extra parameters such as <span class="math inline">\(T_{opt}\)</span> and <span class="math inline">\(r_{max}\)</span>. For reasons that I currently do
+not understand, <strong>Boot()</strong> and
+<strong>calc_params()</strong> only calculates the activation energy,
+deactivation energy, and q10 when using <code>method = case</code> not
+<code>method = residual</code>, but actually it is not recommended to
+bootstrap these parameters from models where they are not explicitly
+included in the model formula anyway.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create empty list column</span></span>
 <span><span class="va">d_fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d_fits</span>, ci_extra_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -404,7 +401,7 @@ bootstrapping. Journal of Animal Ecology, 84(4), 892-897.</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Padfield, Hannah O’Sullivan.</p>
+  <p>Developed by Daniel Padfield, Hannah O’Sullivan, Francis Windram.</p>
 </div>
 
 <div class="pkgdown-footer-right">
