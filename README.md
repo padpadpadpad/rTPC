@@ -75,10 +75,11 @@ install.packages('rTPC')
 ```
 
 **rTPC** can also be installed from GitHub using the
-`remotes::install_github()`. The vignettes are all available online, but
-if you would like to build them locally, add `build_vignettes = TRUE`
-into your `install_github()` command. However, we do not recommend doing
-this due to the number of extra R packages utilised in the vignettes.
+`remotes::install_github()`, which will ensure all the possible models
+are available. The vignettes are all available online, but if you would
+like to build them locally, add `build_vignettes = TRUE` into your
+`install_github()` command. However, we do not recommend doing this due
+to the number of extra R packages utilised in the vignettes.
 
 ``` r
 # install package from GitHub
