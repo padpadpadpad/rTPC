@@ -89,11 +89,15 @@
 <p><strong>rTPC</strong> is an R package that helps fit thermal performance curves (TPCs) in R. <strong>rTPC</strong> contains 29 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.</p>
 <p>The idea behind <strong>rTPC</strong> is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which model works best. Which model and which workflow is “best” is going to be down to the question that is being asked. Throughout the vignettes, <em>Things to consider</em> sections give some key considerations about what to consider <em>before</em> and <em>during</em> the analysis.</p>
 <p>When developing <strong>rTPC</strong>, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of <a href="https://github.com/padpadpadpad/nls.multstart" class="external-link"><strong>nls.multstart</strong></a> for fitting non-linear least squares regression and packages from the <a href="https://www.tidyverse.org" class="external-link"><strong>tidyverse</strong></a> for data manipulation, fitting multiple models, and visualisation. The R package <a href="https://CRAN.R-project.org/package=car/car.pdf" class="external-link"><strong>car</strong></a> is used extensively for the bootstrapping approaches.</p>
-<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Methods in Ecology and Evolution</a> and are open access. ## Citation</p>
+<p><strong>rTPC</strong> and the pipelines outlined in the vignettes are published in <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link">Methods in Ecology and Evolution</a> and are open access.</p>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
 <p>If this R package helps you, please cite us using the following citation:</p>
 <p>Daniel Padfield, Hannah O’Sullivan, &amp; Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <a href="https://doi.org/10.1111/2041-210X.13585" class="external-link uri">https://doi.org/10.1111/2041-210X.13585</a></p>
 <p>And cite the R package itself:</p>
 <p>Padfield D, O’Sullivan H, Windram F (2024). <em>rTPC: Fitting and Analysing Thermal Performance Curves</em>. R package version 1.0.7, <a href="https://padpadpadpad.github.io/rTPC/" class="uri">https://padpadpadpad.github.io/rTPC/</a>, <a href="https://github.com/padpadpadpad/rTPC" class="external-link uri">https://github.com/padpadpadpad/rTPC</a></p>
+</div>
 <div class="section level2">
 <h2 id="bugs-and-suggestions">Bugs and suggestions<a class="anchor" aria-label="anchor" href="#bugs-and-suggestions"></a>
 </h2>

@@ -30,7 +30,9 @@ The idea behind **rTPC** is to make fitting thermal performance curves easier, t
 
 When developing **rTPC**, we made a conscious decision not to repeat code and methods that are already optimised and available in the R ecosystem. Consequently, the workflows take advantage of [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for fitting non-linear least squares regression and packages from the [**tidyverse**](https://www.tidyverse.org) for data manipulation, fitting multiple models, and visualisation. The R package [**car**](https://CRAN.R-project.org/package=car/car.pdf) is used extensively for the bootstrapping approaches.
 
-**rTPC** and the pipelines outlined in the vignettes are published in [Methods in Ecology and Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access. \## Citation
+**rTPC** and the pipelines outlined in the vignettes are published in [Methods in Ecology and Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access. 
+
+## Citation
 
 If this R package helps you, please cite us using the following citation:
 

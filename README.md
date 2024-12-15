@@ -40,7 +40,8 @@ extensively for the bootstrapping approaches.
 **rTPC** and the pipelines outlined in the vignettes are published in
 [Methods in Ecology and
 Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access.
-\## Citation
+
+## Citation
 
 If this R package helps you, please cite us using the following
 citation:
