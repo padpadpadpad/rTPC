@@ -6,3 +6,5 @@
 inst/doc
 .httr-oauth
 get_tpc_equation.R
+/doc/
+/Meta/

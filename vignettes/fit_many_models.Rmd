@@ -358,7 +358,7 @@ The predictions of each model can be estimated using **broom::augment()**. This 
 ```{r preds_and_plot, fig.width = 10, fig.height = 10}
 # stack models
 d_stack <- select(d_fits, -data) %>%
-  pivot_longer(., names_to = 'model_name', values_to = 'fit', beta:weibull)
+  pivot_longer(., names_to = 'model_name', values_to = 'fit', ashrafi1:weibull)
 
 # get parameters using tidy
 params <- d_stack %>%
