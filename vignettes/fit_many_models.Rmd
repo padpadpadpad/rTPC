@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 ```
 ## Things to consider
 
-- How many data points do you have for each curve? To fit all of the 24 models in **rTPC**, there needs to be a minimum of 7 points per curve.
+- How many data points do you have for each curve? To fit all of the `r length(rTPC::get_model_names())` models in **rTPC**, there needs to be a minimum of 7 points per curve.
 - If there are multiple individual curves to be fit, it makes sense to have your data in long format, where grouping variables (e.g. unique curve identifier), temperature and rate have their own columns.
 - Are there negative rate values? If a curve that crosses the x axis, it might be beneficial to only consider models that are capable of modelling negative values.
 - Are there specific parameters you are interested in? If so, it may be beneficial to only consider models that explicitly include that parameter in their formulation.
@@ -46,11 +46,11 @@ label_facets_num <- function(string){
 }
 ```
 
-After searching the literature, __rTPC__ contains 24 different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all 24 model formulations.
+After searching the literature, __rTPC__ contains `r length(rTPC::get_model_names())` different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all `r length(rTPC::get_model_names())` model formulations.
 
-**DISCLAIMER Although we fit all 24 model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on 24 model formulations.**
+**DISCLAIMER Although we fit all `r length(rTPC::get_model_names())` model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on 24 model formulations.**
 
-We can demonstrate the fitting procedure of the 24 model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
+We can demonstrate the fitting procedure of the `r length(rTPC::get_model_names())` model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
 
 ```{r first_plot, fig.width=6, fig.height = 4}
 # load in data
@@ -76,7 +76,25 @@ For a single curve, we nest the dataframe, creating a list column which contains
 ```{r many_mods, message=FALSE}
 # fit every model formulation in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
-  mutate(beta = map(data, ~nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
+  mutate(ashrafi1 = map(data, ~nls_multstart(rate~ashrafi1_2018(temp = temp, a, b, c),
+                        data = .x,
+                        iter = c(6,6,6),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'ashrafi1_2018') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'ashrafi1_2018') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'ashrafi1_2018'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'ashrafi1_2018'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         atkin = map(data, ~nls_multstart(rate~atkin_2005(temp = temp, r0, a, b),
+                        data = .x,
+                        iter = c(6,6,6),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'atkin_2005') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'atkin_2005') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'atkin_2005'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'atkin_2005'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         beta = map(data, ~nls_multstart(rate~beta_2012(temp = temp, a, b, c, d, e),
                         data = .x,
                         iter = c(6,6,6,6,6),
                         start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'beta_2012') - 10,
@@ -119,6 +137,15 @@ d_fits <- nest(d, data = c(temp, rate)) %>%
                         start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'deutsch_2008') + 10,
                         lower = get_lower_lims(.x$temp, .x$rate, model_name = 'deutsch_2008'),
                         upper = get_upper_lims(.x$temp, .x$rate, model_name = 'deutsch_2008'),
+                        supp_errors = 'Y',
+                        convergence_count = FALSE)),
+         flextpc = map(data, ~nls_multstart(rate~flextpc_2024(temp = temp, tmin, tmax, rmax, alpha, beta),
+                        data = .x,
+                        iter = c(5,5,5,5,5),
+                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'flextpc_2024') - 10,
+                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'flextpc_2024') + 10,
+                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'flextpc_2024'),
+                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'flextpc_2024'),
                         supp_errors = 'Y',
                         convergence_count = FALSE)),
          flinn = map(data, ~nls_multstart(rate~flinn_1991(temp = temp, a, b, c),
