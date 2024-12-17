@@ -57,3 +57,29 @@ lactin2_1995 <- function(temp, a, b, tmax, delta_t){
   return(est)
 }
 
+lactin2_1995.starting_vals <- function(d){
+  tmax = max(d$x, na.rm = TRUE)
+  delta_t = mean(tmax - d$x[d$y == max(d$y, na.rm = TRUE)])
+  a = 0.1194843
+  b = -0.254008
+
+  return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
+}
+
+lactin2_1995.lower_lims <- function(d){
+  tmax = min(d$x, na.rm = TRUE)
+  delta_t = 0
+  a = 0
+  b = -10
+
+  return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
+}
+
+lactin2_1995.upper_lims <- function(d){
+  tmax = max(d$x, na.rm = TRUE) *10
+  delta_t = (tmax - mean(d$x[d$y == max(d$y, na.rm = TRUE)])) *10
+  a = 5
+  b = 5
+
+  return(c(a = a, b = b, tmax = tmax, delta_t = delta_t))
+}

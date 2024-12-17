@@ -57,3 +57,29 @@ lrf_1991 <- function(temp, rmax, topt, tmin, tmax){
   return(rmax*((temp - tmax)*(temp - tmin)^2) / ((topt - tmin) * (((topt - tmin)*(temp - topt))-((topt-tmax)*(topt+tmin-2*temp)))))
   }
 
+lrf_1991.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}
+
+lrf_1991.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  tmin = min(d$x, na.rm = TRUE) - 50
+  tmax = min(d$x, na.rm = TRUE)
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}
+
+lrf_1991.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}

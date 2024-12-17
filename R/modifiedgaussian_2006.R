@@ -56,3 +56,30 @@ modifiedgaussian_2006 <- function(temp, rmax, topt, a, b){
   est <- rmax * exp(-0.5 * (abs(temp - topt)/a)^b)
   return(est)
 }
+
+modifiedgaussian_2006.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE))/2
+  b = 2
+
+  return(c(rmax = rmax, topt = topt, a = a, b=b))
+}
+
+modifiedgaussian_2006.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  a = 0
+  b = 0
+
+  return(c(rmax = rmax, topt = topt, a = a, b=b))
+}
+
+modifiedgaussian_2006.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
+  b = 100
+
+  return(c(rmax = rmax, topt = topt, a = a, b=b))
+}

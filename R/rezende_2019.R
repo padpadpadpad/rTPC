@@ -55,7 +55,30 @@
 #' @export rezende_2019
 
 rezende_2019 <- function(temp, q10, a, b, c){
-
   est <-{ifelse(temp < b, (a*10^(log10(q10)/(10/temp))), (a*10^(log10(q10)/(10/temp)))*(1-c*(b - temp)^2))}
   return(est)
+}
+
+rezende_2019.starting_vals <- function(d){
+  b = mean(d[d$x == mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]$x)
+  q10 = 2.77
+  a = 0.0577
+  c = 0.003
+  return(c(q10 = q10, a = a, b = b, c = c))
+}
+
+rezende_2019.lower_lims <- function(d){
+  b = -30
+  q10 = 0
+  a = 0
+  c = 0
+  return(c(q10 = q10, a = a, b = b, c = c))
+}
+
+rezende_2019.upper_lims <- function(d){
+  b = max(d$x, na.rm = TRUE)
+  q10 = 15
+  a = 10 # max of data from paper was 1.7
+  c = 1 # max of data from paper was 0.03034
+  return(c(q10 = q10, a = a, b = b, c = c))
 }

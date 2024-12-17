@@ -67,3 +67,38 @@ sharpeschoolfull_1981 <- function(temp, r_tref, e, el, tl, eh, th, tref){
   return(boltzmann.term * inactivation.term)
 }
 
+sharpeschoolfull_1981.starting_vals <- function(d){
+  # split data into post topt and pre topt
+  post_topt <- d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+  pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+
+  r_tref = mean(d$y, na.rm = TRUE)
+  pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+  post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
+  tl <- pre_topt$x[2]
+  e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+  eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
+  el <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt[1:3,]))[2][[1]] * -1, error = function(err) 5))
+  th = mean(d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']), 'x'])
+  return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
+}
+
+sharpeschoolfull_1981.lower_lims <- function(d){
+  r_tref = 0
+  e = 0
+  eh = 0
+  th = min(d$x, na.rm = TRUE)
+  tl = min(d$x, na.rm = TRUE)
+  el = 0
+  return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
+}
+
+sharpeschoolfull_1981.upper_lims <- function(d){
+  r_tref = max(d$y, na.rm = TRUE)
+  e = 10
+  eh = 40
+  th = max(d$x, na.rm = TRUE)
+  tl = mean(d[d$y == max(d$y, na.rm = TRUE),]$x)
+  el = 40
+  return(c(r_tref = r_tref, e = e, el = el, tl = tl, eh = eh, th = th))
+}

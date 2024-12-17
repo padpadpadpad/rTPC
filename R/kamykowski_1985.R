@@ -58,3 +58,33 @@ kamykowski_1985 <- function(temp, tmin, tmax, a, b, c) {
   est <- a * (1 - exp(-b * (temp - tmin))) * (1 - exp(-c * (tmax - temp)))
   return(est)
 }
+
+kamykowski_1985.starting_vals <- function(d){
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+  a = 1.242143
+  b = 0.5882857
+  c = 1.238821
+
+  return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+}
+
+kamykowski_1985.lower_lims <- function(d){
+  tmin = min(d$x, na.rm = TRUE) - 50
+  tmax = min(d$x, na.rm = TRUE)
+  a = 0
+  b = 0
+  c = 0
+
+  return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+}
+
+kamykowski_1985.upper_lims <- function(d){
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+  a = 100
+  b = 20
+  c = 20
+
+  return(c(tmin = tmin, tmax = tmax, a=a, b=b, c=c))
+}

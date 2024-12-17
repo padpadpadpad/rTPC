@@ -56,3 +56,26 @@ thomas_2012 <- function(temp, a, b, c, tref){
   return(est)
 }
 
+thomas_2012.starting_vals <- function(d){
+  c = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+  b = 0
+  tref = mean(d$x[d$y==max(d$y, na.rm = TRUE)])
+  a = max(d$y)/max(exp(b*d$x)*(1-((d$x-tref)/(c/2))^2))
+  return(c(a = a, b = b, c = c, tref = tref))
+}
+
+thomas_2012.lower_lims <- function(d){
+  tref = min(d$x) - 150
+  c = 0
+  a = -10
+  b = -10
+  return(c(a = a, b = b, c = c, tref = tref))
+}
+
+thomas_2012.upper_lims <- function(d){
+  a = 10
+  b = 10
+  c = (max(d$x) - min(d$x)) * 10
+  tref = max(d$x) + 100
+  return(c(a=a, b=b, c=c, tref=tref))
+}

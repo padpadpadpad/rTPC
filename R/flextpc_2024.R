@@ -58,3 +58,34 @@ flextpc_2024 <- function(temp, tmin, tmax, rmax, alpha, beta){
   return(est)
 }
 
+flextpc_2024.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+  # Use the definitions found in the original paper as starting values
+  alpha = (topt - tmin)/(tmax - tmin)
+  # Beta is the Upper Thermal Breadth (the range of temps where r(T) > exp(-1/8)*rmax)
+  beta = abs(diff(range(d$x[d$y > exp(-1/8)*rmax], na.rm = TRUE)))
+
+  return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
+}
+
+flextpc_2024.lower_lims <- function(d){
+  tmin = min(d$x, na.rm = TRUE) - 50
+  tmax = min(d$x, na.rm = TRUE)
+  rmax = min(d$y, na.rm = TRUE)
+  beta = 0  # Cannot be 0
+  alpha = 0
+  return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
+}
+
+flextpc_2024.upper_lims <- function(d){
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 5
+  rmax = max(d$y, na.rm = TRUE) * 10
+  alpha = 1
+  beta = Inf
+  return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
+}
+

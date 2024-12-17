@@ -66,3 +66,30 @@ beta_2012 <- function(temp, a, b, c, d, e){
   return(temp/temp2)
 
 }
+
+beta_2012.starting_vals <- function(d){
+  a = max(d$y, na.rm = TRUE)
+  b = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
+  c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
+  d = 2
+  e = 2
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}
+
+beta_2012.lower_lims <- function(d){
+  a = 0
+  b = 0
+  c = 0
+  d = 0
+  e = 0
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}
+
+beta_2012.upper_lims <- function(d){
+  a = a = max(d$y, na.rm = TRUE) *100
+  b = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
+  c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*100
+  d = 1000
+  e = 1000
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}

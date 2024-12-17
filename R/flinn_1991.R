@@ -56,3 +56,25 @@ flinn_1991 <- function(temp, a, b, c){
   return(est)
 }
 
+flinn_1991.starting_vals <- function(d){
+  b = (-2*0.005*d$x[d$y==max(d$y)])[1]
+  a = -min(b*d$x +0.005*(d$x^2))
+  c = 1
+  return(c(a = a, b = b, c = c))
+}
+
+flinn_1991.lower_lims <- function(d){
+  # do not really have a scooby
+  b = -100
+  a = -100
+  c = 0
+  return(c(a = a, b = b, c = c))
+}
+
+flinn_1991.upper_lims <- function(d){
+  # do not really have a scooby
+  b = 100
+  a = 500
+  c = 10
+  return(c(a = a, b = b, c = c))
+}

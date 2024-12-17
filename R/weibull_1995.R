@@ -56,4 +56,27 @@ weibull_1995 <- function(temp, a, topt, b, c){
   return((a*(((c-1)/c)^((1-c)/c))*((((temp-topt)/b)+(((c-1)/c)^(1/c)))^(c-1))*(exp(-((((temp-topt)/b)+(((c-1)/c)^(1/c)))^c)+((c-1)/c)))))
 }
 
+weibull_1995.starting_vals <- function(d){
+  a = mean(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
+  b = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+  c = 4
 
+  return(c(a = a, topt = topt, b=b,c=c))
+}
+
+weibull_1995.lower_lims <- function(d){
+  a = abs(min(d$y, na.rm = TRUE)) * -10
+  topt = min(d$x, na.rm = TRUE)
+  b = 0
+  c = 0
+  return(c(a=a, topt = topt, b=b, c=c))
+}
+
+weibull_1995.upper_lims <- function(d){
+  a = Inf
+  topt = max(d$x, na.rm = TRUE)
+  b = Inf
+  c = Inf
+  return(c(a=a, topt = topt, b=b, c=c))
+}

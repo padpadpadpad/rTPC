@@ -58,3 +58,27 @@ hinshelwood_1947 <- function(temp, a, e, b, eh){
   est <- a * exp(-e/(8.62e-05 * (temp + 273.15))) - b * exp(-eh/(8.62e-05 * (temp + 273.15)))
   return(est)
 }
+
+hinshelwood_1947.starting_vals <- function(d){
+  a = 595892892
+  b = 1.57e+30
+  e = 0.5125673
+  eh = 1.922022
+  return(c(a=a, e=e, b=b, eh = eh))
+}
+
+hinshelwood_1947.lower_lims <- function(d){
+  a = 0
+  b = 0
+  e = 0
+  eh = 0
+  return(c(a=a, e=e, b=b, eh = eh))
+}
+
+hinshelwood_1947.upper_lims <- function(d){
+  a = 1e50
+  b = 1e100
+  e = 10
+  eh = 30
+  return(c(a=a, e=e, b=b, eh = eh))
+}

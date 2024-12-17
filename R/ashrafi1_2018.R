@@ -54,3 +54,26 @@ ashrafi1_2018 <- function(temp, a, b, c){
   return(est)
 }
 
+ashrafi1_2018.starting_vals <- function(d){
+  a = min(d$y, na.rm = TRUE)
+  b = 0.1
+  c = 0.003
+
+  return(c(a = a, b = b, c = c))
+}
+
+ashrafi1_2018.lower_lims <- function(d){
+  a = -Inf
+  b = -Inf
+  c = -Inf
+
+  return(c(a = a, b = b, c = c))
+}
+
+ashrafi1_2018.upper_lims <- function(d){
+  a = Inf
+  b = Inf
+  c = Inf
+
+  return(c(a = a, b = b, c = c))
+}
