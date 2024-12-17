@@ -39,13 +39,13 @@ for (model in mod_names) {
 
 # run test
 testthat::test_that("All models can generate starting values", {
-  testthat::expect_equal(length(mod_names), starting_count, info={paste("No starting values for:", starting_failed, collapse = ", ")})
+  testthat::expect_equal(length(mod_names), starting_count, info={paste("No starting values for:\n", paste(starting_failed, collapse = ",\n "))})
 })
 
 testthat::test_that("All models can generate lower limits", {
-  testthat::expect_equal(length(mod_names), lower_count, info={paste("No lower limits for:", lower_failed, collapse = ", ")})
+  testthat::expect_equal(length(mod_names), lower_count, info={paste("No lower limits for:\n", paste(lower_failed, collapse = ",\n "))})
 })
 
 testthat::test_that("All models can generate upper limits", {
-  testthat::expect_equal(length(mod_names), upper_count, info={paste("No upper limits for:", upper_failed, collapse = ", ")})
+  testthat::expect_equal(length(mod_names), upper_count, info={paste("No upper limits for:\n", paste(upper_failed, collapse = ",\n "))})
 })
