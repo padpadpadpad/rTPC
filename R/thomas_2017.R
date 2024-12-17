@@ -55,3 +55,30 @@
 thomas_2017 <- function(temp, a, b, c, d, e){
   return(a * exp(b * temp) - (c + d*(exp(e*temp))))
 }
+
+thomas_2017.starting_vals <- function(d){
+  a = 1.174
+  b = 0.064
+  c = 1.119
+  d = 0.267
+  e = 0.103
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}
+
+thomas_2017.lower_lims <- function(d){
+  a = -100
+  b = -100
+  c = -100
+  d = -100
+  e = -100
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}
+
+thomas_2017.upper_lims <- function(d){
+  a = 1000
+  b = 100
+  c = 100
+  d = 100
+  e = 100
+  return(c(a=a, b=b, c=c, d=d, e=e))
+}

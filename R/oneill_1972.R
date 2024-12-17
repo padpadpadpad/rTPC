@@ -60,3 +60,30 @@ oneill_1972 <- function(temp, rmax, ctmax, topt, q10){
   est <- rmax * ((ctmax - temp)/(ctmax - topt))^(1/400 * ((q10 - 1)*(ctmax - topt))^2 * (1 + sqrt(1+(40/((q10 - 1)*(ctmax - topt)))))^2) * exp((1/400 * ((q10 - 1)*(ctmax - topt))^2 * (1 + sqrt(1+(40/((q10 - 1)*(ctmax - topt)))))^2)*(temp - topt)/(ctmax-topt))
   return(est)
 }
+
+oneill_1972.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  ctmax = max(d$x, na.rm = TRUE)
+  q10 = 1.7
+
+  return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+}
+
+oneill_1972.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  ctmax = min(d$x, na.rm = TRUE)
+  q10 = 0
+
+  return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+}
+
+oneill_1972.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  ctmax = max(d$x, na.rm = TRUE) * 10
+  q10 = 10
+
+  return(c(rmax = rmax, ctmax = ctmax, topt = topt, q10 = q10))
+}

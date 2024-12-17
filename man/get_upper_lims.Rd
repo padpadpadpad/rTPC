@@ -21,4 +21,6 @@ Sets wide upper limits on parameter values for each TPC model
 }
 \author{
 Daniel Padfield
+
+Francis Windram
 }

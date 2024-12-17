@@ -55,3 +55,27 @@ gaussian_1987 <- function(temp, rmax, topt, a){
   est <- rmax * exp(-0.5 * (abs(temp - topt)/a)^2)
   return(est)
 }
+
+gaussian_1987.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  a = max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)
+
+  return(c(rmax = rmax, topt = topt, a = a))
+}
+
+gaussian_1987.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  a = 0
+
+  return(c(rmax = rmax, topt = topt, a = a))
+}
+
+gaussian_1987.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
+
+  return(c(rmax = rmax, topt = topt, a = a))
+}

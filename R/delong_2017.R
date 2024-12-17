@@ -60,3 +60,44 @@ delong_2017 <- function(temp, c, eb, ef, tm, ehc){
     return( c*exp(-(eb-(ef*(1-((temp + 273.15)/(tm + 273.15)))+ehc*((temp + 273.15)-(tm + 273.15)-((temp + 273.15)*log((temp + 273.15)/(tm + 273.15))))))/(k*(temp + 273.15))))
   }
 
+delong_2017.starting_vals <- function(d){
+  # split data into post topt and pre topt
+  post_topt <- d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+  pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+
+  c =  14.45
+  eb = 0.58
+  ef = 2.215
+
+  # if post topt is only 2 rows, then add another point in the middle just for getting a start value
+  if(nrow(post_topt) == 2){
+    post_topt <- rbind(post_topt, c(mean(post_topt$x), mean(post_topt$y)))
+  }
+
+  fit <- suppressWarnings(stats::lm(log(y) ~ x+I(x^2), post_topt))
+  roots <- suppressWarnings(polyroot(stats::coef(fit)))
+  tm = suppressWarnings(as.numeric(max(Re(roots))))
+  ehc = 0.085
+
+  return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+}
+
+delong_2017.lower_lims <- function(d){
+  c =  0
+  eb = 0
+  ef = 0
+  tm = 0
+  ehc = 0
+
+  return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+}
+
+delong_2017.upper_lims <- function(d){
+  c =  14.45 * 500
+  eb = 0.58 * 100
+  ef = 2.215 * 100
+  ehc = 0.085 * 100
+  tm = max(d$x, na.rm = TRUE) * 100
+
+  return(c(c = c, eb = eb, ef = ef, tm = tm, ehc = ehc))
+}

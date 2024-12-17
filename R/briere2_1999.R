@@ -55,3 +55,26 @@ briere2_1999 <- function(temp, tmin, tmax, a, b){
   return(est)
 }
 
+briere2_1999.starting_vals <- function(d){
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+  b = 3
+  a = 2 * 10^-4
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+briere2_1999.lower_lims <- function(d){
+  tmin = -50
+  tmax = min(d$x, na.rm = TRUE)
+  b = 0
+  a = 0
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+briere2_1999.upper_lims <- function(d){
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+  b = 30
+  a = 10^-2
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}

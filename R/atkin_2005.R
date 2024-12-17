@@ -60,3 +60,24 @@ atkin_2005 <- function(temp, r0, a, b){
   }
   return(est)
 }
+
+atkin_2005.starting_vals <- function(d){
+  r0 = min(d$y, na.rm = TRUE)
+  a = 3
+  b = 0.05
+  return(c(r0 = r0, a = a, b = b))
+}
+
+atkin_2005.lower_lims <- function(d){
+  r0 = 0
+  a = 0
+  b = 0
+  return(c(r0 = r0, a = a, b = b))
+}
+
+atkin_2005.upper_lims <- function(d){
+  r0 = Inf
+  a = Inf
+  b = Inf
+  return(c(r0 = r0, a = a, b = b))
+}

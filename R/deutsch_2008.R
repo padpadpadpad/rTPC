@@ -59,3 +59,31 @@ deutsch_2008 <- function(temp, rmax, topt, ctmax, a){
 
   return(est)
 }
+
+deutsch_2008.starting_vals <- function(d){
+      rmax = max(d$y, na.rm = TRUE)
+      topt = mean(d$x[d$y == rmax])
+      ctmax = max(d$x, na.rm = TRUE)
+      # use the width of the temperatures measured divided by 5. Somewhat arbritary
+      a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE))/5
+
+      return(c(rmax = rmax, topt = topt, ctmax = ctmax, a = a))
+}
+
+deutsch_2008.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  ctmax = min(d$x, na.rm = TRUE)
+  a = 0
+
+  return(c(rmax = rmax, topt = topt, ctmax = ctmax, a = a))
+}
+
+deutsch_2008.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  ctmax = max(d$x, na.rm = TRUE) * 10
+  a = (max(d$x, na.rm = TRUE) - min(d$x, na.rm = TRUE)) * 10
+
+  return(c(rmax = rmax, topt = topt, ctmax = ctmax, a = a))
+}

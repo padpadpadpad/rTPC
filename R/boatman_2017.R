@@ -58,3 +58,29 @@ boatman_2017 <- function(temp, rmax, tmin, tmax, a, b){
   return(est)
 }
 
+boatman_2017.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+  a = 1.1
+  b = 0.4
+  return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+boatman_2017.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  tmin = -50
+  tmax = min(d$x, na.rm = TRUE)
+  a = 0
+  b = 0
+  return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+boatman_2017.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+  a = 50
+  b = 10
+  return(c(rmax = rmax, tmin = tmin, tmax = tmax, a = a, b = b))
+}

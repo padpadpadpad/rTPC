@@ -65,3 +65,32 @@ pawar_2018 <- function(temp, r_tref, e, eh, topt, tref){
   return(boltzmann.term * inactivation.term)
 }
 
+pawar_2018.starting_vals <- function(d){
+  # split data into post topt and pre topt
+  post_topt <- d[d$x >= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+  pre_topt <- d[d$x <= mean(d[d$y == max(d$y, na.rm = TRUE),'x']),]
+
+  r_tref = mean(d$y, na.rm = TRUE)
+  pre_topt$x2 <- 1/(8.62e-05*(pre_topt$x + 273.15))
+  post_topt$x2 <- 1/(8.62e-05*(post_topt$x + 273.15))
+  e <- suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, pre_topt))[2][[1]] * -1, error = function(err) 0.6))
+  eh = suppressWarnings(tryCatch(stats::coef(stats::lm(log(y) ~ x2, post_topt))[2][[1]], error = function(err) 5))
+  topt = mean(d$x[d$y == max(d$y, na.rm = TRUE)])
+  return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
+}
+
+pawar_2018.lower_lims <- function(d){
+  r_tref = 0
+  e = 0
+  eh = 0
+  topt = min(d$x, na.rm = TRUE)
+  return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
+}
+
+pawar_2018.upper_lims <- function(d){
+  r_tref = max(d$y, na.rm = TRUE)
+  e = 10
+  eh = 40
+  topt = max(d$x)
+  return(c(r_tref = r_tref, e = e, eh = eh, topt = topt))
+}

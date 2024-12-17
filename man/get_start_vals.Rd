@@ -21,4 +21,6 @@ Estimates sensible start values for fitting thermal performance curves
 }
 \author{
 Daniel Padfield
+
+Francis Windram
 }

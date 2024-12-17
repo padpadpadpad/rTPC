@@ -56,3 +56,27 @@ ratkowsky_1983 <- function(temp, tmin, tmax, a, b){
   est <- ((a * (temp - tmin)) * (1 - exp(b * (temp - tmax))))^2
   return(est)
 }
+
+ratkowsky_1983.starting_vals <- function(d){
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+  a = 1
+  b = 0.1
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+ratkowsky_1983.lower_lims <- function(d){
+  tmin = -50
+  tmax = min(d$x, na.rm = TRUE)
+  a = 0
+  b = 0
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}
+
+ratkowsky_1983.upper_lims <- function(d){
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+  a = 1 *100
+  b = 0.1 * 100
+  return(c(tmin = tmin, tmax = tmax, a = a, b = b))
+}

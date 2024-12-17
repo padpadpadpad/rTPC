@@ -55,3 +55,27 @@ spain_1982 <- function(temp, a, b, c, r0){
   est = r0 * exp(a*temp) * (1 - b*exp(c*temp))
   return(est)
 }
+
+spain_1982.starting_vals <- function(d){
+  r0 = min(d$y, na.rm = TRUE)
+  a = 0
+  b = 0
+  c = 0
+  return(c(a = a, b = b, c = c, r0 = r0))
+}
+
+spain_1982.lower_lims <- function(d){
+  r0 = abs(min(d$y, na.rm = TRUE))*-100
+  a = -2
+  b = -2
+  c = -2
+  return(c(a = a, b = b, c = c, r0 = r0))
+}
+
+spain_1982.upper_lims <- function(d){
+  r0 = max(d$y, na.rm = TRUE)
+  a = 2
+  b = 20
+  c = 2
+  return(c(a = a, b = b, c = c, r0 = r0))
+}

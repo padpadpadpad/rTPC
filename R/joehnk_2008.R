@@ -57,3 +57,33 @@ joehnk_2008 <- function(temp, rmax, topt, a, b, c){
   est = rmax * (1 + a*((b^(temp - topt) -1) - (log(b)/log(c))*(c^(temp - topt) - 1)))
   return(est)
 }
+
+joehnk_2008.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  a = mean(c(5.77, 4.68, 18.61))
+  b = mean(c(1.30,1.02,1.02))
+  c = mean(c(1.37,1.15,1.04))
+
+  return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+}
+
+joehnk_2008.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  a = 0
+  b = 0
+  c = 0
+
+  return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+}
+
+joehnk_2008.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  a = 1000
+  b = 10
+  c = 100
+
+  return(c(rmax = rmax, topt = topt, a = a, b = b, c = c))
+}
