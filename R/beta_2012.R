@@ -86,7 +86,7 @@ beta_2012.lower_lims <- function(d){
 }
 
 beta_2012.upper_lims <- function(d){
-  a = a = max(d$y, na.rm = TRUE) *100
+  a = max(d$y, na.rm = TRUE) *100
   b = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*10
   c = mean(d$x[d$y == max(d$y, na.rm = TRUE)])*100
   d = 1000
