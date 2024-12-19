@@ -26,15 +26,15 @@
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
-#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'simplifiedbetatype_2008')
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'betatypesimplified_2008')
 #' # fit model
-#' mod <- nls.multstart::nls_multstart(rate~simplifiedbetatype_2008(temp = temp, rho, alpha, beta),
+#' mod <- nls.multstart::nls_multstart(rate~betatypesimplified_2008(temp = temp, rho, alpha, beta),
 #' data = d,
 #' iter = c(7,7,7),
 #' start_lower = start_vals - 10,
 #' start_upper = start_vals + 10,
-#' lower = get_lower_lims(d$temp, d$rate, model_name = 'simplifiedbetatype_2008'),
-#' upper = get_upper_lims(d$temp, d$rate, model_name = 'simplifiedbetatype_2008'),
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'betatypesimplified_2008'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'betatypesimplified_2008'),
 #' supp_errors = 'Y',
 #' convergence_count = FALSE)
 #'
@@ -51,29 +51,29 @@
 #' geom_line(aes(temp, .fitted), col = 'blue') +
 #' theme_bw()
 #' }
-#' @export simplifiedbetatype_2008
+#' @export betatypesimplified_2008
 
-simplifiedbetatype_2008 <- function(temp, rho, alpha, beta){
+betatypesimplified_2008 <- function(temp, rho, alpha, beta){
   est <- rho * (alpha - temp/10) * (temp/10)^beta
   return(est)
 
 }
 
-simplifiedbetatype_2008.starting_vals <- function(d){
+betatypesimplified_2008.starting_vals <- function(d){
   rho = 0.0012
   alpha = 4
   beta = 5
   return(c(rho=rho, alpha=alpha, beta=beta))
 }
 
-simplifiedbetatype_2008.lower_lims <- function(d){
+betatypesimplified_2008.lower_lims <- function(d){
   rho = 0
   alpha = 0
   beta = -Inf
   return(c(rho=rho, alpha=alpha, beta=beta))
 }
 
-simplifiedbetatype_2008.upper_lims <- function(d){
+betatypesimplified_2008.upper_lims <- function(d){
   rho = Inf
   alpha = Inf
   beta = Inf

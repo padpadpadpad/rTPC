@@ -1,5 +1,6 @@
 #' Lists or searches the models available in rTPC
 #' @param model Optional string (or vector of strings) representing model/s to search for.
+#' @param returnall Also return the names of deprecated functions
 #' @author Daniel Padfield
 #' @author Francis Windram
 #' @return character vector of thermal performance curves available in rTPC
@@ -8,7 +9,7 @@
 #' get_model_names("briere")
 #' @export get_model_names
 
-get_model_names <- function(model){
+get_model_names <- function(model, returnall=FALSE){
   mod_names <- c(
     'sharpeschoolhigh_1981',
     'sharpeschoollow_1981',
@@ -37,7 +38,7 @@ get_model_names <- function(model){
     'briereextendedsimplified_2021',
     'boatman_2017',
     'beta_2012',
-    'modifiedgaussian_2006',
+    'gaussianmodified_2006',
     'pawar_2018',
     'lrf_1991',
     'deutsch_2008',
@@ -49,12 +50,18 @@ get_model_names <- function(model){
     'taylorsexton_1972',
     'janisch1_1925',
     'janisch2_1925',
-    'simplifiedbetatype_2008',
+    'betatypesimplified_2008',
     'warrendreyer_2006',
     'tomlinsonphillips_2015'
   )
 
-  if (missing(model)){
+  mod_deprecated <- c('modifiedgaussian_2006')
+
+  if (returnall) {
+    mod_names <- c(mod_names, mod_deprecated)
+  }
+
+  if (missing(model)) {
     return(sort(mod_names))
   } else {
     # 0.05 seems about the sweet spot for correcting errors while not spitting out everything all the time
