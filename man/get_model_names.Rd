@@ -2,16 +2,25 @@
 % Please edit documentation in R/get_model_names.R
 \name{get_model_names}
 \alias{get_model_names}
-\title{Lists the models available in rTPC}
+\title{Lists or searches the models available in rTPC}
 \usage{
-get_model_names()
+get_model_names(model)
+}
+\arguments{
+\item{model}{Optional string (or vector of strings) representing model/s to search for.}
 }
 \value{
 character vector of thermal performance curves available in rTPC
 }
 \description{
-Lists the models available in rTPC
+Lists or searches the models available in rTPC
 }
 \examples{
 get_model_names()
+get_model_names("briere")
+}
+\author{
+Daniel Padfield
+
+Francis Windram
 }

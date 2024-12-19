@@ -1,11 +1,14 @@
-#' Lists the models available in rTPC
-#'
+#' Lists or searches the models available in rTPC
+#' @param model Optional string (or vector of strings) representing model/s to search for.
+#' @author Daniel Padfield
+#' @author Francis Windram
 #' @return character vector of thermal performance curves available in rTPC
 #' @examples
 #' get_model_names()
+#' get_model_names("briere")
 #' @export get_model_names
 
-get_model_names <- function(){
+get_model_names <- function(model){
   mod_names <- c(
     'sharpeschoolhigh_1981',
     'sharpeschoollow_1981',
@@ -46,7 +49,11 @@ get_model_names <- function(){
     "tomlinsonphillips_2015"
   )
 
-
-  return(sort(mod_names))
+  if (missing(model)){
+    return(sort(mod_names))
+  } else {
+    # 0.05 seems about the sweet spot for correcting errors while not spitting out everything all the time
+    return(sort(unique(agrep(paste(model, collapse = "|"), mod_names, max.distance = 0.05, value = TRUE, fixed = FALSE))))
+  }
 }
 
