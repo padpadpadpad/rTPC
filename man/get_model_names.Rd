@@ -4,10 +4,12 @@
 \alias{get_model_names}
 \title{Lists or searches the models available in rTPC}
 \usage{
-get_model_names(model)
+get_model_names(model, returnall = FALSE)
 }
 \arguments{
 \item{model}{Optional string (or vector of strings) representing model/s to search for.}
+
+\item{returnall}{Also return the names of deprecated functions}
 }
 \value{
 character vector of thermal performance curves available in rTPC

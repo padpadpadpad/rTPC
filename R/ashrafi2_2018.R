@@ -32,7 +32,7 @@
 #' start_lower = start_vals - 10,
 #' start_upper = start_vals + 10,
 #' lower = get_lower_lims(d$temp, d$rate, model_name = 'ashrafi2_2018'),
-#' upper = get_upper_lims(d$temp, d$rate, model_name = 'ashrafi1_2018'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'ashrafi2_2018'),
 #' supp_errors = 'Y',
 #' convergence_count = FALSE)
 #'

@@ -2,6 +2,7 @@
 
 export(analytiskontodimas_2004)
 export(ashrafi1_2018)
+export(ashrafi2_2018)
 export(atkin_2005)
 export(beta_2012)
 export(betatypesimplified_2008)

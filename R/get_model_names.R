@@ -43,7 +43,7 @@ get_model_names <- function(model, returnall=FALSE){
     'lrf_1991',
     'deutsch_2008',
     'ashrafi1_2018',
-    'ashrafi2_2018'
+    'ashrafi2_2018',
     'flextpc_2024',
     'atkin_2005',
     'eubank_1973',
