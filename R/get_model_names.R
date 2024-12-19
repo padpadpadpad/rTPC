@@ -29,7 +29,12 @@ get_model_names <- function(model){
     'gaussian_1987',
     'flinn_1991',
     'delong_2017',
+    'briere1_1999',
+    'briere1simplified_1999',
     'briere2_1999',
+    'briere2simplified_1999',
+    'briereextended_2021',
+    'briereextendedsimplified_2021',
     'boatman_2017',
     'beta_2012',
     'modifiedgaussian_2006',
@@ -38,15 +43,15 @@ get_model_names <- function(model){
     'deutsch_2008',
     'ashrafi1_2018',
     'flextpc_2024',
-    "atkin_2005",
-    "eubank_1973",
-    "analytiskontodimas_2004",
-    "taylorsexton_1972",
-    "janisch1_1925",
-    "janisch2_1925",
-    "simplifiedbetatype_2008",
-    "warrendreyer_2006",
-    "tomlinsonphillips_2015"
+    'atkin_2005',
+    'eubank_1973',
+    'analytiskontodimas_2004',
+    'taylorsexton_1972',
+    'janisch1_1925',
+    'janisch2_1925',
+    'simplifiedbetatype_2008',
+    'warrendreyer_2006',
+    'tomlinsonphillips_2015'
   )
 
   if (missing(model)){

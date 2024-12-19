@@ -1,4 +1,4 @@
-#' Brière II model for fitting thermal performance curves
+#' Simplified Brière II model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param tmin low temperature (ºC) at which rates become negative
@@ -8,8 +8,8 @@
 #' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Brière, J.F., Pracros, P., Le Roux, A.Y., Pierre, J.S.,  A novel rate model of temperature-dependent development for arthropods. Environmental Entomololgy, 28, 22–29 (1999)
 #' @details Equation:
-#' \deqn{rate=a\cdot temp \cdot(temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{b}}}{%
-#' rate = a.temp.(temp - tmin).(tmax - temp)^(1/b)}
+#' \deqn{rate=a \cdot (temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{b}}}{%
+#' rate = a.(temp - tmin).(tmax - temp)^(1/b)}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 #'
@@ -24,15 +24,15 @@
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
-#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere2_1999')
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere2simplified_1999')
 #' # fit model
-#' mod <- nls.multstart::nls_multstart(rate~briere2_1999(temp = temp, tmin, tmax, a, b),
+#' mod <- nls.multstart::nls_multstart(rate~briere2simplified_1999(temp = temp, tmin, tmax, a, b),
 #' data = d,
 #' iter = c(4,4,4,4),
 #' start_lower = start_vals - 10,
 #' start_upper = start_vals + 10,
-#' lower = get_lower_lims(d$temp, d$rate, model_name = 'briere2_1999'),
-#' upper = get_upper_lims(d$temp, d$rate, model_name = 'briere2_1999'),
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'briere2simplified_1999'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'briere2simplified_1999'),
 #' supp_errors = 'Y',
 #' convergence_count = FALSE)
 #'
@@ -48,14 +48,14 @@
 #' geom_point(aes(temp, rate), d) +
 #' geom_line(aes(temp, .fitted), col = 'blue') +
 #' theme_bw()
-#' @export briere2_1999
+#' @export briere2simplified_1999
 
-briere2_1999 <- function(temp, tmin, tmax, a, b){
-  est <- a*temp * (temp - tmin) * (tmax - temp)^(1/b)
+briere2simplified_1999 <- function(temp, tmin, tmax, a, b){
+  est <- a * (temp - tmin) * (tmax - temp)^(1/b)
   return(est)
 }
 
-briere2_1999.starting_vals <- function(d){
+briere2simplified_1999.starting_vals <- function(d){
   tmin = min(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE)
   b = 3
@@ -63,7 +63,7 @@ briere2_1999.starting_vals <- function(d){
   return(c(tmin = tmin, tmax = tmax, a = a, b = b))
 }
 
-briere2_1999.lower_lims <- function(d){
+briere2simplified_1999.lower_lims <- function(d){
   tmin = -50
   tmax = min(d$x, na.rm = TRUE)
   b = 0
@@ -71,10 +71,11 @@ briere2_1999.lower_lims <- function(d){
   return(c(tmin = tmin, tmax = tmax, a = a, b = b))
 }
 
-briere2_1999.upper_lims <- function(d){
+briere2simplified_1999.upper_lims <- function(d){
   tmin = max(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE) * 10
-  b = 30
-  a = 10^-2
+  # Needs more flexibility in parameters to fit well relative to briere2
+  b = Inf
+  a = Inf
   return(c(tmin = tmin, tmax = tmax, a = a, b = b))
 }
