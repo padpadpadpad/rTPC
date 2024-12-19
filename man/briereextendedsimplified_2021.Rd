@@ -48,15 +48,16 @@ d <- subset(chlorella_tpc, curve_id == 1)
 # get start values and fit model
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briereextendedsimplified_2021')
 # fit model
-mod <- nls.multstart::nls_multstart(rate~briereextendedsimplified_2021(temp = temp, tmin, tmax, a, b, d),
-data = d,
-iter = c(4,4,4,4,4),
-start_lower = start_vals - 10,
-start_upper = start_vals + 10,
-lower = get_lower_lims(d$temp, d$rate, model_name = 'briereextendedsimplified_2021'),
-upper = get_upper_lims(d$temp, d$rate, model_name = 'briereextendedsimplified_2021'),
-supp_errors = 'Y',
-convergence_count = FALSE)
+mod <- nls.multstart::nls_multstart(
+  rate~briereextendedsimplified_2021(temp = temp, tmin, tmax, a, b, d),
+  data = d,
+  iter = c(4,4,4,4,4),
+  start_lower = start_vals - 10,
+  start_upper = start_vals + 10,
+  lower = get_lower_lims(d$temp, d$rate, model_name = 'briereextendedsimplified_2021'),
+  upper = get_upper_lims(d$temp, d$rate, model_name = 'briereextendedsimplified_2021'),
+  supp_errors = 'Y',
+  convergence_count = FALSE)
 
 # look at model fit
 summary(mod)
