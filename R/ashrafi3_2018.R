@@ -8,7 +8,7 @@
 #' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Ashrafi, R. et al. Broad thermal tolerance is negatively correlated with virulence in an opportunistic bacterial pathogen. Evolutionary Applications 11, 1700–1714 (2018).
 #' @details Equation:
-#' \deqn{rate = \frac{1}{(a + b \cdot exp^(temp) + d \cdot exp^(-temp))}}{%
+#' \deqn{rate = \frac{1}{(a + b \cdot exp^{temp} + d \cdot exp^{-temp})}}{%
 #' 1 / ( a + b.exp(temp) + d.exp(-temp) )}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.

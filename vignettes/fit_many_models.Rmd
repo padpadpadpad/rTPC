@@ -48,7 +48,7 @@ label_facets_num <- function(string){
 
 After searching the literature, __rTPC__ contains `r length(rTPC::get_model_names())` different model formulations previously used. The [first vignette](rTPC.html), demonstrated how to easily fit a single model to a single curve, here we will fit all `r length(rTPC::get_model_names())` model formulations.
 
-**DISCLAIMER Although we fit all `r length(rTPC::get_model_names())` model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on 24 model formulations.**
+**DISCLAIMER Although we fit all `r length(rTPC::get_model_names())` model formulations, this is to demonstrate how they fit and their general shape, we do not recommend doing model selection on `r length(rTPC::get_model_names())` model formulations.**
 
 We can demonstrate the fitting procedure of the `r length(rTPC::get_model_names())` model formulations by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
 
