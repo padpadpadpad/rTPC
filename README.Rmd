@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-**rTPC** is an R package that helps fit thermal performance curves (TPCs) in R. **rTPC** contains 29 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
+**rTPC** is an R package that helps fit thermal performance curves (TPCs) in R. **rTPC** contains 46 model formulations previously used to fit TPCs and has helper functions to help set sensible start parameters, upper and lower parameter limits and estimate parameters useful in downstream analyses, such as cardinal temperatures, maximum rate and optimum temperature.
 
 The idea behind **rTPC** is to make fitting thermal performance curves easier, to provide workflows and examples of fitting TPCs without saying which model works best. Which model and which workflow is "best" is going to be down to the question that is being asked. Throughout the vignettes, *Things to consider* sections give some key considerations about what to consider *before* and *during* the analysis.
 
