@@ -84,7 +84,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2024-12-17</h4>
+            <h4 data-toc-skip class="date">2024-12-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/rTPC.Rmd" class="external-link"><code>vignettes/rTPC.Rmd</code></a></small>
       <div class="d-none name"><code>rTPC.Rmd</code></div>
@@ -102,10 +102,12 @@ performance curves using nls.multstart.<a class="anchor" aria-label="anchor" hre
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
 <p><strong>rTPC</strong> provides a suite of functions to help fit
 thermal performance curves to empirical data. After searching the
-literature, <strong>rTPC</strong> contains 29 different model
+literature, <strong>rTPC</strong> contains 43 different model
 formulations that have been used previously. These functions can be
 easily applied to methods in R that use non-linear least squares
 regression to estimate thermal performance curves.</p>
@@ -113,16 +115,28 @@ regression to estimate thermal performance curves.</p>
 <strong>get_model_names()</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "ashrafi1_2018"         "atkin_2005"            "beta_2012"            </span></span>
-<span><span class="co">#&gt;  [4] "boatman_2017"          "briere2_1999"          "delong_2017"          </span></span>
-<span><span class="co">#&gt;  [7] "deutsch_2008"          "flextpc_2024"          "flinn_1991"           </span></span>
-<span><span class="co">#&gt; [10] "gaussian_1987"         "hinshelwood_1947"      "joehnk_2008"          </span></span>
-<span><span class="co">#&gt; [13] "johnsonlewin_1946"     "kamykowski_1985"       "lactin2_1995"         </span></span>
-<span><span class="co">#&gt; [16] "lrf_1991"              "modifiedgaussian_2006" "oneill_1972"          </span></span>
-<span><span class="co">#&gt; [19] "pawar_2018"            "quadratic_2008"        "ratkowsky_1983"       </span></span>
-<span><span class="co">#&gt; [22] "rezende_2019"          "sharpeschoolfull_1981" "sharpeschoolhigh_1981"</span></span>
-<span><span class="co">#&gt; [25] "sharpeschoollow_1981"  "spain_1982"            "thomas_2012"          </span></span>
-<span><span class="co">#&gt; [28] "thomas_2017"           "weibull_1995"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "analytiskontodimas_2004"       "ashrafi1_2018"                </span></span>
+<span><span class="co">#&gt;  [3] "ashrafi2_2018"                 "atkin_2005"                   </span></span>
+<span><span class="co">#&gt;  [5] "beta_2012"                     "betatypesimplified_2008"      </span></span>
+<span><span class="co">#&gt;  [7] "boatman_2017"                  "briere1_1999"                 </span></span>
+<span><span class="co">#&gt;  [9] "briere1simplified_1999"        "briere2_1999"                 </span></span>
+<span><span class="co">#&gt; [11] "briere2simplified_1999"        "briereextended_2021"          </span></span>
+<span><span class="co">#&gt; [13] "briereextendedsimplified_2021" "delong_2017"                  </span></span>
+<span><span class="co">#&gt; [15] "deutsch_2008"                  "eubank_1973"                  </span></span>
+<span><span class="co">#&gt; [17] "flextpc_2024"                  "flinn_1991"                   </span></span>
+<span><span class="co">#&gt; [19] "gaussian_1987"                 "gaussianmodified_2006"        </span></span>
+<span><span class="co">#&gt; [21] "hinshelwood_1947"              "janisch1_1925"                </span></span>
+<span><span class="co">#&gt; [23] "janisch2_1925"                 "joehnk_2008"                  </span></span>
+<span><span class="co">#&gt; [25] "johnsonlewin_1946"             "kamykowski_1985"              </span></span>
+<span><span class="co">#&gt; [27] "lactin2_1995"                  "lrf_1991"                     </span></span>
+<span><span class="co">#&gt; [29] "oneill_1972"                   "pawar_2018"                   </span></span>
+<span><span class="co">#&gt; [31] "quadratic_2008"                "ratkowsky_1983"               </span></span>
+<span><span class="co">#&gt; [33] "rezende_2019"                  "sharpeschoolfull_1981"        </span></span>
+<span><span class="co">#&gt; [35] "sharpeschoolhigh_1981"         "sharpeschoollow_1981"         </span></span>
+<span><span class="co">#&gt; [37] "spain_1982"                    "taylorsexton_1972"            </span></span>
+<span><span class="co">#&gt; [39] "thomas_2012"                   "thomas_2017"                  </span></span>
+<span><span class="co">#&gt; [41] "tomlinsonphillips_2015"        "warrendreyer_2006"            </span></span>
+<span><span class="co">#&gt; [43] "weibull_1995"</span></span></code></pre></div>
 <p>They are generally named after the author of the paper (and hence the
 name of the model within the literature) and the year at which I found
 the model to be first used, separated by a <strong>“_”</strong>. Some
