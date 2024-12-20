@@ -84,7 +84,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2024-12-15</h4>
+            <h4 data-toc-skip class="date">2024-12-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/HEAD/vignettes/rTPC.Rmd" class="external-link"><code>vignettes/rTPC.Rmd</code></a></small>
       <div class="d-none name"><code>rTPC.Rmd</code></div>
@@ -105,7 +105,7 @@ performance curves using nls.multstart.<a class="anchor" aria-label="anchor" hre
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
 <p><strong>rTPC</strong> provides a suite of functions to help fit
 thermal performance curves to empirical data. After searching the
-literature, <strong>rTPC</strong> contains 29 different model
+literature, <strong>rTPC</strong> contains 46 different model
 formulations that have been used previously. These functions can be
 easily applied to methods in R that use non-linear least squares
 regression to estimate thermal performance curves.</p>
@@ -113,16 +113,29 @@ regression to estimate thermal performance curves.</p>
 <strong>get_model_names()</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "ashrafi1_2018"         "atkin_2005"            "beta_2012"            </span></span>
-<span><span class="co">#&gt;  [4] "boatman_2017"          "briere2_1999"          "delong_2017"          </span></span>
-<span><span class="co">#&gt;  [7] "deutsch_2008"          "flextpc_2024"          "flinn_1991"           </span></span>
-<span><span class="co">#&gt; [10] "gaussian_1987"         "hinshelwood_1947"      "joehnk_2008"          </span></span>
-<span><span class="co">#&gt; [13] "johnsonlewin_1946"     "kamykowski_1985"       "lactin2_1995"         </span></span>
-<span><span class="co">#&gt; [16] "lrf_1991"              "modifiedgaussian_2006" "oneill_1972"          </span></span>
-<span><span class="co">#&gt; [19] "pawar_2018"            "quadratic_2008"        "ratkowsky_1983"       </span></span>
-<span><span class="co">#&gt; [22] "rezende_2019"          "sharpeschoolfull_1981" "sharpeschoolhigh_1981"</span></span>
-<span><span class="co">#&gt; [25] "sharpeschoollow_1981"  "spain_1982"            "thomas_2012"          </span></span>
-<span><span class="co">#&gt; [28] "thomas_2017"           "weibull_1995"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "analytiskontodimas_2004"       "ashrafi1_2018"                </span></span>
+<span><span class="co">#&gt;  [3] "ashrafi2_2018"                 "ashrafi3_2018"                </span></span>
+<span><span class="co">#&gt;  [5] "ashrafi4_2018"                 "ashrafi5_2018"                </span></span>
+<span><span class="co">#&gt;  [7] "atkin_2005"                    "beta_2012"                    </span></span>
+<span><span class="co">#&gt;  [9] "betatypesimplified_2008"       "boatman_2017"                 </span></span>
+<span><span class="co">#&gt; [11] "briere1_1999"                  "briere1simplified_1999"       </span></span>
+<span><span class="co">#&gt; [13] "briere2_1999"                  "briere2simplified_1999"       </span></span>
+<span><span class="co">#&gt; [15] "briereextended_2021"           "briereextendedsimplified_2021"</span></span>
+<span><span class="co">#&gt; [17] "delong_2017"                   "deutsch_2008"                 </span></span>
+<span><span class="co">#&gt; [19] "eubank_1973"                   "flextpc_2024"                 </span></span>
+<span><span class="co">#&gt; [21] "flinn_1991"                    "gaussian_1987"                </span></span>
+<span><span class="co">#&gt; [23] "gaussianmodified_2006"         "hinshelwood_1947"             </span></span>
+<span><span class="co">#&gt; [25] "janisch1_1925"                 "janisch2_1925"                </span></span>
+<span><span class="co">#&gt; [27] "joehnk_2008"                   "johnsonlewin_1946"            </span></span>
+<span><span class="co">#&gt; [29] "kamykowski_1985"               "lactin2_1995"                 </span></span>
+<span><span class="co">#&gt; [31] "lrf_1991"                      "oneill_1972"                  </span></span>
+<span><span class="co">#&gt; [33] "pawar_2018"                    "quadratic_2008"               </span></span>
+<span><span class="co">#&gt; [35] "ratkowsky_1983"                "rezende_2019"                 </span></span>
+<span><span class="co">#&gt; [37] "sharpeschoolfull_1981"         "sharpeschoolhigh_1981"        </span></span>
+<span><span class="co">#&gt; [39] "sharpeschoollow_1981"          "spain_1982"                   </span></span>
+<span><span class="co">#&gt; [41] "taylorsexton_1972"             "thomas_2012"                  </span></span>
+<span><span class="co">#&gt; [43] "thomas_2017"                   "tomlinsonphillips_2015"       </span></span>
+<span><span class="co">#&gt; [45] "warrendreyer_2006"             "weibull_1995"</span></span></code></pre></div>
 <p>They are generally named after the author of the paper (and hence the
 name of the model within the literature) and the year at which I found
 the model to be first used, separated by a <strong>“_”</strong>. Some
