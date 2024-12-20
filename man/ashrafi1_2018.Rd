@@ -2,7 +2,7 @@
 % Please edit documentation in R/ashrafi1_2018.R
 \name{ashrafi1_2018}
 \alias{ashrafi1_2018}
-\title{Ashrafi1 model for fitting thermal performance curves}
+\title{Ashrafi I model for fitting thermal performance curves}
 \usage{
 ashrafi1_2018(temp, a, b, c)
 }
@@ -19,7 +19,7 @@ ashrafi1_2018(temp, a, b, c)
 a numeric vector of rate values based on the temperatures and parameter values provided to the function
 }
 \description{
-Ashrafi1 model for fitting thermal performance curves
+Ashrafi I model for fitting thermal performance curves
 }
 \details{
 Equation:
@@ -50,7 +50,7 @@ iter = c(4,4,4),
 start_lower = start_vals - 10,
 start_upper = start_vals + 10,
 lower = get_lower_lims(d$temp, d$rate, model_name = 'ashrafi1_2018'),
-upper = get_upper_lims(d$temp, d$rate, model_name = 'ashrafi1_2018'),
+upper = get_upper_lims(d$temp, d$rate, model_name = 'ashrafi2_2018'),
 supp_errors = 'Y',
 convergence_count = FALSE)
 
@@ -69,4 +69,7 @@ theme_bw()
 }
 \references{
 Ashrafi, R. et al. Broad thermal tolerance is negatively correlated with virulence in an opportunistic bacterial pathogen. Evolutionary Applications 11, 1700–1714 (2018).
+}
+\author{
+Daniel Padfield
 }

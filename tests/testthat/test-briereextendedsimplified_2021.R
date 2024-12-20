@@ -1,5 +1,3 @@
-context("test-ashrafi1_2018.R")
-
 # do not run the test on CRAN as they take too long
 testthat::skip_on_cran()
 
@@ -11,23 +9,25 @@ library(ggplot2)
 # subset for the first TPC curve
 data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
+modelname <- "briereextendedsimplified_2021"
 
 # get start values and fit model
-start_vals <- get_start_vals(d$temp, d$rate, model_name = 'ashrafi1_2018')
+start_vals <- get_start_vals(d$temp, d$rate, model_name = modelname)
 
 # fit model
-mod <- nls.multstart::nls_multstart(rate~ashrafi1_2018(temp = temp, a, b, c),
+mod <- nls.multstart::nls_multstart(rate~briereextendedsimplified_2021(temp = temp, tmin, tmax, a, b, d),
                                     data = d,
-                                    iter = c(4,4,4),
+                                    iter = c(3,3,3,3,3),
                                     start_lower = start_vals - 10,
                                     start_upper = start_vals + 10,
-                                    lower = get_lower_lims(d$temp, d$rate, model_name = 'ashrafi1_2018'),
-                                    upper = get_upper_lims(d$temp, d$rate, model_name = 'ashrafi1_2018'),
+                                    lower = get_lower_lims(d$temp, d$rate, model_name = modelname),
+                                    upper = get_upper_lims(d$temp, d$rate, model_name = modelname),
                                     supp_errors = 'Y',
                                     convergence_count = FALSE)
 
 # get predictions
 preds <- broom::augment(mod)
+# dput(round(preds$.fitted, 1))
 
 # plot
 ggplot(preds) +
@@ -36,8 +36,8 @@ ggplot(preds) +
   theme_bw()
 
 # run test
-testthat::test_that("ashrafi1 function works", {
+testthat::test_that(paste(modelname, "function works"), {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(-0.2, 0.2, 0.6, 0.8, 1.0, 1.2, 1.2, 1.2, 1.1, 0.9, 0.6, 0.2))
+    c(0.1, 0.1, 0.3, 0.4, 0.7, 1, 1.4, 1.6, 1.5, 1.1, 0.4, 0))
 })

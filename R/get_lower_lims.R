@@ -11,7 +11,7 @@
 
 get_lower_lims <- function(x, y, model_name) {
 
-  mod_names <- get_model_names()
+  mod_names <- get_model_names(returnall = TRUE)
   model_name <- tryCatch(rlang::arg_match(model_name, mod_names), error = function(e){
     cli::cli_abort(c("x"="Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC.",
                      "!"="Please check the spelling of {.arg model_name}.",
