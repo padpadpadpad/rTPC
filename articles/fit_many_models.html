@@ -103,7 +103,7 @@ using rTPC, nls.multstart, and the tidyverse.<a class="anchor" aria-label="ancho
 </h2>
 <ul>
 <li>How many data points do you have for each curve? To fit all of the
-43 models in <strong>rTPC</strong>, there needs to be a minimum of 7
+46 models in <strong>rTPC</strong>, there needs to be a minimum of 7
 points per curve.</li>
 <li>If there are multiple individual curves to be fit, it makes sense to
 have your data in long format, where grouping variables (e.g. unique
@@ -131,14 +131,14 @@ parameter in their formulation.</li>
 <span>  <span class="va">string</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">'('</span>, <span class="fl">1</span><span class="op">:</span><span class="va">len</span>, <span class="st">') '</span>, <span class="va">string</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">string</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>After searching the literature, <strong>rTPC</strong> contains 43
+<p>After searching the literature, <strong>rTPC</strong> contains 46
 different model formulations previously used. The <a href="rTPC.html">first vignette</a>, demonstrated how to easily fit a
-single model to a single curve, here we will fit all 43 model
+single model to a single curve, here we will fit all 46 model
 formulations.</p>
-<p><strong>DISCLAIMER Although we fit all 43 model formulations, this is
+<p><strong>DISCLAIMER Although we fit all 46 model formulations, this is
 to demonstrate how they fit and their general shape, we do not recommend
-doing model selection on 24 model formulations.</strong></p>
-<p>We can demonstrate the fitting procedure of the 43 model formulations
+doing model selection on 46 model formulations.</strong></p>
+<p>We can demonstrate the fitting procedure of the 46 model formulations
 by taking a single curve from the example dataset <strong>rTPC</strong>
 - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic
 algae, <em>Chlorella vulgaris</em>. We can plot the data using
