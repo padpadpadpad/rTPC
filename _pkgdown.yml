@@ -6,27 +6,21 @@ template:
     font_scale: 1
   params:
     ganalytics: UA-74093873-3
-
 navbar:
   bg: dark
-
 url: https://padpadpadpad.github.io/rTPC/
-
 toc:
   depth: 2
-
 home:
   links:
   - text: Read paper
     href: https://doi.org/10.1111/2041-210X.13585
   - text: Read preprint
     href: https://www.biorxiv.org/content/10.1101/2020.12.16.423089v1
-
 articles:
 - title: Get started
   navbar: ~
-  contents:
-  - rTPC
+  contents: rTPC
 - title: Single curve fit
   navbar: Fitting a single curve
   contents:
@@ -40,7 +34,6 @@ articles:
   contents:
   - fit_many_curves
   - bootstrapping_many_curves
-
 reference:
 - title: Models
   contents:
@@ -114,3 +107,4 @@ reference:
   contents:
   - bacteria_tpc
   - chlorella_tpc
+
