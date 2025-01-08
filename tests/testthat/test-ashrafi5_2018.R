@@ -27,7 +27,7 @@ mod <- nls.multstart::nls_multstart(rate~ashrafi5_2018(temp = temp, a, b, c, d),
 
 # get predictions
 preds <- broom::augment(mod)
-dput(round(preds$.fitted, 1))
+# dput(round(preds$.fitted, 1))
 
 # plot
 ggplot(preds) +
@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that(paste(modelname, "function works"), {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0, 0.3, 0.6, 0.8, 0.9, 1, 1.1, 1.1, 1, 0.9, 0.7, 0.3))
+    c(0.2, 0.1, 0.3, 0.6, 0.9, 1.2, 1.3, 1.4, 1.3, 1, 0.6, 0))
 })

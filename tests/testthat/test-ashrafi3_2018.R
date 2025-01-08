@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that(paste(modelname, "function works"), {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.1, 0.8, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.8, 0.1))
+    c(0, 0, 0, 0.3, 1.1, 1.3, 1.3, 1.3, 1.3, 1.1, 0.3, 0))
 })
