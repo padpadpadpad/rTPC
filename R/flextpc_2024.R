@@ -60,7 +60,7 @@ flextpc_2024 <- function(temp, tmin, tmax, rmax, alpha, beta){
 
 flextpc_2024.starting_vals <- function(d){
   rmax = max(d$y, na.rm = TRUE)
-  topt = min(d$x, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
   tmin = min(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE)
   # Use the definitions found in the original paper as starting values
