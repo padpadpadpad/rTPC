@@ -1,3 +1,8 @@
+# rTPC 1.0.7 08/01/2024
+
+* Added many more models
+* Reshaped how models are added and how start values and limits are included.
+
 # rTPC 1.0.6 19/08/2024
 
 * Added ashrafi1_2018() to the package

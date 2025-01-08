@@ -53,9 +53,8 @@
 
 ashrafi5_2018 <- function(temp, a, b, c, d){
 
-  est <- log(
+  est <-
     a + b * log(temp + 273.15)^2 + c * log(temp + 273.15) + ((d * log(temp + 273.15))/temp + 273.15)
-  )
 
   return(est)
 }

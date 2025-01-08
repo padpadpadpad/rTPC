@@ -58,7 +58,7 @@ ashrafi3_2018 <- function(temp, a, b, c){
     return(rep(1e10, length(temp)))
   } else
   {
-    return(log(est))
+    return(est)
   }
 
 }
