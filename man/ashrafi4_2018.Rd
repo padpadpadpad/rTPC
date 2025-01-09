@@ -25,8 +25,8 @@ Ashrafi IV model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate = log(a + b \cdot (temp + 273.15) + c \cdot log((temp + 273.15)^2) + \cdot \sqrt{temp + 273.15})}{%
-log(a + b.(temp + 273.15) + c.log((temp + 273.15))^2 + d.sqrt((temp + 273.15)))}
+\deqn{rate = a + b \cdot (temp + 273.15) + c \cdot log((temp + 273.15)^2) + \cdot \sqrt{temp + 273.15}}{%
+a + b.(temp + 273.15) + c.log((temp + 273.15))^2 + d.sqrt((temp + 273.15))}
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 

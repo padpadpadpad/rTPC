@@ -25,8 +25,8 @@ Lobry model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate=a + b \cdot temp^{2} + log(temp) + c \cdot temp^{3}}{%
-rate = a + b.temp^2 + log(temp) + c.temp^3}
+\deqn{rate = rmax \cdot (1 - \frac{(temp - topt)^2)} / {(temp - topt)^2 + temp \cdot (tmax + tmin - temp) - tmax \cdot tmin}}{%
+rate = rmax.(1 - (temp - topt)^2/(temp - topt)^2 + temp.(tmax + tmin - temp) - tmax.tmin)}
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 
