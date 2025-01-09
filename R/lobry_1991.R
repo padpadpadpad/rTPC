@@ -9,8 +9,8 @@
 #' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Lobry, J. R., Rosso, L., & Flandrois, J. P. (1991). A FORTRAN subroutine for the determination of parameter confidence limits in non-linear models. Binary, 3(86-93), 25.
 #' @details Equation:
-#' \deqn{rate = rmax \cdot (1 - \frac{(temp - topt)^2)} / {(temp - topt)^2 + temp \cdot (tmax + tmin - temp) - tmax \cdot tmin}}{%
-#' rate = rmax.(1 - (temp - topt)^2/(temp - topt)^2 + temp.(tmax + tmin - temp) - tmax.tmin)}
+#' \deqn{rate = rmax \cdot (1 - \frac{(temp - topt)^2)}{(temp - topt)^2 + temp \cdot (tmax + tmin - temp) - tmax \cdot tmin}}{%
+#' rate = rmax.(1 - (temp - topt)^2/((temp - topt)^2 + temp.(tmax + tmin - temp) - tmax.tmin))}
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 #'
