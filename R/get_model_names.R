@@ -42,12 +42,12 @@ get_model_names <- function(model, returnall=FALSE){
                    "kamykowski_1985",
                    "lactin2_1995",
                    "lobry_1991",
-                   "lrf_1991",
                    "oneill_1972",
                    "pawar_2018",
                    "quadratic_2008",
                    "ratkowsky_1983",
                    "rezende_2019",
+                   "rosso_1993",
                    "sharpeschoolfull_1981",
                    "sharpeschoolhigh_1981",
                    "sharpeschoollow_1981",
@@ -59,7 +59,7 @@ get_model_names <- function(model, returnall=FALSE){
                    "warrendreyer_2006",
                    "weibull_1995")
 
-  mod_deprecated <- c('modifiedgaussian_2006')
+  mod_deprecated <- c('modifiedgaussian_2006', 'lrf_1991')
 
   if (returnall) {
     mod_names <- c(mod_names, mod_deprecated)

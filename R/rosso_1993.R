@@ -1,4 +1,4 @@
-#' Lobry-Rosso-Flandros (LRF) model for fitting thermal performance curves
+#' Rosso model for fitting thermal performance curves
 #'
 #' @param temp temperature in degrees centigrade
 #' @param rmax maximum rate at optimum temperature
@@ -26,15 +26,15 @@
 #' d <- subset(chlorella_tpc, curve_id == 1)
 #'
 #' # get start values and fit model
-#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'lrf_1991')
+#' start_vals <- get_start_vals(d$temp, d$rate, model_name = 'rosso_1993')
 #' # fit model
 #' mod <- nls_multstart(rate~lrf_1991(temp = temp, rmax, topt, tmin, tmax),
 #' data = d,
 #' iter = c(3,3,3,3),
 #' start_lower = start_vals - 10,
 #' start_upper = start_vals + 10,
-#' lower = get_lower_lims(d$temp, d$rate, model_name = 'lrf_1991'),
-#' upper = get_upper_lims(d$temp, d$rate, model_name = 'lrf_1991'),
+#' lower = get_lower_lims(d$temp, d$rate, model_name = 'rosso_1993'),
+#' upper = get_upper_lims(d$temp, d$rate, model_name = 'rosso_1993'),
 #' supp_errors = 'Y',
 #' convergence_count = FALSE)
 #'
@@ -51,11 +51,48 @@
 #' geom_line(aes(temp, .fitted), col = 'blue') +
 #' theme_bw()
 #'
-#' @export lrf_1991
+#' @export rosso_1993 lrf_1991
+#' @aliases lrf_1991
+
+rosso_1993 <- function(temp, rmax, topt, tmin, tmax){
+  return(rmax*((temp - tmax)*(temp - tmin)^2) / ((topt - tmin) * (((topt - tmin)*(temp - topt))-((topt-tmax)*(topt+tmin-2*temp)))))
+  }
+
+rosso_1993.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)
+  topt = mean(d$x[d$y == rmax])
+  tmin = min(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE)
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}
+
+rosso_1993.lower_lims <- function(d){
+  rmax = min(d$y, na.rm = TRUE)
+  topt = min(d$x, na.rm = TRUE)
+  tmin = min(d$x, na.rm = TRUE) - 50
+  tmax = min(d$x, na.rm = TRUE)
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}
+
+rosso_1993.upper_lims <- function(d){
+  rmax = max(d$y, na.rm = TRUE) * 10
+  topt = max(d$x, na.rm = TRUE)
+  tmin = max(d$x, na.rm = TRUE)
+  tmax = max(d$x, na.rm = TRUE) * 10
+
+  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+}
+
+
+# deprecated function name
+
+
 
 lrf_1991 <- function(temp, rmax, topt, tmin, tmax){
   return(rmax*((temp - tmax)*(temp - tmin)^2) / ((topt - tmin) * (((topt - tmin)*(temp - topt))-((topt-tmax)*(topt+tmin-2*temp)))))
-  }
+}
 
 lrf_1991.starting_vals <- function(d){
   rmax = max(d$y, na.rm = TRUE)
@@ -63,7 +100,10 @@ lrf_1991.starting_vals <- function(d){
   tmin = min(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE)
 
-  return(c(rmax = rmax, topt = topt, tmin = tmin, tmax = tmax))
+  # Warn every 8 hours here so it doesn't slow down fitting too much
+  cli::cli_warn(c("{.fn lrf_1991} has been replaced with {.fn rosso_1993} and will be removed.", "!"="Please modify your code accordingly"), .frequency="regularly", .frequency_id="lrf_rosso")
+  return(rosso_1993.starting_vals(d=d))
+
 }
 
 lrf_1991.lower_lims <- function(d){
