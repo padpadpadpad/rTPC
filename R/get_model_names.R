@@ -52,6 +52,7 @@ get_model_names <- function(model, returnall=FALSE){
                    "sharpeschoolhigh_1981",
                    "sharpeschoollow_1981",
                    "spain_1982",
+                   "stinner_1974",
                    "taylorsexton_1972",
                    "thomas_2012",
                    "thomas_2017",
