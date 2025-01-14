@@ -17,6 +17,7 @@
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
 #'
 #' @note Generally we found this model easy to fit.
+#' @concept model
 #' @examples
 #' # load in ggplot
 #' library(ggplot2)

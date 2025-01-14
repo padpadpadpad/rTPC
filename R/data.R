@@ -16,6 +16,7 @@
 #' @keywords dataset
 #' @docType data
 #' @usage data("chlorella_tpc")
+#' @concept data
 #' @examples
 #' data("chlorella_tpc")
 #' library(ggplot2)
@@ -39,6 +40,7 @@
 #' @keywords dataset
 #' @docType data
 #' @usage data("bacteria_tpc")
+#' @concept data
 #' @examples
 #' data("bacteria_tpc")
 #' library(ggplot2)

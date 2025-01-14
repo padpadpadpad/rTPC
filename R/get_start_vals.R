@@ -7,6 +7,7 @@
 #' @author Daniel Padfield
 #' @author Francis Windram
 #' @return Named list of start parameters given the data and model being fitted
+#' @concept helper
 #' @export get_start_vals
 
 get_start_vals <- function(x, y, model_name) {

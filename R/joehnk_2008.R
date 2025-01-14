@@ -16,6 +16,7 @@
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
 #'
 #' @note Generally we found this model easy to fit.
+#' @concept model
 #' @references Joehnk, Klaus D., et al. Summer heatwaves promote blooms of harmful cyanobacteria. Global change biology 14.3: 495-512 (2008)
 #' @examples
 #' # load in ggplot

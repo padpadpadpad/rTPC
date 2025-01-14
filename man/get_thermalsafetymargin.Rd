@@ -18,3 +18,4 @@ Estimate thermal safety margin of a thermal performance curve
 \details{
 Thermal safety margin is calculated as: CTmax - Topt. This is calculated using the functions \code{get_ctmax} and \code{get_topt}.
 }
+\concept{params}

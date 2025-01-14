@@ -3,6 +3,7 @@
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @details Fits the q10 portion of \code{rezende_2019} to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
 #' @return Numeric estimate of q10 value
+#' @concept params
 #' @export get_q10
 
 get_q10 <- function(model){

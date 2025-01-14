@@ -18,6 +18,7 @@
 #'
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
 #' @note Generally this model requires larger iter values in nls_multstart to fit reliably.
+#' @concept model
 #' @examples
 #' # load in ggplot
 #' library(ggplot2)

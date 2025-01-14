@@ -54,9 +54,15 @@ Adding a model to rTPC consists of 4 major steps:
 1. Add the model code, starting values, and limits.
 2. Add the test file.
 3. Add the model to the rTPC database.
-4. Clean up, check, and add to documentation
+4. Clean up and check.
 
-Models are generally named according to the scheme `authormodifier#_YYYY`. So a model by authors called King and Bishop published in 1992 would usually be codified as `kingbishop_1992`. If they further proposed a modified model, and a simplified version of each in the original paper, those would probably appear as `kingbishopmodified_1992`, `kingbishopsimplified_1992` and `kingbishopmodifiedsimplified_1992`. If there are many authors, or another better description of the model then initialisms or other descriptors can be used, but these may be changed if the package maintainers deem it to be confusing.
+Models are generally named according to the scheme `authormodifier#_YYYY`. So a model by authors called King and Bishop published in 1992 would usually be codified as `kingbishop_1992`. If they further proposed a modified model, and a simplified version of each in the original paper, those would probably appear as 
+
+- `kingbishopmodified_1992`
+- `kingbishopsimplified_1992`
+- `kingbishopmodifiedsimplified_1992`
+
+If there are many authors, or another better description of the model then initialisms or other descriptors can be used, but these may be changed if the package maintainers deem it to be confusing.
 
 ---
 
@@ -372,30 +378,6 @@ On this second run the test should execute properly.
 ```
 
 You can then proceed with commenting back out the `dput()` line.
-
----
-
-### Finalisation
-
-Now you have fully implemented the model, there is a touch more housekeeping to do.
-
-Most notably the `_pkgdown.yaml` file contains the listing for the documentation index.
-
-To add your model to the documentation, add its name to the Models section:
-
-```
-reference:
-- title: Models
-  contents:
-  - analytiskontodimas_2004
-  - ashrafi1_2018
-  - ashrafi2_2018
-  ...
-  - warrendreyer_2006
-  - weibull_1995
-```
-
-_Note: YAML is a language where indentation is meaningful. Make sure your new entry is at the same indentation level as other models!_
 
 ---
 

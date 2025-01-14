@@ -33,3 +33,4 @@ Currently estimates:
 \item skewness using \code{\link[=get_skewness]{get_skewness()}}
 }
 }
+\concept{params}

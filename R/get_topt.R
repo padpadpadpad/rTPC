@@ -3,7 +3,7 @@
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @details Optimum temperature (ºC) is calculated by predicting over the temperature range using the previously estimated parameters and keeping the temperature where the largest rate value occurs. Predictions are done every 0.001 ºC so the estimate of optimum temperature should be accurate up to 0.001 ºC.
 #' @return Numeric estimate of optimum temperature (in ºC)
-#'
+#' @concept params
 #' @export get_topt
 
 get_topt <- function(model){

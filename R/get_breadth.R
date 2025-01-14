@@ -4,7 +4,7 @@
 #' @param level proportion of maximum rate over which thermal performance breadth is calculated
 #' @details Thermal performance breadth is calculated as the range of temperatures over which a curve's rate is at least 0.8 of peak. This defaults to a proportion of 0.8 but can be changed using the \code{level} argument.
 #' @return Numeric estimate of thermal performance breadth (in ºC)
-#'
+#' @concept params
 #' @export get_breadth
 
 get_breadth <- function(model, level = 0.8){

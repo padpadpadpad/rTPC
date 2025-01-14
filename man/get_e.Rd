@@ -18,3 +18,4 @@ Estimate the activation energy of a thermal performance curve
 \details{
 Fits a modified-Boltzmann equation to all raw data below the optimum temperature (ºC; as estimated by \code{get_topt}).
 }
+\concept{params}

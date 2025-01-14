@@ -18,3 +18,4 @@ Estimate optimum temperature of a thermal performance curve
 \details{
 Optimum temperature (ºC) is calculated by predicting over the temperature range using the previously estimated parameters and keeping the temperature where the largest rate value occurs. Predictions are done every 0.001 ºC so the estimate of optimum temperature should be accurate up to 0.001 ºC.
 }
+\concept{params}

@@ -3,6 +3,7 @@
 #' @param model nls model object that contains a model of a thermal performance curve
 #' @details Fits a modified-Boltzmann equation to all raw data beyond the optimum temperature (ºC; as estimated by \code{get_topt}).
 #' @return Numeric estimate of activation energy (eV)
+#' @concept params
 #' @export get_eh
 
 get_eh <- function(model){

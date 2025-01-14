@@ -76,3 +76,4 @@ theme_bw()
 \references{
 Angilletta Jr, M. J. (2006). Estimating and comparing thermal performance curves. Journal of Thermal Biology, 31(7), 541-545.
 }
+\concept{model}

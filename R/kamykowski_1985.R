@@ -16,7 +16,7 @@
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
 #'
 #' @note Generally we found this model easy to fit.
-#'
+#' @concept model
 #' @references Kamykowski, Daniel. A survey of protozoan laboratory temperature studies applied to marine dinoflagellate behaviour from a field perspective. Contributions in Marine Science. (1985).
 #' @examples
 #' # load in ggplot
