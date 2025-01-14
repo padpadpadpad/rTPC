@@ -6,6 +6,7 @@ library(tidyverse)
 library(rTPC)
 library(nls.multstart)
 library(showtext)
+library(magick)
 
 data("Emiliania_huxleyi")
 glimpse(Emiliania_huxleyi)
@@ -168,9 +169,9 @@ d_preds <- merge(d_preds, select(d_stack, model, weight), by = 'model') %>%
 
 # plot these
 plot_1 <- ggplot() +
-  geom_line(aes(temp, .fitted, group = model), size = 0.3, alpha = 0.5, d_preds, col = 'white') +
-  geom_line(aes(temp, ave_pred), ave_preds, size = 0.3, col = 'white') +
-  MicrobioUoE::theme_black(base_size = 6) +
+  geom_line(aes(temp, .fitted, group = model), linewidth = 0.3, alpha = 0.5, d_preds, col = 'white') +
+  geom_line(aes(temp, ave_pred), ave_preds, linewidth = 0.3, col = 'white') +
+  MicrobioUoE::theme_black(base_size = 12) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank(),
@@ -194,10 +195,10 @@ sysfonts::font_families()
 
 sticker(plot_1,
         package="rTPC",
-        p_size = 7,
-        s_x = 0.95,
+        p_size = 28,
+        s_x = 0.9,
         s_y = 0.85,
-        s_width = 1.19,
+        s_width = 1.25,
         s_height = 1,
         p_x = 1,
         p_y = 1.5,
@@ -206,4 +207,16 @@ sticker(plot_1,
         p_color = '#edd90efe',
         p_family = "Anton",
         filename="~/google_drive/rTPC_hex_sticker.png",
-        white_around_sticker = FALSE)
+        white_around_sticker = TRUE)
+
+
+# In case anyone came here (like me) wanting a transparent background rather than white, you can use magick to convert the white to transparent:
+p <- image_read("~/google_drive/rTPC_hex_sticker.png")
+pp <- p %>%
+  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+1") %>%
+  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+1") %>%
+  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+517") %>%
+  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+517")
+image_write(image = pp, path = "~/google_drive/rTPC_hex_sticker.png")
+
+
