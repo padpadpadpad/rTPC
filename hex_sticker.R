@@ -182,7 +182,11 @@ plot_1 <- ggplot() +
         axis.ticks = element_blank(),
         axis.title.x = element_text(margin=margin(-2,0,0,0)),
         axis.title.y = element_text(margin=margin(0,-2,0,0)),
-        panel.grid.major = element_line(size = 0.1, colour = 'grey')) +
+        panel.grid.major = element_line(size = 0.1, colour = 'grey'),
+        panel.background = element_rect(fill = "transparent",
+                                        colour = NA_character_),
+        plot.background = element_rect(fill = "transparent",
+                                       colour = NA_character_)) +
   xlab('Temperature') +
   ylab('Rate') +
   scale_y_continuous(breaks = c(0, 0.25, 0.5))
@@ -207,16 +211,4 @@ sticker(plot_1,
         p_color = '#edd90efe',
         p_family = "Anton",
         filename="man/figures/rTPC_hex_sticker.png",
-        white_around_sticker = TRUE)
-
-
-# In case anyone came here (like me) wanting a transparent background rather than white, you can use magick to convert the white to transparent:
-p <- image_read("man/figures/rTPC_hex_sticker.png")
-pp <- p %>%
-  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+1") %>%
-  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+1") %>%
-  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+517") %>%
-  image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+517")
-image_write(image = pp, path = "man/figures/rTPC_hex_sticker.png")
-
-
+        white_around_sticker = FALSE)
