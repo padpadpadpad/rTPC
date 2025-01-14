@@ -171,7 +171,7 @@ d_preds <- merge(d_preds, select(d_stack, model, weight), by = 'model') %>%
 plot_1 <- ggplot() +
   geom_line(aes(temp, .fitted, group = model), linewidth = 0.3, alpha = 0.5, d_preds, col = 'white') +
   geom_line(aes(temp, ave_pred), ave_preds, linewidth = 0.3, col = 'white') +
-  MicrobioUoE::theme_black(base_size = 12) +
+  MicrobioUoE::theme_black(base_size = 18) +
   theme(legend.position = 'none',
         strip.text = element_text(hjust = 0),
         strip.background = element_blank(),
@@ -197,9 +197,9 @@ sticker(plot_1,
         package="rTPC",
         p_size = 28,
         s_x = 0.9,
-        s_y = 0.85,
-        s_width = 1.25,
-        s_height = 1,
+        s_y = 0.8,
+        s_width = 1.4,
+        s_height = 1.1,
         p_x = 1,
         p_y = 1.5,
         h_fill = 'black',
