@@ -23,11 +23,15 @@ knitr::opts_chunk$set(
 runstart <- lubridate::now()
 ```
 
+---
+
 ## First steps
 
 The first thing you want to do when you have a model that is potentially useful in rTPC is to _check whether it's already there_!
 
 rTPC already contains many models designed on a variety of different data. It is quite likely at this point that there is a similar (or identical) model that already serves the same purpose. So why not save yourself the work if you can?
+
+---
 
 ### Forking the repository
 
@@ -41,6 +45,8 @@ It is _strongly_ suggested that you install all packages from the "Suggests" sec
 
 Once you have done this, git clone from YOUR fork of rTPC into a folder of your choice, and then open up the `rTPC.Rproj` file if you are using RStudio.
 
+---
+
 ## Adding a model
 
 Adding a model to rTPC consists of 4 major steps:
@@ -51,6 +57,8 @@ Adding a model to rTPC consists of 4 major steps:
 4. Clean up, check, and add to documentation
 
 Models are generally named according to the scheme `authormodifier#_YYYY`. So a model by authors called King and Bishop published in 1992 would usually be codified as `kingbishop_1992`. If they further proposed a modified model, and a simplified version of each in the original paper, those would probably appear as `kingbishopmodified_1992`, `kingbishopsimplified_1992` and `kingbishopmodifiedsimplified_1992`. If there are many authors, or another better description of the model then initialisms or other descriptors can be used, but these may be changed if the package maintainers deem it to be confusing.
+
+---
 
 ### The model
 
@@ -68,6 +76,8 @@ $$R(T) = \frac{a}{(T-T_{opt})^2+b}$$
 
 Where $a$ and $b$ are arbitrary parameters for fitting, and $T_{opt}$ can be at least approximated from the data.
 
+---
+
 ### The model file
 
 The model itself lives in a file named after the function, in the `R` directory. In our case that will be `eubank_1973.R`.
@@ -83,6 +93,8 @@ Within this file are 4 functions:
 
 It is _very important_ that the auxiliary functions are named in this manner, otherwise the unified starting value/limit dispatch will not function correctly.
 
+---
+
 #### The model function - `eubank_1973()`
 
 First of all we must implement the actual model itself (i.e. the equation above, but as R code).
@@ -95,6 +107,8 @@ eubank_1973 <- function(temp, topt, a, b){
 ```
 
 A model function takes the parameters to fit the model as arguments, with temperature being the first by convention, and returns the estimates of the trait value at the given temperatures and parameter values.
+
+---
 
 #### The starting values - `eubank_1973.starting_vals()`
 
@@ -146,6 +160,8 @@ The following _will not and can not work_:
 - `.starting_vals()`
 - `model.starting_vals()`
 
+---
+
 #### The limits - `eubank_1973.lower_lims()` & `eubank_1973.upper_lims()`
 
 NLLS fitting often fails when unconstrained (as it may take one parameter to infinity and ignore all others). Even specifying absurdly large or infinite limits can make the optimiser behave better.
@@ -180,6 +196,8 @@ eubank_1973.upper_lims <- function(d){
 }
 ```
 
+---
+
 #### The documentation
 
 rTPC leverages `roxygen2` for documentation. Each file contains documentation definitions at the **top of the file** in special comments starting `#'`.
@@ -187,6 +205,7 @@ rTPC leverages `roxygen2` for documentation. Each file contains documentation de
 The best way to implement these is to copy from another model file (such as `atkin_2005`) and modify it to suit your own needs.
 
 Things to modify:
+
 - The first line description
 - parameters
 - author
@@ -196,11 +215,15 @@ Things to modify:
 - examples
 - export directive (this _must_ match the name of the model! The starting value and limit functions do not need exporting)
 
+---
+
 ### The model database
 
 Once you have created a model file, you need to add this model to rTPC's database of model names, so it knows that the model is available.
 
 This simply requires modifying the `mod_names` vector within the `get_model_names.R` file to include your new model. Make sure that the model name is exactly the same as that in your original file, and that it is enclosed in quotes!
+
+---
 
 ### Testing the model
 
@@ -245,6 +268,8 @@ In this case we can see that I simply misspelled the name of the model in the `g
 
 If only one test of the three failed, that is likely an issue with the names of the functions in the actual model file.
 
+---
+
 ### The model test file
 
 Each model requires a model test, to make sure that changes in the future do not cause major fitting issues. These test files live in the `tests/testthat` directory.
@@ -256,9 +281,10 @@ This will create a new test file, in our case `tests/testthat/test-eubank_1973.R
 Tests are mostly boilerplate, however there are a few things that do need to be changed, so again you can copy most of the code from another test file, such as `test-atkin_2005.R`.
 
 The main items to be changed are:
+
 - The model name throughout (5 occurrences)
 - The model arguments within `nls_multstart`
-- The `iter` argument to `nls_multstart` (this should be something like c(3,3,3,3) for a model with 4 free parameters)
+- The `iter` argument to `nls_multstart` (this should be something like `c(3,3,3,3)` for a model with 4 free parameters)
 
 So the final test file will look something like this:
 
@@ -307,6 +333,8 @@ testthat::test_that("eubank_1973 function works", {
 })
 ```
 
+---
+
 #### Getting results values
 
 The second-from-final line in the test file defines the expected return from a model run. It is not really feasible to know this ahead of time, but luckily the code here contains an extra function that makes retrieving the expected value easy.
@@ -345,6 +373,8 @@ On this second run the test should execute properly.
 
 You can then proceed with commenting back out the `dput()` line.
 
+---
+
 ### Finalisation
 
 Now you have fully implemented the model, there is a touch more housekeeping to do.
@@ -366,6 +396,8 @@ reference:
 ```
 
 _Note: YAML is a language where indentation is meaningful. Make sure your new entry is at the same indentation level as other models!_
+
+---
 
 ## Testing
 
@@ -390,17 +422,31 @@ Duration: 4m 55.6s
 R CMD check succeeded
 ```
 
+---
+
+## Documenting your model
+
+Documentation needs to be generated in order to be available for your own model.
+
+To do this, simply run the command `devtools::document()`.
+
+Once this has completed you can view your documentation internally using `?modelname_yyyy`.
+
+---
+
 ## Commiting your changes back upstream
 
 Now you have fully implemented your model it is time to hand it back to the rTPC team for integration.
 
-The simplest way to do this is to commit your changes, push those to your own forked repo, then open a pull request (a prompt should appear on your repo on the github website).
+The simplest way to do this is to commit your changes (including the .Rd documentation file), push those to your own forked repo, then open a pull request (a prompt should appear on your repo on the github website).
 
 Please make sure you include a sensible title such as "Add eubank_1976 model". 
 
 Include in the description any notes about the model itself, decisions you may have had to make when creating it, or problems and difficulties when fitting the model.
 
 See [PR #58 ](https://github.com/padpadpadpad/rTPC/pull/58) for an example of a good pull request.
+
+---
 
 ## Done!
 
