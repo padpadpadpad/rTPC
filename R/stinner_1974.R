@@ -31,7 +31,7 @@
 #' # fit model
 #' mod <- nls.multstart::nls_multstart(rate~stinner_1974(temp = temp, rmax, topt, a, b),
 #' data = d,
-#' iter = c(4,4,4,4),
+#' iter = c(5,5,5,5),
 #' start_lower = start_vals - 10,
 #' start_upper = start_vals + 10,
 #' lower = get_lower_lims(d$temp, d$rate, model_name = 'stinner_1974'),
