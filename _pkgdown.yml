@@ -1,5 +1,6 @@
 template:
   bootstrap: 5
+  light-switch: true
   bootswatch: cosmo
   math-rendering: mathjax
   bslib:
@@ -34,6 +35,10 @@ articles:
   contents:
   - fit_many_curves
   - bootstrapping_many_curves
+- title: Contributing to rTPC
+  navbar: Contributing to rTPC
+  contents:
+  - adding_models
 reference:
 - title: Models
   contents:
