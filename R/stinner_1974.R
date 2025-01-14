@@ -55,7 +55,7 @@
 
 stinner_1974 <- function(temp, rmax, topt, a, b){
 
-  est <-{ifelse(temp <= topt, rmax * ((1 + exp(a + b * topt))/(1 + exp(a + b * temp))), rmax * ((1 + exp(a + b * topt))/(1 + exp(a + b * (2* topt - temp)))))}
+  est <-{ifelse(temp <= topt, rmax * (1 + exp(a + b * topt))/(1 + exp(a + b * temp)), rmax * (1 + exp(a + b * topt))/(1 + exp(a + b * (2 * topt - temp))))}
 
   return(est)
 
@@ -64,17 +64,17 @@ stinner_1974 <- function(temp, rmax, topt, a, b){
 stinner_1974.starting_vals <- function(d){
   rmax = max(d$y, na.rm = TRUE)
   topt = mean(d$x[d$y == rmax])
-  a = 0.2
-  b = 0.1
+  a = 2
+  b = - 0.2
 
   return(c(rmax = rmax, topt = topt, a = a, b = b))
 }
 
 stinner_1974.lower_lims <- function(d){
   rmax = min(d$y, na.rm = TRUE)
-  topt = min(d$x[d$y == rmax])
-  a = 0
-  b = 0
+  topt = min(d$x)
+  a = -Inf
+  b = -Inf
 
   return(c(rmax = rmax, topt = topt, a = a, b = b))
 }
