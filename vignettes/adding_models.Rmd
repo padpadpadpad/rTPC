@@ -66,7 +66,7 @@ If there are many authors, or another better description of the model then initi
 
 ---
 
-### The model
+### Model equation
 
 For this example, let's implement the Eubank model from [The Significance and Thermodynamics of Fluctuating Versus Static Thermal Environments on _Heliothis zea_ Egg Development Rates](https://academic.oup.com/ee/article/2/4/491/2480483).
 
@@ -84,7 +84,7 @@ Where $a$ and $b$ are arbitrary parameters for fitting, and $T_{opt}$ can be at 
 
 ---
 
-### The model file
+### Implementation
 
 The model itself lives in a file named after the function, in the `R` directory. In our case that will be `eubank_1973.R`.
 
@@ -101,7 +101,7 @@ It is _very important_ that the auxiliary functions are named in this manner, ot
 
 ---
 
-#### The model function - `eubank_1973()`
+#### Model function - `eubank_1973()`
 
 First of all we must implement the actual model itself (i.e. the equation above, but as R code).
 
@@ -116,7 +116,7 @@ A model function takes the parameters to fit the model as arguments, with temper
 
 ---
 
-#### The starting values - `eubank_1973.starting_vals()`
+#### Starting values - `eubank_1973.starting_vals()`
 
 Deciding sensible starting values is truly a dark art. In many cases these are fairly arbitrary, though in certain cases an estimate can be obtained from the data.
 
@@ -160,6 +160,7 @@ eubank_1973.starting_vals <- function(d){
 To reiterate an earlier point, it is _essential_ that the starting values function is named appropriately, e.g. `eubank_1973.starting_vals()`.
 
 The following _will not and can not work_:
+
 - `eubank_1973.startingvals()`
 - `eubank_1973.start_vals()`
 - `eubank_1973_starting_vals()`
@@ -168,7 +169,7 @@ The following _will not and can not work_:
 
 ---
 
-#### The limits - `eubank_1973.lower_lims()` & `eubank_1973.upper_lims()`
+#### Limits - `eubank_1973.lower_lims()` & `eubank_1973.upper_lims()`
 
 NLLS fitting often fails when unconstrained (as it may take one parameter to infinity and ignore all others). Even specifying absurdly large or infinite limits can make the optimiser behave better.
 
@@ -204,7 +205,7 @@ eubank_1973.upper_lims <- function(d){
 
 ---
 
-#### The documentation
+#### Documentation
 
 rTPC leverages `roxygen2` for documentation. Each file contains documentation definitions at the **top of the file** in special comments starting `#'`.
 
@@ -223,7 +224,7 @@ Things to modify:
 
 ---
 
-### The model database
+### Updating the model database
 
 Once you have created a model file, you need to add this model to rTPC's database of model names, so it knows that the model is available.
 
@@ -231,7 +232,7 @@ This simply requires modifying the `mod_names` vector within the `get_model_name
 
 ---
 
-### Testing the model
+### Testing model implementation
 
 Now that the model is set up, the next port of call is to simply run the integration test.
 
@@ -276,7 +277,7 @@ If only one test of the three failed, that is likely an issue with the names of 
 
 ---
 
-### The model test file
+### Individual model test
 
 Each model requires a model test, to make sure that changes in the future do not cause major fitting issues. These test files live in the `tests/testthat` directory.
 
