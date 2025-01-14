@@ -206,17 +206,17 @@ sticker(plot_1,
         h_color = '#edd90efe',
         p_color = '#edd90efe',
         p_family = "Anton",
-        filename="~/google_drive/rTPC_hex_sticker.png",
+        filename="man/figures/rTPC_hex_sticker.png",
         white_around_sticker = TRUE)
 
 
 # In case anyone came here (like me) wanting a transparent background rather than white, you can use magick to convert the white to transparent:
-p <- image_read("~/google_drive/rTPC_hex_sticker.png")
+p <- image_read("man/figures/rTPC_hex_sticker.png")
 pp <- p %>%
   image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+1") %>%
   image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+1") %>%
   image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+1+517") %>%
   image_fill(color = "transparent", refcolor = "white", fuzz = 4, point = "+517+517")
-image_write(image = pp, path = "~/google_drive/rTPC_hex_sticker.png")
+image_write(image = pp, path = "man/figures/rTPC_hex_sticker.png")
 
 
