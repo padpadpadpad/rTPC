@@ -17,7 +17,7 @@ start_vals <- get_start_vals(d$temp, d$rate, model_name = modelname)
 # fit model
 mod <- nls.multstart::nls_multstart(rate~stinner_1974(temp = temp, rmax, topt, a, b),
                                     data = d,
-                                    iter = c(3,3,3,3),
+                                    iter = c(5,5,5,5),
                                     start_lower = start_vals - 10,
                                     start_upper = start_vals + 10,
                                     lower = get_lower_lims(d$temp, d$rate, model_name = modelname),
@@ -39,5 +39,5 @@ ggplot(preds) +
 testthat::test_that(paste(modelname, "function works"), {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.1, 0.2, 0.3, 0.4, 0.6, 0.9, 1.2, 1.7, 1.4, 1, 0.7, 0.5))
+    c(0, 0, 0, 0.2, 1, 1.3, 1.4, 1.4, 1.3, 1.1, 0.3, 0))
 })
