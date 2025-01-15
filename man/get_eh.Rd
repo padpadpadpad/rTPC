@@ -18,3 +18,4 @@ Estimate the deactivation energy of a thermal performance curve
 \details{
 Fits a modified-Boltzmann equation to all raw data beyond the optimum temperature (ºC; as estimated by \code{get_topt}).
 }
+\concept{params}

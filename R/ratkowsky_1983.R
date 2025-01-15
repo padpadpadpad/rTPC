@@ -15,6 +15,7 @@
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are based on extreme values that are unlikely to occur in ecological settings.
 #'
 #' @note Generally we found this model easy to fit.
+#' @concept model
 #' @references Ratkowsky, D.A., Lowry, R.K., McMeekin, T.A., Stokes, A.N., Chandler, R.E., Model for bacterial growth rate throughout the entire biokinetic temperature range. J. Bacteriol. 154: 1222–1226 (1983)
 #' @examples
 #' # load in ggplot

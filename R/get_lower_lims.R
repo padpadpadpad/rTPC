@@ -7,6 +7,7 @@
 #' @author Daniel Padfield
 #' @author Francis Windram
 #' @return Named list of lower limits given the data and model being fitted
+#' @concept helper
 #' @export get_lower_lims
 
 get_lower_lims <- function(x, y, model_name) {

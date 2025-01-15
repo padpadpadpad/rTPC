@@ -73,3 +73,4 @@ theme_bw()
 \references{
 Lactin, D.J., Holliday, N.J., Johnson, D.L. & Craigen, R. Improved rate models of temperature-dependent development by arthropods. Environmental Entomology 24, 69-75 (1995)
 }
+\concept{model}

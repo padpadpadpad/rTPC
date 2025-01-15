@@ -17,7 +17,7 @@
 #' @note Generally we found this model difficult to fit.
 #'
 #' This function was previously called \code{modifiedgaussian_2006()} however this is now deprecated and will be removed in the future.
-#'
+#' @concept model
 #' @references Angilletta Jr, M. J. (2006). Estimating and comparing thermal performance curves. Journal of Thermal Biology, 31(7), 541-545.
 #' @examples
 #' # load in ggplot

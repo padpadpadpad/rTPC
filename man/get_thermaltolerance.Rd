@@ -18,3 +18,4 @@ Estimate thermal tolerance of a thermal performance curve
 \details{
 Thermal tolerance is calculated as: CTmax - CTmin. This is calculated using the functions \code{get_ctmax} and \code{get_ctmin}.
 }
+\concept{params}

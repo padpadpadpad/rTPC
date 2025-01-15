@@ -1,5 +1,6 @@
 template:
   bootstrap: 5
+  light-switch: true
   bootswatch: cosmo
   math-rendering: mathjax
   bslib:
@@ -34,79 +35,24 @@ articles:
   contents:
   - fit_many_curves
   - bootstrapping_many_curves
+- title: Contributing to rTPC
+  navbar: Contributing to rTPC
+  contents:
+  - adding_models
 reference:
 - title: Models
+  desc: TPC models for fitting.
   contents:
-  - analytiskontodimas_2004
-  - ashrafi1_2018
-  - ashrafi2_2018
-  - ashrafi3_2018
-  - ashrafi4_2018
-  - ashrafi5_2018
-  - atkin_2005
-  - beta_2012
-  - betatypesimplified_2008
-  - boatman_2017
-  - briere1_1999
-  - briere1simplified_1999
-  - briere2_1999
-  - briere2simplified_1999
-  - briereextended_2021
-  - briereextendedsimplified_2021
-  - delong_2017
-  - deutsch_2008
-  - eubank_1973
-  - flextpc_2024
-  - flinn_1991
-  - gaussian_1987
-  - gaussianmodified_2006
-  - hinshelwood_1947
-  - janisch1_1925
-  - janisch2_1925
-  - joehnk_2008
-  - johnsonlewin_1946
-  - kamykowski_1985
-  - lactin2_1995
-  - lobry_1991
-  - oneill_1972
-  - pawar_2018
-  - quadratic_2008
-  - ratkowsky_1983
-  - rezende_2019
-  - rosso_1993
-  - sharpeschoolfull_1981
-  - sharpeschoolhigh_1981
-  - sharpeschoollow_1981
-  - spain_1982
-  - stinner_1974
-  - taylorsexton_1972
-  - thomas_2012
-  - thomas_2017
-  - tomlinsonphillips_2015
-  - warrendreyer_2006
-  - weibull_1995
+  - has_concept("model")
 - title: Helper functions
+  desc: Functions to aid in generating starting values or limits.
   contents:
-  - get_model_names
-  - get_start_vals
-  - get_lower_lims
-  - get_upper_lims
+  - has_concept("helper")
 - title: Calculating parameters
+  desc: Functions for calculating parameters of interest.
   contents:
-  - calc_params
-  - get_ctmax
-  - get_ctmin
-  - get_e
-  - get_eh
-  - get_q10
-  - get_rmax
-  - get_skewness
-  - get_thermalsafetymargin
-  - get_thermaltolerance
-  - get_breadth
-  - get_topt
+  - has_concept("params")
 - title: Data
   contents:
-  - bacteria_tpc
-  - chlorella_tpc
+  - has_concept("data")
 

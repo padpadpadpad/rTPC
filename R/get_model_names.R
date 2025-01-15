@@ -4,6 +4,7 @@
 #' @author Daniel Padfield
 #' @author Francis Windram
 #' @return character vector of thermal performance curves available in rTPC
+#' @concept helper
 #' @examples
 #' get_model_names()
 #' get_model_names("briere")

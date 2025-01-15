@@ -17,6 +17,7 @@
 #' * skewness using [get_skewness()]
 #'
 #' @md
+#' @concept params
 #' @export calc_params
 
 calc_params <- function(model, ...){

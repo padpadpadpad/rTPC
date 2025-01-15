@@ -7,6 +7,7 @@
 #' @author Daniel Padfield
 #' @author Francis Windram
 #' @return Named list of upper limits given the data and model being fitted
+#' @concept helper
 #' @export get_upper_lims
 
 get_upper_lims <- function(x, y, model_name) {
