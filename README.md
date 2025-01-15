@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rTPC <img src="man/figures/rTPC_hex_sticker.png" height="138" align="right"/>
+# rTPC <img src="man/figures/logo.png" height="138" align="right"/>
 
 <!-- badges: start -->
 
