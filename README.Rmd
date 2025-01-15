@@ -34,13 +34,15 @@ When developing **rTPC**, we made a conscious decision not to repeat code and me
 
 ## Citation
 
-If this R package helps you, please cite us using the following citation:
-
-Daniel Padfield, Hannah O'Sullivan, & Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <https://doi.org/10.1111/2041-210X.13585>
-
-And cite the R package itself:
+If this R package helps you, please cite the R package:
 
 Padfield D, O'Sullivan H, Windram F (2024). *rTPC: Fitting and Analysing Thermal Performance Curves*. R package version 1.0.7, <https://padpadpadpad.github.io/rTPC/>, <https://github.com/padpadpadpad/rTPC>
+
+This allows all developers of the package to get credit for the work they are doing, since Francis Windram was key to driving the development and improvement of **rTPC** after the publication in MEE.
+
+You can also cite the publication in Methods in Ecology and Evolution, but please cite the R packages **rTPC** and **nls.multstart** as well:
+
+Daniel Padfield, Hannah O'Sullivan, & Samraat Pawar (2021). rTPC and nls.multstart: A new pipeline to fit thermal performance curves in R. Methods in Ecology and Evolution. <https://doi.org/10.1111/2041-210X.13585>
 
 ## Bugs and suggestions
 
