@@ -1,7 +1,6 @@
 template:
   bootstrap: 5
   light-switch: true
-  bootswatch: cosmo
   math-rendering: mathjax
   bslib:
     font_scale: 1
