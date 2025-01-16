@@ -1,9 +1,9 @@
 .template-home img.logo, img.logo {
-  height: 200px;
-  width: 180px;
+  height: 300px;
+  width: 300px;
 }
 
 .template-article img.logo, img.logo {
-  height: 100px;
-  width: 90px;
+  height: 200px;
+  width: 200px;
 }
