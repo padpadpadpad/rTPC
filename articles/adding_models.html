@@ -100,9 +100,10 @@
 
     
     
-<p>So you want to contribute a model to rTPC? That’s awesome!</p>
+<p>So you want to contribute a model to <strong>rTPC</strong>? That’s
+awesome!</p>
 <p>Here we will go through all the major steps for creating and
-contributing a model to rTPC.</p>
+contributing a model to <strong>rTPC</strong>.</p>
 <p>This vignette assumes that you have a working knowledge of basic git
 usage (either through the terminal, the RStudio interface, or another
 GUI), of R, and a functional knowledge of thermal performance
@@ -112,12 +113,41 @@ curves.</p>
 <h2 id="first-steps">First steps<a class="anchor" aria-label="anchor" href="#first-steps"></a>
 </h2>
 <p>The first thing you want to do when you have a model that is
-potentially useful in rTPC is to <em>check whether it’s already
-there</em>!</p>
-<p>rTPC already contains many models designed on a variety of different
+potentially useful in <strong>rTPC</strong> is to <em>check whether it’s
+already there</em>!</p>
+<p>rTPC already contains 48 models designed on a variety of different
 data. It is quite likely at this point that there is a similar (or
 identical) model that already serves the same purpose. So why not save
 yourself the work if you can?</p>
+<p>You can find all the models currently available using
+<code><a href="../reference/get_model_names.html">rTPC::get_model_names()</a></code>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># show all models in rTPC</span></span>
+<span><span class="fu">rTPC</span><span class="fu">::</span><span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "analytiskontodimas_2004"       "ashrafi1_2018"                </span></span>
+<span><span class="co">#&gt;  [3] "ashrafi2_2018"                 "ashrafi3_2018"                </span></span>
+<span><span class="co">#&gt;  [5] "ashrafi4_2018"                 "ashrafi5_2018"                </span></span>
+<span><span class="co">#&gt;  [7] "atkin_2005"                    "beta_2012"                    </span></span>
+<span><span class="co">#&gt;  [9] "betatypesimplified_2008"       "boatman_2017"                 </span></span>
+<span><span class="co">#&gt; [11] "briere1_1999"                  "briere1simplified_1999"       </span></span>
+<span><span class="co">#&gt; [13] "briere2_1999"                  "briere2simplified_1999"       </span></span>
+<span><span class="co">#&gt; [15] "briereextended_2021"           "briereextendedsimplified_2021"</span></span>
+<span><span class="co">#&gt; [17] "delong_2017"                   "deutsch_2008"                 </span></span>
+<span><span class="co">#&gt; [19] "eubank_1973"                   "flextpc_2024"                 </span></span>
+<span><span class="co">#&gt; [21] "flinn_1991"                    "gaussian_1987"                </span></span>
+<span><span class="co">#&gt; [23] "gaussianmodified_2006"         "hinshelwood_1947"             </span></span>
+<span><span class="co">#&gt; [25] "janisch1_1925"                 "janisch2_1925"                </span></span>
+<span><span class="co">#&gt; [27] "joehnk_2008"                   "johnsonlewin_1946"            </span></span>
+<span><span class="co">#&gt; [29] "kamykowski_1985"               "lactin2_1995"                 </span></span>
+<span><span class="co">#&gt; [31] "lobry_1991"                    "oneill_1972"                  </span></span>
+<span><span class="co">#&gt; [33] "pawar_2018"                    "quadratic_2008"               </span></span>
+<span><span class="co">#&gt; [35] "ratkowsky_1983"                "rezende_2019"                 </span></span>
+<span><span class="co">#&gt; [37] "rosso_1993"                    "sharpeschoolfull_1981"        </span></span>
+<span><span class="co">#&gt; [39] "sharpeschoolhigh_1981"         "sharpeschoollow_1981"         </span></span>
+<span><span class="co">#&gt; [41] "spain_1982"                    "stinner_1974"                 </span></span>
+<span><span class="co">#&gt; [43] "taylorsexton_1972"             "thomas_2012"                  </span></span>
+<span><span class="co">#&gt; [45] "thomas_2017"                   "tomlinsonphillips_2015"       </span></span>
+<span><span class="co">#&gt; [47] "warrendreyer_2006"             "weibull_1995"</span></span></code></pre></div>
 <hr>
 <div class="section level3">
 <h3 id="forking-the-repository">Forking the repository<a class="anchor" aria-label="anchor" href="#forking-the-repository"></a>
@@ -138,8 +168,8 @@ alongside the packages <code>devtools</code> and <code>usethis</code>
 (see <a href="https://r-pkgs.org/setup.html" class="external-link">here</a> for a deeper
 explanation of these packages).</p>
 <p>Once you have done this, git clone from YOUR fork of rTPC into a
-folder of your choice, and then open up the <code>rTPC.Rproj</code> file
-if you are using RStudio.</p>
+folder of your choice on your computer, and then open up the
+<code>rTPC.Rproj</code> file if you are using RStudio.</p>
 <hr>
 </div>
 </div>
@@ -154,9 +184,9 @@ if you are using RStudio.</p>
 <li>Clean up and check.</li>
 </ol>
 <p>Models are generally named according to the scheme
-<code>authormodifier#_YYYY</code>. So a model by authors called King and
+<code>authormodifier_YYYY</code>. So a model by authors called King and
 Bishop published in 1992 would usually be codified as
-<code>kingbishop_1992</code>. If they further proposed a modified model,
+<code>kingbishop_1992</code>. If they also proposed a modified model,
 and a simplified version of each in the original paper, those would
 probably appear as</p>
 <ul>
@@ -165,8 +195,9 @@ probably appear as</p>
 <li><code>kingbishopmodifiedsimplified_1992</code></li>
 </ul>
 <p>If there are many authors, or another better description of the model
-then initialisms or other descriptors can be used, but these may be
-changed if the package maintainers deem it to be confusing.</p>
+then initials or other descriptors may be used, but these may be changed
+if the package maintainers think there are simpler, more consistent, and
+more identifiable names.</p>
 <hr>
 <div class="section level3">
 <h3 id="model-equation">Model equation<a class="anchor" aria-label="anchor" href="#model-equation"></a>
@@ -181,8 +212,8 @@ magic numbers:</p>
 <p>As a generalisation, we know from looking at the paper that <span class="math inline">\(T_{opt} = 91\)</span>, and the numbers 800 and 432
 are species-specific (and thus should be fit).</p>
 <p>As such we can reformulate the equation as:</p>
-<p><span class="math display">\[R(T) =
-\frac{a}{(T-T_{opt})^2+b}\]</span></p>
+<p><span class="math display">\[rate(temp) =
+\frac{a}{(temp-T_{opt})^2+b}\]</span></p>
 <p>Where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are arbitrary parameters for fitting,
 and <span class="math inline">\(T_{opt}\)</span> can be at least
 approximated from the data.</p>
@@ -207,16 +238,19 @@ approximated from the data.</p>
 <li>
 <code>eubank_1973.upper_lims()</code> - The upper limits</li>
 </ul>
-<p>It is <em>very important</em> that the auxiliary functions are named
-in this manner, otherwise the unified starting value/limit dispatch will
-not function correctly.</p>
+<p>It is <em>very important</em> that the auxiliary functions
+(<code>eubank_1973.starting_vals()</code>,
+<code>eubank_1973.lower_lims()</code> and
+<code>eubank_1973.upper_lims()</code>) are named in this manner, to
+allow the unified method for specifying and setting up starting
+values/limits will not work.</p>
 <hr>
 <div class="section level4">
 <h4 id="model-function---eubank_1973">Model function - <code>eubank_1973()</code><a class="anchor" aria-label="anchor" href="#model-function---eubank_1973"></a>
 </h4>
 <p>First of all we must implement the actual model itself (i.e. the
 equation above, but as R code).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eubank_1973</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">topt</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">est</span> <span class="op">&lt;-</span> <span class="va">a</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">temp</span> <span class="op">-</span> <span class="va">topt</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span></span>
@@ -225,20 +259,32 @@ equation above, but as R code).</p>
 with temperature being the first by convention, and returns the
 estimates of the trait value at the given temperatures and parameter
 values.</p>
+<p>All of the models take temperature in ºC as their predictor variable.
+If the model uses temperature in degrees Kelvin, then we change it
+within the function, as seen in the Sharpe-Schoolfield models.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sharpeschoolhigh_1981</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">r_tref</span>, <span class="va">e</span>, <span class="va">eh</span>, <span class="va">th</span>, <span class="va">tref</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">tref</span> <span class="op">&lt;-</span> <span class="fl">273.15</span> <span class="op">+</span> <span class="va">tref</span></span>
+<span>  <span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">8.62e-05</span></span>
+<span>  <span class="va">boltzmann.term</span> <span class="op">&lt;-</span> <span class="va">r_tref</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">e</span><span class="op">/</span><span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">tref</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">inactivation.term</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">eh</span><span class="op">/</span><span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">th</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">boltzmann.term</span> <span class="op">*</span> <span class="va">inactivation.term</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level4">
 <h4 id="starting-values---eubank_1973-starting_vals">Starting values - <code>eubank_1973.starting_vals()</code><a class="anchor" aria-label="anchor" href="#starting-values---eubank_1973-starting_vals"></a>
 </h4>
-<p>Deciding sensible starting values is truly a dark art. In many cases
-these are fairly arbitrary, though in certain cases an estimate can be
-obtained from the data.</p>
-<p>Starting values functions are always passed a dataframe called
+<p>Deciding sensible starting values is notoriously tricky. In many
+cases these are fairly arbitrary, though in certain cases an estimate
+can be obtained from the data (e.g. for <span class="math inline">\(T_{opt}\)</span> or <span class="math inline">\(r_{max}\)</span>).</p>
+<p>Starting values functions are always passed to a dataframe called
 <code>d</code>, which will contain only the temperature and trait values
 for the given curve:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># A slightly compressed example of how d is generated</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">subs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">chlorella_tpc</span>, <span class="va">chlorella_tpc</span><span class="op">$</span><span class="va">curve_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">subs</span><span class="op">$</span><span class="va">temp</span>, y<span class="op">=</span><span class="va">subs</span><span class="op">$</span><span class="va">rate</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>,<span class="op">]</span></span>
@@ -259,7 +305,7 @@ for the given curve:</p>
 <p>Every <code>model.starting_values()</code> function has the same
 approximate form, taking <code>d</code> as the only argument, and
 returning a named list of starting values. So in our case:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># starting values go here</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
@@ -269,10 +315,11 @@ fairly sensible values at approximately the right magnitude (say <span class="ma
 = 50\)</span>).</p>
 <p><span class="math inline">\(T_{opt}\)</span> on the other hand is a
 value that we can derive from our data, in this case it’s the
-temperature at which <span class="math inline">\(R\)</span> is at its
+temperature at which <span class="math inline">\(rate\)</span> is at its
 maximum.</p>
-<p>So lets put that together in our starting_vals function</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>So lets put that together in our <code>starting_vals</code>
+function</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">rmax</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">y</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Find max trait value</span></span>
 <span>  <span class="va">topt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">y</span> <span class="op">==</span> <span class="va">rmax</span><span class="op">]</span><span class="op">)</span>  <span class="co"># Find T of rmax</span></span>
@@ -280,10 +327,10 @@ maximum.</p>
 <span>  <span class="va">b</span> <span class="op">=</span> <span class="fl">50</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>To reiterate an earlier point, it is <em>essential</em> that the
-starting values function is named appropriately,
+<p>To reiterate an earlier point, it is <strong>essential</strong> that
+the starting values function is named appropriately,
 e.g. <code>eubank_1973.starting_vals()</code>.</p>
-<p>The following <em>will not and can not work</em>:</p>
+<p>The following <strong>will not and can not work</strong>:</p>
 <ul>
 <li><code>eubank_1973.startingvals()</code></li>
 <li><code>eubank_1973.start_vals()</code></li>
@@ -300,17 +347,17 @@ e.g. <code>eubank_1973.starting_vals()</code>.</p>
 <p>NLLS fitting often fails when unconstrained (as it may take one
 parameter to infinity and ignore all others). Even specifying absurdly
 large or infinite limits can make the optimiser behave better.</p>
-<p>As such, we must provide realistic bounds on the upper and lower
-limits of each parameter.</p>
+<p>As such, it is often beneficial to provide realistic bounds on the
+upper and lower limits of each parameter.</p>
 <p>These take the same functional form as the <code>starting_vals</code>
 function, requiring one argument (<code>d</code>) and returning a named
 list.</p>
 <p>Generally speaking it is best to keep limits fairly wide unless there
 is a good biological reason to do otherwise.</p>
-<p>For instance at the most <span class="math inline">\(T_{opt}\)</span>
-is never going to be above about 150°C, and likely will be a lot lower.
+<p>For instance at most <span class="math inline">\(T_{opt}\)</span> is
+never going to be above about 150 °C, and likely will be a lot lower.
 And at its lower bound it is unlikely for the optimal trait value to
-occur at temperatures below 0°C. That gives us some fairly reasonable
+occur at temperatures below 0 °C. That gives us some fairly reasonable
 bounds for the values of <span class="math inline">\(T_{opt}\)</span>.</p>
 <p><span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, however, are arbitrary values. Just by
 looking at the functional form of the model we can see that if <span class="math inline">\(a\)</span> goes to or below 0, or <span class="math inline">\(b = 0-(T-T_{opt})\)</span> then we will end up
@@ -322,7 +369,7 @@ values may go (as they will be proportional to the units of the trait),
 so we can’t set any reasonable bounds aside from <code>Inf</code>.</p>
 <p>To put that together, here are the lower and upper limit functions
 for <code>eubank_1976</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eubank_1973.lower_lims</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">topt</span> <span class="op">=</span> <span class="fl">0</span></span>
 <span>  <span class="va">a</span> <span class="op">=</span> <span class="fl">0</span></span>
@@ -356,8 +403,9 @@ needs.</p>
 <li>equation</li>
 <li>note (if poorly fitting)</li>
 <li>examples</li>
-<li>export directive (this <em>must</em> match the name of the model!
-The starting value and limit functions do not need exporting)</li>
+<li>export directive (this <strong>must</strong> match the name of the
+model! The starting value and limit functions do not need
+exporting)</li>
 </ul>
 <hr>
 </div>
@@ -371,7 +419,7 @@ available.</p>
 <p>This simply requires modifying the <code>mod_names</code> vector
 within the <code>get_model_names.R</code> file to include your new
 model. Make sure that the model name is exactly the same as that in your
-original file, and that it is enclosed in quotes!</p>
+original file, and that it is enclosed in quotes.</p>
 <hr>
 </div>
 <div class="section level3">
@@ -438,7 +486,7 @@ should be something like <code>c(3,3,3,3)</code> for a model with 4 free
 parameters)</li>
 </ul>
 <p>So the final test file will look something like this:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># do not run the test on CRAN as they take too long</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -489,8 +537,8 @@ parameters)</li>
 return from a model run. It is not really feasible to know this ahead of
 time, but luckily the code here contains an extra function that makes
 retrieving the expected value easy.</p>
-<p>Before running the test for the first time, uncomment the line
-<code>dput(round(preds$.fitted, 1))</code>.</p>
+<p>Before running the test for the first time, uncomment (remove the
+hashtag) the line <code># dput(round(preds$.fitted, 1))</code>.</p>
 <p>Now when you run the test with
 <code>testthat::test_file("tests/testthat/test-eubank_1973.R")</code>
 then the test will very likely fail, but it will also output a vector to
@@ -593,7 +641,7 @@ locate and run the appropriate model functions.</p>
 <p>A good example of this is when getting starting values.</p>
 <p>The <code><a href="../reference/get_start_vals.html">get_start_vals()</a></code> function in its entirety is
 replicated here:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">get_start_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">model_name</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span>  <span class="va">mod_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span>returnall <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -617,7 +665,7 @@ replicated here:</p>
 a source data frame (<code>d</code>) is created.</p>
 <p>Finally a model function name is created by pasting together the name
 of the model along with <code>".starting_vals"</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_name</span> <span class="op">&lt;-</span> <span class="st">"eubank_1976"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="st">".starting_vals"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "eubank_1976.starting_vals"</span></span></code></pre></div>
@@ -631,7 +679,7 @@ the value is returned.</p>
 <code><a href="../reference/get_start_vals.html">get_start_vals()</a></code> errors out early with a more specific
 error message.</p>
 <p><span style="opacity: 0.1;font-size: small;">Built in
-0.5743215s</span></p>
+0.6827652s</span></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
