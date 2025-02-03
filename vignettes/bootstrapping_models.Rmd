@@ -463,7 +463,7 @@ You can see that the confidence intervals around certain parameters, such as `e`
 NB The Padfield _et al._ analysis actually uses a Bayesian approach to fit thermal performance curves, quantify uncertainty, and estimate derived parameters. This approach is powerful and flexible, and becoming easier to use with the incredible development of the R package [**brms**](https://github.com/paul-buerkner/brms). Examples of using **brms** to model thermal performance curves can be found on the [GitHub repository](https://github.com/padpadpadpad/Padfield_2019_ISME_bact_phage_temperature) of the paper
 
 *** 
-#### Further reading
+## Further reading
 
 - John Fox (author of car) on bootstrapping regression models in R
     - https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf

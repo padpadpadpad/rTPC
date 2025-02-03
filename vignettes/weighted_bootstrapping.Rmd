@@ -288,7 +288,7 @@ Here the profiling approach fails, and the residual method returns values that a
 
 The bootstrapping approaches could also be used to estimate the uncertainty in the derived parameters, as in `vignette(bootstrapping_models)`.
 
-#### Further reading
+## Further reading
 
 - John Fox (author of car) on bootstrapping regression models in R
     - https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf
