@@ -278,9 +278,9 @@ within the function, as seen in the Sharpe-Schoolfield models.</p>
 <p>Deciding sensible starting values is notoriously tricky. In many
 cases these are fairly arbitrary, though in certain cases an estimate
 can be obtained from the data (e.g. for <span class="math inline">\(T_{opt}\)</span> or <span class="math inline">\(r_{max}\)</span>).</p>
-<p>Starting values functions are always passed to a dataframe called
-<code>d</code>, which will contain only the temperature and trait values
-for the given curve:</p>
+<p>Starting values functions are provided a dataframe in their arguments
+which is called <code>d</code> internally within the function, which
+contains only the temperature and trait values for the given curve:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># A slightly compressed example of how d is generated</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
@@ -679,7 +679,7 @@ the value is returned.</p>
 <code><a href="../reference/get_start_vals.html">get_start_vals()</a></code> errors out early with a more specific
 error message.</p>
 <p><span style="opacity: 0.1;font-size: small;">Built in
-0.6855419s</span></p>
+0.6869183s</span></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
