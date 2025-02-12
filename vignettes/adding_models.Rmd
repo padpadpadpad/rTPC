@@ -140,7 +140,7 @@ sharpeschoolhigh_1981 <- function(temp, r_tref, e, eh, th, tref){
 
 Deciding sensible starting values is notoriously tricky. In many cases these are fairly arbitrary, though in certain cases an estimate can be obtained from the data (e.g. for $T_{opt}$ or $r_{max}$).
 
-Starting values functions are always passed to a dataframe called `d`, which will contain only the temperature and trait values for the given curve:
+Starting values functions are provided a dataframe in their arguments which is called `d` internally within the function, which contains only the temperature and trait values for the given curve:
 
 ```{r}
 # A slightly compressed example of how d is generated
