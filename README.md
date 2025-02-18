@@ -14,7 +14,7 @@ mirror](https://cranlogs.r-pkg.org/badges/grand-total/rTPC)](https://www.r-pkg.o
 <!-- badges: end -->
 
 **rTPC** is an R package that helps fit thermal performance curves
-(TPCs) in R. **rTPC** contains 48 model formulations previously used to
+(TPCs) in R. **rTPC** contains 49 model formulations previously used to
 fit TPCs and has helper functions to help set sensible start parameters,
 upper and lower parameter limits and estimate parameters useful in
 downstream analyses, such as cardinal temperatures, maximum rate and
