@@ -8,12 +8,15 @@
 #' @return a numeric vector of rate values based on the temperatures and parameter values provided to the function
 #' @references Mitchell, W. A., & Angilletta Jr, M. J. (2009). Thermal games: frequency-dependent models of thermal adaptation. Functional Ecology, 510-520.
 #' @details Equation:
-#' \deqn{rate=a\cdot temp \cdot (temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{2}}}{%
-#' rate = a.temp.(temp - tmin).(tmax - temp)^(1/2)}
+#' \deqn{rate=\frac{1}{2 \cdot b} \cdot (1 + cos(\frac{temp - t_{opt}}{b} \cdot \pi)) \cdot a }{%
+#' rate = (1/(2. b)).(1 + cos(((temp - topt)/b).pi)).a}
+#' 
+#' When temperatures fall below topt - b or above topt + b, rates are set to 0 to prevent multimodality.
 #'
 #' Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 #'
 #' Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the data or based extreme values that are unlikely to occur in ecological settings.
+#' 
 #' @note Generally we found this model easy to fit.
 #' @concept model
 #' @examples

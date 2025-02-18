@@ -23,8 +23,10 @@ Mitchell Angilletta model for fitting thermal performance curves
 }
 \details{
 Equation:
-\deqn{rate=a\cdot temp \cdot (temp - t_{min}) \cdot (t_{max} - temp)^{\frac{1}{2}}}{%
-rate = a.temp.(temp - tmin).(tmax - temp)^(1/2)}
+\deqn{rate=\frac{1}{2 \cdot b} \cdot (1 + cos(\frac{temp - t_{opt}}{b} \cdot \pi)) \cdot a }{%
+rate = (1/(2. b)).(1 + cos(((temp - topt)/b).pi)).a}
+
+When temperatures fall below topt - b or above topt + b, rates are set to 0 to prevent multimodality.
 
 Start values in \code{get_start_vals} are derived from the data or sensible values from the literature.
 
@@ -42,7 +44,7 @@ data('chlorella_tpc')
 d <- subset(chlorella_tpc, curve_id == 1)
 
 # get start values and fit model
-start_vals <- get_start_vals(d$temp, d$rate, model_name = 'briere1_1999')
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'mitchell_2009')
 # fit model
 mod <- nls.multstart::nls_multstart(rate~mitchell_2009(temp = temp, topt, a, b),
 data = d,
