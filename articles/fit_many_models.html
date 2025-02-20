@@ -95,7 +95,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2025-02-18</h4>
+            <h4 data-toc-skip class="date">2025-02-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_models.Rmd" class="external-link"><code>vignettes/fit_many_models.Rmd</code></a></small>
       <div class="d-none name"><code>fit_many_models.Rmd</code></div>
@@ -114,7 +114,7 @@ using rTPC, nls.multstart, and the tidyverse.<a class="anchor" aria-label="ancho
 </h2>
 <ul>
 <li>How many data points do you have for each curve? To fit all of the
-48 models in <strong>rTPC</strong>, there needs to be a minimum of 7
+49 models in <strong>rTPC</strong>, there needs to be a minimum of 7
 points per curve.</li>
 <li>If there are multiple individual curves to be fit, it makes sense to
 have your data in long format, where grouping variables (e.g. unique
@@ -140,15 +140,15 @@ parameter in their formulation.</li>
 <span>  <span class="va">string</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">'('</span>, <span class="fl">1</span><span class="op">:</span><span class="va">len</span>, <span class="st">') '</span>, <span class="va">string</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">string</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>After searching the literature, <strong>rTPC</strong> contains 48
+<p>After searching the literature, <strong>rTPC</strong> contains 49
 different model formulations previously used. The <a href="rTPC.html">first vignette</a>, demonstrated how to easily fit a
-single model to a single curve, here we will fit all 48 model
+single model to a single curve, here we will fit all 49 model
 formulations.</p>
-<p><strong>DISCLAIMER Although we fit all 48 model formulations, this is
+<p><strong>DISCLAIMER Although we fit all 49 model formulations, this is
 to demonstrate how they fit and their general shape, we do not recommend
-doing model selection on 48 model formulations. SERIOUSLY, PLEASE DO NOT
+doing model selection on 49 model formulations. SERIOUSLY, PLEASE DO NOT
 DO THIS.</strong></p>
-<p>We can demonstrate the fitting procedure of the 48 model formulations
+<p>We can demonstrate the fitting procedure of the 49 model formulations
 by taking a single curve from the example dataset <strong>rTPC</strong>
 - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic
 algae, <em>Chlorella vulgaris</em>. We can plot the data using
@@ -461,6 +461,15 @@ number of parameters, c(5, 5, 5) for 3 estimated parameters will yield
 <span>                        start_upper <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'lobry_1991'</span><span class="op">)</span> <span class="op">+</span> <span class="fl">10</span>,</span>
 <span>                        lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'lobry_1991'</span><span class="op">)</span>,</span>
 <span>                        upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'lobry_1991'</span><span class="op">)</span>,</span>
+<span>                        supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
+<span>                        convergence_count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>         mitchell <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/mitchell_2009.html">mitchell_2009</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">topt</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span>,</span>
+<span>                        data <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>                        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,</span>
+<span>                        start_lower <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'mitchell_2009'</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span>,</span>
+<span>                        start_upper <span class="op">=</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'mitchell_2009'</span><span class="op">)</span> <span class="op">+</span> <span class="fl">10</span>,</span>
+<span>                        lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'mitchell_2009'</span><span class="op">)</span>,</span>
+<span>                        upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">temp</span>, <span class="va">.x</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'mitchell_2009'</span><span class="op">)</span>,</span>
 <span>                        supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
 <span>                        convergence_count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>         oneill <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/oneill_1972.html">oneill_1972</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">rmax</span>, <span class="va">ctmax</span>, <span class="va">topt</span>, <span class="va">q10</span><span class="op">)</span>,</span>
