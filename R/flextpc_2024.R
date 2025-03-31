@@ -67,7 +67,7 @@ flextpc_2024.starting_vals <- function(d){
   # Use the definitions found in the original paper as starting values
   alpha = (topt - tmin)/(tmax - tmin)
   # Beta is the Upper Thermal Breadth (the range of temps where r(T) > exp(-1/8)*rmax)
-  beta = abs(diff(range(d$x[d$y > exp(-1/8)*rmax], na.rm = TRUE)))
+  beta = 0.3
 
   return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
 }
