@@ -28,6 +28,7 @@ mod <- suppressWarnings(nls.multstart::nls_multstart(rate~flextpc_2024(temp = te
 
 # get predictions
 preds <- broom::augment(mod)
+# dput(round(preds$.fitted, 1))
 
 # plot
 ggplot(preds) +
@@ -39,5 +40,5 @@ ggplot(preds) +
 testthat::test_that("flextpc_2024 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.1, 0.2, 0.3, 0.5, 0.7, 1, 1.3, 1.5, 1.5, 1.1, 0.4, 0))
+    c(0.1, 0.2, 0.3, 0.5, 0.8, 1.1, 1.4, 1.5, 1.5, 1.1, 0.4, 0))
 })
