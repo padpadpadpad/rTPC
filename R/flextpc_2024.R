@@ -86,7 +86,7 @@ flextpc_2024.upper_lims <- function(d){
   tmax = max(d$x, na.rm = TRUE) * 5
   rmax = max(d$y, na.rm = TRUE) * 10
   alpha = 1
-  beta = Inf
+  beta = 100
   return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
 }
 
