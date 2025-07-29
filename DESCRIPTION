@@ -31,9 +31,6 @@ Suggests:
     boot,
     broom,
     car,
-    dplyr,
-    forcats,
-    ggplot2,
     ggrepel,
     knitr,
     minpack.lm,
@@ -42,12 +39,9 @@ Suggests:
     nlstools,
     patchwork,
     progress,
-    purrr,
     RColorBrewer,
     rmarkdown,
-    stringr,
     testthat,
-    tidyr,
     tidyverse
 VignetteBuilder: 
     knitr
