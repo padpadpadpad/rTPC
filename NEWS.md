@@ -1,3 +1,7 @@
+# rTPC 2.0.0 - 29/07/2025
+
+* Prepared for CRAN submission.
+
 # rTPC 1.0.7 08/01/2024
 
 * Added many more models
@@ -35,6 +39,3 @@
 * Added a `NEWS.md` file to track changes to the package.
 * Added a new vignette `vignette("bootstrapping_many_curves")` to demonstrate how to run the bootstrap procedure on multiple curves at once
 * Updated README to reflect this
-
-
-
