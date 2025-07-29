@@ -25,7 +25,7 @@ quickfit_tpc(
 
 \item{trait}{the column name (as a string) containing the temperature data}
 
-\item{start_adjusts}{any additive adjustments to make to the lower and upper starting bounds}
+\item{start_adjusts}{any adjustments to make to the lower and upper starting bounds. If \code{0 < start_adjusts < 1}, this will be interpreted as a proportion of the base starting values.}
 
 \item{iter}{number of combinations of starting parameters which will be tried (as in \code{\link[nls.multstart]{nls_multstart}})}
 
@@ -37,13 +37,14 @@ so \code{3} will become \code{c(3,3,3)} for a 3-parameter model)}
 \item{force}{whether to force a gridstart even with very large numbers of iterations}
 }
 \value{
-Named list of lower limits given the data and model being fitted
+The nls model object of the fit model
 }
 \description{
 Performs a simple TPC fit using \code{\link[nls.multstart]{nls_multstart}}. This function tries to use a sensible default configuration, 
 however if you need to use the more esoteric elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
 }
 \examples{
+data("chlorella_tpc")
 subs <- subset(chlorella_tpc, curve_id == 1)
 quickfit_tpc(subs, "briere1_1999", "temp", "rate")
 

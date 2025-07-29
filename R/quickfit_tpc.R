@@ -6,17 +6,18 @@
 #' @param model_name the model name as a string
 #' @param temp the column name (as a string) containing the temperature data
 #' @param trait the column name (as a string) containing the temperature data
-#' @param start_adjusts any additive adjustments to make to the lower and upper starting bounds
+#' @param start_adjusts any adjustments to make to the lower and upper starting bounds. If \code{0 < start_adjusts < 1}, this will be interpreted as a proportion of the base starting values.
 #' @param iter number of combinations of starting parameters which will be tried (as in \code{\link[nls.multstart]{nls_multstart}})
 #' @param lhstype method to use for Latin Hypercube Sampling using \code{\link[lhs]{lhs}} (as in \code{\link[nls.multstart]{nls_multstart}})
 #' @param gridstart whether to run a gridstart approach (interpreting iter as the number of samples to take across each parameter, 
 #' so \code{3} will become \code{c(3,3,3)} for a 3-parameter model)
 #' @param force whether to force a gridstart even with very large numbers of iterations
 #' @author Francis Windram
-#' @return Named list of lower limits given the data and model being fitted
+#' @return The nls model object of the fit model
 #' @concept helper
 #' 
 #' @examples
+#' data("chlorella_tpc")
 #' subs <- subset(chlorella_tpc, curve_id == 1)
 #' quickfit_tpc(subs, "briere1_1999", "temp", "rate")
 #' 
@@ -31,7 +32,14 @@ quickfit_tpc <- function(data, model_name, temp, trait, start_adjusts = 0, iter 
   
   rlang::check_installed("nls.multstart")
   
-  start_vals <- get_start_vals(data[,temp], data[,trait], model_name = model_name)
+  # The form of column extraction used below only works properly on dfs.
+  data <- as.data.frame(data)
+  
+  start_vals <- rTPC::get_start_vals(data[,temp], data[,trait], model_name = model_name)
+  
+  if (0 < start_adjusts && start_adjusts < 1) {
+    start_adjusts <- start_vals * start_adjusts
+  }
   
   if (gridstart){
     iter <- rep(iter, length(start_vals))
@@ -43,13 +51,13 @@ quickfit_tpc <- function(data, model_name, temp, trait, start_adjusts = 0, iter 
     }
   }
   
-  mod <- nls.multstart::nls_multstart(get_tpc_as_formula(model_name, temp, trait),
+  mod <- nls.multstart::nls_multstart(rTPC::get_tpc_as_formula(model_name, temp, trait),
                        data = data,
                        iter = iter,
                        start_lower = start_vals - start_adjusts,
                        start_upper = start_vals + start_adjusts,
-                       lower = get_lower_lims(data[, temp], data[, trait], model_name = model_name),
-                       upper = get_upper_lims(data[, temp], data[, trait], model_name = model_name),
+                       lower = rTPC::get_lower_lims(data[, temp], data[, trait], model_name = model_name),
+                       upper = rTPC::get_upper_lims(data[, temp], data[, trait], model_name = model_name),
                        supp_errors = 'Y',
                        lhstype = lhstype,
                        convergence_count = FALSE)

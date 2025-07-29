@@ -1,7 +1,7 @@
 Type: Package
 Package: rTPC
 Title: Fitting and Analysing Thermal Performance Curves
-Version: 1.0.7
+Version: 1.1.0
 Authors@R: 
     c(person(given = "Daniel",
              family = "Padfield",
@@ -31,6 +31,7 @@ Suggests:
     boot,
     broom,
     car,
+    dplyr,
     forcats,
     ggplot2,
     ggrepel,
@@ -41,10 +42,12 @@ Suggests:
     nlstools,
     patchwork,
     progress,
+    purrr,
     RColorBrewer,
     rmarkdown,
     stringr,
     testthat,
+    tidyr,
     tidyverse
 VignetteBuilder: 
     knitr

@@ -4,7 +4,7 @@
 \alias{get_tpc_as_formula}
 \title{Get a formula object for calling a TPC}
 \usage{
-get_tpc_as_formula(model_name, temp, trait)
+get_tpc_as_formula(model_name, temp, trait, explicit = FALSE)
 }
 \arguments{
 \item{model_name}{the name of the model being fitted}
@@ -12,6 +12,8 @@ get_tpc_as_formula(model_name, temp, trait)
 \item{temp}{the name of the temperature column}
 
 \item{trait}{the name of the trait column}
+
+\item{explicit}{whether to return the formula constructed using the explicit form of the tpc function (e.g. \code{rTPC::briere1_1999()})}
 }
 \value{
 A formula calling the expected TPC
