@@ -44,13 +44,31 @@ Performs a simple TPC fit using \code{\link[nls.multstart]{nls_multstart}}. This
 however if you need to use the more esoteric elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
 }
 \examples{
+\dontrun{
 data("chlorella_tpc")
 subs <- subset(chlorella_tpc, curve_id == 1)
 quickfit_tpc(subs, "briere1_1999", "temp", "rate")
 
-quickfit_tpc(subs, "briere1_1999", "temp", "rate", start_adjusts = 10, iter = 150, lhstype = "maximin")
+quickfit_tpc(
+  subs,
+  "briere1_1999",
+  "temp",
+  "rate",
+  start_adjusts = 10,
+  iter = 150,
+  lhstype = "maximin"
+)
 
-quickfit_tpc(subs, "briere1_1999", "temp", "rate", start_adjusts = 10, iter = 5, gridstart=TRUE)
+quickfit_tpc(
+  subs,
+  "briere1_1999",
+  "temp",
+  "rate",
+  start_adjusts = 10,
+  iter = 5,
+  gridstart = TRUE
+)
+}
 
 }
 \author{

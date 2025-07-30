@@ -48,6 +48,7 @@ The parameters \code{temp}, \code{trait}, \code{start_adjusts}, \code{iter}, \co
  by providing a vector of values of a length equal to the number of models to be fit.
 }
 \examples{
+\dontrun{
 data("chlorella_tpc")
 d2 <- subset(chlorella_tpc, curve_id <= 60)
 
@@ -61,7 +62,7 @@ quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate", start_
 quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate", iter = c(100, 150))
 
 mirai::daemons(0)
-
+}
 }
 \author{
 Francis Windram

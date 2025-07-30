@@ -43,5 +43,5 @@ get_tpc_as_formula <- function(model_name, temp, trait, explicit = FALSE){
   }
   
   formulastr <- glue::glue("{trait}~{model}(temp = {temp}, {paste(tpcargs[tpcargs != 'temp'], collapse = ', ')})")
-  return(as.formula(formulastr))
+  return(stats::as.formula(formulastr))
 }

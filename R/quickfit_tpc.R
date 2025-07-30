@@ -17,13 +17,31 @@
 #' @concept helper
 #' 
 #' @examples
+#' \dontrun{
 #' data("chlorella_tpc")
 #' subs <- subset(chlorella_tpc, curve_id == 1)
 #' quickfit_tpc(subs, "briere1_1999", "temp", "rate")
 #' 
-#' quickfit_tpc(subs, "briere1_1999", "temp", "rate", start_adjusts = 10, iter = 150, lhstype = "maximin")
+#' quickfit_tpc(
+#'   subs,
+#'   "briere1_1999",
+#'   "temp",
+#'   "rate",
+#'   start_adjusts = 10,
+#'   iter = 150,
+#'   lhstype = "maximin"
+#' )
 #' 
-#' quickfit_tpc(subs, "briere1_1999", "temp", "rate", start_adjusts = 10, iter = 5, gridstart=TRUE)
+#' quickfit_tpc(
+#'   subs,
+#'   "briere1_1999",
+#'   "temp",
+#'   "rate",
+#'   start_adjusts = 10,
+#'   iter = 5,
+#'   gridstart = TRUE
+#' )
+#' }
 #' 
 #' @export quickfit_tpc
 

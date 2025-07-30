@@ -21,6 +21,7 @@
 #' @concept helper
 #' 
 #' @examples
+#' \dontrun{
 #' data("chlorella_tpc")
 #' d2 <- subset(chlorella_tpc, curve_id <= 60)
 #' 
@@ -34,7 +35,7 @@
 #' quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate", iter = c(100, 150))
 #' 
 #' mirai::daemons(0)
-#' 
+#' }
 #' @export quickfit_tpc_multi
 
 quickfit_tpc_multi <- function(d, model_names, temp, trait, start_adjusts = 0, iter = 150, lhstype = "none", gridstart=FALSE, force=FALSE) {
@@ -67,7 +68,7 @@ quickfit_tpc_multi <- function(d, model_names, temp, trait, start_adjusts = 0, i
   nesting_cols <- c(temp, trait)
   
   fit_models <- d |> 
-    tidyr::nest(data = all_of(nesting_cols)) |> 
+    tidyr::nest(data = dplyr::all_of(nesting_cols)) |> 
     dplyr::mutate(
       mods = purrr::map(
         data,
