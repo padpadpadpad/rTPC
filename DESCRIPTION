@@ -33,6 +33,7 @@ Suggests:
     car,
     dplyr,
     forcats,
+    ggplot2,
     ggrepel,
     knitr,
     lubridate,
