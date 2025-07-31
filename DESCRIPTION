@@ -50,7 +50,8 @@ Suggests:
     stringr,
     testthat,
     tibble,
-    tidyr
+    tidyr,
+    tidyverse
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
