@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   adding_models: adding_models.html
@@ -11,7 +11,7 @@ articles:
   model_weighting: model_weighting.html
   rTPC: rTPC.html
   weighted_bootstrapping: weighted_bootstrapping.html
-last_built: 2025-03-31T13:36Z
+last_built: 2025-07-31T15:43Z
 urls:
   reference: https://padpadpadpad.github.io/rTPC/reference
   article: https://padpadpadpad.github.io/rTPC/articles
