@@ -2,46 +2,39 @@
 % Please edit documentation in R/quickfit_tpc_multi.R
 \name{quickfit_tpc_multi}
 \alias{quickfit_tpc_multi}
-\title{Perform a parallelised quick tpc fit across models and curves}
+\title{Perform an automated quick tpc fit across models and curves}
 \usage{
 quickfit_tpc_multi(
-  d,
+  data,
   model_names,
   temp,
   trait,
   start_adjusts = 0,
-  iter = 150,
-  lhstype = "none",
-  gridstart = FALSE,
-  force = FALSE
+  iter,
+  ...
 )
 }
 \arguments{
-\item{d}{the data to fit a model to}
-
 \item{model_names}{a vector of model names to fit as strings}
 
 \item{temp}{the column name (as a string) containing the temperature data}
 
 \item{trait}{the column name (as a string) containing the temperature data}
 
-\item{start_adjusts}{any adjustments to make to the lower and upper starting bounds. If \code{0 < start_adjusts < 1}, this will be interpreted as a proportion of the base starting values.}
+\item{start_adjusts}{any adjustments to make to the lower and upper starting bounds. If \code{0 < start_adjusts < 1}, this will be interpreted as a proportion of the base starting values. If above 1, it will add and substract that value from the base starting values.}
 
-\item{iter}{number of combinations of starting parameters which will be tried (as in \code{\link[nls.multstart]{nls_multstart}})}
+\item{iter}{number of combinations of starting parameters which will be tried . If a single value is provided, then a shotgun/random-search/lhs approach will be used to sample starting parameters from a uniform distribution within the starting parameter bounds. If a vector of the same length as the number of parameters is provided, then a gridstart approach will be used to define each combination of that number of equally spaced intervals across each of the starting parameter bounds respectively. Thus, c(5,5,5) for three fitted parameters yields 125 model fits. Supplying a vector for iter will override convergence_count.}
 
-\item{lhstype}{method to use for Latin Hypercube Sampling using \code{\link[lhs]{lhs}} (as in \code{\link[nls.multstart]{nls_multstart}})}
+\item{...}{additional arguments to pass to \code{\link[nls.multstart]{nls_multstart}}.}
 
-\item{gridstart}{whether to run a gridstart approach (interpreting iter as the number of samples to take across each parameter, 
-so \code{3} will become \code{c(3,3,3)} for a 3-parameter model)}
-
-\item{force}{whether to force a gridstart even with very large numbers of iterations}
+\item{d}{the data to fit a model to}
 }
 \value{
 A tibble of model fits
 }
 \description{
-Performs a parallelised TPC fit using \code{\link[nls.multstart]{nls_multstart}} and \code{\link[purrr]{map}}. This function tries to use a sensible default configuration, 
-however if you need to use the more esoteric elements of \code{\link[nls.multstart]{nls_multstart}} then you may need to construct your own running script.
+Performs a TPC fit using \code{\link[nls.multstart]{nls_multstart}} and \code{\link[purrr]{map}}. This function tries to use a sensible default configuration,
+however if you need to to use the more custom elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
 }
 \note{
 The parameters \code{temp}, \code{trait}, \code{start_adjusts}, \code{iter}, \code{lhstype}, \code{gridstart}, or \code{force} can be specified per-model
@@ -49,22 +42,23 @@ The parameters \code{temp}, \code{trait}, \code{start_adjusts}, \code{iter}, \co
 }
 \examples{
 \dontrun{
+# load example data
 data("chlorella_tpc")
-d2 <- subset(chlorella_tpc, curve_id <= 60)
 
-# Set up daemons for parallelism
-mirai::daemons(2)
+# subset for just the first 5 curves
+d <- subset(chlorella_tpc, curve_id <= 5)
 
-quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate")
 
-quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate", start_adjusts = 10)
+quickfit_tpc_multi(d, c("briere1_1999", "briere2_1999"), "temp", "rate")
 
-quickfit_tpc_multi(d2, c("briere1_1999", "briere2_1999"), "temp", "rate", iter = c(100, 150))
+quickfit_tpc_multi(d, c("briere1_1999", "briere2_1999"), "temp", "rate", start_adjusts = 10)
 
-mirai::daemons(0)
+quickfit_tpc_multi(d, c("briere1_1999", "briere2_1999"), "temp", "rate", iter = c(100, 150))
 }
 }
 \author{
 Francis Windram
+
+Daniel Padfield
 }
 \concept{helper}
