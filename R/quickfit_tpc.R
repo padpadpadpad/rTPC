@@ -1,7 +1,7 @@
-#' Perform a quick tpc fit
+#' Perform a quick, automated, TPC fit
 #'
 #' @description Performs a simple TPC fit using \code{\link[nls.multstart]{nls_multstart}}. This function tries to use a sensible default configuration, 
-#' however if you need to use the more esoteric elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
+#' however if you want to use the more custom elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
 #' @param data the data to fit a model to
 #' @param model_name the model name as a string
 #' @param temp the column name (as a string) containing the temperature data
@@ -19,8 +19,8 @@
 #' @examples
 #' \dontrun{
 #' data("chlorella_tpc")
-#' subs <- subset(chlorella_tpc, curve_id == 1)
-#' quickfit_tpc(subs, "briere1_1999", "temp", "rate")
+#' d <- subset(chlorella_tpc, curve_id == 1)
+#' quickfit_tpc(d, "briere1_1999", "temp", "rate")
 #' 
 #' quickfit_tpc(
 #'   subs,
