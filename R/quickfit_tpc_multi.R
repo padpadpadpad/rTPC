@@ -2,7 +2,7 @@
 #'
 #' @description Performs a TPC fit using \code{\link[nls.multstart]{nls_multstart}} and \code{\link[purrr]{map}}. This function tries to use a sensible default configuration,
 #' however if you need to to use the more custom elements of \code{\link[nls.multstart]{nls_multstart}} then you will need to construct your own.
-#' @param d the data to fit a model to
+#' @param data the data to fit a model to
 #' @param model_names a vector of model names to fit as strings
 #' @param temp the column name (as a string) containing the temperature data
 #' @param trait the column name (as a string) containing the temperature data

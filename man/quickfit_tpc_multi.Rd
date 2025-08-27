@@ -15,6 +15,8 @@ quickfit_tpc_multi(
 )
 }
 \arguments{
+\item{data}{the data to fit a model to}
+
 \item{model_names}{a vector of model names to fit as strings}
 
 \item{temp}{the column name (as a string) containing the temperature data}
@@ -26,8 +28,6 @@ quickfit_tpc_multi(
 \item{iter}{number of combinations of starting parameters which will be tried . If a single value is provided, then a shotgun/random-search/lhs approach will be used to sample starting parameters from a uniform distribution within the starting parameter bounds. If a vector of the same length as the number of parameters is provided, then a gridstart approach will be used to define each combination of that number of equally spaced intervals across each of the starting parameter bounds respectively. Thus, c(5,5,5) for three fitted parameters yields 125 model fits. Supplying a vector for iter will override convergence_count.}
 
 \item{...}{additional arguments to pass to \code{\link[nls.multstart]{nls_multstart}}.}
-
-\item{d}{the data to fit a model to}
 }
 \value{
 A tibble of model fits
