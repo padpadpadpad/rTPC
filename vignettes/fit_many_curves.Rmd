@@ -22,6 +22,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Things to consider 
+
+- Go through all the other **Things to consider** sections in the other vignettes.
+- Think carefully about how to do model selection on the whole dataset. 
+- If you care about specific parameters (e.g. optimum temperature or activation energy) then you might want to pick a single "best" model for the whole dataset.
+- If you care about the overall fit and its shape, then you might want to do pick a "best" model on each individual curve.
+- You should read resources about model selection to inform your decisions.
+
+***
+
+
 ```{r setup, message=FALSE}
 # load packages
 library(rTPC)
@@ -30,61 +41,87 @@ library(broom)
 library(tidyverse)
 ```
 
-In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all 24 model formulations to demonstrate this approach, we will use only 2 models in this example: **gaussian_1987()** and **sharpeschoolhigh_1981()**.
+In the final part of the general pipeline, we demonstrate how multiple models can be fitted to multiple TPCs. Instead of picking all `r length(rTPC::get_model_names())` model formulations to demonstrate this approach, we will use only 2 models in this example: **gaussian_1987()** and **sharpeschoolhigh_1981()**. 
 
 We can demonstrate the fitting of multiple curves by modelling all 60 TPCs from the example dataset of **rTPC** curve from the example dataset **rTPC**. These TPCs are of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. These algae differed in their growth temperature, `growth_temp`, and how long they had been grown at that temperature, `process`, either for ~100 or ~10 generations.
 
 Using a similar approach to `vignette('fit_many_models')`, models can be fitted to each curve using list columns and **purrr::map()** to fit and store multiple models in a data frame.
 
-When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run.The R package **purrr** does now has progress bars built in; you can add a progress bar to the **map()** function using the argument *.progress*. However, when fitting multiple models with multiple **map()** calls a new progress bar each time, so currently I have not found a way to have a single progress bar for multiple **map()** calls, so we will keep with what we have at the moment.
+When fitting lots of models at once, it is useful to know the progress the code as it may take a long time to run.The R package **purrr** now has progress bars built in; you can add a progress bar to the **map()** function using the argument *.progress*. To make this work, we need to only do a single **map()** call, so we will write a function that fits both models that we will then pass to **purrr**. This is how we _strongly_ recommend fitting multiple models using **map()**.
 
 ```{r fit_multiple_models, warning=FALSE}
 # load in data
 data("chlorella_tpc")
 d <- chlorella_tpc
 
-# when scaling up our code to fit hundreds of models, its nice to have a progress bar
-# edit nls_multstart to allow for a progress bar
-nls_multstart_progress <- function(formula, data = parent.frame(), iter, start_lower, 
-                                   start_upper, supp_errors = c("Y", "N"), convergence_count = 100, 
-                                   control, modelweights, ...){
-  if(!is.null(pb)){
-    pb$tick()
-  }
-  nls_multstart(formula = formula, data = data, iter = iter, start_lower = start_lower, 
-                start_upper = start_upper, supp_errors = supp_errors, convergence_count = convergence_count, 
-                control = control, modelweights = modelweights, ...)
+# write function to fit both models
+fit_TPCs <- function(d, ...) {
+  # get start values and fit gaussian
+  start_vals <- rTPC::get_start_vals(
+    d$temp,
+    d$rate,
+    model_name = 'gaussian_1987'
+  )
+
+  mod_gaussian <- nls.multstart::nls_multstart(
+    rate ~ rTPC::gaussian_1987(temp = temp, rmax, topt, a),
+    data = d,
+    iter = c(4, 4, 4),
+    start_lower = start_vals - 10,
+    start_upper = start_vals + 10,
+    lower = rTPC::get_lower_lims(d$temp, d$rate, model_name = 'gaussian_1987'),
+    upper = rTPC::get_upper_lims(d$temp, d$rate, model_name = 'gaussian_1987'),
+    supp_errors = 'Y',
+    convergence_count = FALSE,
+    ...
+  )
+
+  # get start values and fit sharpe schoolfield
+  start_vals <- rTPC::get_start_vals(
+    d$temp,
+    d$rate,
+    model_name = 'sharpeschoolhigh_1981'
+  )
+
+  # fit model
+  mod_ss <- nls.multstart::nls_multstart(
+    rate ~
+      rTPC::sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 20),
+    data = d,
+    iter = c(3, 3, 3, 3),
+    start_lower = start_vals - 10,
+    start_upper = start_vals + 10,
+    lower = rTPC::get_lower_lims(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ),
+    upper = rTPC::get_upper_lims(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ),
+    supp_errors = 'Y',
+    convergence_count = FALSE,
+    ...
+  )
+  
+  return(tibble::tibble(
+    gaussian = list(mod_gaussian),
+    sharpeschoolhigh = list(mod_ss)
+  ))
 }
-
-# start progress bar and estimate time it will take
-number_of_models <- 2
-number_of_curves <- length(unique(d$curve_id))
-
-# setup progress bar
-pb <- progress::progress_bar$new(total = number_of_curves*number_of_models,
-                                 clear = FALSE,
-                                 format ="[:bar] :percent :elapsedfull")
 
 # fit two chosen model formulation in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
-  mutate(gaussian = map(data, ~nls_multstart_progress(rate~gaussian_1987(temp = temp, rmax,topt,a),
-                        data = .x,
-                        iter = c(3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         sharpeschoolhigh = map(data, ~nls_multstart_progress(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)))
+  mutate(
+    mods = map(
+      data,
+      ~ fit_TPCs(d = .x),
+      .progress = TRUE
+    )
+  ) %>%
+  unnest(mods)
 ```
 ```
 [=========================================================] 100% 00:00:40
@@ -135,7 +172,7 @@ The traits of each thermal performance curve can also easily be calculated.
 ```{r params}
 # stack models and calculate extra params
 d_params <- pivot_longer(d_fits, names_to = 'model_name', values_to = 'fit', c(gaussian,sharpeschoolhigh)) %>%
-  mutate(params = map(fit, calc_params)) %>%
+  mutate(params = map(fit, calc_params, .progress = TRUE)) %>%
   select(curve_id, growth_temp, process, flux, model_name, params) %>%
   unnest(params)
 
