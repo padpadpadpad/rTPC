@@ -38,12 +38,13 @@ library(tidyverse)
 The available model formulations can be accessed using **get_model_names()**.
 
 ```{r get_mod_names}
+# list model names
 get_model_names()
 ```
 
 They are generally named after the author of the paper (and hence the name of the model within the literature) and the year at which I found the model to be first used, separated by a **"\_"**. Some original model formulations have been altered so that all models take temperature in degrees centigrade and raw rate values as input.
 
-We can demonstrate the fitting procedure by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**
+We can demonstrate the fitting procedure by taking a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
 
 ```{r first_plot, fig.width=6, fig.height = 4}
 # load in data
@@ -56,9 +57,11 @@ d <- filter(chlorella_tpc, curve_id == 1)
 ggplot(d, aes(temp, rate)) +
   geom_point() +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures'
+  )
 
 ```
 
@@ -69,11 +72,19 @@ For each model, **rTPC** has helper functions that estimate sensible start value
 mod = 'sharpschoolhigh_1981'
 
 # get start vals
-start_vals <- get_start_vals(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981')
+start_vals <- get_start_vals(
+  d$temp,
+  d$rate,
+  model_name = 'sharpeschoolhigh_1981'
+)
 
 # get limits
 low_lims <- get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981')
-upper_lims <- get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981')
+upper_lims <- get_upper_lims(
+  d$temp,
+  d$rate,
+  model_name = 'sharpeschoolhigh_1981'
+)
 
 start_vals
 low_lims
@@ -84,18 +95,21 @@ One problem with most methods of fitting models in R using non-linear least squa
 
 To overcome this, we recommend using the R package [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart), which uses **minpackLM::nlsLM()**, but allows for multiple sets of starting parameters. It iterates through multiple starting values, attempting a fit with each set of start parameters. The best model is then picked using AIC scores.
 
-Using **nls_multstart**, we will use a random-search/shotgun approach to fit the curve. Random start parameter values are picked from a uniform distribution between `start_lower` and `start_upper` for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit. This is controlled by convergence_count, if this is set to `FALSE`, **nls_multstart()** will try and fit all iterations.
+Using **nls_multstart()**, we will use Latin Hypercube Sampling (LHS), which can only be used when `iter` is set to a single number. Instead of sampling from a uniform distribution across the bounds of each parameter, these methods try to take a set of samples from the range of parameter values that covers the parameter space optimally for any given set of parameters. _This approach can result in less iterations being needed to get the same reliability of model fitting than either the shotgun or grid-start approaches_.
 
 ```{r fit_model}
 # fit model
-fit <- nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                                                     data = d,
-                                                     iter = 500,
-                                                     start_lower = start_vals - 10,
-                                                     start_upper = start_vals + 10,
-                                                     lower = low_lims,
-                                                     upper = upper_lims,
-                                                     supp_errors = 'Y')
+fit <- nls_multstart(
+  rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+  data = d,
+  iter = 500,
+  start_lower = start_vals - 10,
+  start_upper = start_vals + 10,
+  lower = low_lims,
+  upper = upper_lims,
+  supp_errors = 'Y',
+  lhstype = 'random'
+)
 
 fit
 ```
@@ -121,8 +135,10 @@ ggplot(d, aes(temp, rate)) +
   geom_point() +
   geom_line(aes(temp, .fitted), preds, col = 'blue') +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures'
+  )
 
 ```
