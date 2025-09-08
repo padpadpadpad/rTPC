@@ -21,13 +21,14 @@ knitr::opts_chunk$set(
   fig.align = 'center'
 )
 ```
+
 ## Things to consider 
 
 - There is no magic bullet with model selection and model averaging.
 - Think carefully about which models to fit **before** any fitting takes place.
 - Should models be weighted when doing model averaging? 
     - It seems illogical to allow a poor model to ruin the prediction, so it makes sense to down-weight it. This is the advice much of ecology takes: only average models within $\Delta 2 AIC$ of the best model.
-    -  If we have already pre-selected sensible models from the 24, it may often be wiser not to compute model weights. This is the common procedure in economics and with the IPCC earth-system-models.
+    -  If we have already pre-selected sensible models from the `r length(rTPC::get_model_names())`, it may often be wiser not to compute model weights. This is the common procedure in economics and with the IPCC earth-system-models.
 
 ***
 
@@ -44,7 +45,7 @@ The general pipeline demonstrates how models can be fitted, parameters extracted
 
 Here, we demonstrate how this pipeline can easily be extended to do (1) model selection where the model that best supports the data is chosen or (2) model averaging where multiple models are used to make predictions or estimating extra parameters, usually by weighting each model by how well they fit to the data. 
 
-Instead of picking all 24 model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see `vignette('fit_many_models')`): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
+Instead of picking all `r length(rTPC::get_model_names())` model formulations to demonstrate these approaches, we picked 5 models with different shaped curves (see `vignette('fit_many_models')`): **boatman_2017()**, **gaussian_1987()**, **oneill_1972()**, **quadratic_2008()**, **rezende_2019()**, and **sharpeschoolhigh_1981()**
 
 First, we fit each of these model formulations to a single curve from the example dataset **rTPC** - a dataset of 60 TPCs of respiration and photosynthesis of the aquatic algae, *Chlorella vulgaris*. We can plot the data using **ggplot2**.
 
@@ -59,71 +60,191 @@ d <- filter(chlorella_tpc, curve_id == 1)
 ggplot(d, aes(temp, rate)) +
   geom_point() +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures'
+  )
 
 ```
 
-The 5 models are then be fitted using the same approach as in the `vignette('fit_many_models')`, using list columns **purrr::map()** to fit and store multiple models in a data frame.
+The 5 models are then be fitted using the same approach as in the `vignette('fit_many_models')`, using list columns and **purrr::map()** to fit and store multiple models in a data frame. Again, we will write a function that fits all models that we then pass to **purrr::map()**.
 
 ```{r fit_multiple_models, warning=FALSE}
+# write a function to fit the five models and output a tibble
+fit_TPCs <- function(d, ...) {
+  boatman <- nls_multstart(
+    rate ~ boatman_2017(temp = temp, rmax, tmin, tmax, a, b),
+    data = d,
+    iter = c(4, 4, 4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'boatman_2017'
+    ) -
+      10,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'boatman_2017'
+    ) +
+      10,
+    lower = get_lower_lims(d$temp, d$rate, model_name = 'boatman_2017'),
+    upper = get_upper_lims(d$temp, d$rate, model_name = 'boatman_2017'),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+  gaussian <- nls_multstart(
+    rate ~ gaussian_1987(temp = temp, rmax, topt, a),
+    data = d,
+    iter = c(4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'gaussian_1987'
+    ) -
+      10,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'gaussian_1987'
+    ) +
+      10,
+    lower = get_lower_lims(
+      d$temp,
+      d$rate,
+      model_name = 'gaussian_1987'
+    ),
+    upper = get_upper_lims(
+      d$temp,
+      d$rate,
+      model_name = 'gaussian_1987'
+    ),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+  oneill <- nls_multstart(
+    rate ~ oneill_1972(temp = temp, rmax, ctmax, topt, q10),
+    data = d,
+    iter = c(4, 4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'oneill_1972'
+    ) -
+      10,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'oneill_1972'
+    ) +
+      10,
+    lower = get_lower_lims(d$temp, d$rate, model_name = 'oneill_1972'),
+    upper = get_upper_lims(d$temp, d$rate, model_name = 'oneill_1972'),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+  quadratic <- nls_multstart(
+    rate ~ quadratic_2008(temp = temp, a, b, c),
+    data = d,
+    iter = c(4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'quadratic_2008'
+    ) -
+      0.5,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'quadratic_2008'
+    ) +
+      0.5,
+    lower = get_lower_lims(
+      d$temp,
+      d$rate,
+      model_name = 'quadratic_2008'
+    ),
+    upper = get_upper_lims(
+      d$temp,
+      d$rate,
+      model_name = 'quadratic_2008'
+    ),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+  rezende <- nls_multstart(
+    rate ~ rezende_2019(temp = temp, q10, a, b, c),
+    data = d,
+    iter = c(4, 4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'rezende_2019'
+    ) -
+      10,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'rezende_2019'
+    ) +
+      10,
+    lower = get_lower_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+    upper = get_upper_lims(d$temp, d$rate, model_name = 'rezende_2019'),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+  sharpeschoolhigh <- nls_multstart(
+    rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+    data = d,
+    iter = c(4, 4, 4, 4),
+    start_lower = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ) -
+      10,
+    start_upper = get_start_vals(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ) +
+      10,
+    lower = get_lower_lims(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ),
+    upper = get_upper_lims(
+      d$temp,
+      d$rate,
+      model_name = 'sharpeschoolhigh_1981'
+    ),
+    supp_errors = 'Y',
+    convergence_count = FALSE
+  )
+
+  return(tibble::tibble(
+    boatman = list(boatman),
+    gaussian = list(gaussian),
+    oneill = list(oneill),
+    quadratic = list(quadratic),
+    rezende = list(rezende),
+    sharpeschoolhigh = list(sharpeschoolhigh)
+  ))
+}
+
+
 # fit five chosen model formulations in rTPC
 d_fits <- nest(d, data = c(temp, rate)) %>%
-  mutate(boatman = map(data, ~nls_multstart(rate~boatman_2017(temp = temp, rmax, tmin, tmax, a,b),
-                        data = .x,
-                        iter = c(4,4,4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'boatman_2017') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'boatman_2017') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'boatman_2017'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'boatman_2017'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         gaussian = map(data, ~nls_multstart(rate~gaussian_1987(temp = temp, rmax, topt, a),
-                        data = .x,
-                        iter = c(4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         oneill = map(data, ~nls_multstart(rate~oneill_1972(temp = temp, rmax, ctmax, topt, q10),
-                        data = .x,
-                        iter = c(4,4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'oneill_1972') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'oneill_1972'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'oneill_1972'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         quadratic = map(data, ~nls_multstart(rate~quadratic_2008(temp = temp, a, b, c),
-                        data = .x,
-                        iter = c(4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'quadratic_2008') - 0.5,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'quadratic_2008') + 0.5,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'quadratic_2008'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'quadratic_2008'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         rezende = map(data, ~nls_multstart(rate~rezende_2019(temp = temp, q10, a,b,c),
-                        data = .x,
-                        iter = c(4,4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'rezende_2019') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'rezende_2019'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = .x,
-                        iter = c(4,4,4,4),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)))
+  mutate(
+    mods = map(
+      data,
+      ~ fit_TPCs(d = .x),
+      .progress = TRUE
+    )
+  ) %>%
+  unnest(mods)
 ```
 
 The predictions of each model can be estimated using **broom::augment()**. By stacking the models into long format, this can be done on all models at once. To create a smooth curve fit, the predictions are done on a new temperature vector that has 100 points over the temperature range. The predictions for each model formulation are then visualised in **ggplot2**.
@@ -131,7 +252,12 @@ The predictions of each model can be estimated using **broom::augment()**. By st
 ```{r preds_and_plot, fig.width = 6, fig.height = 4}
 # stack models
 d_stack <- select(d_fits, -data) %>%
-  pivot_longer(., names_to = 'model_name', values_to = 'fit', boatman:sharpeschoolhigh)
+  pivot_longer(
+    .,
+    names_to = 'model_name',
+    values_to = 'fit',
+    boatman:sharpeschoolhigh
+  )
 
 # get predictions using augment
 newdata <- tibble(temp = seq(min(d$temp), max(d$temp), length.out = 100))
@@ -149,24 +275,32 @@ d_labs <- filter(d_preds, temp < 30) %>%
 # plot
 ggplot(d_preds, aes(temp, .fitted)) +
   geom_line(aes(col = model_name)) +
-  geom_label_repel(aes(temp, .fitted, label = model_name, col = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', d_labs) +
+  geom_label_repel(
+    aes(temp, .fitted, label = model_name, col = model_name),
+    fill = 'white',
+    nudge_y = 0.8,
+    segment.size = 0.2,
+    segment.colour = 'grey50',
+    d_labs
+  ) +
   geom_point(aes(temp, rate), d) +
   theme_bw(base_size = 12) +
   theme(legend.position = 'none') +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures') +
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures'
+  ) +
   geom_hline(aes(yintercept = 0), linetype = 2) +
   scale_color_brewer(type = 'qual', palette = 2)
 
 ```
 
-As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using  measures of relative model fit - such as AIC, BIC, and AICc (AIC correcting for small sample size). AIC and BIC are both returned by **broom::glance()**, and AICc can be added using **MuMIn::AICc()**
+As can be seen in the above plot, there is some variation in how the different model formulations fit to the data. We can use a information theoretic approach to compare between different models, using  measures of relative model fit - such as AIC, BIC, and AICc (AIC correcting for small sample size). AIC and BIC are both returned by **broom::glance()**, and AICc can be added using **MuMIn::AICc()**.
 
 ```{r calculate_fit_measures}
 d_ic <- d_stack %>%
-  mutate(., info = map(fit, glance),
-         AICc =  map_dbl(fit, MuMIn::AICc)) %>%
+  mutate(., info = map(fit, glance), AICc = map_dbl(fit, MuMIn::AICc)) %>%
   select(-fit) %>%
   unnest(info) %>%
   select(model_name, sigma, AIC, AICc, BIC, df.residual)
@@ -190,16 +324,29 @@ col_best_mod = RColorBrewer::brewer.pal(n = 6, name = "Dark2")[6]
 # plot
 ggplot(d_preds, aes(temp, .fitted)) +
   geom_line(aes(group = model_name), col = 'grey50', alpha = 0.5) +
-  geom_line(data = filter(d_preds, model_name == best_model), col = col_best_mod) +
-  geom_label_repel(aes(temp, .fitted, label = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', data = filter(d_labs, model_name == best_model), col = col_best_mod) +
+  geom_line(
+    data = filter(d_preds, model_name == best_model),
+    col = col_best_mod
+  ) +
+  geom_label_repel(
+    aes(temp, .fitted, label = model_name),
+    fill = 'white',
+    nudge_y = 0.8,
+    segment.size = 0.2,
+    segment.colour = 'grey50',
+    data = filter(d_labs, model_name == best_model),
+    col = col_best_mod
+  ) +
   geom_point(aes(temp, rate), d) +
   theme_bw(base_size = 12) +
   theme(legend.position = 'none') +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures',
-       subtitle= 'The Sharpe-Schoolfield model is the best model') +
-  geom_hline(aes(yintercept = 0), linetype = 2) 
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures',
+    subtitle = 'The Sharpe-Schoolfield model is the best model'
+  ) +
+  geom_hline(aes(yintercept = 0), linetype = 2)
 
 ```
 
@@ -220,7 +367,7 @@ select(d_ic, model_name, weight) %>%
 # calculate average prediction
 ave_preds <- left_join(d_preds, select(d_ic, model_name, weight)) %>%
   group_by(temp) %>%
-  summarise(., .fitted = sum(.fitted*weight)) %>%
+  summarise(., .fitted = sum(.fitted * weight)) %>%
   ungroup() %>%
   mutate(model_name = 'model average')
 
@@ -231,14 +378,24 @@ d_labs <- filter(ave_preds, temp < 30) %>% sample_n(., 1)
 ggplot(d_preds, aes(temp, .fitted)) +
   geom_line(aes(col = model_name), alpha = 0.3) +
   geom_line(data = ave_preds, col = 'blue') +
-  geom_label_repel(aes(label = model_name), fill = 'white', nudge_y = 0.8, segment.size = 0.2, segment.colour = 'grey50', data = d_labs, col = 'blue') +
+  geom_label_repel(
+    aes(label = model_name),
+    fill = 'white',
+    nudge_y = 0.8,
+    segment.size = 0.2,
+    segment.colour = 'grey50',
+    data = d_labs,
+    col = 'blue'
+  ) +
   geom_point(aes(temp, rate), d) +
   theme_bw(base_size = 12) +
   theme(legend.position = 'none') +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Respiration across temperatures',
-       subtitle= 'Model averaged predictions') +
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Respiration across temperatures',
+    subtitle = 'Model averaged predictions'
+  ) +
   geom_hline(aes(yintercept = 0), linetype = 2) +
   scale_color_brewer(type = 'qual', palette = 2)
 
@@ -258,7 +415,12 @@ params <- d_stack %>%
 
 # get averaged parameters based on model weights
 ave_params <- left_join(params, select(d_ic, model_name, weight)) %>%
-  summarise(., across(rmax:skewness, function(x){sum(x*.$weight)})) %>%
+  summarise(
+    .,
+    across(rmax:skewness, function(x) {
+      sum(x * .$weight)
+    })
+  ) %>%
   mutate(model_name = 'model average')
 
 # show them
@@ -266,6 +428,7 @@ bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
   mutate_if(is.numeric, round, 2)
 
 ```
+
 ***
 
 ## Further reading
