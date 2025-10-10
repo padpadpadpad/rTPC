@@ -64,6 +64,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>Fitting many curves</h6></li>
     <li><a class="dropdown-item" href="../articles/fit_many_curves.html">Fitting many curves using rTPC</a></li>
     <li><a class="dropdown-item" href="../articles/bootstrapping_many_curves.html">Bootstrapping many curves using rTPC</a></li>
+    <li><a class="dropdown-item" href="../articles/quickfit_parallel.html">Parallelising rTPC</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Contributing to rTPC</h6></li>
     <li><a class="dropdown-item" href="../articles/adding_models.html">Adding Models to rTPC</a></li>
@@ -100,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2025-08-27</h4>
+            <h4 data-toc-skip class="date">2025-10-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/rTPC.Rmd" class="external-link"><code>vignettes/rTPC.Rmd</code></a></small>
       <div class="d-none name"><code>rTPC.Rmd</code></div>
@@ -128,7 +129,8 @@ regression to estimate thermal performance curves.</p>
 <p>The available model formulations can be accessed using
 <strong>get_model_names()</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># list model names</span></span>
+<span><span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "analytiskontodimas_2004"       "ashrafi1_2018"                </span></span>
 <span><span class="co">#&gt;  [3] "ashrafi2_2018"                 "ashrafi3_2018"                </span></span>
 <span><span class="co">#&gt;  [5] "ashrafi4_2018"                 "ashrafi5_2018"                </span></span>
@@ -162,7 +164,7 @@ temperature in degrees centigrade and raw rate values as input.</p>
 <p>We can demonstrate the fitting procedure by taking a single curve
 from the example dataset <strong>rTPC</strong> - a dataset of 60 TPCs of
 respiration and photosynthesis of the aquatic algae, <em>Chlorella
-vulgaris</em>. We can plot the data using <strong>ggplot2</strong></p>
+vulgaris</em>. We can plot the data using <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load in data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"chlorella_tpc"</span><span class="op">)</span></span>
@@ -174,9 +176,11 @@ vulgaris</em>. We can plot the data using <strong>ggplot2</strong></p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">rate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
-<span>       y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,</span>
-<span>       title <span class="op">=</span> <span class="st">'Respiration across temperatures'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">'Respiration across temperatures'</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="rTPC_files/figure-html/first_plot-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>For each model, <strong>rTPC</strong> has helper functions that
 estimate sensible start values (<strong>get_start_vals()</strong>),
@@ -189,11 +193,19 @@ only.</p>
 <span><span class="va">mod</span> <span class="op">=</span> <span class="st">'sharpschoolhigh_1981'</span></span>
 <span></span>
 <span><span class="co"># get start vals</span></span>
-<span><span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'sharpeschoolhigh_1981'</span><span class="op">)</span></span>
+<span><span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span></span>
+<span>  <span class="va">d</span><span class="op">$</span><span class="va">temp</span>,</span>
+<span>  <span class="va">d</span><span class="op">$</span><span class="va">rate</span>,</span>
+<span>  model_name <span class="op">=</span> <span class="st">'sharpeschoolhigh_1981'</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># get limits</span></span>
 <span><span class="va">low_lims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'sharpeschoolhigh_1981'</span><span class="op">)</span></span>
-<span><span class="va">upper_lims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'sharpeschoolhigh_1981'</span><span class="op">)</span></span>
+<span><span class="va">upper_lims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span></span>
+<span>  <span class="va">d</span><span class="op">$</span><span class="va">temp</span>,</span>
+<span>  <span class="va">d</span><span class="op">$</span><span class="va">rate</span>,</span>
+<span>  model_name <span class="op">=</span> <span class="st">'sharpeschoolhigh_1981'</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">start_vals</span></span>
 <span><span class="co">#&gt;     r_tref          e         eh         th </span></span>
@@ -215,25 +227,27 @@ which uses <strong>minpackLM::nlsLM()</strong>, but allows for multiple
 sets of starting parameters. It iterates through multiple starting
 values, attempting a fit with each set of start parameters. The best
 model is then picked using AIC scores.</p>
-<p>Using <strong>nls_multstart</strong>, we will use a
-random-search/shotgun approach to fit the curve. Random start parameter
-values are picked from a uniform distribution between
-<code>start_lower</code> and <code>start_upper</code> for each
-parameter. If the best model is not improved upon (in terms of AIC
-score) for 100 new start parameter combinations, the function will
-return that model fit. This is controlled by convergence_count, if this
-is set to <code>FALSE</code>, <strong>nls_multstart()</strong> will try
-and fit all iterations.</p>
+<p>Using <strong>nls_multstart()</strong>, we will use Latin Hypercube
+Sampling (LHS), which can only be used when <code>iter</code> is set to
+a single number. Instead of sampling from a uniform distribution across
+the bounds of each parameter, these methods try to take a set of samples
+from the range of parameter values that covers the parameter space
+optimally for any given set of parameters. <em>This approach can result
+in less iterations being needed to get the same reliability of model
+fitting than either the shotgun or grid-start approaches</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fit model</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">r_tref</span>,<span class="va">e</span>,<span class="va">eh</span>,<span class="va">th</span>, tref <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>,</span>
-<span>                                                     data <span class="op">=</span> <span class="va">d</span>,</span>
-<span>                                                     iter <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>                                                     start_lower <span class="op">=</span> <span class="va">start_vals</span> <span class="op">-</span> <span class="fl">10</span>,</span>
-<span>                                                     start_upper <span class="op">=</span> <span class="va">start_vals</span> <span class="op">+</span> <span class="fl">10</span>,</span>
-<span>                                                     lower <span class="op">=</span> <span class="va">low_lims</span>,</span>
-<span>                                                     upper <span class="op">=</span> <span class="va">upper_lims</span>,</span>
-<span>                                                     supp_errors <span class="op">=</span> <span class="st">'Y'</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span></span>
+<span>  <span class="va">rate</span> <span class="op">~</span> <span class="fu"><a href="../reference/sharpeschoolhigh_1981.html">sharpeschoolhigh_1981</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">r_tref</span>, <span class="va">e</span>, <span class="va">eh</span>, <span class="va">th</span>, tref <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">d</span>,</span>
+<span>  iter <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  start_lower <span class="op">=</span> <span class="va">start_vals</span> <span class="op">-</span> <span class="fl">10</span>,</span>
+<span>  start_upper <span class="op">=</span> <span class="va">start_vals</span> <span class="op">+</span> <span class="fl">10</span>,</span>
+<span>  lower <span class="op">=</span> <span class="va">low_lims</span>,</span>
+<span>  upper <span class="op">=</span> <span class="va">upper_lims</span>,</span>
+<span>  supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
+<span>  lhstype <span class="op">=</span> <span class="st">'random'</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fit</span></span>
 <span><span class="co">#&gt; Nonlinear regression model</span></span>
@@ -243,7 +257,7 @@ and fit all iterations.</p>
 <span><span class="co">#&gt;  0.2595  0.5826 14.2031 43.5531 </span></span>
 <span><span class="co">#&gt;  residual sum-of-squares: 0.3144</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of iterations to convergence: 21 </span></span>
+<span><span class="co">#&gt; Number of iterations to convergence: 43 </span></span>
 <span><span class="co">#&gt; Achieved convergence tolerance: 1.49e-08</span></span></code></pre></div>
 <p>To calculate additional parameters of interest, we can use
 <strong>rTPC::calc_params()</strong>. This function uses high resolution
@@ -275,9 +289,11 @@ data.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span><span class="op">)</span>, <span class="va">preds</span>, col <span class="op">=</span> <span class="st">'blue'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
-<span>       y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,</span>
-<span>       title <span class="op">=</span> <span class="st">'Respiration across temperatures'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">'Respiration across temperatures'</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="rTPC_files/figure-html/pred_and_plot-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

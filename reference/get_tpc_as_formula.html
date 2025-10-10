@@ -42,6 +42,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>Fitting many curves</h6></li>
     <li><a class="dropdown-item" href="../articles/fit_many_curves.html">Fitting many curves using rTPC</a></li>
     <li><a class="dropdown-item" href="../articles/bootstrapping_many_curves.html">Bootstrapping many curves using rTPC</a></li>
+    <li><a class="dropdown-item" href="../articles/quickfit_parallel.html">Parallelising rTPC</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Contributing to rTPC</h6></li>
     <li><a class="dropdown-item" href="../articles/adding_models.html">Adding Models to rTPC</a></li>
@@ -110,7 +111,7 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_tpc_as_formula</span><span class="op">(</span><span class="st">"briere1_1999"</span>, <span class="st">"temperature"</span>, <span class="st">"rate"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rate ~ briere1_1999(temp = temperature, tmin, tmax, a)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e5182955f8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55d7c827fc48&gt;</span>
 <span class="r-in"><span><span class="co"># &gt; rate ~ briere1_1999(temp = temperature, tmin, tmax, a)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
