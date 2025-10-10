@@ -110,7 +110,8 @@ d_mods_para <- d %>%
       data,
       in_parallel(
         \(x) {
-          rTPC::quickfit_tpc_multi(
+          library(rTPC)
+          quickfit_tpc_multi(
             data = x,
             c(
               "briereextended_2021",
