@@ -267,8 +267,8 @@ machine or across the network.</p>
 <span></span>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The non parallel code took 77 seconds, whereas the parallel code took
-37 seconds, which is 2.1 times faster. That is a serious speed up!</p>
+<p>The non parallel code took 74 seconds, whereas the parallel code took
+36 seconds, which is 2.1 times faster. That is a serious speed up!</p>
 <p>The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
 other parts.</p>
@@ -415,23 +415,23 @@ where every function inside your custom function come from using
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">mods</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■                               </span>   2% | ETA:  4m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■                            </span>  10% | ETA:  1m</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■                               </span>   2% | ETA:  2m</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■                              </span>   3% | ETA:  2m</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■                             </span>   8% | ETA:  1m</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■                           </span>  15% | ETA:  1m</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■                         </span>  22% | ETA:  1m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■                       </span>  27% | ETA: 49s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA: 41s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■                    </span>  37% | ETA: 38s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  42% | ETA: 35s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  47% | ETA: 33s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  53% | ETA: 28s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  58% | ETA: 24s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  65% | ETA: 21s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA: 17s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  73% | ETA: 16s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  78% | ETA: 13s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  85% | ETA:  9s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  6s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■                       </span>  27% | ETA: 42s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA: 38s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■                    </span>  37% | ETA: 36s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  42% | ETA: 33s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  47% | ETA: 31s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  53% | ETA: 27s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 23s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA: 19s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  72% | ETA: 16s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  78% | ETA: 12s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  85% | ETA:  8s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  5s</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  </span>  97% | ETA:  2s</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
 <span></span>
@@ -440,7 +440,7 @@ where every function inside your custom function come from using
 <span></span>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">custom_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>This code took 56.6120226 seconds to run. We can then plot all the
+<p>This code took 53.143877 seconds to run. We can then plot all the
 curves as done in previous vignettes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new list column of for high resolution data</span></span>
