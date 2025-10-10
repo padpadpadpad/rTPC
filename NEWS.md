@@ -1,6 +1,8 @@
-# rTPC 2.0.0 - 29/07/2025
+# rTPC 1.1.0 - 10/10/2025
 
 * Prepared for CRAN submission.
+* Updated vignettes.
+* Added new vignette on parallelising rTPC.
 
 # rTPC 1.0.7 08/01/2024
 

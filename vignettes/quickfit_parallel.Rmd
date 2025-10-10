@@ -1,5 +1,5 @@
 ---
-title: "quickfit_parallel"
+title: "Parallelising rTPC"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
@@ -9,6 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 #### A brief example of how to parallelise fitting many models to many TPCs using rTPC, nls.multstart the tidyverse, and mirai.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -21,7 +22,13 @@ knitr::opts_chunk$set(
 
 ***
 
-```{r setup}
+## Things to consider
+
+- **quickfit_tpc_multi()** makes assumptions about start values and currently does not support functions where you have to specify a reference temperature (e.g. **sharpe_schoolfield_1981()**). This is **by design** because you should think hard about the fitting process and writing your own functions will help you understand the process.
+- We recommend writing your own functions for fitting models to pass to **purrr**.
+
+
+```{r setup, message=FALSE}
 # load in packages
 library(rTPC)
 library(nls.multstart)
@@ -37,15 +44,17 @@ head(d)
 
 In our previous vignettes, we have shown how to fit many models to many curves using **rTPC**, **nls.multstart()**, and the **tidyverse**. However, as your datasets get larger (e.g. tens, hundreds, or thousands of TPCs) this could take a long time to run.
 
-Excitingly, [**purrr**]https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/) now supports parallelisation when combined with [**mirai**](https://mirai.r-lib.org/). This is the reason why we recommend using a single **map()** call that encompasses all models, as it integrates much better with **mirai** and allows for parallelisation.
+Excitingly, [**purrr**](https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/) now supports parallelisation when combined with [**mirai**](https://mirai.r-lib.org/). This is the reason why we recommend using a single **purrr::map()** call that encompasses all models, as it integrates much better with **mirai** and allows for parallelisation.
 
-Even more excitingly, we have functions in **rTPC** that allow you to easily fit one - **quickfit_tpc()** - or multiple - **quickfit_multi_tpcs()**. These functions make some assumptions about the start values and are not as customisable as each individual function, so we still recommend writing your own functions, but these are super useful if you want a quick idea of a few curves. Hats off to **Francis Windram** for the amazing additions. We will use them here to demonstrate how to parallelise fitting many models to many curves.
+Even more excitingly, we have functions in **rTPC** that allow you to easily fit one - **quickfit_tpc()** - or multiple - **quickfit_multi_tpcs()**. These functions make some assumptions about the start values and are not as customisable as each individual function, so we still recommend writing your own functions, but these are super useful if you want a quick idea of a few curves. Hats off to Francis Windram for the amazing additions. We will use them here to demonstrate how to parallelise fitting many models to many curves.
 
-We will fit 5 models to all 60 TPCs in `chlorella_tpc`. Firstly I will demonstrate this using **quickfit_multi_tpcs()** and **purrr**. As curve fitting is generally the most time-consuming part of the pipeline, we fit TPCs with and without parallelisation to see how much **mirai** speeds things up. To switch things up, the models we will fit are **briereextended_2021**, **gaussianmodified_2006**, **briere1simplified_1999**, **tomlinsonphillips_2015**, and **lactin2_1995**.
+We will fit 5 models to all 60 TPCs in `chlorella_tpc`, demonstrating how **quickfit_multi_tpcs()** can be used with and **purrr::map()**, and how curve fitting can be sped up by parallelising using **mirai**. To switch things up, the models we will fit are _briereextended_2021_, _gaussianmodified_2006_, _briere1simplified_1999_, _tomlinsonphillips_2015_, and _lactin2_1995_.
+
+# quickfit_tpc_multi() without parallelisation
 
 Firstly without parallelisation. We will time how long each method takes. In **quickfit_tpc_multi()**, you can pass model specific arguments by using a list. For example, here we pass different numbers of iterations for each model, and mix a shotgun approach with a gridstart approach between models. This could be useful if you know some models are harder to fit than others.
 
-```{r fit_many, warning=FALSE}
+```{r fit_many, warning=FALSE, message=FALSE}
 # start timer
 no_parallel_start <- Sys.time()
 
@@ -78,9 +87,11 @@ d_mods_nopara <- d |>
 no_parallel_end <- Sys.time()
 ```
 
+# quickfit_tpc_multi() with parallelisation
+
 And now with parallelisation, which you can read more about in the [**purrr** documentation](https://purrr.tidyverse.org/reference/in_parallel.html). How and where parallelisation occurs is determined by **mirai::daemons()** that sets up daemons (persistent background processes that receive parallel computations) on your local machine or across the network.
 
-```{r fit_many_parallel, warning=FALSE}
+```{r fit_many_parallel, warning=FALSE, message=FALSE}
 # start timer
 parallel_start <- Sys.time()
 
@@ -140,6 +151,8 @@ colnames(d_mods_para)
 head(d_mods_nopara)
 head(d_mods_para)
 ```
+
+# Custom rTPC parallelisation
 
 As we said, **quickfit_tpc_multi()** makes some assumptions about start values and the fitting process, so we still recommend writing your own functions. 
 
