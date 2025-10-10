@@ -241,7 +241,8 @@ machine or across the network.</p>
 <span>      <span class="va">data</span>,</span>
 <span>      <span class="fu"><a href="https://purrr.tidyverse.org/reference/in_parallel.html" class="external-link">in_parallel</a></span><span class="op">(</span></span>
 <span>        \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>          <span class="fu">rTPC</span><span class="fu">::</span><span class="fu"><a href="../reference/quickfit_tpc_multi.html">quickfit_tpc_multi</a></span><span class="op">(</span></span>
+<span>          <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
+<span>          <span class="fu"><a href="../reference/quickfit_tpc_multi.html">quickfit_tpc_multi</a></span><span class="op">(</span></span>
 <span>            data <span class="op">=</span> <span class="va">x</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>              <span class="st">"briereextended_2021"</span>,</span>
@@ -268,8 +269,8 @@ machine or across the network.</p>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
-<p>The non parallel code took 76 seconds, whereas the parallel code took
-37 seconds, which is 2.1 times faster. That is a serious speed up!</p>
+<p>The non parallel code took 74 seconds, whereas the parallel code took
+36 seconds, which is 2.1 times faster. That is a serious speed up!</p>
 <p>The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
 other parts.</p>
@@ -423,7 +424,7 @@ where every function inside your custom function come from using
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">custom_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
-<p>This code took 55.35 seconds to run. We can then plot all the curves
+<p>This code took 53.63 seconds to run. We can then plot all the curves
 as done in previous vignettes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new list column of for high resolution data</span></span>
