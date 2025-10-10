@@ -59,8 +59,8 @@ Firstly without parallelisation. We will time how long each method takes. In **q
 no_parallel_start <- Sys.time()
 
 # fit multiple models to multiple curves
-d_mods_nopara <- d |>
-  tidyr::nest(data = c(temp, rate)) |>
+d_mods_nopara <- d %>%
+  tidyr::nest(data = c(temp, rate)) %>%
   dplyr::mutate(
     mods = purrr::map(
       data,
@@ -80,7 +80,7 @@ d_mods_nopara <- d |>
       ),
       .progress = TRUE
     )
-  ) |>
+  ) %>%
   tidyr::unnest(mods)
 
 # end timer
@@ -99,14 +99,14 @@ parallel_start <- Sys.time()
 daemons(3)
 
 # fit models as before, but in parallel
-d_mods_para <- d |>
-  nest(data = c(temp, rate)) |>
+d_mods_para <- d %>%
+  nest(data = c(temp, rate)) %>%
   mutate(
     mods = map(
       data,
       in_parallel(
         \(x) {
-          quickfit_tpc_multi(
+          rTPC::quickfit_tpc_multi(
             data = x,
             c(
               "briereextended_2021",
@@ -120,8 +120,7 @@ d_mods_para <- d |>
             iter = list(150, 150, c(4, 4, 4), 150, 200),
             lhstype = 'random'
           )
-        },
-        quickfit_tpc_multi = quickfit_tpc_multi
+        }
       ),
       .progress = TRUE
     )
@@ -230,8 +229,8 @@ custom_parallel_start <- Sys.time()
 daemons(3)
 
 # fit models
-d_fits <- d |>
-  nest(data = c(temp, rate)) |>
+d_fits <- d %>%
+  nest(data = c(temp, rate)) %>%
   mutate(
     mods = map(
       data,
