@@ -134,3 +134,6 @@ model uncertainty and calculate confidence intervals of parameters.
   `vignette("model_weighting")`, `vignette("bootstrapping_models")`,
   `vignette("weighted_bootstrapping")`, and
   `vignette("bootstrapping_many_curves")`.
+- For an example of how to parallelise **rTPC**, see
+  `vignette("quickfit_parallel")`.
+- To add a model to **rTPC**, see `vignette("adding_models")`.
