@@ -27,7 +27,6 @@ knitr::opts_chunk$set(
 - **quickfit_tpc_multi()** makes assumptions about start values and currently does not support functions where you have to specify a reference temperature (e.g. **sharpe_schoolfield_1981()**). This is **by design** because you should think hard about the fitting process and writing your own functions will help you understand the process.
 - We recommend writing your own functions for fitting models to pass to **purrr**.
 
-
 ```{r setup, message=FALSE}
 # load in packages
 library(rTPC)
@@ -87,6 +86,11 @@ d_mods_nopara <- d %>%
 no_parallel_end <- Sys.time()
 ```
 
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
+```
+ 
+
 # quickfit_tpc_multi() with parallelisation
 
 And now with parallelisation, which you can read more about in the [**purrr** documentation](https://purrr.tidyverse.org/reference/in_parallel.html). How and where parallelisation occurs is determined by **mirai::daemons()** that sets up daemons (persistent background processes that receive parallel computations) on your local machine or across the network.
@@ -135,6 +139,10 @@ parallel_end <- Sys.time()
 
 ```
 
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
+```
+
 The non parallel code took `r as.numeric(no_parallel_end - no_parallel_start, units = 'secs') %>% round(0)` seconds, whereas the parallel code took `r as.numeric(parallel_end - parallel_start, units = 'secs') %>% round(0)` seconds, which is `r round((as.numeric(no_parallel_end - no_parallel_start, units = 'secs') %>% round(0))/(as.numeric(parallel_end - parallel_start, units = 'secs') %>% round(0)), 1)` times faster. That is a serious speed up!
 
 The model fitting is likely to be the most time consuming part of the pipeline, so it is unlikely you will need to parallelise any of the other parts.
@@ -159,7 +167,7 @@ Here is an example of how to do this using **nls_multstart()** and **purrr** wit
 
 The key difference when making things parallel is you need to specify where every function inside your custom function come from using **::** (for example **nls.multstart::nls_multstart()**.
 
-```{r custom_fit_parallel}
+```{r custom_fit_parallel, message=FALSE}
 # write a function to fit the five models and output a tibble
 fit_TPCs <- function(d, ...) {
   rezende <- nls.multstart::nls_multstart(
@@ -253,7 +261,11 @@ custom_parallel_end <- Sys.time()
 
 ```
 
-This code took `r as.numeric(custom_parallel_end - custom_parallel_start, units = 'secs')` seconds to run. We can then plot all the curves as done in previous vignettes.
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
+```
+
+This code took `r round(as.numeric(custom_parallel_end - custom_parallel_start, units = 'secs'), 2)` seconds to run. We can then plot all the curves as done in previous vignettes.
 
 ```{r predictions}
 # create new list column of for high resolution data
@@ -286,7 +298,7 @@ glimpse(d_preds)
 
 We can the plot the predictions of each curve using **ggplot2**.
 
-```{r plot}
+```{r plot, fig.height = 12, fig.width=8}
 # plot
 ggplot(d_preds) +
   geom_line(aes(temp, .fitted, col = model_name)) +
