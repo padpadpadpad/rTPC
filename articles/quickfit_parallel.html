@@ -216,6 +216,7 @@ models are harder to fit than others.</p>
 <span></span>
 <span><span class="co"># end timer</span></span>
 <span><span class="va">no_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="quickfit_tpc_multi-with-parallelisation">quickfit_tpc_multi() with parallelisation<a class="anchor" aria-label="anchor" href="#quickfit_tpc_multi-with-parallelisation"></a>
@@ -225,7 +226,7 @@ documentation</a>. How and where parallelisation occurs is determined by
 <strong>mirai::daemons()</strong> that sets up daemons (persistent
 background processes that receive parallel computations) on your local
 machine or across the network.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># start timer</span></span>
 <span><span class="va">parallel_start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -266,13 +267,14 @@ machine or across the network.</p>
 <span></span>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The non parallel code took 74 seconds, whereas the parallel code took
-37 seconds, which is 2 times faster. That is a serious speed up!</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
+<p>The non parallel code took 76 seconds, whereas the parallel code took
+37 seconds, which is 2.1 times faster. That is a serious speed up!</p>
 <p>The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
 other parts.</p>
 <p>We can have a look at both objects to see that they are the same.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># look at colnames</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">d_mods_nopara</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"            "process"               </span></span>
@@ -329,7 +331,7 @@ we have used in <code><a href="../articles/fit_many_models.html">vignette("fit_m
 where every function inside your custom function come from using
 <strong>::</strong> (for example
 <strong>nls.multstart::nls_multstart()</strong>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># write a function to fit the five models and output a tibble</span></span>
 <span><span class="va">fit_TPCs</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">rezende</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span></span>
@@ -414,34 +416,16 @@ where every function inside your custom function come from using
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">mods</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■                               </span>   2% | ETA:  3m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■                             </span>   5% | ETA:  1m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■                             </span>   8% | ETA:  1m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■                           </span>  13% | ETA:  1m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■                         </span>  20% | ETA:  1m</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■                       </span>  27% | ETA: 45s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  32% | ETA: 42s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  38% | ETA: 37s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  45% | ETA: 32s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  52% | ETA: 28s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  53% | ETA: 27s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 23s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA: 19s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA: 17s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA: 13s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  82% | ETA: 10s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  88% | ETA:  7s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   </span>  93% | ETA:  4s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
 <span></span>
 <span><span class="co"># close parallel session</span></span>
 <span><span class="fu"><a href="https://mirai.r-lib.org/reference/daemons.html" class="external-link">daemons</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">custom_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>This code took 55.0508816 seconds to run. We can then plot all the
-curves as done in previous vignettes.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
+<p>This code took 55.35 seconds to run. We can then plot all the curves
+as done in previous vignettes.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new list column of for high resolution data</span></span>
 <span><span class="va">d_preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">d_fits</span>,</span>
@@ -479,7 +463,7 @@ curves as done in previous vignettes.</p>
 <span><span class="co">#&gt; $ .fitted     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.3090878<span style="color: #949494;">, </span>0.3172922<span style="color: #949494;">, </span>0.3257144<span style="color: #949494;">, </span>0.3343602<span style="color: #949494;">, </span>0.3432355<span style="color: #949494;">, </span>0.3…</span></span></code></pre></div>
 <p>We can the plot the predictions of each curve using
 <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">.fitted</span>, col <span class="op">=</span> <span class="va">model_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -494,7 +478,7 @@ curves as done in previous vignettes.</p>
 <span>    title <span class="op">=</span> <span class="st">'All fitted thermal performance curves'</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">'rezende in green; sharpeschoolhigh in orange'</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="quickfit_parallel_files/figure-html/plot-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="quickfit_parallel_files/figure-html/plot-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
