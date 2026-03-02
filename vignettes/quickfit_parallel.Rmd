@@ -47,7 +47,7 @@ Excitingly, [**purrr**](https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-paral
 
 Even more excitingly, we have functions in **rTPC** that allow you to easily fit one - **quickfit_tpc()** - or multiple - **quickfit_multi_tpcs()**. These functions make some assumptions about the start values and are not as customisable as each individual function, so we still recommend writing your own functions, but these are super useful if you want a quick idea of a few curves. Hats off to Francis Windram for the amazing additions. We will use them here to demonstrate how to parallelise fitting many models to many curves.
 
-We will fit 5 models to all 60 TPCs in `chlorella_tpc`, demonstrating how **quickfit_multi_tpcs()** can be used with and **purrr::map()**, and how curve fitting can be sped up by parallelising using **mirai**. To switch things up, the models we will fit are _briereextended_2021_, _gaussianmodified_2006_, _briere1simplified_1999_, _tomlinsonphillips_2015_, and _lactin2_1995_.
+We will fit 3 models to all 60 TPCs in `chlorella_tpc`, demonstrating how **quickfit_multi_tpcs()** can be used with and **purrr::map()**, and how curve fitting can be sped up by parallelising using **mirai**. To switch things up, the models we will fit are _briereextended_2021_, _gaussianmodified_2006_, and _lactin2_1995_.
 
 # quickfit_tpc_multi() without parallelisation
 
@@ -68,13 +68,11 @@ d_mods_nopara <- d %>%
         c(
           "briereextended_2021",
           "gaussianmodified_2006",
-          "briere1simplified_1999",
-          "tomlinsonphillips_2015",
           'lactin2_1995'
         ),
         "temp",
         "rate",
-        iter = list(150, 150, c(4, 4, 4), 150, 200),
+        iter = list(150, 150, 200),
         lhstype = 'random'
       ),
       .progress = TRUE
@@ -118,13 +116,11 @@ d_mods_para <- d %>%
             c(
               "briereextended_2021",
               "gaussianmodified_2006",
-              "briere1simplified_1999",
-              "tomlinsonphillips_2015",
               'lactin2_1995'
             ),
             "temp",
             "rate",
-            iter = list(150, 150, c(4, 4, 4), 150, 200),
+            iter = list(150, 150, 200),
             lhstype = 'random'
           )
         }
@@ -176,6 +172,9 @@ The key difference when making things parallel is you need to specify where ever
 ```{r custom_fit_parallel, message=FALSE}
 # write a function to fit the five models and output a tibble
 fit_TPCs <- function(d, ...) {
+  # attach rTPC to search path
+  library(rTPC)
+  
   rezende <- nls.multstart::nls_multstart(
     rate ~ rTPC::rezende_2019(temp = temp, q10, a, b, c),
     data = d,
