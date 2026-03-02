@@ -1,0 +1,328 @@
+# rTPC
+
+**rTPC** is an R package that helps fit thermal performance curves
+(TPCs) in R. **rTPC** contains 49 model formulations previously used to
+fit TPCs and has helper functions to help set sensible start parameters,
+upper and lower parameter limits and estimate parameters useful in
+downstream analyses, such as cardinal temperatures, maximum rate and
+optimum temperature.
+
+The idea behind **rTPC** is to make fitting thermal performance curves
+easier, to provide workflows and examples of fitting TPCs without saying
+which model works best. Which model and which workflow is “best” is
+going to be down to the question that is being asked. Throughout the
+vignettes, *Things to consider* sections give some key considerations
+about what to consider *before* and *during* the analysis.
+
+When developing **rTPC**, we made a conscious decision not to repeat
+code and methods that are already optimised and available in the R
+ecosystem. Consequently, the workflows take advantage of
+[**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for
+fitting non-linear least squares regression and packages from the
+[**tidyverse**](https://www.tidyverse.org) for data manipulation,
+fitting multiple models, and visualisation. The R package
+[**car**](https://CRAN.R-project.org/package=car/car.pdf) is used
+extensively for the bootstrapping approaches.
+
+**rTPC** and the pipelines outlined in the vignettes are published in
+[Methods in Ecology and
+Evolution](https://doi.org/10.1111/2041-210X.13585) and are open access.
+
+## Citation
+
+If this R package helps you, please cite the R package:
+
+Padfield D, O’Sullivan H, Windram F (2024). *rTPC: Fitting and Analysing
+Thermal Performance Curves*. R package version 1.0.7,
+<https://padpadpadpad.github.io/rTPC/>,
+<https://github.com/padpadpadpad/rTPC>
+
+This allows all developers of the package to get credit for the work
+they are doing, since Francis Windram was key to driving the development
+and improvement of **rTPC** after the publication in MEE.
+
+You can also cite the publication in Methods in Ecology and Evolution,
+but please cite the R packages **rTPC** and **nls.multstart** as well:
+
+Daniel Padfield, Hannah O’Sullivan, & Samraat Pawar (2021). rTPC and
+nls.multstart: A new pipeline to fit thermal performance curves in R.
+Methods in Ecology and Evolution.
+<https://doi.org/10.1111/2041-210X.13585>
+
+## Bugs and suggestions
+
+Please report any bugs and suggestions to the
+[Issues](https://github.com/padpadpadpad/rTPC/issues) or email
+<d.padfield@exeter.ac.uk>. This could be requests for the inclusion of a
+new mathematical model formulation.
+
+## Installation
+
+The devlopment version of **rTPC** - which likely includes up to date
+fixes and new models - can be installed from GitHub using the
+`remotes::install_github()`. The vignettes are all available online, but
+if you would like to build them locally, add `build_vignettes = TRUE`
+into your `install_github()` command. However, we do not recommend doing
+this due to the number of extra R packages utilised in the vignettes.
+
+``` r
+# install package from GitHub
+remotes::install_github("padpadpadpad/rTPC")
+```
+
+**rTPC** can also easily be downloaded from CRAN.
+
+``` r
+# install package from CRAN
+install.packages('rTPC')
+```
+
+## General pipeline
+
+**rTPC** makes it easy to fit multiple models to multiple thermal
+performance curves.
+
+![](reference/figures/rTPC_pipeline.png)
+
+**Figure 1. General pipeline for fitting thermal performance curves
+using rTPC**. (1) Collect, check, and manipulate data into long format.
+(2) Choose which models from rTPC are going to be used. Here, a random
+assortment of four models were chosen. (3) Fit the models to data using
+nls.multstart and helper functions from rTPC. (4) Models can be
+visualised and (5) common traits of TPCs can be estimated using
+**rTPC::calc_params()**. (6) This simple pipeline can easily be scaled
+up to be used on multiple curves.
+
+## Extensions to the pipeline
+
+**rTPC** can also be easily used to do a number of common tasks needed
+when fitting TPCs, such as model selection, model averaging,
+incorporating model weights and bootstrapping of model fits.
+
+![](reference/figures/rTPC_pipeline_extensions.png)
+
+**Figure 2. Potential applications for fitting thermal performance
+curves using rTPC**. (1) AIC, BIC or other metrics of model fit can be
+calculated to help to allow model selection or model averaging. (2) If
+TPCs are being fit to averages of multiple replicates, then weighted
+NLLS can be used that reduce parameter bias. (3) After the model has
+been fitted, non-parametric bootstrapping approaches can help estimate
+model uncertainty and calculate confidence intervals of parameters.
+
+## Getting started
+
+- For an introduction to **rTPC**, see
+  [`vignette("rTPC")`](https://padpadpadpad.github.io/rTPC/articles/rTPC.md)
+- To follow the general pipeline, see
+  [`vignette("fit_many_models")`](https://padpadpadpad.github.io/rTPC/articles/fit_many_models.md)
+  and
+  [`vignette("fit_many_curves")`](https://padpadpadpad.github.io/rTPC/articles/fit_many_curves.md).
+- For examples of extensions to this pipeline, see the
+  [`vignette("model_averaging_selection")`](https://padpadpadpad.github.io/rTPC/articles/model_averaging_selection.md),
+  [`vignette("model_weighting")`](https://padpadpadpad.github.io/rTPC/articles/model_weighting.md),
+  [`vignette("bootstrapping_models")`](https://padpadpadpad.github.io/rTPC/articles/bootstrapping_models.md),
+  [`vignette("weighted_bootstrapping")`](https://padpadpadpad.github.io/rTPC/articles/weighted_bootstrapping.md),
+  and
+  [`vignette("bootstrapping_many_curves")`](https://padpadpadpad.github.io/rTPC/articles/bootstrapping_many_curves.md).
+- For an example of how to parallelise **rTPC**, see
+  [`vignette("quickfit_parallel")`](https://padpadpadpad.github.io/rTPC/articles/quickfit_parallel.md).
+- To add a model to **rTPC**, see
+  [`vignette("adding_models")`](https://padpadpadpad.github.io/rTPC/articles/adding_models.md).
+
+# Package index
+
+## Models
+
+TPC models for fitting.
+
+- [`analytiskontodimas_2004()`](https://padpadpadpad.github.io/rTPC/reference/analytiskontodimas_2004.md)
+  : Analytis-Kontodimas model for fitting thermal performance curves
+- [`ashrafi1_2018()`](https://padpadpadpad.github.io/rTPC/reference/ashrafi1_2018.md)
+  : Ashrafi I model for fitting thermal performance curves
+- [`ashrafi2_2018()`](https://padpadpadpad.github.io/rTPC/reference/ashrafi2_2018.md)
+  : Ashrafi II model for fitting thermal performance curves
+- [`ashrafi3_2018()`](https://padpadpadpad.github.io/rTPC/reference/ashrafi3_2018.md)
+  : Ashrafi III model for fitting thermal performance curves
+- [`ashrafi4_2018()`](https://padpadpadpad.github.io/rTPC/reference/ashrafi4_2018.md)
+  : Ashrafi IV model for fitting thermal performance curves
+- [`ashrafi5_2018()`](https://padpadpadpad.github.io/rTPC/reference/ashrafi5_2018.md)
+  : Ashrafi V model for fitting thermal performance curves
+- [`atkin_2005()`](https://padpadpadpad.github.io/rTPC/reference/atkin_2005.md)
+  : Atkin model for fitting thermal performance curves
+- [`beta_2012()`](https://padpadpadpad.github.io/rTPC/reference/beta_2012.md)
+  : Beta model for fitting thermal performance curves
+- [`betatypesimplified_2008()`](https://padpadpadpad.github.io/rTPC/reference/betatypesimplified_2008.md)
+  : Simplified Beta-type model for fitting thermal performance curves
+- [`boatman_2017()`](https://padpadpadpad.github.io/rTPC/reference/boatman_2017.md)
+  : Boatman model for fitting thermal performance curves
+- [`briere1_1999()`](https://padpadpadpad.github.io/rTPC/reference/briere1_1999.md)
+  : Brière I model for fitting thermal performance curves
+- [`briere1simplified_1999()`](https://padpadpadpad.github.io/rTPC/reference/briere1simplified_1999.md)
+  : Simplified Brière I model for fitting thermal performance curves
+- [`briere2_1999()`](https://padpadpadpad.github.io/rTPC/reference/briere2_1999.md)
+  : Brière II model for fitting thermal performance curves
+- [`briere2simplified_1999()`](https://padpadpadpad.github.io/rTPC/reference/briere2simplified_1999.md)
+  : Simplified Brière II model for fitting thermal performance curves
+- [`briereextended_2021()`](https://padpadpadpad.github.io/rTPC/reference/briereextended_2021.md)
+  : Extended Brière model for fitting thermal performance curves
+- [`briereextendedsimplified_2021()`](https://padpadpadpad.github.io/rTPC/reference/briereextendedsimplified_2021.md)
+  : Simplified Extended Brière model for fitting thermal performance
+  curves
+- [`delong_2017()`](https://padpadpadpad.github.io/rTPC/reference/delong_2017.md)
+  : DeLong enzyme-assisted Arrhenius model for fitting thermal
+  performance curves
+- [`deutsch_2008()`](https://padpadpadpad.github.io/rTPC/reference/deutsch_2008.md)
+  : Modified deutsch model for fitting thermal performance curves
+- [`eubank_1973()`](https://padpadpadpad.github.io/rTPC/reference/eubank_1973.md)
+  : Eubank model for fitting thermal performance curves
+- [`flextpc_2024()`](https://padpadpadpad.github.io/rTPC/reference/flextpc_2024.md)
+  : flexTPC model for fitting thermal performance curves
+- [`flinn_1991()`](https://padpadpadpad.github.io/rTPC/reference/flinn_1991.md)
+  : Flinn model for fitting thermal performance curves
+- [`gaussian_1987()`](https://padpadpadpad.github.io/rTPC/reference/gaussian_1987.md)
+  : Gaussian model for fitting thermal performance curves
+- [`gaussianmodified_2006()`](https://padpadpadpad.github.io/rTPC/reference/gaussianmodified_2006.md)
+  : Modified gaussian model for fitting thermal performance curves
+- [`hinshelwood_1947()`](https://padpadpadpad.github.io/rTPC/reference/hinshelwood_1947.md)
+  : Hinshelwood model for fitting thermal performance curves
+- [`janisch1_1925()`](https://padpadpadpad.github.io/rTPC/reference/janisch1_1925.md)
+  : Janisch I model for fitting thermal performance curves
+- [`janisch2_1925()`](https://padpadpadpad.github.io/rTPC/reference/janisch2_1925.md)
+  : Janisch II model for fitting thermal performance curves
+- [`joehnk_2008()`](https://padpadpadpad.github.io/rTPC/reference/joehnk_2008.md)
+  : Jöhnk model for fitting thermal performance curves
+- [`johnsonlewin_1946()`](https://padpadpadpad.github.io/rTPC/reference/johnsonlewin_1946.md)
+  : Johnson-Lewin model for fitting thermal performance curves
+- [`kamykowski_1985()`](https://padpadpadpad.github.io/rTPC/reference/kamykowski_1985.md)
+  : Kamykowski model for fitting thermal performance curves
+- [`lactin2_1995()`](https://padpadpadpad.github.io/rTPC/reference/lactin2_1995.md)
+  : Lactin2 model for fitting thermal performance curves
+- [`lobry_1991()`](https://padpadpadpad.github.io/rTPC/reference/lobry_1991.md)
+  : Lobry model for fitting thermal performance curves
+- [`mitchell_2009()`](https://padpadpadpad.github.io/rTPC/reference/mitchell_2009.md)
+  : Mitchell Angilletta model for fitting thermal performance curves
+- [`oneill_1972()`](https://padpadpadpad.github.io/rTPC/reference/oneill_1972.md)
+  : O'Neill model for fitting thermal performance curves
+- [`pawar_2018()`](https://padpadpadpad.github.io/rTPC/reference/pawar_2018.md)
+  : Pawar model for fitting thermal performance curves
+- [`quadratic_2008()`](https://padpadpadpad.github.io/rTPC/reference/quadratic_2008.md)
+  : Quadratic model for fitting thermal performance curves
+- [`ratkowsky_1983()`](https://padpadpadpad.github.io/rTPC/reference/ratkowsky_1983.md)
+  : Ratkowsky model for fitting thermal performance curves
+- [`rezende_2019()`](https://padpadpadpad.github.io/rTPC/reference/rezende_2019.md)
+  : Rezende model for fitting thermal performance curves
+- [`rosso_1993()`](https://padpadpadpad.github.io/rTPC/reference/rosso_1993.md)
+  : Rosso model for fitting thermal performance curves
+- [`sharpeschoolfull_1981()`](https://padpadpadpad.github.io/rTPC/reference/sharpeschoolfull_1981.md)
+  : Full Sharpe-Schoolfield model for fitting thermal performance curves
+- [`sharpeschoolhigh_1981()`](https://padpadpadpad.github.io/rTPC/reference/sharpeschoolhigh_1981.md)
+  : Sharpe-Schoolfield model (high temperature inactivation only) for
+  fitting thermal performance curves
+- [`sharpeschoollow_1981()`](https://padpadpadpad.github.io/rTPC/reference/sharpeschoollow_1981.md)
+  : Sharpe-Schoolfield model (low temperature inactivation only) for
+  fitting thermal performance curves
+- [`spain_1982()`](https://padpadpadpad.github.io/rTPC/reference/spain_1982.md)
+  : Spain model for fitting thermal performance curves
+- [`stinner_1974()`](https://padpadpadpad.github.io/rTPC/reference/stinner_1974.md)
+  : Stinner model for fitting thermal performance curves
+- [`taylorsexton_1972()`](https://padpadpadpad.github.io/rTPC/reference/taylorsexton_1972.md)
+  : Taylor-Sexton model for fitting thermal performance curves
+- [`thomas_2012()`](https://padpadpadpad.github.io/rTPC/reference/thomas_2012.md)
+  : Thomas model (2012) for fitting thermal performance curves
+- [`thomas_2017()`](https://padpadpadpad.github.io/rTPC/reference/thomas_2017.md)
+  : Thomas model (2017) for fitting thermal performance curves
+- [`tomlinsonphillips_2015()`](https://padpadpadpad.github.io/rTPC/reference/tomlinsonphillips_2015.md)
+  : Tomlinson-Phillips model for fitting thermal performance curves
+- [`warrendreyer_2006()`](https://padpadpadpad.github.io/rTPC/reference/warrendreyer_2006.md)
+  : Warren-Dreyer model for fitting thermal performance curves
+- [`weibull_1995()`](https://padpadpadpad.github.io/rTPC/reference/weibull_1995.md)
+  : Weibull model for fitting thermal performance curves
+
+## Helper functions
+
+Functions to aid in generating starting values or limits.
+
+- [`get_lower_lims()`](https://padpadpadpad.github.io/rTPC/reference/get_lower_lims.md)
+  : Set broad lower limits on parameter values
+- [`get_model_names()`](https://padpadpadpad.github.io/rTPC/reference/get_model_names.md)
+  : Lists or searches the models available in rTPC
+- [`get_start_vals()`](https://padpadpadpad.github.io/rTPC/reference/get_start_vals.md)
+  : Estimate start values for TPC fitting
+- [`get_tpc_as_formula()`](https://padpadpadpad.github.io/rTPC/reference/get_tpc_as_formula.md)
+  : Get a formula object for calling a TPC
+- [`get_upper_lims()`](https://padpadpadpad.github.io/rTPC/reference/get_upper_lims.md)
+  : Set broad upper limits on parameter values
+- [`quickfit_tpc()`](https://padpadpadpad.github.io/rTPC/reference/quickfit_tpc.md)
+  : Perform a quick, automated, TPC fit
+- [`quickfit_tpc_multi()`](https://padpadpadpad.github.io/rTPC/reference/quickfit_tpc_multi.md)
+  : Perform an automated quick tpc fit across models and curves
+
+## Calculating parameters
+
+Functions for calculating parameters of interest.
+
+- [`calc_params()`](https://padpadpadpad.github.io/rTPC/reference/calc_params.md)
+  : Calculate extra parameters of a thermal performance curve
+- [`get_breadth()`](https://padpadpadpad.github.io/rTPC/reference/get_breadth.md)
+  : Estimate thermal performance breadth of a thermal performance curve
+- [`get_ctmax()`](https://padpadpadpad.github.io/rTPC/reference/get_ctmax.md)
+  : Estimate the critical thermal maximum of a thermal performance curve
+- [`get_ctmin()`](https://padpadpadpad.github.io/rTPC/reference/get_ctmin.md)
+  : Estimate the critical thermal minimum of a thermal performance curve
+- [`get_e()`](https://padpadpadpad.github.io/rTPC/reference/get_e.md) :
+  Estimate the activation energy of a thermal performance curve
+- [`get_eh()`](https://padpadpadpad.github.io/rTPC/reference/get_eh.md)
+  : Estimate the deactivation energy of a thermal performance curve
+- [`get_q10()`](https://padpadpadpad.github.io/rTPC/reference/get_q10.md)
+  : Estimate the q10 value of a thermal performance curve
+- [`get_rmax()`](https://padpadpadpad.github.io/rTPC/reference/get_rmax.md)
+  : Estimate maximum rate of a thermal performance curve
+- [`get_skewness()`](https://padpadpadpad.github.io/rTPC/reference/get_skewness.md)
+  : Estimates skewness of a thermal performance curve
+- [`get_thermalsafetymargin()`](https://padpadpadpad.github.io/rTPC/reference/get_thermalsafetymargin.md)
+  : Estimate thermal safety margin of a thermal performance curve
+- [`get_thermaltolerance()`](https://padpadpadpad.github.io/rTPC/reference/get_thermaltolerance.md)
+  : Estimate thermal tolerance of a thermal performance curve
+- [`get_topt()`](https://padpadpadpad.github.io/rTPC/reference/get_topt.md)
+  : Estimate optimum temperature of a thermal performance curve
+
+## Data
+
+- [`bacteria_tpc`](https://padpadpadpad.github.io/rTPC/reference/bacteria_tpc.md)
+  : Example thermal performance curves of bacterial growth
+- [`chlorella_tpc`](https://padpadpadpad.github.io/rTPC/reference/chlorella_tpc.md)
+  : Example metabolic thermal performance curves
+
+# Articles
+
+### Get started
+
+- [Introduction to
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/rTPC.md):
+
+### Single curve fit
+
+- [Fitting many models with
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/fit_many_models.md):
+- [Model weighting with
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/model_weighting.md):
+- [Model selection and model averaging with
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/model_averaging_selection.md):
+- [Bootstrapping using
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/bootstrapping_models.md):
+- [Bootstrapping with weights using
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/weighted_bootstrapping.md):
+
+### Multiple curve fits
+
+- [Fitting many curves using
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/fit_many_curves.md):
+- [Bootstrapping many curves using
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/bootstrapping_many_curves.md):
+- [Parallelising
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/quickfit_parallel.md):
+
+### Contributing to rTPC
+
+- [Adding Models to
+  rTPC](https://padpadpadpad.github.io/rTPC/articles/adding_models.md):

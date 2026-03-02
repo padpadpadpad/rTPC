@@ -101,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2025-10-10</h4>
+            <h4 data-toc-skip class="date">2026-03-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/bootstrapping_models.Rmd" class="external-link"><code>vignettes/bootstrapping_models.Rmd</code></a></small>
       <div class="d-none name"><code>bootstrapping_models.Rmd</code></div>
@@ -141,7 +141,7 @@ significant differences between curves.</li>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/projects/car/" class="external-link">car</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bprice2652/car_repo" class="external-link">car</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
@@ -181,7 +181,7 @@ same curve and there is no <code>rep</code> column as in the
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">'Growth rate'</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">'Growth rate across temperatures'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/load_data-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/load_data-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <p>As in the study, we can fit the Sharpe-Schoolfield model to the data
 and plot the predictions using the approaches in
 <code>vignette(rTPC)</code> and
@@ -215,7 +215,7 @@ and plot the predictions using the approaches in
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Temperature (ºC)'</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">'Growth rate'</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">'Growth rate across temperatures'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/fit_and_plot-1.png" width="576" style="display: block; margin: auto;">
+<p><img src="bootstrapping_models_files/figure-html/fit_and_plot-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;">
 Here we have the best fit to the data. If we want confidence bands
 around this prediction, we can get those by resampling the data a number
 of times. The R package <strong>car</strong> contains the function
@@ -258,7 +258,7 @@ the <strong>hist.boot()</strong> to look at the distribution of each
 parameter.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">boot1</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/hist_boot-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/hist_boot-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>We can easily create predictions for each of these models and through
 this confidence intervals around the original fitted predictions. We can
 then plot (1) the bootstrapped fits and (2) the confidence regions
@@ -301,7 +301,7 @@ around the model predictions.</p>
 <span>       title <span class="op">=</span> <span class="st">'Growth rate across temperatures'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/plot_boots-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/plot_boots-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>This method works well here, because there are many points beyond the
 optimum temperature and multiple independent points at each
 temperature.</p>
@@ -397,7 +397,7 @@ dropped.</p>
 <span>       title <span class="op">=</span> <span class="st">'Growth rate across temperatures'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/bootstrap_case2_plot-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/bootstrap_case2_plot-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>As can be seen, bootstrapping-with-replacement with only a single
 point at each temperature can lead to a large variety of fits. In the
 second panel, we can see the variation of the curve fits, clustering
@@ -477,7 +477,7 @@ implement residual resampling instead of case resampling.</p>
 <span>       title <span class="op">=</span> <span class="st">'Growth rate across temperatures'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/residual_resample_data-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/residual_resample_data-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="calculating-confidence-intervals-of-estimated-and-calculated-parameters">Calculating confidence intervals of estimated and calculated
@@ -542,7 +542,7 @@ previously in this vignette. First with the bacteria TPC.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="st">''</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link">str_wrap</a></span><span class="op">(</span><span class="va">x</span>, width <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">'For the bacteria TPC; dashed lines are CI of profiling method'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/confint_bact-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="bootstrapping_models_files/figure-html/confint_bact-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>Each panel is a different explicitly modelled parameter. The dashed
 lines represent the 95% intervals for the profiling method. In general,
 the different bootstrap methods are similar to the profiled intervals,
@@ -566,7 +566,8 @@ that are more similar to those calculated from profiling.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">'asymptotic'</span><span class="op">)</span></span>
 <span><span class="va">ci_chlor2</span> <span class="op">&lt;-</span> <span class="fu">nlstools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html" class="external-link">confint2</a></span><span class="op">(</span><span class="va">fit_nlsLM2</span>, method <span class="op">=</span> <span class="st">'profile'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Waiting for profiling to be done...</span></span>
-<span><span class="co">#&gt; Error in prof$getProfile(): number of iterations exceeded maximum of 50</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `prof$getProfile()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> number of iterations exceeded maximum of 50</span></span>
 <span><span class="co"># profiling method fails</span></span>
 <span><span class="va">ci_chlor2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">ci_chlor1</span>, method <span class="op">=</span> <span class="st">'profile'</span>,</span>
 <span>                    conf_lower <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -598,7 +599,7 @@ that are more similar to those calculated from profiling.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="st">''</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link">str_wrap</a></span><span class="op">(</span><span class="va">x</span>, width <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/confint_chlor-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="bootstrapping_models_files/figure-html/confint_chlor-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;">
 For this curve, the profiling method failed and the asymptotic method
 has very wide confidence intervals for <code>eh</code>. Consequently, it
 is hard to know how the bootstrapping methods do as these cannot be
@@ -634,7 +635,7 @@ bacteria TPC and the case resample.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Calculation of confidence intervals for extra parameters'</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">'For the bacteria TPC; using case resampling'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bootstrapping_models_files/figure-html/ci_calc_param-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="bootstrapping_models_files/figure-html/ci_calc_param-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;">
 You can see that the confidence intervals around certain parameters,
 such as <code>e</code>, <code>eh</code>, <code>q10</code>, and
 <code>skewness</code> are very asymmetrical. This is because they are
@@ -686,7 +687,7 @@ bootstrapping. Journal of Animal Ecology, 84(4), 892-897.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

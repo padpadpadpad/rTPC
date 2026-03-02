@@ -101,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2025-10-10</h4>
+            <h4 data-toc-skip class="date">2026-03-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd" class="external-link"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="d-none name"><code>fit_many_curves.Rmd</code></div>
@@ -287,7 +287,7 @@ line of the code is commented.</p>
 <span>       y <span class="op">=</span> <span class="st">'Metabolic rate'</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">'All fitted thermal performance curves'</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">'gaussian in green; sharpeschoolhigh in orange'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fit_many_curves_files/figure-html/plot-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="fit_many_curves_files/figure-html/plot-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>The traits of each thermal performance curve can also easily be
 calculated.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -297,9 +297,9 @@ calculated.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">curve_id</span>, <span class="va">growth_temp</span>, <span class="va">process</span>, <span class="va">flux</span>, <span class="va">model_name</span>, <span class="va">params</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■                           </span>  12% |  ETA: 12s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■                    </span>  36% |  ETA:  8s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■              </span>  57% |  ETA:  6s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  81% |  ETA:  3s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  35% |  ETA:  9s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  58% |  ETA:  6s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% |  ETA:  3s</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">d_params</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 120</span></span>
@@ -332,7 +332,7 @@ calculated.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

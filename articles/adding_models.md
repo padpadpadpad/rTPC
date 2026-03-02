@@ -1,0 +1,647 @@
+# Adding Models to rTPC
+
+So you want to contribute a model to **rTPC**? That’s awesome!
+
+Here we will go through all the major steps for creating and
+contributing a model to **rTPC**.
+
+This vignette assumes that you have a working knowledge of basic git
+usage (either through the terminal, the RStudio interface, or another
+GUI), of R, and a functional knowledge of thermal performance curves.
+
+------------------------------------------------------------------------
+
+## First steps
+
+The first thing you want to do when you have a model that is potentially
+useful in **rTPC** is to *check whether it’s already there*!
+
+rTPC already contains 49 models designed on a variety of different data.
+It is quite likely at this point that there is a similar (or identical)
+model that already serves the same purpose. So why not save yourself the
+work if you can?
+
+You can find all the models currently available using
+[`rTPC::get_model_names()`](https://padpadpadpad.github.io/rTPC/reference/get_model_names.md).
+
+``` r
+# show all models in rTPC
+rTPC::get_model_names()
+#>  [1] "analytiskontodimas_2004"       "ashrafi1_2018"                
+#>  [3] "ashrafi2_2018"                 "ashrafi3_2018"                
+#>  [5] "ashrafi4_2018"                 "ashrafi5_2018"                
+#>  [7] "atkin_2005"                    "beta_2012"                    
+#>  [9] "betatypesimplified_2008"       "boatman_2017"                 
+#> [11] "briere1_1999"                  "briere1simplified_1999"       
+#> [13] "briere2_1999"                  "briere2simplified_1999"       
+#> [15] "briereextended_2021"           "briereextendedsimplified_2021"
+#> [17] "delong_2017"                   "deutsch_2008"                 
+#> [19] "eubank_1973"                   "flextpc_2024"                 
+#> [21] "flinn_1991"                    "gaussian_1987"                
+#> [23] "gaussianmodified_2006"         "hinshelwood_1947"             
+#> [25] "janisch1_1925"                 "janisch2_1925"                
+#> [27] "joehnk_2008"                   "johnsonlewin_1946"            
+#> [29] "kamykowski_1985"               "lactin2_1995"                 
+#> [31] "lobry_1991"                    "mitchell_2009"                
+#> [33] "oneill_1972"                   "pawar_2018"                   
+#> [35] "quadratic_2008"                "ratkowsky_1983"               
+#> [37] "rezende_2019"                  "rosso_1993"                   
+#> [39] "sharpeschoolfull_1981"         "sharpeschoolhigh_1981"        
+#> [41] "sharpeschoollow_1981"          "spain_1982"                   
+#> [43] "stinner_1974"                  "taylorsexton_1972"            
+#> [45] "thomas_2012"                   "thomas_2017"                  
+#> [47] "tomlinsonphillips_2015"        "warrendreyer_2006"            
+#> [49] "weibull_1995"
+```
+
+------------------------------------------------------------------------
+
+### Forking the repository
+
+The easiest way to start working on rTPC is to **fork** the repo.
+[Github has some excellent instructions on doing
+this](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
+
+Working on a fork of the repository will allow you to commit to rTPC as
+if it is your own project, and then contribute those commits back to the
+main repository through a **pull request**.
+
+### Setting up your workspace and R installation
+
+It is *strongly* suggested that you install all packages from the
+“Suggests” section of rTPC (easily found in the DESCRIPTION file),
+alongside the packages `devtools` and `usethis` (see
+[here](https://r-pkgs.org/setup.html) for a deeper explanation of these
+packages).
+
+Once you have done this, git clone from YOUR fork of rTPC into a folder
+of your choice on your computer, and then open up the `rTPC.Rproj` file
+if you are using RStudio.
+
+------------------------------------------------------------------------
+
+## Adding a model
+
+Adding a model to rTPC consists of 4 major steps:
+
+1.  Add the model code, starting values, and limits.
+2.  Add the test file.
+3.  Add the model to the rTPC database.
+4.  Clean up and check.
+
+Models are generally named according to the scheme
+`authormodifier_YYYY`. So a model by authors called King and Bishop
+published in 1992 would usually be codified as `kingbishop_1992`. If
+they also proposed a modified model, and a simplified version of each in
+the original paper, those would probably appear as
+
+- `kingbishopmodified_1992`
+- `kingbishopsimplified_1992`
+- `kingbishopmodifiedsimplified_1992`
+
+If there are many authors, or another better description of the model
+then initials or other descriptors may be used, but these may be changed
+if the package maintainers think there are simpler, more consistent, and
+more identifiable names.
+
+------------------------------------------------------------------------
+
+### Model equation
+
+For this example, let’s implement the Eubank model from [The
+Significance and Thermodynamics of Fluctuating Versus Static Thermal
+Environments on *Heliothis zea* Egg Development
+Rates](https://academic.oup.com/ee/article/2/4/491/2480483).
+
+This model (eq4) is originally derived just for a bollworm, with some
+magic numbers:
+
+\\R(T) = \frac{800}{(T-91)^2+432}\\
+
+As a generalisation, we know from looking at the paper that \\T\_{opt} =
+91\\, and the numbers 800 and 432 are species-specific (and thus should
+be fit).
+
+As such we can reformulate the equation as:
+
+\\rate(temp) = \frac{a}{(temp-T\_{opt})^2+b}\\
+
+Where \\a\\ and \\b\\ are arbitrary parameters for fitting, and
+\\T\_{opt}\\ can be at least approximated from the data.
+
+------------------------------------------------------------------------
+
+### Implementation
+
+The model itself lives in a file named after the function, in the `R`
+directory. In our case that will be `eubank_1973.R`.
+
+You can create one using the function `usethis::use_r("eubank_1973")`
+
+Within this file are 4 functions:
+
+- [`eubank_1973()`](https://padpadpadpad.github.io/rTPC/reference/eubank_1973.md) -
+  The model itself
+- `eubank_1973.starting_vals()` - The starting values
+- `eubank_1973.lower_lims()` - The lower limits
+- `eubank_1973.upper_lims()` - The upper limits
+
+It is *very important* that the auxiliary functions
+(`eubank_1973.starting_vals()`, `eubank_1973.lower_lims()` and
+`eubank_1973.upper_lims()`) are named in this manner, to allow the
+unified method for specifying and setting up starting values/limits will
+not work.
+
+------------------------------------------------------------------------
+
+#### Model function - `eubank_1973()`
+
+First of all we must implement the actual model itself (i.e. the
+equation above, but as R code).
+
+``` r
+eubank_1973 <- function(temp, topt, a, b){
+  est <- a / ((temp - topt)^2 + b)
+  return(est)
+}
+```
+
+A model function takes the parameters to fit the model as arguments,
+with temperature being the first by convention, and returns the
+estimates of the trait value at the given temperatures and parameter
+values.
+
+All of the models take temperature in ºC as their predictor variable. If
+the model uses temperature in degrees Kelvin, then we change it within
+the function, as seen in the Sharpe-Schoolfield models.
+
+``` r
+sharpeschoolhigh_1981 <- function(temp, r_tref, e, eh, th, tref){
+  tref <- 273.15 + tref
+  k <- 8.62e-05
+  boltzmann.term <- r_tref*exp(e/k * (1/tref - 1/(temp + 273.15)))
+  inactivation.term <- 1/(1 + exp(eh/k * (1/(th + 273.15) - 1/(temp + 273.15))))
+  return(boltzmann.term * inactivation.term)
+}
+```
+
+------------------------------------------------------------------------
+
+#### Starting values - `eubank_1973.starting_vals()`
+
+Deciding sensible starting values is notoriously tricky. In many cases
+these are fairly arbitrary, though in certain cases an estimate can be
+obtained from the data (e.g. for \\T\_{opt}\\ or \\r\_{max}\\).
+
+Starting values functions are provided a dataframe in their arguments
+which is called `d` internally within the function, which contains only
+the temperature and trait values for the given curve:
+
+``` r
+# A slightly compressed example of how d is generated
+library(rTPC)
+
+subs <- subset(chlorella_tpc, chlorella_tpc$curve_id == 1)
+d <- data.frame(x=subs$temp, y=subs$rate, stringsAsFactors = FALSE)
+d <- d[order(d$x),]
+d
+#>     x          y
+#> 1  16 0.12712578
+#> 2  19 0.26596797
+#> 3  22 0.38513241
+#> 4  25 0.45183566
+#> 5  28 0.83357098
+#> 6  31 1.19034130
+#> 7  34 0.95635362
+#> 8  37 1.61689379
+#> 9  40 1.47394412
+#> 10 43 1.48238927
+#> 11 46 0.02100078
+#> 12 49 0.17843617
+```
+
+Every `model.starting_values()` function has the same approximate form,
+taking `d` as the only argument, and returning a named list of starting
+values. So in our case:
+
+``` r
+eubank_1973.starting_vals <- function(d){
+  # starting values go here
+  return(c(topt=topt, a=a, b=b))
+}
+```
+
+In the case of the eubank model, \\a\\ and \\b\\ are arbitrary. As such
+we can take fairly sensible values at approximately the right magnitude
+(say \\a = 300\\ and \\b = 50\\).
+
+\\T\_{opt}\\ on the other hand is a value that we can derive from our
+data, in this case it’s the temperature at which \\rate\\ is at its
+maximum.
+
+So lets put that together in our `starting_vals` function
+
+``` r
+eubank_1973.starting_vals <- function(d){
+  rmax = max(d$y, na.rm = TRUE)  # Find max trait value
+  topt = mean(d$x[d$y == rmax])  # Find T of rmax
+  a = 300
+  b = 50
+  return(c(topt=topt, a=a, b=b))
+}
+```
+
+To reiterate an earlier point, it is **essential** that the starting
+values function is named appropriately,
+e.g. `eubank_1973.starting_vals()`.
+
+The following **will not and can not work**:
+
+- `eubank_1973.startingvals()`
+- `eubank_1973.start_vals()`
+- `eubank_1973_starting_vals()`
+- `.starting_vals()`
+- `model.starting_vals()`
+
+------------------------------------------------------------------------
+
+#### Limits - `eubank_1973.lower_lims()` & `eubank_1973.upper_lims()`
+
+NLLS fitting often fails when unconstrained (as it may take one
+parameter to infinity and ignore all others). Even specifying absurdly
+large or infinite limits can make the optimiser behave better.
+
+As such, it is often beneficial to provide realistic bounds on the upper
+and lower limits of each parameter.
+
+These take the same functional form as the `starting_vals` function,
+requiring one argument (`d`) and returning a named list.
+
+Generally speaking it is best to keep limits fairly wide unless there is
+a good biological reason to do otherwise.
+
+For instance at most \\T\_{opt}\\ is never going to be above about 150
+°C, and likely will be a lot lower. And at its lower bound it is
+unlikely for the optimal trait value to occur at temperatures below 0
+°C. That gives us some fairly reasonable bounds for the values of
+\\T\_{opt}\\.
+
+\\a\\ and \\b\\, however, are arbitrary values. Just by looking at the
+functional form of the model we can see that if \\a\\ goes to or below
+0, or \\b = 0-(T-T\_{opt})\\ then we will end up with fairly nonsensical
+answers (either negative trait values or undefined results), so we can
+bound those both on the low end at 0 to be safe.
+
+In terms of upper limits, we have no real idea of how large those values
+may go (as they will be proportional to the units of the trait), so we
+can’t set any reasonable bounds aside from `Inf`.
+
+To put that together, here are the lower and upper limit functions for
+`eubank_1976`:
+
+``` r
+eubank_1973.lower_lims <- function(d){
+  topt = 0
+  a = 0
+  b = 0
+  return(c(topt=topt, a=a, b=b))
+}
+
+eubank_1973.upper_lims <- function(d){
+  topt = 150
+  a = Inf
+  b = Inf
+  return(c(topt=topt, a=a, b=b))
+}
+```
+
+------------------------------------------------------------------------
+
+#### Documentation
+
+rTPC leverages `roxygen2` for documentation. Each file contains
+documentation definitions at the **top of the file** in special comments
+starting `#'`.
+
+The best way to implement these is to copy from another model file (such
+as `atkin_2005`) and modify it to suit your own needs.
+
+Things to modify:
+
+- The first line description
+- parameters
+- author
+- reference
+- equation
+- note (if poorly fitting)
+- examples
+- export directive (this **must** match the name of the model! The
+  starting value and limit functions do not need exporting)
+
+------------------------------------------------------------------------
+
+### Updating the model database
+
+Once you have created a model file, you need to add this model to rTPC’s
+database of model names, so it knows that the model is available.
+
+This simply requires modifying the `mod_names` vector within the
+`get_model_names.R` file to include your new model. Make sure that the
+model name is exactly the same as that in your original file, and that
+it is enclosed in quotes.
+
+------------------------------------------------------------------------
+
+### Testing model implementation
+
+Now that the model is set up, the next port of call is to simply run the
+integration test.
+
+This is located in the `tests/testthat/test-startingvalues.R`
+
+It should provide a result somewhat like.
+
+    [ FAIL 0 | WARN 0 | SKIP 0 | PASS 3 ]
+
+If the test failed, the output is instead more like this:
+
+    [ FAIL 3 | WARN 0 | SKIP 0 | PASS 0 ]
+
+    ── Failure (test-startingvalues.R:42:3): All models can generate starting values ──
+    length(mod_names) not equal to `starting_count`.
+    1/1 mismatches
+    [1] 48 - 47 == 1
+    No starting values for:
+     ebank_1973
+
+    ── Failure (test-startingvalues.R:46:3): All models can generate lower limits ──
+    length(mod_names) not equal to `lower_count`.
+    1/1 mismatches
+    [1] 48 - 47 == 1
+    No lower limits for:
+     ebank_1973
+
+    ── Failure (test-startingvalues.R:50:3): All models can generate upper limits ──
+    length(mod_names) not equal to `upper_count`.
+    1/1 mismatches
+    [1] 48 - 47 == 1
+    No upper limits for:
+     ebank_1973
+    [ FAIL 3 | WARN 0 | SKIP 0 | PASS 0 ]
+
+In this case we can see that I simply misspelled the name of the model
+in the `get_model_names.R` file, so need to change that.
+
+If only one test of the three failed, that is likely an issue with the
+names of the functions in the actual model file.
+
+------------------------------------------------------------------------
+
+### Individual model test
+
+Each model requires a model test, to make sure that changes in the
+future do not cause major fitting issues. These test files live in the
+`tests/testthat` directory.
+
+Creating a new one in RStudio is easy! Just make sure you have your
+model file in the script window, then run the command
+`usethis::use_test()`.
+
+This will create a new test file, in our case
+`tests/testthat/test-eubank_1973.R`
+
+Tests are mostly boilerplate, however there are a few things that do
+need to be changed, so again you can copy most of the code from another
+test file, such as `test-atkin_2005.R`.
+
+The main items to be changed are:
+
+- The model name throughout (5 occurrences)
+- The model arguments within `nls_multstart`
+- The `iter` argument to `nls_multstart` (this should be something like
+  `c(3,3,3,3)` for a model with 4 free parameters)
+
+So the final test file will look something like this:
+
+``` r
+# do not run the test on CRAN as they take too long
+testthat::skip_on_cran()
+
+# method: fit model and get predictions. Check these against others.
+
+# load in ggplot
+library(ggplot2)
+
+# subset for the first TPC curve
+data('chlorella_tpc')
+d <- subset(chlorella_tpc, curve_id == 1)
+
+# get start values and fit model
+start_vals <- get_start_vals(d$temp, d$rate, model_name = 'eubank_1973')
+
+# fit model
+mod <- nls.multstart::nls_multstart(rate~eubank_1973(temp = temp, tops, a, b),
+                                    data = d,
+                                    iter = c(3,3,3),
+                                    start_lower = start_vals - 10,
+                                    start_upper = start_vals + 10,
+                                    lower = get_lower_lims(d$temp, d$rate, model_name = 'eubank_1973'),
+                                    upper = get_upper_lims(d$temp, d$rate, model_name = 'eubank_1973'),
+                                    supp_errors = 'Y',
+                                    convergence_count = FALSE)
+
+# get predictions
+preds <- broom::augment(mod)
+# dput(round(preds$.fitted, 1))
+
+# plot
+ggplot(preds) +
+  geom_point(aes(temp, rate)) +
+  geom_line(aes(temp, .fitted)) +
+  theme_bw()
+
+# run test
+testthat::test_that("eubank_1973 function works", {
+  testthat::expect_equal(
+    round(preds$.fitted, 1),
+    c(0.2, 0.2, 0.3, 0.4, 0.6, 0.9, 1.3, 1.6, 1.4, 1, 0.7, 0.4))
+})
+```
+
+------------------------------------------------------------------------
+
+#### Getting results values
+
+The second-from-final line in the test file defines the expected return
+from a model run. It is not really feasible to know this ahead of time,
+but luckily the code here contains an extra function that makes
+retrieving the expected value easy.
+
+Before running the test for the first time, uncomment (remove the
+hashtag) the line `# dput(round(preds$.fitted, 1))`.
+
+Now when you run the test with
+`testthat::test_file("tests/testthat/test-eubank_1973.R")` then the test
+will very likely fail, but it will also output a vector to the console.
+
+    [ FAIL 0 | WARN 0 | SKIP 0 | PASS 0 ]c(0.2, 0.2, 0.3, 0.4, 0.6, 0.9, 1.3, 1.6, 1.4, 1, 0.7, 0.4)
+    [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+
+    ── Failure (test-eubank_1973.R:39:3): eubank_1973 function works ───────────────
+    round(preds$.fitted, 1) not equal to c(0.2, 0.3, 0.5, 0.6, 0.8, 1, 1.1, 1.2, 1.3, 1.2, 1, 0.1).
+    11/12 mismatches (average diff: 0.209)
+    [2]  0.2 - 0.3 == -0.1
+    [3]  0.3 - 0.5 == -0.2
+    [4]  0.4 - 0.6 == -0.2
+    [5]  0.6 - 0.8 == -0.2
+    [6]  0.9 - 1.0 == -0.1
+    [7]  1.3 - 1.1 ==  0.2
+    [8]  1.6 - 1.2 ==  0.4
+    [9]  1.4 - 1.3 ==  0.1
+    [10] 1.0 - 1.2 == -0.2
+    ...
+    [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+
+You can paste this vector (in this case
+`c(0.2, 0.2, 0.3, 0.4, 0.6, 0.9, 1.3, 1.6, 1.4, 1, 0.7, 0.4)`) onto the
+second from last line (remembering the extra closing parenthesis), then
+save and run again.
+
+On this second run the test should execute properly.
+
+    [ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]
+
+You can then proceed with commenting back out the
+[`dput()`](https://rdrr.io/r/base/dput.html) line.
+
+------------------------------------------------------------------------
+
+## Testing
+
+At this point it is worth doing a bit of testing of your new function.
+
+Load your new version of the package with `devtools::load_all(".")` and
+then in a new R (or Rmarkdown) file try running some tests with your new
+function.
+
+If you are having trouble with fitting, modify your starting values or
+limits and try again until you get fairly good fits.
+
+You may also have to play with the `iter` argument to `nls_multstart`.
+
+Once you are happy with everything it’s time to run R CMD CHECK (for
+example using `devtools::check()`).
+
+Look to make sure that there are no warnings or errors.
+
+    ── R CMD check results ──
+    Duration: 4m 55.6s
+
+    0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+    R CMD check succeeded
+
+------------------------------------------------------------------------
+
+## Documenting your model
+
+Documentation needs to be generated in order to be available for your
+own model.
+
+To do this, simply run the command `devtools::document()`.
+
+Once this has completed you can view your documentation internally using
+`?modelname_yyyy`.
+
+------------------------------------------------------------------------
+
+## Commiting your changes back upstream
+
+Now you have fully implemented your model it is time to hand it back to
+the rTPC team for integration.
+
+The simplest way to do this is to commit your changes (including the .Rd
+documentation file), push those to your own forked repo, then open a
+pull request (a prompt should appear on your repo on the github
+website).
+
+Please make sure you include a sensible title such as “Add eubank_1976
+model”.
+
+Include in the description any notes about the model itself, decisions
+you may have had to make when creating it, or problems and difficulties
+when fitting the model.
+
+See [PR \#58](https://github.com/padpadpadpad/rTPC/pull/58) for an
+example of a good pull request.
+
+------------------------------------------------------------------------
+
+## Done!
+
+Now you are done and can go and have a well-earned cup of tea! You
+deserve it!
+
+------------------------------------------------------------------------
+
+## Auxiliary model function dispatch
+
+*A note on **how** rTPC dispatches auxiliary model functions*
+
+Under the hood, rTPC relies on the
+[`do.call()`](https://rdrr.io/r/base/do.call.html) function to locate
+and run the appropriate model functions.
+
+A good example of this is when getting starting values.
+
+The
+[`get_start_vals()`](https://padpadpadpad.github.io/rTPC/reference/get_start_vals.md)
+function in its entirety is replicated here:
+
+``` r
+get_start_vals <- function(x, y, model_name) {
+
+  mod_names <- get_model_names(returnall = TRUE)
+  model_name <- tryCatch(rlang::arg_match(model_name, mod_names), error = function(e){
+    cli::cli_abort(c("x"="Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC.",
+                     "!"="Please check the spelling of {.arg model_name}.",
+                     " "="(run {.fn rTPC::get_model_names} to see all valid names.)",
+                     ""), call=rlang::caller_env(n=4))
+  })
+
+  # make data frame
+  d <- data.frame(x, y, stringsAsFactors = FALSE)
+  d <- d[order(d$x),]
+
+  start_vals <- tryCatch(do.call(paste0(model_name, ".starting_vals"), list(d=d)),
+                         error = function(e){NULL})
+
+  return(start_vals)
+}
+```
+
+Here the model name is checked against the list of valid models, and a
+source data frame (`d`) is created.
+
+Finally a model function name is created by pasting together the name of
+the model along with `".starting_vals"`:
+
+``` r
+model_name <- "eubank_1976"
+paste0(model_name, ".starting_vals")
+#> [1] "eubank_1976.starting_vals"
+```
+
+This function name is then executed using
+[`do.call()`](https://rdrr.io/r/base/do.call.html) along with a list of
+arguments (in this case simply `d`), and the value is returned.
+
+If a model function is not present or is spelled incorrectly,
+[`do.call()`](https://rdrr.io/r/base/do.call.html) will throw an error
+which the `tryCatch` will convert into a `NULL` output.
+
+In the case of an entirely missing model,
+[`get_start_vals()`](https://padpadpadpad.github.io/rTPC/reference/get_start_vals.md)
+errors out early with a more specific error message.
+
+Built in 0.6810803s

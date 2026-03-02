@@ -101,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2025-10-10</h4>
+            <h4 data-toc-skip class="date">2026-03-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/weighted_bootstrapping.Rmd" class="external-link"><code>vignettes/weighted_bootstrapping.Rmd</code></a></small>
       <div class="d-none name"><code>weighted_bootstrapping.Rmd</code></div>
@@ -134,7 +134,7 @@ caution and think critically about their output.</li>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/projects/car/" class="external-link">car</a></span><span class="op">)</span> <span class="co"># to install development version of car install.packages("car", repos = c("https://r-forge.r-project.org"), dep = FALSE)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bprice2652/car_repo" class="external-link">car</a></span><span class="op">)</span> <span class="co"># to install development version of car install.packages("car", repos = c("https://r-forge.r-project.org"), dep = FALSE)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nls.multstart</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
@@ -178,8 +178,12 @@ then plotted using <strong>ggplot2</strong>. Instead of fitting
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span>,</span>
 <span>            ave_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span>,</span>
 <span>            groups <span class="op">=</span> <span class="st">'drop'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'temp'. You can override using the</span></span>
-<span><span class="co">#&gt; `.groups` argument.</span></span>
+<span><span class="co">#&gt; `summarise()` has regrouped the output.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Summaries were computed grouped by <span style="color: #0000BB;">temp</span> and <span style="color: #0000BB;">flux</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Output is grouped by <span style="color: #0000BB;">temp</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `summarise(.groups = "drop_last")` to silence this message.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `summarise(.by = c(temp, flux))` for per-operation grouping</span></span>
+<span><span class="co">#&gt;   (`?dplyr::dplyr_by`) instead.</span></span>
 <span></span>
 <span><span class="va">d_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="va">d_ave</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">temp</span>, <span class="va">ave_rate</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>weighted <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">ave_rate</span><span class="op">~</span><span class="fu"><a href="../reference/lactin2_1995.html">lactin2_1995</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">tmax</span>, <span class="va">delta_t</span><span class="op">)</span>,</span>
@@ -215,7 +219,7 @@ then plotted using <strong>ggplot2</strong>. Instead of fitting
 <span>       title <span class="op">=</span> <span class="st">'Photosynthesis rates across temperatures'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">3.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="weighted_bootstrapping_files/figure-html/get_data-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="weighted_bootstrapping_files/figure-html/get_data-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -292,7 +296,7 @@ plotted using <strong>ggplot2</strong>.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<p><img src="weighted_bootstrapping_files/figure-html/bootstrap1-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="weighted_bootstrapping_files/figure-html/bootstrap1-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>For this model formulation, the case resampling method gives
 extremely wide confidence intervals for the model predictions at high
 temperatures. In some of the bootstrapped datasets, the rate value at 49
@@ -364,7 +368,7 @@ using <code>getAnywhere(Boot.nls)</code>.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">3.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<p><img src="weighted_bootstrapping_files/figure-html/bootstrap2-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="weighted_bootstrapping_files/figure-html/bootstrap2-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="calculating-confidence-intervals-of-estimated-and-calculated-parameters">Calculating confidence intervals of estimated and calculated
@@ -388,7 +392,8 @@ confidence intervals (using <strong>nlstools::confint2()</strong>).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">'asymptotic'</span><span class="op">)</span></span>
 <span><span class="va">ci2</span> <span class="op">&lt;-</span> <span class="fu">nlstools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlstools/man/confint2.html" class="external-link">confint2</a></span><span class="op">(</span><span class="va">fit_nlsLM</span>, method <span class="op">=</span> <span class="st">'profile'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Waiting for profiling to be done...</span></span>
-<span><span class="co">#&gt; Error in prof$getProfile(): number of iterations exceeded maximum of 50</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `prof$getProfile()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> number of iterations exceeded maximum of 50</span></span>
 <span><span class="co"># profiling method fails</span></span>
 <span><span class="va">ci2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">ci1</span>, method <span class="op">=</span> <span class="st">'profile'</span>,</span>
 <span>                    conf_lower <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -420,7 +425,7 @@ confidence intervals (using <strong>nlstools::confint2()</strong>).</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="st">''</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link">str_wrap</a></span><span class="op">(</span><span class="va">x</span>, width <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Calculation of confidence intervals for model parameters'</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">'For the chlorella TPC; profile method failes'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="weighted_bootstrapping_files/figure-html/conf_int-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="weighted_bootstrapping_files/figure-html/conf_int-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;">
 Here the profiling approach fails, and the residual method returns
 values that are narrower than those created from asymptotic intervals.
 The case bootstrap does not work well in this instance. As can be seen,
@@ -465,7 +470,7 @@ bootstrapping. Journal of Animal Ecology, 84(4), 892-897.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
