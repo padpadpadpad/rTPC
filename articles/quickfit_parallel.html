@@ -168,13 +168,12 @@ functions, but these are super useful if you want a quick idea of a few
 curves. Hats off to Francis Windram for the amazing additions. We will
 use them here to demonstrate how to parallelise fitting many models to
 many curves.</p>
-<p>We will fit 5 models to all 60 TPCs in <code>chlorella_tpc</code>,
+<p>We will fit 3 models to all 60 TPCs in <code>chlorella_tpc</code>,
 demonstrating how <strong>quickfit_multi_tpcs()</strong> can be used
 with and <strong>purrr::map()</strong>, and how curve fitting can be
 sped up by parallelising using <strong>mirai</strong>. To switch things
 up, the models we will fit are <em>briereextended_2021</em>,
-<em>gaussianmodified_2006</em>, <em>briere1simplified_1999</em>,
-<em>tomlinsonphillips_2015</em>, and <em>lactin2_1995</em>.</p>
+<em>gaussianmodified_2006</em>, and <em>lactin2_1995</em>.</p>
 </div>
 <div class="section level2">
 <h2 id="quickfit_tpc_multi-without-parallelisation">quickfit_tpc_multi() without parallelisation<a class="anchor" aria-label="anchor" href="#quickfit_tpc_multi-without-parallelisation"></a>
@@ -200,13 +199,11 @@ models are harder to fit than others.</p>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>          <span class="st">"briereextended_2021"</span>,</span>
 <span>          <span class="st">"gaussianmodified_2006"</span>,</span>
-<span>          <span class="st">"briere1simplified_1999"</span>,</span>
-<span>          <span class="st">"tomlinsonphillips_2015"</span>,</span>
 <span>          <span class="st">'lactin2_1995'</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        <span class="st">"temp"</span>,</span>
 <span>        <span class="st">"rate"</span>,</span>
-<span>        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">150</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span>,</span>
+<span>        iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span>,</span>
 <span>        lhstype <span class="op">=</span> <span class="st">'random'</span></span>
 <span>      <span class="op">)</span>,</span>
 <span>      .progress <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -249,13 +246,11 @@ can create using <strong>parallel::detectCores()</strong></p>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>              <span class="st">"briereextended_2021"</span>,</span>
 <span>              <span class="st">"gaussianmodified_2006"</span>,</span>
-<span>              <span class="st">"briere1simplified_1999"</span>,</span>
-<span>              <span class="st">"tomlinsonphillips_2015"</span>,</span>
 <span>              <span class="st">'lactin2_1995'</span></span>
 <span>            <span class="op">)</span>,</span>
 <span>            <span class="st">"temp"</span>,</span>
 <span>            <span class="st">"rate"</span>,</span>
-<span>            iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">150</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span>,</span>
+<span>            iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span>,</span>
 <span>            lhstype <span class="op">=</span> <span class="st">'random'</span></span>
 <span>          <span class="op">)</span></span>
 <span>        <span class="op">}</span></span>
@@ -274,8 +269,8 @@ can create using <strong>parallel::detectCores()</strong></p>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
-<p>The non parallel code took 73 seconds, whereas the parallel code took
-39 seconds, which is 1.9 times faster. That is a serious speed up!</p>
+<p>The non parallel code took 46 seconds, whereas the parallel code took
+25 seconds, which is 1.8 times faster. That is a serious speed up!</p>
 <p>The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
 other parts.</p>
@@ -283,19 +278,17 @@ other parts.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># look at colnames</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">d_mods_nopara</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"            "process"               </span></span>
-<span><span class="co">#&gt;  [4] "flux"                   "data"                   "briereextended_2021"   </span></span>
-<span><span class="co">#&gt;  [7] "gaussianmodified_2006"  "briere1simplified_1999" "tomlinsonphillips_2015"</span></span>
-<span><span class="co">#&gt; [10] "lactin2_1995"</span></span>
+<span><span class="co">#&gt; [1] "curve_id"              "growth_temp"           "process"              </span></span>
+<span><span class="co">#&gt; [4] "flux"                  "data"                  "briereextended_2021"  </span></span>
+<span><span class="co">#&gt; [7] "gaussianmodified_2006" "lactin2_1995"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">d_mods_para</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"            "process"               </span></span>
-<span><span class="co">#&gt;  [4] "flux"                   "data"                   "briereextended_2021"   </span></span>
-<span><span class="co">#&gt;  [7] "gaussianmodified_2006"  "briere1simplified_1999" "tomlinsonphillips_2015"</span></span>
-<span><span class="co">#&gt; [10] "lactin2_1995"</span></span>
+<span><span class="co">#&gt; [1] "curve_id"              "growth_temp"           "process"              </span></span>
+<span><span class="co">#&gt; [4] "flux"                  "data"                  "briereextended_2021"  </span></span>
+<span><span class="co">#&gt; [7] "gaussianmodified_2006" "lactin2_1995"</span></span>
 <span></span>
 <span><span class="co"># look at first six rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d_mods_nopara</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;   curve_id growth_temp process     flux        data     briereextended_2021</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
@@ -304,11 +297,9 @@ other parts.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4          27 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5          27 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>        6          30 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: gaussianmodified_2006 &lt;list&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   briere1simplified_1999 &lt;list&gt;, tomlinsonphillips_2015 &lt;list&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   lactin2_1995 &lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: gaussianmodified_2006 &lt;list&gt;, lactin2_1995 &lt;list&gt;</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d_mods_para</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;   curve_id growth_temp process     flux        data     briereextended_2021</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1          20 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
@@ -317,9 +308,7 @@ other parts.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4          27 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5          27 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>        6          30 acclimation respiration <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;nls&gt;</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: gaussianmodified_2006 &lt;list&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   briere1simplified_1999 &lt;list&gt;, tomlinsonphillips_2015 &lt;list&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   lactin2_1995 &lt;list&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: gaussianmodified_2006 &lt;list&gt;, lactin2_1995 &lt;list&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="custom-rtpc-parallelisation">Custom rTPC parallelisation<a class="anchor" aria-label="anchor" href="#custom-rtpc-parallelisation"></a>
@@ -340,6 +329,9 @@ where every function inside your custom function come from using
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># write a function to fit the five models and output a tibble</span></span>
 <span><span class="va">fit_TPCs</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># attach rTPC to search path</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
+<span>  </span>
 <span>  <span class="va">rezende</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span></span>
 <span>    <span class="va">rate</span> <span class="op">~</span> <span class="fu">rTPC</span><span class="fu">::</span><span class="fu"><a href="../reference/rezende_2019.html">rezende_2019</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">q10</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span><span class="op">)</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">d</span>,</span>
@@ -432,7 +424,7 @@ where every function inside your custom function come from using
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">custom_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">██████████████████████████████</span> 100% | ETA: 0s</span></span></code></pre>
-<p>This code took 57.59 seconds to run. We can then plot all the curves
+<p>This code took 59.2 seconds to run. We can then plot all the curves
 as done in previous vignettes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new list column of for high resolution data</span></span>

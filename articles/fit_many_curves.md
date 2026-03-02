@@ -193,10 +193,11 @@ d_params <- pivot_longer(d_fits, names_to = 'model_name', values_to = 'fit', c(g
   mutate(params = map(fit, calc_params, .progress = TRUE)) %>%
   select(curve_id, growth_temp, process, flux, model_name, params) %>%
   unnest(params)
-#>  ■■■■■                             12% |  ETA: 12s
-#>  ■■■■■■■■■■■                       35% |  ETA:  9s
-#>  ■■■■■■■■■■■■■■■■■■■               58% |  ETA:  6s
-#>  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% |  ETA:  3s
+#>  ■■■                                8% |  ETA: 14s
+#>  ■■■■■■■■■■                        30% |  ETA: 10s
+#>  ■■■■■■■■■■■■■■■■■                 52% |  ETA:  7s
+#>  ■■■■■■■■■■■■■■■■■■■■■■■           74% |  ETA:  4s
+#>  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    98% |  ETA:  0s
 
 glimpse(d_params)
 #> Rows: 120

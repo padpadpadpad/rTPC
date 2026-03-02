@@ -57,12 +57,11 @@ are super useful if you want a quick idea of a few curves. Hats off to
 Francis Windram for the amazing additions. We will use them here to
 demonstrate how to parallelise fitting many models to many curves.
 
-We will fit 5 models to all 60 TPCs in `chlorella_tpc`, demonstrating
+We will fit 3 models to all 60 TPCs in `chlorella_tpc`, demonstrating
 how **quickfit_multi_tpcs()** can be used with and **purrr::map()**, and
 how curve fitting can be sped up by parallelising using **mirai**. To
 switch things up, the models we will fit are *briereextended_2021*,
-*gaussianmodified_2006*, *briere1simplified_1999*,
-*tomlinsonphillips_2015*, and *lactin2_1995*.
+*gaussianmodified_2006*, and *lactin2_1995*.
 
 ## quickfit_tpc_multi() without parallelisation
 
@@ -88,13 +87,11 @@ d_mods_nopara <- d %>%
         c(
           "briereextended_2021",
           "gaussianmodified_2006",
-          "briere1simplified_1999",
-          "tomlinsonphillips_2015",
           'lactin2_1995'
         ),
         "temp",
         "rate",
-        iter = list(150, 150, c(4, 4, 4), 150, 200),
+        iter = list(150, 150, 200),
         lhstype = 'random'
       ),
       .progress = TRUE
@@ -142,13 +139,11 @@ d_mods_para <- d %>%
             c(
               "briereextended_2021",
               "gaussianmodified_2006",
-              "briere1simplified_1999",
-              "tomlinsonphillips_2015",
               'lactin2_1995'
             ),
             "temp",
             "rate",
-            iter = list(150, 150, c(4, 4, 4), 150, 200),
+            iter = list(150, 150, 200),
             lhstype = 'random'
           )
         }
@@ -170,8 +165,8 @@ parallel_end <- Sys.time()
 
     #> ██████████████████████████████ 100% | ETA: 0s
 
-The non parallel code took 73 seconds, whereas the parallel code took 39
-seconds, which is 1.9 times faster. That is a serious speed up!
+The non parallel code took 46 seconds, whereas the parallel code took 25
+seconds, which is 1.8 times faster. That is a serious speed up!
 
 The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
@@ -182,19 +177,17 @@ We can have a look at both objects to see that they are the same.
 ``` r
 # look at colnames
 colnames(d_mods_nopara)
-#>  [1] "curve_id"               "growth_temp"            "process"               
-#>  [4] "flux"                   "data"                   "briereextended_2021"   
-#>  [7] "gaussianmodified_2006"  "briere1simplified_1999" "tomlinsonphillips_2015"
-#> [10] "lactin2_1995"
+#> [1] "curve_id"              "growth_temp"           "process"              
+#> [4] "flux"                  "data"                  "briereextended_2021"  
+#> [7] "gaussianmodified_2006" "lactin2_1995"
 colnames(d_mods_para)
-#>  [1] "curve_id"               "growth_temp"            "process"               
-#>  [4] "flux"                   "data"                   "briereextended_2021"   
-#>  [7] "gaussianmodified_2006"  "briere1simplified_1999" "tomlinsonphillips_2015"
-#> [10] "lactin2_1995"
+#> [1] "curve_id"              "growth_temp"           "process"              
+#> [4] "flux"                  "data"                  "briereextended_2021"  
+#> [7] "gaussianmodified_2006" "lactin2_1995"
 
 # look at first six rows
 head(d_mods_nopara)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 8
 #>   curve_id growth_temp process     flux        data     briereextended_2021
 #>      <dbl>       <dbl> <chr>       <chr>       <list>   <list>             
 #> 1        1          20 acclimation respiration <tibble> <nls>              
@@ -203,11 +196,9 @@ head(d_mods_nopara)
 #> 4        4          27 acclimation respiration <tibble> <nls>              
 #> 5        5          27 acclimation respiration <tibble> <nls>              
 #> 6        6          30 acclimation respiration <tibble> <nls>              
-#> # ℹ 4 more variables: gaussianmodified_2006 <list>,
-#> #   briere1simplified_1999 <list>, tomlinsonphillips_2015 <list>,
-#> #   lactin2_1995 <list>
+#> # ℹ 2 more variables: gaussianmodified_2006 <list>, lactin2_1995 <list>
 head(d_mods_para)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 8
 #>   curve_id growth_temp process     flux        data     briereextended_2021
 #>      <dbl>       <dbl> <chr>       <chr>       <list>   <list>             
 #> 1        1          20 acclimation respiration <tibble> <nls>              
@@ -216,9 +207,7 @@ head(d_mods_para)
 #> 4        4          27 acclimation respiration <tibble> <nls>              
 #> 5        5          27 acclimation respiration <tibble> <nls>              
 #> 6        6          30 acclimation respiration <tibble> <nls>              
-#> # ℹ 4 more variables: gaussianmodified_2006 <list>,
-#> #   briere1simplified_1999 <list>, tomlinsonphillips_2015 <list>,
-#> #   lactin2_1995 <list>
+#> # ℹ 2 more variables: gaussianmodified_2006 <list>, lactin2_1995 <list>
 ```
 
 ## Custom rTPC parallelisation
@@ -242,6 +231,9 @@ where every function inside your custom function come from using **::**
 ``` r
 # write a function to fit the five models and output a tibble
 fit_TPCs <- function(d, ...) {
+  # attach rTPC to search path
+  library(rTPC)
+  
   rezende <- nls.multstart::nls_multstart(
     rate ~ rTPC::rezende_2019(temp = temp, q10, a, b, c),
     data = d,
@@ -337,7 +329,7 @@ custom_parallel_end <- Sys.time()
 
     #> ██████████████████████████████ 100% | ETA: 0s
 
-This code took 57.59 seconds to run. We can then plot all the curves as
+This code took 59.2 seconds to run. We can then plot all the curves as
 done in previous vignettes.
 
 ``` r
