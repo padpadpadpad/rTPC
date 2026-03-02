@@ -95,12 +95,14 @@ cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
 
 And now with parallelisation, which you can read more about in the [**purrr** documentation](https://purrr.tidyverse.org/reference/in_parallel.html). How and where parallelisation occurs is determined by **mirai::daemons()** that sets up daemons (persistent background processes that receive parallel computations) on your local machine or across the network.
 
+We only use 2 cores in our examples, but you can check how many you can create using **parallel::detectCores()**
+
 ```{r fit_many_parallel, warning=FALSE, message=FALSE}
 # start timer
 parallel_start <- Sys.time()
 
 # start parallel session
-daemons(3)
+daemons(2)
 
 # fit models as before, but in parallel
 d_mods_para <- d %>%
@@ -134,6 +136,9 @@ d_mods_para <- d %>%
 
 # close parallel session
 daemons(0)
+
+# wait for 1 second to make sure it is closed
+Sys.sleep(1)
 
 # end time of parallel
 parallel_end <- Sys.time()
@@ -235,7 +240,7 @@ fit_TPCs <- function(d, ...) {
 custom_parallel_start <- Sys.time()
 
 # start parallel session
-daemons(3)
+daemons(2)
 
 # fit models
 d_fits <- d %>%
@@ -256,6 +261,9 @@ d_fits <- d %>%
 
 # close parallel session
 daemons(0)
+
+# wait for 1 second to make sure it is closed
+Sys.sleep(1)
 
 # end time of parallel
 custom_parallel_end <- Sys.time()
