@@ -2,7 +2,7 @@
 title: "Parallelising rTPC"
 author: "Daniel Padfield"
 output: rmarkdown::html_vignette
-date: "2026-03-03"
+date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Parallelising rTPC}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,9 +10,19 @@ vignette: >
 ---
 #### A brief example of how to parallelise fitting many models to many TPCs using rTPC, nls.multstart the tidyverse, and mirai.
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  #tidy.opts=list(width.cutoff=60),
+  #tidy=TRUE,
+  fig.align = 'center'
+)
+```
 
-
-
+```{r runtimer, include=FALSE}
+runstart <- lubridate::now()
+```
 
 ***
 
@@ -21,8 +31,7 @@ vignette: >
 - **quickfit_tpc_multi()** makes assumptions about start values and currently does not support functions where you have to specify a reference temperature (e.g. **sharpe_schoolfield_1981()**). This is **by design** because you should think hard about the fitting process and writing your own functions will help you understand the process.
 - We recommend writing your own functions for fitting models to pass to **purrr**.
 
-
-``` r
+```{r setup, message=FALSE}
 # load in packages
 library(rTPC)
 library(nls.multstart)
@@ -34,13 +43,6 @@ library(mirai)
 data('chlorella_tpc')
 d <- chlorella_tpc
 head(d)
-#>   curve_id growth_temp     process        flux temp      rate
-#> 1        1          20 acclimation respiration   16 0.1271258
-#> 2        1          20 acclimation respiration   19 0.2659680
-#> 3        1          20 acclimation respiration   22 0.3851324
-#> 4        1          20 acclimation respiration   25 0.4518357
-#> 5        1          20 acclimation respiration   28 0.8335710
-#> 6        1          20 acclimation respiration   31 1.1903413
 ```
 
 In our previous vignettes, we have shown how to fit many models to many curves using **rTPC**, **nls.multstart()**, and the **tidyverse**. However, as your datasets get larger (e.g. tens, hundreds, or thousands of TPCs) this could take a long time to run.
@@ -55,8 +57,7 @@ We will fit 5 models to all 60 TPCs in `chlorella_tpc`, demonstrating how **quic
 
 Firstly without parallelisation. We will time how long each method takes. In **quickfit_tpc_multi()**, you can pass model specific arguments by using a list. For example, here we pass different numbers of iterations for each model, and mix a shotgun approach with a gridstart approach between models. This could be useful if you know some models are harder to fit than others.
 
-
-``` r
+```{r fit_many, warning=FALSE, message=FALSE}
 # start timer
 no_parallel_start <- Sys.time()
 
@@ -89,9 +90,8 @@ d_mods_nopara <- d %>%
 no_parallel_end <- Sys.time()
 ```
 
-
-```
-#> ██████████████████████████████ 100% | ETA: 0s
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
 ```
  
 
@@ -99,10 +99,50 @@ no_parallel_end <- Sys.time()
 
 And now with parallelisation, which you can read more about in the [**purrr** documentation](https://purrr.tidyverse.org/reference/in_parallel.html). How and where parallelisation occurs is determined by **mirai::daemons()** that sets up daemons (persistent background processes that receive parallel computations) on your local machine or across the network.
 
+```{r fit_many_parallel_devmode, message=FALSE, warning=FALSE, include=FALSE}
+# start timer
+parallel_start <- Sys.time()
 
+# start parallel session
+daemons(3)
+everywhere(devtools::load_all("."))
+# fit models as before, but in parallel
+d_mods_para <- d %>%
+  nest(data = c(temp, rate)) %>%
+  mutate(
+    mods = map(
+      data,
+      in_parallel(
+        \(x) {
+          quickfit_tpc_multi(
+            data = x,
+            c(
+              "briereextended_2021",
+              "gaussianmodified_2006",
+              "briere1simplified_1999",
+              "tomlinsonphillips_2015",
+              'lactin2_1995'
+            ),
+            "temp",
+            "rate",
+            iter = list(150, 150, c(4, 4, 4), 150, 200),
+            lhstype = 'random'
+          )
+        }
+      ),
+      .progress = TRUE
+    )
+  ) %>%
+  tidyr::unnest(mods)
 
+# close parallel session
+daemons(0)
 
-``` r
+# end time of parallel
+parallel_end <- Sys.time()
+```
+
+```{r fit_many_parallel, echo=TRUE, eval = FALSE, message=FALSE, warning=FALSE}
 # start timer
 parallel_start <- Sys.time()
 
@@ -146,48 +186,24 @@ daemons(0)
 parallel_end <- Sys.time()
 ```
 
-
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
 ```
-#> ██████████████████████████████ 100% | ETA: 0s
-```
 
-The non parallel code took 90 seconds, whereas the parallel code took 36 seconds, which is 2.5 times faster. That is a serious speed up!
+The non parallel code took `r as.numeric(no_parallel_end - no_parallel_start, units = 'secs') %>% round(0)` seconds, whereas the parallel code took `r as.numeric(parallel_end - parallel_start, units = 'secs') %>% round(0)` seconds, which is `r round((as.numeric(no_parallel_end - no_parallel_start, units = 'secs') %>% round(0))/(as.numeric(parallel_end - parallel_start, units = 'secs') %>% round(0)), 1)` times faster. That is a serious speed up!
 
 The model fitting is likely to be the most time consuming part of the pipeline, so it is unlikely you will need to parallelise any of the other parts.
 
 We can have a look at both objects to see that they are the same.
 
-
-``` r
+```{r compare}
 # look at colnames
 colnames(d_mods_nopara)
-#>  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" 
-#>  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"
 colnames(d_mods_para)
-#>  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" 
-#>  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"
 
 # look at first six rows
 head(d_mods_nopara)
-#> # A tibble: 6 × 10
-#>   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995
-#>      <dbl>       <dbl> <chr>       <chr>       <list>            <list>              <list>                <list>                 <list>                 <list>      
-#> 1        1          20 acclimation respiration <tibble [12 × 2]> <nls>               <NULL>                <nls>                  <NULL>                 <nls>       
-#> 2        2          20 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 3        3          23 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>       
-#> 4        4          27 acclimation respiration <tibble [9 × 2]>  <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 5        5          27 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 6        6          30 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>
 head(d_mods_para)
-#> # A tibble: 6 × 10
-#>   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995
-#>      <dbl>       <dbl> <chr>       <chr>       <list>            <list>              <list>                <list>                 <list>                 <list>      
-#> 1        1          20 acclimation respiration <tibble [12 × 2]> <nls>               <NULL>                <nls>                  <NULL>                 <nls>       
-#> 2        2          20 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 3        3          23 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>       
-#> 4        4          27 acclimation respiration <tibble [9 × 2]>  <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 5        5          27 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 6        6          30 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>
 ```
 
 # Custom rTPC parallelisation
@@ -198,8 +214,7 @@ Here is an example of how to do this using **nls_multstart()** and **purrr** wit
 
 The key difference when making things parallel is you need to specify where every function inside your custom function come from using **::** (for example **nls.multstart::nls_multstart()**.
 
-
-``` r
+```{r custom_fit_parallel, message=FALSE}
 # write a function to fit the five models and output a tibble
 fit_TPCs <- function(d, ...) {
   rezende <- nls.multstart::nls_multstart(
@@ -292,15 +307,13 @@ custom_parallel_end <- Sys.time()
 
 ```
 
-
+```{r, echo=FALSE}
+cli::cli_text(cli::col_green(strrep("█", 30)), " 100% | ETA:  0s")
 ```
-#> ██████████████████████████████ 100% | ETA: 0s
-```
 
-This code took 40.83 seconds to run. We can then plot all the curves as done in previous vignettes.
+This code took `r round(as.numeric(custom_parallel_end - custom_parallel_start, units = 'secs'), 2)` seconds to run. We can then plot all the curves as done in previous vignettes.
 
-
-``` r
+```{r predictions}
 # create new list column of for high resolution data
 d_preds <- mutate(
   d_fits,
@@ -327,21 +340,11 @@ d_preds <- mutate(
   unnest(preds)
 
 glimpse(d_preds)
-#> Rows: 12,000
-#> Columns: 7
-#> $ curve_id    <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-#> $ growth_temp <dbl> 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, …
-#> $ process     <chr> "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", …
-#> $ flux        <chr> "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", …
-#> $ model_name  <chr> "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rez…
-#> $ temp        <dbl> 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.66667, 18.00000, 18.33333, 18.66667, 19.00000, 19.33333, 19.66667, 20.00000, 20.33333, 20.66667, 21.00000, 21.33333, 21.66667, …
-#> $ .fitted     <dbl> 0.3090878, 0.3172922, 0.3257144, 0.3343602, 0.3432355, 0.3523464, 0.3616991, 0.3713001, 0.3811559, 0.3912733, 0.4016593, 0.4123210, 0.4232657, 0.4345009, 0.4460343, 0.4578739, 0.47…
 ```
 
 We can the plot the predictions of each curve using **ggplot2**.
 
-
-``` r
+```{r parallel_plot, fig.height = 12, fig.width=8, fig.cap="Fitted TPCs"}
 # plot
 ggplot(d_preds) +
   geom_line(aes(temp, .fitted, col = model_name)) +
@@ -358,11 +361,8 @@ ggplot(d_preds) +
   )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="figure/parallel_plot-1.png" alt="Fitted TPCs"  />
-<p class="caption">Fitted TPCs</p>
-</div>
+```{r tot_time, include=FALSE}
+tot_time <- lubridate::as.duration(lubridate::now() - runstart)
+```
 
-
-
-[Built in 170.831075s]{style="opacity: 0.1;font-size: small;"}
+[Built in `r tot_time`s]{style="opacity: 0.1;font-size: small;"}

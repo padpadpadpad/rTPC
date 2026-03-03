@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r runtimer, include=FALSE}
+runstart <- lubridate::now()
+```
+
 ## Things to consider 
 
 - Go through all the other **Things to consider** sections in the other vignettes.
@@ -181,3 +185,8 @@ d_params <- pivot_longer(d_fits, names_to = 'model_name', values_to = 'fit', c(g
 glimpse(d_params)
 ```
 
+```{r tot_time, include=FALSE}
+tot_time <- lubridate::as.duration(lubridate::now() - runstart)
+```
+
+[Built in `r tot_time`s]{style="opacity: 0.1;font-size: small;"}
