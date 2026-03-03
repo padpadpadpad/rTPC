@@ -23,6 +23,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r runtimer, include=FALSE}
+runstart <- lubridate::now()
+```
 ## Things to consider
 
 - How many data points do you have for each curve? To fit all of the `r length(rTPC::get_model_names())` models in **rTPC**, there needs to be a minimum of 7 points per curve.
@@ -1472,3 +1475,8 @@ If any of the fits do not converge properly, there are things you can try:
 - Change the boundaries of `start_lower` and `start_upper`. In most of these fits, we just +/- 10 from the output of **get_start_vals()**. Sometimes we had to change this value to +/- 1 to get reproducible fits. Or scaling the to be 0.5 times or 1.5 times the start values might help.
 - Remove `lower` and `upper` arguments from the fitting process.
 
+```{r tot_time, include=FALSE}
+tot_time <- lubridate::as.duration(lubridate::now() - runstart)
+```
+
+[Built in `r tot_time`s]{style="opacity: 0.1;font-size: small;"}
