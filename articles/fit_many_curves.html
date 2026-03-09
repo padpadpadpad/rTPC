@@ -101,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2026-03-02</h4>
+            <h4 data-toc-skip class="date">2026-03-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/fit_many_curves.Rmd" class="external-link"><code>vignettes/fit_many_curves.Rmd</code></a></small>
       <div class="d-none name"><code>fit_many_curves.Rmd</code></div>
@@ -296,11 +296,11 @@ calculated.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>params <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">calc_params</span>, .progress <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">curve_id</span>, <span class="va">growth_temp</span>, <span class="va">process</span>, <span class="va">flux</span>, <span class="va">model_name</span>, <span class="va">params</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■                             </span>   8% |  ETA: 14s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% |  ETA: 10s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  52% |  ETA:  7s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  74% |  ETA:  4s</span></span>
-<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  </span>  98% |  ETA:  0s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■                         </span>  22% |  ETA: 13s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■                  </span>  42% |  ETA:  9s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% |  ETA:  6s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  79% |  ETA:  3s</span></span>
+<span><span class="co">#&gt;  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span>  98% |  ETA:  0s</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">d_params</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 120</span></span>
@@ -321,6 +321,8 @@ calculated.</p>
 <span><span class="co">#&gt; $ thermal_tolerance     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 35.286<span style="color: #949494;">, </span>43.019<span style="color: #949494;">, </span>33.437<span style="color: #949494;">, </span>41.594<span style="color: #949494;">, </span>34.493<span style="color: #949494;">, </span>41.094<span style="color: #949494;">, </span>…</span></span>
 <span><span class="co">#&gt; $ breadth               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.651<span style="color: #949494;">, </span>5.371<span style="color: #949494;">, </span>9.165<span style="color: #949494;">, </span>6.495<span style="color: #949494;">, </span>9.442<span style="color: #949494;">, </span>7.714<span style="color: #949494;">, </span>10.354…</span></span>
 <span><span class="co">#&gt; $ skewness              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -4.008871e-01<span style="color: #949494;">, </span>-1.090378e+01<span style="color: #949494;">, </span>-2.526351e-01<span style="color: #949494;">, </span>-1.…</span></span></code></pre></div>
+<p><span style="opacity: 0.1;font-size: small;">Built in
+41.7926998s</span></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

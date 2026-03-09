@@ -1524,3 +1524,5 @@ try:
   fits. Or scaling the to be 0.5 times or 1.5 times the start values
   might help.
 - Remove `lower` and `upper` arguments from the fitting process.
+
+Built in 144.0789905s

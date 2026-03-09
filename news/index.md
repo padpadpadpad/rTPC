@@ -5,6 +5,7 @@
 - Prepared for CRAN submission.
 - Updated vignettes.
 - Added new vignette on parallelising rTPC.
+- Bump R dependency to \>= 4.1 due to use of new-style pipes.
 
 ## rTPC 1.0.7 08/01/2024
 

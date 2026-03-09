@@ -112,18 +112,18 @@ summary(mod)
 #> 
 #> Parameters:
 #>        Estimate Std. Error t value Pr(>|t|)    
-#> r_tref  1.61689    4.91091   0.329   0.7532    
+#> r_tref  1.61689    4.91090   0.329   0.7532    
 #> e       0.02815    1.01715   0.028   0.9788    
 #> el      1.44338    0.68857   2.096   0.0809 .  
-#> tl     28.53344   21.51361   1.326   0.2330    
-#> eh     19.24223   25.84740   0.744   0.4847    
-#> th     44.01635    1.62324  27.116 1.66e-07 ***
+#> tl     28.53344   21.51358   1.326   0.2330    
+#> eh     19.24223   25.84739   0.744   0.4847    
+#> th     44.01635    1.62323  27.116 1.66e-07 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
 #> Residual standard error: 0.1831 on 6 degrees of freedom
 #> 
-#> Number of iterations to convergence: 38 
+#> Number of iterations to convergence: 33 
 #> Achieved convergence tolerance: 1.49e-08
 #> 
 

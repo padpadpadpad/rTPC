@@ -510,3 +510,5 @@ bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
 - Banner, K. M., & Higgs, M. D. (2017). Considerations for assessing
   model averaging of regression coefficients. Ecological Applications,
   27(1), 78-93. <https://doi.org/10.1002/eap.1419>
+
+Built in 13.8587673s

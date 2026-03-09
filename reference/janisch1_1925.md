@@ -86,14 +86,14 @@ summary(mod)
 #> Parameters:
 #>      Estimate Std. Error t value Pr(>|t|)    
 #> m     0.64569    0.09142   7.063 5.90e-05 ***
-#> a     0.84671    0.02766  30.614 2.07e-10 ***
+#> a     1.18104    0.03858  30.614 2.07e-10 ***
 #> topt 36.81111    1.12499  32.721 1.14e-10 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
 #> Residual standard error: 0.329 on 9 degrees of freedom
 #> 
-#> Number of iterations to convergence: 51 
+#> Number of iterations to convergence: 25 
 #> Achieved convergence tolerance: 1.49e-08
 #> 
 

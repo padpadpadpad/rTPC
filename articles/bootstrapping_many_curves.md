@@ -316,3 +316,5 @@ left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(e
 - Puth, M. T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
+
+Built in 17.9915781s

@@ -100,7 +100,7 @@ summary(mod)
 #> 
 #> Residual standard error: 0.2038 on 8 degrees of freedom
 #> 
-#> Number of iterations to convergence: 29 
+#> Number of iterations to convergence: 33 
 #> Achieved convergence tolerance: 1.49e-08
 #> 
 

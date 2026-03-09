@@ -352,3 +352,5 @@ uncertainty in the derived parameters, as in
 - Puth, M. T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
+
+Built in 8.1602757s

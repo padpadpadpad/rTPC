@@ -41,6 +41,6 @@ Francis Windram
 ``` r
 get_tpc_as_formula("briere1_1999", "temperature", "rate")
 #> rate ~ briere1_1999(temp = temperature, tmin, tmax, a)
-#> <environment: 0x55f8fa2367c0>
+#> <environment: 0x556e5075acb8>
 # > rate ~ briere1_1999(temp = temperature, tmin, tmax, a)
 ```
