@@ -18,6 +18,10 @@ vignette: >
 
 ***
 
+```{r runtimer, include=FALSE}
+runstart <- lubridate::now()
+```
+
 ```{r setup, message=FALSE}
 # load packages
 library(boot)
@@ -247,3 +251,8 @@ left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(e
 - Schenker, N., & Gentleman, J. F. (2001). On judging the significance of differences by examining the overlap between confidence intervals. The American Statistician, 55(3), 182-186.
 - Puth, M. T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of methods for calculating confidence intervals by bootstrapping. Journal of Animal Ecology, 84(4), 892-897.
 
+```{r tot_time, include=FALSE}
+tot_time <- lubridate::as.duration(lubridate::now() - runstart)
+```
+
+[Built in `r tot_time`s]{style="opacity: 0.1;font-size: small;"}

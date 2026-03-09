@@ -25,6 +25,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r runtimer, include=FALSE}
+runstart <- lubridate::now()
+```
+
 ```{r setup, message=FALSE}
 # load packages
 library(rTPC)
@@ -142,3 +146,9 @@ ggplot(d, aes(temp, rate)) +
   )
 
 ```
+
+```{r tot_time, include=FALSE}
+tot_time <- lubridate::as.duration(lubridate::now() - runstart)
+```
+
+[Built in `r tot_time`s]{style="opacity: 0.1;font-size: small;"}
