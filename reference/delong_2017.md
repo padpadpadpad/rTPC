@@ -99,17 +99,17 @@ summary(mod)
 #> 
 #> Parameters:
 #>      Estimate Std. Error t value Pr(>|t|)  
-#> c   1.843e+03  3.808e+10    0.00   1.0000  
-#> eb  1.919e-01  5.545e+05    0.00   1.0000  
-#> ef  4.849e-01  5.980e+05    0.00   1.0000  
-#> tm  3.804e+01  5.326e+05    0.00   0.9999  
-#> ehc 1.575e-01  6.036e-02    2.61   0.0349 *
+#> c   1.598e+02  1.951e+09   0.000    1.000  
+#> eb  1.252e-01  3.263e+05   0.000    1.000  
+#> ef  2.715e-01  3.114e+05   0.000    1.000  
+#> tm  3.711e+01  9.028e+05   0.000    1.000  
+#> ehc 1.575e-01  6.464e-02   2.437    0.045 *
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
 #> Residual standard error: 0.3787 on 7 degrees of freedom
 #> 
-#> Number of iterations to convergence: 49 
+#> Number of iterations to convergence: 46 
 #> Achieved convergence tolerance: 1.49e-08
 #> 
 

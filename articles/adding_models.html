@@ -209,9 +209,9 @@ more identifiable names.</p>
 <div class="section level3">
 <h3 id="model-equation">Model equation<a class="anchor" aria-label="anchor" href="#model-equation"></a>
 </h3>
-<p>For this example, let’s implement the Eubank model from <a href="https://academic.oup.com/ee/article/2/4/491/2480483" class="external-link">The
-Significance and Thermodynamics of Fluctuating Versus Static Thermal
-Environments on <em>Heliothis zea</em> Egg Development Rates</a>.</p>
+<p>For this example, let’s implement the Eubank model from <a href="https://doi.org/10.1093/ee/2.4.491" class="external-link">The Significance and
+Thermodynamics of Fluctuating Versus Static Thermal Environments on
+<em>Heliothis zea</em> Egg Development Rates</a>.</p>
 <p>This model (eq4) is originally derived just for a bollworm, with some
 magic numbers:</p>
 <p><span class="math display">\[R(T) =
@@ -258,7 +258,7 @@ values/limits will not work.</p>
 <p>First of all we must implement the actual model itself (i.e. the
 equation above, but as R code).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eubank_1973</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">topt</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">eubank_1973</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">topt</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">est</span> <span class="op">&lt;-</span> <span class="va">a</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">temp</span> <span class="op">-</span> <span class="va">topt</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -270,11 +270,12 @@ values.</p>
 If the model uses temperature in degrees Kelvin, then we change it
 within the function, as seen in the Sharpe-Schoolfield models.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sharpeschoolhigh_1981</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">r_tref</span>, <span class="va">e</span>, <span class="va">eh</span>, <span class="va">th</span>, <span class="va">tref</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">sharpeschoolhigh_1981</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">temp</span>, <span class="va">r_tref</span>, <span class="va">e</span>, <span class="va">eh</span>, <span class="va">th</span>, <span class="va">tref</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">tref</span> <span class="op">&lt;-</span> <span class="fl">273.15</span> <span class="op">+</span> <span class="va">tref</span></span>
 <span>  <span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">8.62e-05</span></span>
-<span>  <span class="va">boltzmann.term</span> <span class="op">&lt;-</span> <span class="va">r_tref</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">e</span><span class="op">/</span><span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">tref</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">inactivation.term</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">eh</span><span class="op">/</span><span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">th</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">boltzmann.term</span> <span class="op">&lt;-</span> <span class="va">r_tref</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">e</span> <span class="op">/</span> <span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">tref</span> <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">inactivation.term</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span></span>
+<span>    <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">eh</span> <span class="op">/</span> <span class="va">k</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">th</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">temp</span> <span class="op">+</span> <span class="fl">273.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">boltzmann.term</span> <span class="op">*</span> <span class="va">inactivation.term</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <hr>
@@ -293,8 +294,8 @@ contains only the temperature and trait values for the given curve:</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/padpadpadpad/rTPC" class="external-link">rTPC</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">subs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">chlorella_tpc</span>, <span class="va">chlorella_tpc</span><span class="op">$</span><span class="va">curve_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">subs</span><span class="op">$</span><span class="va">temp</span>, y<span class="op">=</span><span class="va">subs</span><span class="op">$</span><span class="va">rate</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">subs</span><span class="op">$</span><span class="va">temp</span>, y <span class="op">=</span> <span class="va">subs</span><span class="op">$</span><span class="va">rate</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">d</span></span>
 <span><span class="co">#&gt;     x          y</span></span>
 <span><span class="co">#&gt; 1  16 0.12712578</span></span>
@@ -313,9 +314,9 @@ contains only the temperature and trait values for the given curve:</p>
 approximate form, taking <code>d</code> as the only argument, and
 returning a named list of starting values. So in our case:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># starting values go here</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt <span class="op">=</span> <span class="va">topt</span>, a <span class="op">=</span> <span class="va">a</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>In the case of the eubank model, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are arbitrary. As such we can take
 fairly sensible values at approximately the right magnitude (say <span class="math inline">\(a = 300\)</span> and <span class="math inline">\(b
@@ -327,12 +328,12 @@ maximum.</p>
 <p>So lets put that together in our <code>starting_vals</code>
 function</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="va">rmax</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">y</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Find max trait value</span></span>
-<span>  <span class="va">topt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">y</span> <span class="op">==</span> <span class="va">rmax</span><span class="op">]</span><span class="op">)</span>  <span class="co"># Find T of rmax</span></span>
+<code class="sourceCode R"><span><span class="va">eubank_1973.starting_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">rmax</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">y</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Find max trait value</span></span>
+<span>  <span class="va">topt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">y</span> <span class="op">==</span> <span class="va">rmax</span><span class="op">]</span><span class="op">)</span> <span class="co"># Find T of rmax</span></span>
 <span>  <span class="va">a</span> <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="va">b</span> <span class="op">=</span> <span class="fl">50</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt <span class="op">=</span> <span class="va">topt</span>, a <span class="op">=</span> <span class="va">a</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>To reiterate an earlier point, it is <strong>essential</strong> that
 the starting values function is named appropriately,
@@ -377,18 +378,18 @@ so we can’t set any reasonable bounds aside from <code>Inf</code>.</p>
 <p>To put that together, here are the lower and upper limit functions
 for <code>eubank_1976</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eubank_1973.lower_lims</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">eubank_1973.lower_lims</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">topt</span> <span class="op">=</span> <span class="fl">0</span></span>
 <span>  <span class="va">a</span> <span class="op">=</span> <span class="fl">0</span></span>
 <span>  <span class="va">b</span> <span class="op">=</span> <span class="fl">0</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt <span class="op">=</span> <span class="va">topt</span>, a <span class="op">=</span> <span class="va">a</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">eubank_1973.upper_lims</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="va">eubank_1973.upper_lims</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">topt</span> <span class="op">=</span> <span class="fl">150</span></span>
 <span>  <span class="va">a</span> <span class="op">=</span> <span class="cn">Inf</span></span>
 <span>  <span class="va">b</span> <span class="op">=</span> <span class="cn">Inf</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt<span class="op">=</span><span class="va">topt</span>, a<span class="op">=</span><span class="va">a</span>, b<span class="op">=</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>topt <span class="op">=</span> <span class="va">topt</span>, a <span class="op">=</span> <span class="va">a</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <hr>
 </div>
@@ -510,15 +511,17 @@ parameters)</li>
 <span><span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_start_vals.html">get_start_vals</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'eubank_1973'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># fit model</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span><span class="va">rate</span><span class="op">~</span><span class="fu"><a href="../reference/eubank_1973.html">eubank_1973</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tops</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span>,</span>
-<span>                                    data <span class="op">=</span> <span class="va">d</span>,</span>
-<span>                                    iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                    start_lower <span class="op">=</span> <span class="va">start_vals</span> <span class="op">-</span> <span class="fl">10</span>,</span>
-<span>                                    start_upper <span class="op">=</span> <span class="va">start_vals</span> <span class="op">+</span> <span class="fl">10</span>,</span>
-<span>                                    lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'eubank_1973'</span><span class="op">)</span>,</span>
-<span>                                    upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'eubank_1973'</span><span class="op">)</span>,</span>
-<span>                                    supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
-<span>                                    convergence_count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">nls.multstart</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html" class="external-link">nls_multstart</a></span><span class="op">(</span></span>
+<span>  <span class="va">rate</span> <span class="op">~</span> <span class="fu"><a href="../reference/eubank_1973.html">eubank_1973</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="va">temp</span>, <span class="va">tops</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">d</span>,</span>
+<span>  iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  start_lower <span class="op">=</span> <span class="va">start_vals</span> <span class="op">-</span> <span class="fl">10</span>,</span>
+<span>  start_upper <span class="op">=</span> <span class="va">start_vals</span> <span class="op">+</span> <span class="fl">10</span>,</span>
+<span>  lower <span class="op">=</span> <span class="fu"><a href="../reference/get_lower_lims.html">get_lower_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'eubank_1973'</span><span class="op">)</span>,</span>
+<span>  upper <span class="op">=</span> <span class="fu"><a href="../reference/get_upper_lims.html">get_upper_lims</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">d</span><span class="op">$</span><span class="va">rate</span>, model_name <span class="op">=</span> <span class="st">'eubank_1973'</span><span class="op">)</span>,</span>
+<span>  supp_errors <span class="op">=</span> <span class="st">'Y'</span>,</span>
+<span>  convergence_count <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># get predictions</span></span>
 <span><span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">augment</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
@@ -534,7 +537,8 @@ parameters)</li>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"eubank_1973 function works"</span>, <span class="op">{</span></span>
 <span>  <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">preds</span><span class="op">$</span><span class="va">.fitted</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.9</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="fl">1.4</span>, <span class="fl">1</span>, <span class="fl">0.7</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.9</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="fl">1.4</span>, <span class="fl">1</span>, <span class="fl">0.7</span>, <span class="fl">0.4</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <hr>
 <div class="section level4">
@@ -650,21 +654,32 @@ locate and run the appropriate model functions.</p>
 replicated here:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">get_start_vals</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">model_name</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
 <span>  <span class="va">mod_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_model_names.html">get_model_names</a></span><span class="op">(</span>returnall <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="va">model_name</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/arg_match.html" class="external-link">arg_match</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="va">mod_names</span><span class="op">)</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli_abort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">=</span><span class="st">"Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC."</span>,</span>
-<span>                     <span class="st">"!"</span><span class="op">=</span><span class="st">"Please check the spelling of {.arg model_name}."</span>,</span>
-<span>                     <span class="st">" "</span><span class="op">=</span><span class="st">"(run {.fn rTPC::get_model_names} to see all valid names.)"</span>,</span>
-<span>                     <span class="st">""</span><span class="op">)</span>, call<span class="op">=</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="va">model_name</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
+<span>    <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/arg_match.html" class="external-link">arg_match</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="va">mod_names</span><span class="op">)</span>,</span>
+<span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli_abort</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>          <span class="st">"x"</span> <span class="op">=</span> <span class="st">"Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC."</span>,</span>
+<span>          <span class="st">"!"</span> <span class="op">=</span> <span class="st">"Please check the spelling of {.arg model_name}."</span>,</span>
+<span>          <span class="st">" "</span> <span class="op">=</span> <span class="st">"(run {.fn rTPC::get_model_names} to see all valid names.)"</span>,</span>
+<span>          <span class="st">""</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        call <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># make data frame</span></span>
 <span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>,<span class="op">]</span></span>
+<span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="op">]</span></span>
 <span></span>
-<span>  <span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="st">".starting_vals"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>d<span class="op">=</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">{</span><span class="cn">NULL</span><span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="va">start_vals</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">model_name</span>, <span class="st">".starting_vals"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>d <span class="op">=</span> <span class="va">d</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="cn">NULL</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">start_vals</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -686,7 +701,7 @@ the value is returned.</p>
 <code><a href="../reference/get_start_vals.html">get_start_vals()</a></code> errors out early with a more specific
 error message.</p>
 <p><span style="opacity: 0.1;font-size: small;">Built in
-0.6102729s</span></p>
+0.6911328s</span></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -101,7 +101,7 @@
                         <h4 data-toc-skip class="author">Daniel
 Padfield</h4>
             
-            <h4 data-toc-skip class="date">2026-03-03</h4>
+            <h4 data-toc-skip class="date">2026-04-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/padpadpadpad/rTPC/blob/master/vignettes/quickfit_parallel.Rmd" class="external-link"><code>vignettes/quickfit_parallel.Rmd</code></a></small>
       <div class="d-none name"><code>quickfit_parallel.Rmd</code></div>
@@ -154,7 +154,7 @@ many curves using <strong>rTPC</strong>,
 <strong>nls.multstart()</strong>, and the <strong>tidyverse</strong>.
 However, as your datasets get larger (e.g. tens, hundreds, or thousands
 of TPCs) this could take a long time to run.</p>
-<p>Excitingly, <a href="https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/" class="external-link"><strong>purrr</strong></a>
+<p>Excitingly, <a href="https://tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/" class="external-link"><strong>purrr</strong></a>
 now supports parallelisation when combined with <a href="https://mirai.r-lib.org/" class="external-link"><strong>mirai</strong></a>. This is the
 reason why we recommend using a single <strong>purrr::map()</strong>
 call that encompasses all models, as it integrates much better with
@@ -269,8 +269,8 @@ machine or across the network.</p>
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; ██████████████████████████████ 100% | ETA: 0s</span></span></code></pre>
-<p>The non parallel code took 90 seconds, whereas the parallel code took
-36 seconds, which is 2.5 times faster. That is a serious speed up!</p>
+<p>The non parallel code took 36 seconds, whereas the parallel code took
+16 seconds, which is 2.2 times faster. That is a serious speed up!</p>
 <p>The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
 other parts.</p>
@@ -278,33 +278,47 @@ other parts.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># look at colnames</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">d_mods_nopara</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" </span></span>
-<span><span class="co">#&gt;  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"</span></span>
+<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"           </span></span>
+<span><span class="co">#&gt;  [3] "process"                "flux"                  </span></span>
+<span><span class="co">#&gt;  [5] "data"                   "briereextended_2021"   </span></span>
+<span><span class="co">#&gt;  [7] "gaussianmodified_2006"  "briere1simplified_1999"</span></span>
+<span><span class="co">#&gt;  [9] "tomlinsonphillips_2015" "lactin2_1995"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">d_mods_para</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" </span></span>
-<span><span class="co">#&gt;  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"</span></span>
+<span><span class="co">#&gt;  [1] "curve_id"               "growth_temp"           </span></span>
+<span><span class="co">#&gt;  [3] "process"                "flux"                  </span></span>
+<span><span class="co">#&gt;  [5] "data"                   "briereextended_2021"   </span></span>
+<span><span class="co">#&gt;  [7] "gaussianmodified_2006"  "briere1simplified_1999"</span></span>
+<span><span class="co">#&gt;  [9] "tomlinsonphillips_2015" "lactin2_1995"</span></span>
 <span></span>
 <span><span class="co"># look at first six rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d_mods_nopara</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 6 × 10</span></span>
-<span><span class="co">#&gt;   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995</span></span>
-<span><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;list&gt;            &lt;list&gt;              &lt;list&gt;                &lt;list&gt;                 &lt;list&gt;                 &lt;list&gt;      </span></span>
-<span><span class="co">#&gt; 1        1          20 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;NULL&gt;                &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 2        2          20 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 3        3          23 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 4        4          27 acclimation respiration &lt;tibble [9 × 2]&gt;  &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 5        5          27 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 6        6          30 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;</span></span>
+<span><span class="co">#&gt;   curve_id growth_temp process     flux        data            </span></span>
+<span><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;list&gt;          </span></span>
+<span><span class="co">#&gt; 1        1          20 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 2        2          20 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 3        3          23 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 4        4          27 acclimation respiration &lt;tibble [9 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 5        5          27 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 6        6          30 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; # ℹ 5 more variables: briereextended_2021 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   gaussianmodified_2006 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   briere1simplified_1999 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   tomlinsonphillips_2015 &lt;list&gt;, lactin2_1995 &lt;list&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d_mods_para</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 6 × 10</span></span>
-<span><span class="co">#&gt;   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995</span></span>
-<span><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;list&gt;            &lt;list&gt;              &lt;list&gt;                &lt;list&gt;                 &lt;list&gt;                 &lt;list&gt;      </span></span>
-<span><span class="co">#&gt; 1        1          20 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;NULL&gt;                &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 2        2          20 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 3        3          23 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 4        4          27 acclimation respiration &lt;tibble [9 × 2]&gt;  &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 5        5          27 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;nls&gt;                  &lt;nls&gt;       </span></span>
-<span><span class="co">#&gt; 6        6          30 acclimation respiration &lt;tibble [12 × 2]&gt; &lt;nls&gt;               &lt;nls&gt;                 &lt;nls&gt;                  &lt;NULL&gt;                 &lt;nls&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;   curve_id growth_temp process     flux        data            </span></span>
+<span><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;list&gt;          </span></span>
+<span><span class="co">#&gt; 1        1          20 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 2        2          20 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 3        3          23 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 4        4          27 acclimation respiration &lt;tibble [9 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 5        5          27 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; 6        6          30 acclimation respiration &lt;tibble&gt;        </span></span>
+<span><span class="co">#&gt; # ℹ 5 more variables: briereextended_2021 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   gaussianmodified_2006 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   briere1simplified_1999 &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; #   tomlinsonphillips_2015 &lt;list&gt;, lactin2_1995 &lt;list&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="custom-rtpc-parallelisation">Custom rTPC parallelisation<a class="anchor" aria-label="anchor" href="#custom-rtpc-parallelisation"></a>
@@ -413,7 +427,7 @@ where every function inside your custom function come from using
 <span><span class="co"># end time of parallel</span></span>
 <span><span class="va">custom_parallel_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; ██████████████████████████████ 100% | ETA: 0s</span></span></code></pre>
-<p>This code took 40.83 seconds to run. We can then plot all the curves
+<p>This code took 20.77 seconds to run. We can then plot all the curves
 as done in previous vignettes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new list column of for high resolution data</span></span>
@@ -444,13 +458,13 @@ as done in previous vignettes.</p>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">d_preds</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 12,000</span></span>
 <span><span class="co">#&gt; Columns: 7</span></span>
-<span><span class="co">#&gt; $ curve_id    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span></span>
-<span><span class="co">#&gt; $ growth_temp &lt;dbl&gt; 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, …</span></span>
-<span><span class="co">#&gt; $ process     &lt;chr&gt; "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", …</span></span>
-<span><span class="co">#&gt; $ flux        &lt;chr&gt; "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", …</span></span>
-<span><span class="co">#&gt; $ model_name  &lt;chr&gt; "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rez…</span></span>
-<span><span class="co">#&gt; $ temp        &lt;dbl&gt; 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.66667, 18.00000, 18.33333, 18.66667, 19.00000, 19.33333, 19.66667, 20.00000, 20.33333, 20.66667, 21.00000, 21.33333, 21.66667, …</span></span>
-<span><span class="co">#&gt; $ .fitted     &lt;dbl&gt; 0.3090878, 0.3172922, 0.3257144, 0.3343602, 0.3432355, 0.3523464, 0.3616991, 0.3713001, 0.3811559, 0.3912733, 0.4016593, 0.4123210, 0.4232657, 0.4345009, 0.4460343, 0.4578739, 0.47…</span></span></code></pre></div>
+<span><span class="co">#&gt; $ curve_id    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span></span>
+<span><span class="co">#&gt; $ growth_temp &lt;dbl&gt; 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 2…</span></span>
+<span><span class="co">#&gt; $ process     &lt;chr&gt; "acclimation", "acclimation", "acclimatio…</span></span>
+<span><span class="co">#&gt; $ flux        &lt;chr&gt; "respiration", "respiration", "respiratio…</span></span>
+<span><span class="co">#&gt; $ model_name  &lt;chr&gt; "rezende", "rezende", "rezende", "rezende…</span></span>
+<span><span class="co">#&gt; $ temp        &lt;dbl&gt; 16.00000, 16.33333, 16.66667, 17.00000, 1…</span></span>
+<span><span class="co">#&gt; $ .fitted     &lt;dbl&gt; 0.3090878, 0.3172922, 0.3257144, 0.334360…</span></span></code></pre></div>
 <p>We can the plot the predictions of each curve using
 <strong>ggplot2</strong>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -474,7 +488,7 @@ Fitted TPCs
 </p>
 </div>
 <p><span style="opacity: 0.1;font-size: small;">Built in
-170.831075s</span></p>
+76.824054s</span></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

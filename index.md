@@ -19,8 +19,8 @@ code and methods that are already optimised and available in the R
 ecosystem. Consequently, the workflows take advantage of
 [**nls.multstart**](https://github.com/padpadpadpad/nls.multstart) for
 fitting non-linear least squares regression and packages from the
-[**tidyverse**](https://www.tidyverse.org) for data manipulation,
-fitting multiple models, and visualisation. The R package
+[**tidyverse**](https://tidyverse.org/) for data manipulation, fitting
+multiple models, and visualisation. The R package
 [**car**](https://CRAN.R-project.org/package=car/car.pdf) is used
 extensively for the bootstrapping approaches.
 

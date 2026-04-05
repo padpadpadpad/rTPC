@@ -193,10 +193,10 @@ d_params <- pivot_longer(d_fits, names_to = 'model_name', values_to = 'fit', c(g
   mutate(params = map(fit, calc_params, .progress = TRUE)) %>%
   select(curve_id, growth_temp, process, flux, model_name, params) %>%
   unnest(params)
-#>  ■■■■■■■                           22% |  ETA: 13s
-#>  ■■■■■■■■■■■■■■                    42% |  ETA:  9s
-#>  ■■■■■■■■■■■■■■■■■■■               60% |  ETA:  6s
-#>  ■■■■■■■■■■■■■■■■■■■■■■■■■         79% |  ETA:  3s
+#>  ■■■■                              10% |  ETA: 14s
+#>  ■■■■■■■■■■■                       32% |  ETA: 10s
+#>  ■■■■■■■■■■■■■■■■■                 54% |  ETA:  6s
+#>  ■■■■■■■■■■■■■■■■■■■■■■■■          76% |  ETA:  3s
 #>  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   98% |  ETA:  0s
 
 glimpse(d_params)
@@ -220,4 +220,4 @@ glimpse(d_params)
 #> $ skewness              <dbl> -4.008871e-01, -1.090378e+01, -2.526351e-01, -1.…
 ```
 
-Built in 41.7926998s
+Built in 38.7265263s

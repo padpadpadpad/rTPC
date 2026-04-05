@@ -111,7 +111,7 @@ more identifiable names.
 For this example, let’s implement the Eubank model from [The
 Significance and Thermodynamics of Fluctuating Versus Static Thermal
 Environments on *Heliothis zea* Egg Development
-Rates](https://academic.oup.com/ee/article/2/4/491/2480483).
+Rates](https://doi.org/10.1093/ee/2.4.491).
 
 This model (eq4) is originally derived just for a bollworm, with some
 magic numbers:
@@ -160,7 +160,7 @@ First of all we must implement the actual model itself (i.e. the
 equation above, but as R code).
 
 ``` r
-eubank_1973 <- function(temp, topt, a, b){
+eubank_1973 <- function(temp, topt, a, b) {
   est <- a / ((temp - topt)^2 + b)
   return(est)
 }
@@ -176,11 +176,12 @@ the model uses temperature in degrees Kelvin, then we change it within
 the function, as seen in the Sharpe-Schoolfield models.
 
 ``` r
-sharpeschoolhigh_1981 <- function(temp, r_tref, e, eh, th, tref){
+sharpeschoolhigh_1981 <- function(temp, r_tref, e, eh, th, tref) {
   tref <- 273.15 + tref
   k <- 8.62e-05
-  boltzmann.term <- r_tref*exp(e/k * (1/tref - 1/(temp + 273.15)))
-  inactivation.term <- 1/(1 + exp(eh/k * (1/(th + 273.15) - 1/(temp + 273.15))))
+  boltzmann.term <- r_tref * exp(e / k * (1 / tref - 1 / (temp + 273.15)))
+  inactivation.term <- 1 /
+    (1 + exp(eh / k * (1 / (th + 273.15) - 1 / (temp + 273.15))))
   return(boltzmann.term * inactivation.term)
 }
 ```
@@ -202,8 +203,8 @@ the temperature and trait values for the given curve:
 library(rTPC)
 
 subs <- subset(chlorella_tpc, chlorella_tpc$curve_id == 1)
-d <- data.frame(x=subs$temp, y=subs$rate, stringsAsFactors = FALSE)
-d <- d[order(d$x),]
+d <- data.frame(x = subs$temp, y = subs$rate, stringsAsFactors = FALSE)
+d <- d[order(d$x), ]
 d
 #>     x          y
 #> 1  16 0.12712578
@@ -225,9 +226,9 @@ taking `d` as the only argument, and returning a named list of starting
 values. So in our case:
 
 ``` r
-eubank_1973.starting_vals <- function(d){
+eubank_1973.starting_vals <- function(d) {
   # starting values go here
-  return(c(topt=topt, a=a, b=b))
+  return(c(topt = topt, a = a, b = b))
 }
 ```
 
@@ -242,12 +243,12 @@ maximum.
 So lets put that together in our `starting_vals` function
 
 ``` r
-eubank_1973.starting_vals <- function(d){
-  rmax = max(d$y, na.rm = TRUE)  # Find max trait value
-  topt = mean(d$x[d$y == rmax])  # Find T of rmax
+eubank_1973.starting_vals <- function(d) {
+  rmax = max(d$y, na.rm = TRUE) # Find max trait value
+  topt = mean(d$x[d$y == rmax]) # Find T of rmax
   a = 300
   b = 50
-  return(c(topt=topt, a=a, b=b))
+  return(c(topt = topt, a = a, b = b))
 }
 ```
 
@@ -300,18 +301,18 @@ To put that together, here are the lower and upper limit functions for
 `eubank_1976`:
 
 ``` r
-eubank_1973.lower_lims <- function(d){
+eubank_1973.lower_lims <- function(d) {
   topt = 0
   a = 0
   b = 0
-  return(c(topt=topt, a=a, b=b))
+  return(c(topt = topt, a = a, b = b))
 }
 
-eubank_1973.upper_lims <- function(d){
+eubank_1973.upper_lims <- function(d) {
   topt = 150
   a = Inf
   b = Inf
-  return(c(topt=topt, a=a, b=b))
+  return(c(topt = topt, a = a, b = b))
 }
 ```
 
@@ -440,15 +441,17 @@ d <- subset(chlorella_tpc, curve_id == 1)
 start_vals <- get_start_vals(d$temp, d$rate, model_name = 'eubank_1973')
 
 # fit model
-mod <- nls.multstart::nls_multstart(rate~eubank_1973(temp = temp, tops, a, b),
-                                    data = d,
-                                    iter = c(3,3,3),
-                                    start_lower = start_vals - 10,
-                                    start_upper = start_vals + 10,
-                                    lower = get_lower_lims(d$temp, d$rate, model_name = 'eubank_1973'),
-                                    upper = get_upper_lims(d$temp, d$rate, model_name = 'eubank_1973'),
-                                    supp_errors = 'Y',
-                                    convergence_count = FALSE)
+mod <- nls.multstart::nls_multstart(
+  rate ~ eubank_1973(temp = temp, tops, a, b),
+  data = d,
+  iter = c(3, 3, 3),
+  start_lower = start_vals - 10,
+  start_upper = start_vals + 10,
+  lower = get_lower_lims(d$temp, d$rate, model_name = 'eubank_1973'),
+  upper = get_upper_lims(d$temp, d$rate, model_name = 'eubank_1973'),
+  supp_errors = 'Y',
+  convergence_count = FALSE
+)
 
 # get predictions
 preds <- broom::augment(mod)
@@ -464,7 +467,8 @@ ggplot(preds) +
 testthat::test_that("eubank_1973 function works", {
   testthat::expect_equal(
     round(preds$.fitted, 1),
-    c(0.2, 0.2, 0.3, 0.4, 0.6, 0.9, 1.3, 1.6, 1.4, 1, 0.7, 0.4))
+    c(0.2, 0.2, 0.3, 0.4, 0.6, 0.9, 1.3, 1.6, 1.4, 1, 0.7, 0.4)
+  )
 })
 ```
 
@@ -600,21 +604,32 @@ function in its entirety is replicated here:
 
 ``` r
 get_start_vals <- function(x, y, model_name) {
-
   mod_names <- get_model_names(returnall = TRUE)
-  model_name <- tryCatch(rlang::arg_match(model_name, mod_names), error = function(e){
-    cli::cli_abort(c("x"="Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC.",
-                     "!"="Please check the spelling of {.arg model_name}.",
-                     " "="(run {.fn rTPC::get_model_names} to see all valid names.)",
-                     ""), call=rlang::caller_env(n=4))
-  })
+  model_name <- tryCatch(
+    rlang::arg_match(model_name, mod_names),
+    error = function(e) {
+      cli::cli_abort(
+        c(
+          "x" = "Supplied {.arg model_name} ({.val {model_name}}) is not an available model in rTPC.",
+          "!" = "Please check the spelling of {.arg model_name}.",
+          " " = "(run {.fn rTPC::get_model_names} to see all valid names.)",
+          ""
+        ),
+        call = rlang::caller_env(n = 4)
+      )
+    }
+  )
 
   # make data frame
   d <- data.frame(x, y, stringsAsFactors = FALSE)
-  d <- d[order(d$x),]
+  d <- d[order(d$x), ]
 
-  start_vals <- tryCatch(do.call(paste0(model_name, ".starting_vals"), list(d=d)),
-                         error = function(e){NULL})
+  start_vals <- tryCatch(
+    do.call(paste0(model_name, ".starting_vals"), list(d = d)),
+    error = function(e) {
+      NULL
+    }
+  )
 
   return(start_vals)
 }
@@ -644,4 +659,4 @@ In the case of an entirely missing model,
 [`get_start_vals()`](https://padpadpadpad.github.io/rTPC/reference/get_start_vals.md)
 errors out early with a more specific error message.
 
-Built in 0.6102729s
+Built in 0.6911328s

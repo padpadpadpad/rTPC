@@ -345,7 +345,7 @@ uncertainty in the derived parameters, as in
   - <https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf>
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their
   Application.
-  - <https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A>
+  - <https://doi.org/10.1017/CBO9780511802843>
 - Schenker, N., & Gentleman, J. F. (2001). On judging the significance
   of differences by examining the overlap between confidence intervals.
   The American Statistician, 55(3), 182-186.
@@ -353,4 +353,4 @@ uncertainty in the derived parameters, as in
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
 
-Built in 8.1602757s
+Built in 7.8706958s

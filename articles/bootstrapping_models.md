@@ -67,9 +67,11 @@ d <- filter(bacteria_tpc, phage == 'nophage')
 ggplot(d, aes(temp, rate)) +
   geom_point(size = 2, alpha = 0.5) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 ```
 
 ![](bootstrapping_models_files/figure-html/load_data-1.png)
@@ -81,19 +83,47 @@ plot the predictions using the approaches in `vignette(rTPC)` and
 ``` r
 # fit Sharpe-Schoolfield model
 d_fit <- nest(d, data = c(temp, rate)) %>%
-  mutate(sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         # create new temperature data
-         new_data = map(data, ~tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))),
-         # predict over that data,
-         preds =  map2(sharpeschoolhigh, new_data, ~augment(.x, newdata = .y)))
+  mutate(
+    sharpeschoolhigh = map(
+      data,
+      ~ nls_multstart(
+        rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+        data = .x,
+        iter = c(3, 3, 3, 3),
+        start_lower = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ) -
+          10,
+        start_upper = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ) +
+          10,
+        lower = get_lower_lims(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ),
+        upper = get_upper_lims(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ),
+        supp_errors = 'Y',
+        convergence_count = FALSE
+      )
+    ),
+    # create new temperature data
+    new_data = map(
+      data,
+      ~ tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))
+    ),
+    # predict over that data,
+    preds = map2(sharpeschoolhigh, new_data, ~ augment(.x, newdata = .y))
+  )
 
 # unnest predictions
 d_preds <- select(d_fit, preds) %>%
@@ -104,17 +134,20 @@ ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
   geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 ```
 
-![](bootstrapping_models_files/figure-html/fit_and_plot-1.png) Here we
-have the best fit to the data. If we want confidence bands around this
-prediction, we can get those by resampling the data a number of times.
-The R package **car** contains the function **Boot()** that provides a
-wrapper for the widely used function **boot::boot()** that is tailored
-to bootstrapping regression models.
+![](bootstrapping_models_files/figure-html/fit_and_plot-1.png)
+
+Here we have the best fit to the data. If we want confidence bands
+around this prediction, we can get those by resampling the data a number
+of times. The R package **car** contains the function **Boot()** that
+provides a wrapper for the widely used function **boot::boot()** that is
+tailored to bootstrapping regression models.
 
 **nls_multstart()** is designed to fit models across a wide possible
 parameter space, but as it samples multiple start parameters for each
@@ -126,12 +159,14 @@ coefficients.
 
 ``` r
 # refit model using nlsLM
-fit_nlsLM <- minpack.lm::nlsLM(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = d,
-                        start = coef(d_fit$sharpeschoolhigh[[1]]),
-                        lower = get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
-                        weights = rep(1, times = nrow(d)))
+fit_nlsLM <- minpack.lm::nlsLM(
+  rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+  data = d,
+  start = coef(d_fit$sharpeschoolhigh[[1]]),
+  lower = get_lower_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
+  upper = get_upper_lims(d$temp, d$rate, model_name = 'sharpeschoolhigh_1981'),
+  weights = rep(1, times = nrow(d))
+)
 
 # bootstrap using case resampling
 boot1 <- Boot(fit_nlsLM, method = 'case')
@@ -144,7 +179,7 @@ head(boot1$t)
 #> [3,] 0.3036737 0.6834247 2.299114 31.08185
 #> [4,] 0.2141809 1.1114502 2.375178 27.99414
 #> [5,] 0.2840736 0.7499155 2.366436 30.70785
-#> [6,] 0.2044722 1.1842966 2.364179 27.48222
+#> [6,] 0.2044722 1.1842967 2.364180 27.48222
 ```
 
 The parameters of each bootstrapped refit are returned. All methods that
@@ -153,7 +188,7 @@ objects. This includes the **hist.boot()** to look at the distribution
 of each parameter.
 
 ``` r
-hist(boot1, layout = c(2,2))
+hist(boot1, layout = c(2, 2))
 ```
 
 ![](bootstrapping_models_files/figure-html/hist_boot-1.png)
@@ -176,29 +211,45 @@ boot1_preds <- boot1$t %>%
 
 # calculate bootstrapped confidence intervals
 boot1_conf_preds <- group_by(boot1_preds, temp) %>%
-  summarise(conf_lower = quantile(pred, 0.025),
-            conf_upper = quantile(pred, 0.975)) %>%
+  summarise(
+    conf_lower = quantile(pred, 0.025),
+    conf_upper = quantile(pred, 0.975)
+  ) %>%
   ungroup()
 
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot1_conf_preds, fill = 'blue', alpha = 0.3) +
+  geom_ribbon(
+    aes(temp, ymin = conf_lower, ymax = conf_upper),
+    boot1_conf_preds,
+    fill = 'blue',
+    alpha = 0.3
+  ) +
   geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_line(aes(temp, pred, group = iter), boot1_preds, col = 'blue', alpha = 0.007) +
+  geom_line(
+    aes(temp, pred, group = iter),
+    boot1_preds,
+    col = 'blue',
+    alpha = 0.007
+  ) +
   geom_point(aes(temp, rate), d, size = 2, alpha = 0.5) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 p1 + p2
 ```
@@ -220,34 +271,72 @@ refit the model using **nlsLM()**, then bootstrap the model using
 
 ``` r
 # load in chlorella data
-data('chlorella_tpc') 
+data('chlorella_tpc')
 
 d2 <- filter(chlorella_tpc, curve_id == 1)
 
 # fit Sharpe-Schoolfield model to raw data
 d_fit <- nest(d2, data = c(temp, rate)) %>%
-  mutate(sharpeschoolhigh = map(data, ~nls_multstart(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = .x,
-                        iter = c(3,3,3,3),
-                        start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') - 10,
-                        start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981') + 10,
-                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'sharpeschoolhigh_1981'),
-                        supp_errors = 'Y',
-                        convergence_count = FALSE)),
-         # create new temperature data
-         new_data = map(data, ~tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))),
-         # predict over that data,
-         preds =  map2(sharpeschoolhigh, new_data, ~augment(.x, newdata = .y)))
+  mutate(
+    sharpeschoolhigh = map(
+      data,
+      ~ nls_multstart(
+        rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+        data = .x,
+        iter = c(3, 3, 3, 3),
+        start_lower = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ) -
+          10,
+        start_upper = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ) +
+          10,
+        lower = get_lower_lims(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ),
+        upper = get_upper_lims(
+          .x$temp,
+          .x$rate,
+          model_name = 'sharpeschoolhigh_1981'
+        ),
+        supp_errors = 'Y',
+        convergence_count = FALSE
+      )
+    ),
+    # create new temperature data
+    new_data = map(
+      data,
+      ~ tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))
+    ),
+    # predict over that data,
+    preds = map2(sharpeschoolhigh, new_data, ~ augment(.x, newdata = .y))
+  )
 
 # refit model using nlsLM
-fit_nlsLM2 <- nlsLM(rate~sharpeschoolhigh_1981(temp = temp, r_tref,e,eh,th, tref = 15),
-                        data = d2,
-                        start = coef(d_fit$sharpeschoolhigh[[1]]),
-                        lower = get_lower_lims(d2$temp, d2$rate, model_name = 'sharpeschoolhigh_1981'),
-                        upper = get_upper_lims(d2$temp, d2$rate, model_name = 'sharpeschoolhigh_1981'),
-                        control = nls.lm.control(maxiter=500),
-                        weights = rep(1, times = nrow(d2)))
+fit_nlsLM2 <- nlsLM(
+  rate ~ sharpeschoolhigh_1981(temp = temp, r_tref, e, eh, th, tref = 15),
+  data = d2,
+  start = coef(d_fit$sharpeschoolhigh[[1]]),
+  lower = get_lower_lims(
+    d2$temp,
+    d2$rate,
+    model_name = 'sharpeschoolhigh_1981'
+  ),
+  upper = get_upper_lims(
+    d2$temp,
+    d2$rate,
+    model_name = 'sharpeschoolhigh_1981'
+  ),
+  control = nls.lm.control(maxiter = 500),
+  weights = rep(1, times = nrow(d2))
+)
 
 # bootstrap using case resampling
 boot2 <- Boot(fit_nlsLM2, method = 'case')
@@ -278,29 +367,45 @@ boot2_preds <- boot2$t %>%
 
 # calculate bootstrapped confidence intervals
 boot2_conf_preds <- group_by(boot2_preds, temp) %>%
-  summarise(conf_lower = quantile(pred, 0.025),
-            conf_upper = quantile(pred, 0.975)) %>%
+  summarise(
+    conf_lower = quantile(pred, 0.025),
+    conf_upper = quantile(pred, 0.975)
+  ) %>%
   ungroup()
 
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot2_conf_preds, fill = 'blue', alpha = 0.3) +
+  geom_ribbon(
+    aes(temp, ymin = conf_lower, ymax = conf_upper),
+    boot2_conf_preds,
+    fill = 'blue',
+    alpha = 0.3
+  ) +
   geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_line(aes(temp, pred, group = iter), boot2_preds, col = 'blue', alpha = 0.007) +
+  geom_line(
+    aes(temp, pred, group = iter),
+    boot2_preds,
+    col = 'blue',
+    alpha = 0.007
+  ) +
   geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 p1 + p2
 ```
@@ -364,29 +469,45 @@ boot3_preds <- boot3$t %>%
 
 # calculate bootstrapped confidence intervals
 boot3_conf_preds <- group_by(boot3_preds, temp) %>%
-  summarise(conf_lower = quantile(pred, 0.025),
-            conf_upper = quantile(pred, 0.975)) %>%
+  summarise(
+    conf_lower = quantile(pred, 0.025),
+    conf_upper = quantile(pred, 0.975)
+  ) %>%
   ungroup()
 
 # plot bootstrapped CIs
 p1 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot3_conf_preds, fill = 'blue', alpha = 0.3) +
+  geom_ribbon(
+    aes(temp, ymin = conf_lower, ymax = conf_upper),
+    boot3_conf_preds,
+    fill = 'blue',
+    alpha = 0.3
+  ) +
   geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 # plot bootstrapped predictions
 p2 <- ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_line(aes(temp, pred, group = iter), boot3_preds, col = 'blue', alpha = 0.007) +
+  geom_line(
+    aes(temp, pred, group = iter),
+    boot3_preds,
+    col = 'blue',
+    alpha = 0.007
+  ) +
   geom_point(aes(temp, rate), d2, size = 2) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Growth rate',
-       title = 'Growth rate across temperatures')
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Growth rate',
+    title = 'Growth rate across temperatures'
+  )
 
 p1 + p2
 ```
@@ -405,6 +526,7 @@ intervals. We use BCa here, and we will calculate all CIs on the two
 models done previously in this vignette. First with the bacteria TPC.
 
 ``` r
+
 # First for the bacteria
 
 # get parameters of fitted model
@@ -444,16 +566,33 @@ ci_bact <- bind_rows(ci_bact1, ci_bact2, ci_bact3, ci_bact4) %>%
 #> Joining with `by = join_by(param)`
 
 # plot
-ggplot(ci_bact, aes(forcats::fct_relevel(method, c('profile', 'asymptotic')), estimate, col = method)) +
-  geom_hline(aes(yintercept = conf_lower), linetype = 2, filter(ci_bact, method == 'profile')) +
-  geom_hline(aes(yintercept = conf_upper), linetype = 2, filter(ci_bact, method == 'profile')) +
+ggplot(
+  ci_bact,
+  aes(
+    forcats::fct_relevel(method, c('profile', 'asymptotic')),
+    estimate,
+    col = method
+  )
+) +
+  geom_hline(
+    aes(yintercept = conf_lower),
+    linetype = 2,
+    filter(ci_bact, method == 'profile')
+  ) +
+  geom_hline(
+    aes(yintercept = conf_upper),
+    linetype = 2,
+    filter(ci_bact, method == 'profile')
+  ) +
   geom_point(size = 4) +
   geom_linerange(aes(ymin = conf_lower, ymax = conf_upper)) +
   theme_bw() +
   facet_wrap(~param, scales = 'free') +
   scale_x_discrete('', labels = function(x) stringr::str_wrap(x, width = 10)) +
-  labs(title = 'Calculation of confidence intervals for model parameters',
-       subtitle = 'For the bacteria TPC; dashed lines are CI of profiling method')
+  labs(
+    title = 'Calculation of confidence intervals for model parameters',
+    subtitle = 'For the bacteria TPC; dashed lines are CI of profiling method'
+  )
 ```
 
 ![](bootstrapping_models_files/figure-html/confint_bact-1.png)
@@ -486,9 +625,12 @@ ci_chlor2 <- nlstools::confint2(fit_nlsLM2, method = 'profile')
 #> Error in `prof$getProfile()`:
 #> ! number of iterations exceeded maximum of 50
 # profiling method fails
-ci_chlor2 <- mutate(ci_chlor1, method = 'profile',
-                    conf_lower = NA,
-                    conf_upper = NA)
+ci_chlor2 <- mutate(
+  ci_chlor1,
+  method = 'profile',
+  conf_lower = NA,
+  conf_upper = NA
+)
 
 # CIs from case resampling
 ci_chlor3 <- confint(boot2, method = 'bca') %>%
@@ -508,26 +650,36 @@ ci_chlor <- bind_rows(ci_chlor1, ci_chlor2, ci_chlor3, ci_chlor4) %>%
   full_join(., param_chlor)
 #> Joining with `by = join_by(param)`
 
-ggplot(ci_chlor, aes(forcats::fct_relevel(method, c('profile', 'asymptotic')), estimate, col = method)) +
+ggplot(
+  ci_chlor,
+  aes(
+    forcats::fct_relevel(method, c('profile', 'asymptotic')),
+    estimate,
+    col = method
+  )
+) +
   geom_point(size = 4) +
   geom_linerange(aes(ymin = conf_lower, ymax = conf_upper)) +
   theme_bw() +
   facet_wrap(~param, scales = 'free') +
   scale_x_discrete('', labels = function(x) stringr::str_wrap(x, width = 10)) +
-  labs(title = 'Calculation of confidence intervals for model parameters',
-       subtitle = 'For the chlorella TPC; profile method failes')
+  labs(
+    title = 'Calculation of confidence intervals for model parameters',
+    subtitle = 'For the chlorella TPC; profile method failes'
+  )
 ```
 
-![](bootstrapping_models_files/figure-html/confint_chlor-1.png) For this
-curve, the profiling method failed and the asymptotic method has very
-wide confidence intervals for `eh`. Consequently, it is hard to know how
-the bootstrapping methods do as these cannot be benchmarked against the
-profiling method. Even so, we can see that the intervals for `eh` and
-`th` for the case resampling method are very wide (as can be seen from
-the plot of the model predictions earlier). Meanwhile, the residual
-resampling method again gives more symmetric estimates, but we don’t
-know if they are conservative (give narrower CIs) which would increase
-the rate of false positives if used for inference.
+![](bootstrapping_models_files/figure-html/confint_chlor-1.png)
+
+For this curve, the profiling method failed and the asymptotic method
+has very wide confidence intervals for `eh`. Consequently, it is hard to
+know how the bootstrapping methods do as these cannot be benchmarked
+against the profiling method. Even so, we can see that the intervals for
+`eh` and `th` for the case resampling method are very wide (as can be
+seen from the plot of the model predictions earlier). Meanwhile, the
+residual resampling method again gives more symmetric estimates, but we
+don’t know if they are conservative (give narrower CIs) which would
+increase the rate of false positives if used for inference.
 
 We can also bootstrap confidence intervals for the extra parameters
 calculated in **calc_params()**. We will do this for the bacteria TPC
@@ -535,15 +687,23 @@ and the case resample.
 
 ``` r
 extra_params <- calc_params(fit_nlsLM) %>%
-  pivot_longer(everything(), names_to =  'param', values_to = 'estimate')
+  pivot_longer(everything(), names_to = 'param', values_to = 'estimate')
 
-ci_extra_params <- Boot(fit_nlsLM, f = function(x){unlist(calc_params(x))}, labels = names(calc_params(fit_nlsLM)), R = 200, method = 'case') %>%
+ci_extra_params <- Boot(
+  fit_nlsLM,
+  f = function(x) {
+    unlist(calc_params(x))
+  },
+  labels = names(calc_params(fit_nlsLM)),
+  R = 200,
+  method = 'case'
+) %>%
   confint(., method = 'bca') %>%
   as.data.frame() %>%
   rename(conf_lower = 1, conf_upper = 2) %>%
   rownames_to_column(., var = 'param') %>%
   mutate(method = 'case bootstrap')
-  
+
 ci_extra_params <- left_join(ci_extra_params, extra_params)
 #> Joining with `by = join_by(param)`
 
@@ -553,18 +713,22 @@ ggplot(ci_extra_params, aes(param, estimate)) +
   theme_bw() +
   facet_wrap(~param, scales = 'free') +
   scale_x_discrete('') +
-  labs(title = 'Calculation of confidence intervals for extra parameters',
-       subtitle = 'For the bacteria TPC; using case resampling')
+  labs(
+    title = 'Calculation of confidence intervals for extra parameters',
+    subtitle = 'For the bacteria TPC; using case resampling'
+  )
 ```
 
-![](bootstrapping_models_files/figure-html/ci_calc_param-1.png) You can
-see that the confidence intervals around certain parameters, such as
-`e`, `eh`, `q10`, and `skewness` are very asymmetrical. This is because
-they are modelled from a subsample of the original dataset (for example,
-`e` is calculated from fitting a modified Boltzmann equation to all the
-points at or below the optimum temperature as calculated from the model
-predictions). If interested in these parameters, we recommend using
-mathematical models that contain them explicitly in the formulation.
+![](bootstrapping_models_files/figure-html/ci_calc_param-1.png)
+
+You can see that the confidence intervals around certain parameters,
+such as `e`, `eh`, `q10`, and `skewness` are very asymmetrical. This is
+because they are modelled from a subsample of the original dataset (for
+example, `e` is calculated from fitting a modified Boltzmann equation to
+all the points at or below the optimum temperature as calculated from
+the model predictions). If interested in these parameters, we recommend
+using mathematical models that contain them explicitly in the
+formulation.
 
 ------------------------------------------------------------------------
 
@@ -584,8 +748,8 @@ of the paper
 - John Fox (author of car) on bootstrapping regression models in R
   - <https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf>
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their
-  Application. -
-  <https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A>
+  Application.
+  - <https://doi.org/10.1017/CBO9780511802843>
 - Schenker, N., & Gentleman, J. F. (2001). On judging the significance
   of differences by examining the overlap between confidence intervals.
   The American Statistician, 55(3), 182-186.
@@ -593,4 +757,4 @@ of the paper
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
 
-Built in 37.7648637s
+Built in 34.4887683s

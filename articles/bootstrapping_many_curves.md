@@ -45,20 +45,43 @@ d <- filter(chlorella_tpc, curve_id <= 3)
 
 # fit
 d_fits <- nest(d, data = c(rate, temp)) %>%
-  mutate(gaussian = map(data, ~nls_multstart(rate ~ gaussian_1987(temp, rmax, topt, a),
-                                             data = .x,
-                                             iter = c(3,3,3),
-                                             start_lower = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') - 1,
-                                             start_upper = get_start_vals(.x$temp, .x$rate, model_name = 'gaussian_1987') + 1,
-                                             lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                                             upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                                             supp_errors = 'Y',
-                                             convergence_count = FALSE)))
+  mutate(
+    gaussian = map(
+      data,
+      ~ nls_multstart(
+        rate ~ gaussian_1987(temp, rmax, topt, a),
+        data = .x,
+        iter = c(3, 3, 3),
+        start_lower = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'gaussian_1987'
+        ) -
+          1,
+        start_upper = get_start_vals(
+          .x$temp,
+          .x$rate,
+          model_name = 'gaussian_1987'
+        ) +
+          1,
+        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
+        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
+        supp_errors = 'Y',
+        convergence_count = FALSE
+      )
+    )
+  )
 
 # create high resolution predictions
-d_preds <- mutate(d_fits, new_data = map(data, ~tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100)))) %>%
+d_preds <- mutate(
+  d_fits,
+  new_data = map(
+    data,
+    ~ tibble(temp = seq(min(.x$temp), max(.x$temp), length.out = 100))
+  )
+) %>%
   select(., -data) %>%
-  mutate(preds = map2(gaussian, new_data, ~augment(.x, newdata = .y))) %>%
+  mutate(preds = map2(gaussian, new_data, ~ augment(.x, newdata = .y))) %>%
   select(curve_id, growth_temp, process, flux, preds) %>%
   unnest(preds)
 
@@ -67,9 +90,11 @@ ggplot(d, aes(temp, rate)) +
   geom_point(size = 2) +
   geom_line(aes(temp, .fitted), d_preds) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Metabolic rate',
-       title = 'Metabolic rate across temperatures') +
+  labs(
+    x = 'Temperature (ºC)',
+    y = 'Metabolic rate',
+    title = 'Metabolic rate across temperatures'
+  ) +
   facet_wrap(~curve_id)
 ```
 
@@ -89,11 +114,20 @@ Extracting the coefficients and refitting the models using
 d_fits <- mutate(d_fits, coefs = map(gaussian, coef))
 
 # fit with nlsLM instead
-d_fits <- mutate(d_fits, nls_fit = map2(data, coefs, ~nlsLM(rate ~ gaussian_1987(temp, rmax, topt, a),
-                                        data = .x,
-                                        start = .y,
-                                        lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
-                                        upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'))))
+d_fits <- mutate(
+  d_fits,
+  nls_fit = map2(
+    data,
+    coefs,
+    ~ nlsLM(
+      rate ~ gaussian_1987(temp, rmax, topt, a),
+      data = .x,
+      start = .y,
+      lower = get_lower_lims(.x$temp, .x$rate, model_name = 'gaussian_1987'),
+      upper = get_upper_lims(.x$temp, .x$rate, model_name = 'gaussian_1987')
+    )
+  )
+)
 
 head(d_fits)
 #> # A tibble: 3 × 8
@@ -119,7 +153,10 @@ However, using **car::Boot()** currently gives an error.
 
 ``` r
 # try and bootstrap # THIS BREAKS
-d_fits <- mutate(d_fits, bootstrap = map(nls_fit, ~Boot(.x, method = 'residual')))
+d_fits <- mutate(
+  d_fits,
+  bootstrap = map(nls_fit, ~ Boot(.x, method = 'residual'))
+)
 #> Error in `mutate()`:
 #> ℹ In argument: `bootstrap = map(nls_fit, ~Boot(.x, method =
 #>   "residual"))`.
@@ -153,13 +190,23 @@ approach and have found it powerful numerous times now.
 d_fits <- mutate(d_fits, bootstrap = list(rep(NA, n())))
 
 # run for loop to bootstrap each refitted model
-for(i in 1:nrow(d_fits)){
+for (i in 1:nrow(d_fits)) {
   temp_data <- d_fits$data[[i]]
-  temp_fit <- nlsLM(rate ~ gaussian_1987(temp, rmax, topt, a),
-               data = temp_data,
-               start = d_fits$coefs[[i]],
-               lower = get_lower_lims(temp_data$temp, temp_data$rate, model_name = 'gaussian_1987'),
-               upper = get_upper_lims(temp_data$temp, temp_data$rate, model_name = 'gaussian_1987'))
+  temp_fit <- nlsLM(
+    rate ~ gaussian_1987(temp, rmax, topt, a),
+    data = temp_data,
+    start = d_fits$coefs[[i]],
+    lower = get_lower_lims(
+      temp_data$temp,
+      temp_data$rate,
+      model_name = 'gaussian_1987'
+    ),
+    upper = get_upper_lims(
+      temp_data$temp,
+      temp_data$rate,
+      model_name = 'gaussian_1987'
+    )
+  )
   boot <- Boot(temp_fit, method = 'residual')
   d_fits$bootstrap[[i]] <- boot
   rm(list = c('temp_fit', 'temp_data', 'boot'))
@@ -191,32 +238,41 @@ job as in
 d_fits <- mutate(d_fits, output_boot = map(bootstrap, function(x) x$t))
 
 # calculate predictions with a gnarly written function
-d_fits <- mutate(d_fits, preds = map2(output_boot, data, function(x, y){
-  temp <- as.data.frame(x) %>%
-    drop_na() %>%
-    mutate(iter = 1:n()) %>%
-    group_by_all() %>%
-    do(data.frame(temp = seq(min(y$temp), max(y$temp), length.out = 100))) %>%
-    ungroup() %>%
-    mutate(pred = gaussian_1987(temp, rmax, topt, a))
-  return(temp)
-}))
+d_fits <- mutate(
+  d_fits,
+  preds = map2(output_boot, data, function(x, y) {
+    temp <- as.data.frame(x) %>%
+      drop_na() %>%
+      mutate(iter = 1:n()) %>%
+      group_by_all() %>%
+      do(data.frame(temp = seq(min(y$temp), max(y$temp), length.out = 100))) %>%
+      ungroup() %>%
+      mutate(pred = gaussian_1987(temp, rmax, topt, a))
+    return(temp)
+  })
+)
 
 # select, unnest and calculate 95% CIs of predictions
 boot_conf_preds <- select(d_fits, curve_id, preds) %>%
   unnest(preds) %>%
   group_by(curve_id, temp) %>%
-  summarise(conf_lower = quantile(pred, 0.025),
-            conf_upper = quantile(pred, 0.975),
-            .groups = 'drop')
+  summarise(
+    conf_lower = quantile(pred, 0.025),
+    conf_upper = quantile(pred, 0.975),
+    .groups = 'drop'
+  )
 
 ggplot() +
   geom_line(aes(temp, .fitted), d_preds, col = 'blue') +
-  geom_ribbon(aes(temp, ymin = conf_lower, ymax = conf_upper), boot_conf_preds, fill = 'blue', alpha = 0.3) +
+  geom_ribbon(
+    aes(temp, ymin = conf_lower, ymax = conf_upper),
+    boot_conf_preds,
+    fill = 'blue',
+    alpha = 0.3
+  ) +
   geom_point(aes(temp, rate), d, size = 2) +
   theme_bw(base_size = 12) +
-  labs(x = 'Temperature (ºC)',
-       y = 'Rate') +
+  labs(x = 'Temperature (ºC)', y = 'Rate') +
   facet_wrap(~curve_id)
 ```
 
@@ -228,18 +284,23 @@ parameters explicitly modelled in the regression.
 ``` r
 # get tidied parameters using broom::tidy
 # get confidence intervals of parameters
-d_fits <- mutate(d_fits, params = map(nls_fit, broom::tidy),
-                 cis = map(bootstrap, function(x){
-                   temp <- confint(x, method = 'bca') %>%
-                     as.data.frame() %>%
-                     rename(conf_lower = 1, conf_upper = 2) %>%
-                     rownames_to_column(., var = 'term')
-                   return(temp)
-                   }))
+d_fits <- mutate(
+  d_fits,
+  params = map(nls_fit, broom::tidy),
+  cis = map(bootstrap, function(x) {
+    temp <- confint(x, method = 'bca') %>%
+      as.data.frame() %>%
+      rename(conf_lower = 1, conf_upper = 2) %>%
+      rownames_to_column(., var = 'term')
+    return(temp)
+  })
+)
 
-# join parameter and confidence intervals in the same dataset 
-left_join(select(d_fits, curve_id, growth_temp, flux, params) %>% unnest(params),
-          select(d_fits, curve_id, growth_temp, flux, cis) %>% unnest(cis)) %>%
+# join parameter and confidence intervals in the same dataset
+left_join(
+  select(d_fits, curve_id, growth_temp, flux, params) %>% unnest(params),
+  select(d_fits, curve_id, growth_temp, flux, cis) %>% unnest(cis)
+) %>%
   ggplot(., aes(curve_id, estimate)) +
   geom_point(size = 4) +
   geom_linerange(aes(ymin = conf_lower, ymax = conf_upper)) +
@@ -264,18 +325,36 @@ explicitly included in the model formula anyway.
 d_fits <- mutate(d_fits, ci_extra_params = list(rep(NA, n())))
 
 # run for loop to bootstrap extra params from each model
-for(i in 1:nrow(d_fits)){
+for (i in 1:nrow(d_fits)) {
   temp_data <- d_fits$data[[i]]
-  temp_fit <- nlsLM(rate ~ gaussian_1987(temp, rmax, topt, a),
-               data = temp_data,
-               start = d_fits$coefs[[i]],
-               lower = get_lower_lims(temp_data$temp, temp_data$rate, model_name = 'gaussian_1987'),
-               upper = get_upper_lims(temp_data$temp, temp_data$rate, model_name = 'gaussian_1987'))
-  boot <- Boot(temp_fit, f = function(x){unlist(calc_params(x))}, labels = names(calc_params(temp_fit)), R = 20, method = 'case') %>%
-  confint(., method = 'bca') %>%
-  as.data.frame() %>%
-  rename(conf_lower = 1, conf_upper = 2) %>%
-  rownames_to_column(., var = 'param')
+  temp_fit <- nlsLM(
+    rate ~ gaussian_1987(temp, rmax, topt, a),
+    data = temp_data,
+    start = d_fits$coefs[[i]],
+    lower = get_lower_lims(
+      temp_data$temp,
+      temp_data$rate,
+      model_name = 'gaussian_1987'
+    ),
+    upper = get_upper_lims(
+      temp_data$temp,
+      temp_data$rate,
+      model_name = 'gaussian_1987'
+    )
+  )
+  boot <- Boot(
+    temp_fit,
+    f = function(x) {
+      unlist(calc_params(x))
+    },
+    labels = names(calc_params(temp_fit)),
+    R = 20,
+    method = 'case'
+  ) %>%
+    confint(., method = 'bca') %>%
+    as.data.frame() %>%
+    rename(conf_lower = 1, conf_upper = 2) %>%
+    rownames_to_column(., var = 'param')
   d_fits$ci_extra_params[[i]] <- boot
   rm(list = c('temp_fit', 'temp_data', 'boot'))
 }
@@ -287,10 +366,20 @@ for(i in 1:nrow(d_fits)){
 #>  Number of bootstraps was 14 out of 20 attempted
 
 # calculate extra params for each model and put in long format to begin with
-d_fits <- mutate(d_fits, extra_params = map(nls_fit, function(x){calc_params(x) %>% pivot_longer(everything(), names_to =  'param', values_to = 'estimate')}))
+d_fits <- mutate(
+  d_fits,
+  extra_params = map(nls_fit, function(x) {
+    calc_params(x) %>%
+      pivot_longer(everything(), names_to = 'param', values_to = 'estimate')
+  })
+)
 
-left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(extra_params),
-          select(d_fits, curve_id, growth_temp, flux, ci_extra_params) %>% unnest(ci_extra_params)) %>%
+left_join(
+  select(d_fits, curve_id, growth_temp, flux, extra_params) %>%
+    unnest(extra_params),
+  select(d_fits, curve_id, growth_temp, flux, ci_extra_params) %>%
+    unnest(ci_extra_params)
+) %>%
   ggplot(., aes(as.character(curve_id), estimate)) +
   geom_point(size = 4) +
   geom_linerange(aes(ymin = conf_lower, ymax = conf_upper)) +
@@ -308,8 +397,8 @@ left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(e
 - John Fox (author of car) on bootstrapping regression models in R
   - <https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf>
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their
-  Application. -
-  <https://www.cambridge.org/core/books/bootstrap-methods-and-their-application/ED2FD043579F27952363566DC09CBD6A>
+  Application.
+  - <https://doi.org/10.1017/CBO9780511802843>
 - Schenker, N., & Gentleman, J. F. (2001). On judging the significance
   of differences by examining the overlap between confidence intervals.
   The American Statistician, 55(3), 182-186.
@@ -317,4 +406,4 @@ left_join(select(d_fits, curve_id, growth_temp, flux, extra_params) %>% unnest(e
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
 
-Built in 17.9915781s
+Built in 16.4809084s

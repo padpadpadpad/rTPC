@@ -165,7 +165,7 @@ fit
 #>  0.2595  0.5826 14.2031 43.5531 
 #>  residual sum-of-squares: 0.3144
 #> 
-#> Number of iterations to convergence: 21 
+#> Number of iterations to convergence: 43 
 #> Achieved convergence tolerance: 1.49e-08
 ```
 
@@ -213,4 +213,4 @@ ggplot(d, aes(temp, rate)) +
 
 ![](rTPC_files/figure-html/pred_and_plot-1.png)
 
-Built in 2.9005938s
+Built in 2.8520765s

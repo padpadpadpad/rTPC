@@ -41,7 +41,7 @@ However, as your datasets get larger (e.g. tens, hundreds, or thousands
 of TPCs) this could take a long time to run.
 
 Excitingly,
-[**purrr**](https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/)
+[**purrr**](https://tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/)
 now supports parallelisation when combined with
 [**mirai**](https://mirai.r-lib.org/). This is the reason why we
 recommend using a single **purrr::map()** call that encompasses all
@@ -164,8 +164,8 @@ parallel_end <- Sys.time()
 
     #> ██████████████████████████████ 100% | ETA: 0s
 
-The non parallel code took 90 seconds, whereas the parallel code took 36
-seconds, which is 2.5 times faster. That is a serious speed up!
+The non parallel code took 36 seconds, whereas the parallel code took 16
+seconds, which is 2.2 times faster. That is a serious speed up!
 
 The model fitting is likely to be the most time consuming part of the
 pipeline, so it is unlikely you will need to parallelise any of the
@@ -176,33 +176,47 @@ We can have a look at both objects to see that they are the same.
 ``` r
 # look at colnames
 colnames(d_mods_nopara)
-#>  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" 
-#>  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"
+#>  [1] "curve_id"               "growth_temp"           
+#>  [3] "process"                "flux"                  
+#>  [5] "data"                   "briereextended_2021"   
+#>  [7] "gaussianmodified_2006"  "briere1simplified_1999"
+#>  [9] "tomlinsonphillips_2015" "lactin2_1995"
 colnames(d_mods_para)
-#>  [1] "curve_id"               "growth_temp"            "process"                "flux"                   "data"                   "briereextended_2021"    "gaussianmodified_2006" 
-#>  [8] "briere1simplified_1999" "tomlinsonphillips_2015" "lactin2_1995"
+#>  [1] "curve_id"               "growth_temp"           
+#>  [3] "process"                "flux"                  
+#>  [5] "data"                   "briereextended_2021"   
+#>  [7] "gaussianmodified_2006"  "briere1simplified_1999"
+#>  [9] "tomlinsonphillips_2015" "lactin2_1995"
 
 # look at first six rows
 head(d_mods_nopara)
 #> # A tibble: 6 × 10
-#>   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995
-#>      <dbl>       <dbl> <chr>       <chr>       <list>            <list>              <list>                <list>                 <list>                 <list>      
-#> 1        1          20 acclimation respiration <tibble [12 × 2]> <nls>               <NULL>                <nls>                  <NULL>                 <nls>       
-#> 2        2          20 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 3        3          23 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>       
-#> 4        4          27 acclimation respiration <tibble [9 × 2]>  <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 5        5          27 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 6        6          30 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>
+#>   curve_id growth_temp process     flux        data            
+#>      <dbl>       <dbl> <chr>       <chr>       <list>          
+#> 1        1          20 acclimation respiration <tibble>        
+#> 2        2          20 acclimation respiration <tibble>        
+#> 3        3          23 acclimation respiration <tibble>        
+#> 4        4          27 acclimation respiration <tibble [9 × 2]>
+#> 5        5          27 acclimation respiration <tibble>        
+#> 6        6          30 acclimation respiration <tibble>        
+#> # ℹ 5 more variables: briereextended_2021 <list>,
+#> #   gaussianmodified_2006 <list>,
+#> #   briere1simplified_1999 <list>,
+#> #   tomlinsonphillips_2015 <list>, lactin2_1995 <list>
 head(d_mods_para)
 #> # A tibble: 6 × 10
-#>   curve_id growth_temp process     flux        data              briereextended_2021 gaussianmodified_2006 briere1simplified_1999 tomlinsonphillips_2015 lactin2_1995
-#>      <dbl>       <dbl> <chr>       <chr>       <list>            <list>              <list>                <list>                 <list>                 <list>      
-#> 1        1          20 acclimation respiration <tibble [12 × 2]> <nls>               <NULL>                <nls>                  <NULL>                 <nls>       
-#> 2        2          20 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 3        3          23 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>       
-#> 4        4          27 acclimation respiration <tibble [9 × 2]>  <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 5        5          27 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <nls>                  <nls>       
-#> 6        6          30 acclimation respiration <tibble [12 × 2]> <nls>               <nls>                 <nls>                  <NULL>                 <nls>
+#>   curve_id growth_temp process     flux        data            
+#>      <dbl>       <dbl> <chr>       <chr>       <list>          
+#> 1        1          20 acclimation respiration <tibble>        
+#> 2        2          20 acclimation respiration <tibble>        
+#> 3        3          23 acclimation respiration <tibble>        
+#> 4        4          27 acclimation respiration <tibble [9 × 2]>
+#> 5        5          27 acclimation respiration <tibble>        
+#> 6        6          30 acclimation respiration <tibble>        
+#> # ℹ 5 more variables: briereextended_2021 <list>,
+#> #   gaussianmodified_2006 <list>,
+#> #   briere1simplified_1999 <list>,
+#> #   tomlinsonphillips_2015 <list>, lactin2_1995 <list>
 ```
 
 ## Custom rTPC parallelisation
@@ -317,7 +331,7 @@ custom_parallel_end <- Sys.time()
 
     #> ██████████████████████████████ 100% | ETA: 0s
 
-This code took 40.83 seconds to run. We can then plot all the curves as
+This code took 20.77 seconds to run. We can then plot all the curves as
 done in previous vignettes.
 
 ``` r
@@ -349,13 +363,13 @@ d_preds <- mutate(
 glimpse(d_preds)
 #> Rows: 12,000
 #> Columns: 7
-#> $ curve_id    <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-#> $ growth_temp <dbl> 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, …
-#> $ process     <chr> "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", "acclimation", …
-#> $ flux        <chr> "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", "respiration", …
-#> $ model_name  <chr> "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rezende", "rez…
-#> $ temp        <dbl> 16.00000, 16.33333, 16.66667, 17.00000, 17.33333, 17.66667, 18.00000, 18.33333, 18.66667, 19.00000, 19.33333, 19.66667, 20.00000, 20.33333, 20.66667, 21.00000, 21.33333, 21.66667, …
-#> $ .fitted     <dbl> 0.3090878, 0.3172922, 0.3257144, 0.3343602, 0.3432355, 0.3523464, 0.3616991, 0.3713001, 0.3811559, 0.3912733, 0.4016593, 0.4123210, 0.4232657, 0.4345009, 0.4460343, 0.4578739, 0.47…
+#> $ curve_id    <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+#> $ growth_temp <dbl> 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 2…
+#> $ process     <chr> "acclimation", "acclimation", "acclimatio…
+#> $ flux        <chr> "respiration", "respiration", "respiratio…
+#> $ model_name  <chr> "rezende", "rezende", "rezende", "rezende…
+#> $ temp        <dbl> 16.00000, 16.33333, 16.66667, 17.00000, 1…
+#> $ .fitted     <dbl> 0.3090878, 0.3172922, 0.3257144, 0.334360…
 ```
 
 We can the plot the predictions of each curve using **ggplot2**.
@@ -381,4 +395,4 @@ ggplot(d_preds) +
 
 Fitted TPCs
 
-Built in 170.831075s
+Built in 76.824054s
