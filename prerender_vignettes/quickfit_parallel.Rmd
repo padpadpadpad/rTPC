@@ -47,7 +47,7 @@ head(d)
 
 In our previous vignettes, we have shown how to fit many models to many curves using **rTPC**, **nls.multstart()**, and the **tidyverse**. However, as your datasets get larger (e.g. tens, hundreds, or thousands of TPCs) this could take a long time to run.
 
-Excitingly, [**purrr**](https://www.tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/) now supports parallelisation when combined with [**mirai**](https://mirai.r-lib.org/). This is the reason why we recommend using a single **purrr::map()** call that encompasses all models, as it integrates much better with **mirai** and allows for parallelisation.
+Excitingly, [**purrr**](https://tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/) now supports parallelisation when combined with [**mirai**](https://mirai.r-lib.org/). This is the reason why we recommend using a single **purrr::map()** call that encompasses all models, as it integrates much better with **mirai** and allows for parallelisation.
 
 Even more excitingly, we have functions in **rTPC** that allow you to easily fit one - **quickfit_tpc()** - or multiple - **quickfit_multi_tpcs()**. These functions make some assumptions about the start values and are not as customisable as each individual function, so we still recommend writing your own functions, but these are super useful if you want a quick idea of a few curves. Hats off to Francis Windram for the amazing additions. We will use them here to demonstrate how to parallelise fitting many models to many curves.
 
