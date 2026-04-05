@@ -1,8 +1,13 @@
-# rTPC 1.1.0 - 10/10/2025
+# rTPC 1.1.0 - 05/05/2026
 
-* Prepared for CRAN submission.
-* Updated vignettes.
-* Added new vignette on parallelising rTPC.
+* added several new models
+* reshaped how start values and limits are called
+* updated the README and vignettes to reflect the changes
+* updated NEWS.md
+* updated the versioning
+* updated all links and urls to reflect best practice (DOIs instead of links, fixing identified issues)
+* added vignette about parallelisation
+* added internal function for pre-rendering vignettes that take a long time
 * Bump R dependency to >= 4.1 due to use of new-style pipes.
 
 # rTPC 1.0.7 08/01/2024
