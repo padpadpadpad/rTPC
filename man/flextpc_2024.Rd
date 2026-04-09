@@ -38,6 +38,7 @@ Limits in \code{get_lower_lims} and \code{get_upper_lims} are derived from the d
 Generally this model requires larger iter values in nls_multstart to fit reliably.
 }
 \examples{
+\donttest{
 # load in ggplot
 library(ggplot2)
 
@@ -70,6 +71,7 @@ ggplot(preds) +
 geom_point(aes(temp, rate), d) +
 geom_line(aes(temp, .fitted), col = 'blue') +
 theme_bw()
+}
 }
 \references{
 Cruz-Loya M, Mordecai EA, Savage VM. A flexible model for thermal performance curves. bioRxiv [Preprint]. 2024

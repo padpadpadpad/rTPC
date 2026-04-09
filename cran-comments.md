@@ -2,6 +2,7 @@
 
 This is a major resubmission of rTPC v1.1.0 to CRAN. In this version we have:
 
+- fixed additional notes
 - added several new models
 - reshaped how start values and limits are called
 - updated the README and vignettes to reflect the changes
@@ -10,7 +11,7 @@ This is a major resubmission of rTPC v1.1.0 to CRAN. In this version we have:
 - updated all links and urls to reflect best practice (DOIs instead of links, fixing identified issues)
 - added vignette about parallelisation
 - added internal function for pre-rendering vignettes that take a long time
-- Updated R dependency to >= 4.1 due to use of new-style pipes
+- updated R dependency to >= 4.1 due to use of new-style pipes
 
 ## Test environments
 

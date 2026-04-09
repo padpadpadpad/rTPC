@@ -11,7 +11,7 @@ status](https://www.r-pkg.org/badges/version/rTPC)](https://CRAN.R-project.org/p
 [![Downloads from Rstudio
 mirror](https://cranlogs.r-pkg.org/badges/grand-total/rTPC)](https://www.r-pkg.org/pkg/rTPC)
 [![License: GPL
-v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 
 <!-- badges: end -->
 

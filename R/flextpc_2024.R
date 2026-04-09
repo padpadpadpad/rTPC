@@ -20,6 +20,7 @@
 #' @note Generally this model requires larger iter values in nls_multstart to fit reliably.
 #' @concept model
 #' @examples
+#' \donttest{
 #' # load in ggplot
 #' library(ggplot2)
 #'
@@ -52,36 +53,40 @@
 #' geom_point(aes(temp, rate), d) +
 #' geom_line(aes(temp, .fitted), col = 'blue') +
 #' theme_bw()
+#' }
 #' @export flextpc_2024
 
-flextpc_2024 <- function(temp, tmin, tmax, rmax, alpha, beta){
-  est <- rmax * (((temp - tmin) / alpha) ^ alpha * ((tmax - temp) / (1 - alpha)) ^ (1 - alpha) * (1 / (tmax - tmin))) ^ ((alpha * (1 - alpha)) / beta ^ 2)
+flextpc_2024 <- function(temp, tmin, tmax, rmax, alpha, beta) {
+  est <- rmax *
+    (((temp - tmin) / alpha)^alpha *
+      ((tmax - temp) / (1 - alpha))^(1 - alpha) *
+      (1 / (tmax - tmin)))^((alpha * (1 - alpha)) / beta^2)
   return(est)
 }
 
-flextpc_2024.starting_vals <- function(d){
+flextpc_2024.starting_vals <- function(d) {
   rmax = max(d$y, na.rm = TRUE)
   topt = mean(d$x[d$y == rmax])
   tmin = min(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE)
   # Use the definitions found in the original paper as starting values
-  alpha = (topt - tmin)/(tmax - tmin)
+  alpha = (topt - tmin) / (tmax - tmin)
   # Beta is the Upper Thermal Breadth (the range of temps where r(T) > exp(-1/8)*rmax)
   beta = 0.3
 
   return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
 }
 
-flextpc_2024.lower_lims <- function(d){
+flextpc_2024.lower_lims <- function(d) {
   tmin = min(d$x, na.rm = TRUE) - 50
   tmax = min(d$x, na.rm = TRUE)
   rmax = min(d$y, na.rm = TRUE)
-  beta = 0  # Cannot be 0
+  beta = 0 # Cannot be 0
   alpha = 0
   return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
 }
 
-flextpc_2024.upper_lims <- function(d){
+flextpc_2024.upper_lims <- function(d) {
   tmin = max(d$x, na.rm = TRUE)
   tmax = max(d$x, na.rm = TRUE) * 5
   rmax = max(d$y, na.rm = TRUE) * 10
@@ -89,4 +94,3 @@ flextpc_2024.upper_lims <- function(d){
   beta = 100
   return(c(tmin = tmin, tmax = tmax, rmax = rmax, alpha = alpha, beta = beta))
 }
-
