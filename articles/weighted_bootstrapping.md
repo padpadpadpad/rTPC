@@ -342,7 +342,7 @@ uncertainty in the derived parameters, as in
 ### Further reading
 
 - John Fox (author of car) on bootstrapping regression models in R
-  - <https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf>
+  - <https://www.john-fox.ca/Companion/appendices/Appendix-Bootstrapping.pdf>
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their
   Application.
   - <https://doi.org/10.1017/CBO9780511802843>
@@ -353,4 +353,4 @@ uncertainty in the derived parameters, as in
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
 
-Built in 7.8706958s
+Built in 7.8245533s

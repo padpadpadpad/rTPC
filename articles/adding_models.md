@@ -659,4 +659,4 @@ In the case of an entirely missing model,
 [`get_start_vals()`](https://padpadpadpad.github.io/rTPC/reference/get_start_vals.md)
 errors out early with a more specific error message.
 
-Built in 0.6911328s
+Built in 0.6093552s

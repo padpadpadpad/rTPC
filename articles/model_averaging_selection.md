@@ -511,4 +511,4 @@ bind_rows(select(params, model_name, rmax:skewness), ave_params) %>%
   model averaging of regression coefficients. Ecological Applications,
   27(1), 78-93. <https://doi.org/10.1002/eap.1419>
 
-Built in 13.5543642s
+Built in 13.3489678s

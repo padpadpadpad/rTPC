@@ -93,17 +93,18 @@ summary(mod)
 #> 
 #> Parameters:
 #>       Estimate Std. Error t value Pr(>|t|)   
-#> r0   7.322e+07  3.295e+08   0.222  0.82968   
+#> r0   7.322e+07  3.294e+08   0.222  0.82968   
 #> e    4.784e-01  1.191e-01   4.016  0.00386 **
 #> eh   4.000e+01  5.278e+03   0.008  0.99414   
-#> topt 4.401e+01  2.324e+02   0.189  0.85453   
+#> topt 4.401e+01  2.324e+02   0.189  0.85454   
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
 #> Residual standard error: 0.2406 on 8 degrees of freedom
 #> 
-#> Number of iterations to convergence: 94 
+#> Number of iterations till stop: 96 
 #> Achieved convergence tolerance: 1.49e-08
+#> Reason stopped: Number of calls to `fcn' has reached or exceeded `maxfev' == 500.
 #> 
 
 # get predictions

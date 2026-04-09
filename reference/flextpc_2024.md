@@ -69,6 +69,7 @@ Francis Windram
 ## Examples
 
 ``` r
+# \donttest{
 # load in ggplot
 library(ggplot2)
 
@@ -119,4 +120,6 @@ ggplot(preds) +
 geom_point(aes(temp, rate), d) +
 geom_line(aes(temp, .fitted), col = 'blue') +
 theme_bw()
+
+# }
 ```

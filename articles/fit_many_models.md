@@ -1525,4 +1525,4 @@ try:
   might help.
 - Remove `lower` and `upper` arguments from the fitting process.
 
-Built in 143.8182034s
+Built in 142.6433024s

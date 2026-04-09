@@ -179,7 +179,7 @@ head(boot1$t)
 #> [3,] 0.3036737 0.6834247 2.299114 31.08185
 #> [4,] 0.2141809 1.1114502 2.375178 27.99414
 #> [5,] 0.2840736 0.7499155 2.366436 30.70785
-#> [6,] 0.2044722 1.1842967 2.364180 27.48222
+#> [6,] 0.2044722 1.1842966 2.364179 27.48222
 ```
 
 The parameters of each bootstrapped refit are returned. All methods that
@@ -746,7 +746,7 @@ of the paper
 ### Further reading
 
 - John Fox (author of car) on bootstrapping regression models in R
-  - <https://artowen.su.domains/courses/305a/FoxOnBootingRegInR.pdf>
+  - <https://www.john-fox.ca/Companion/appendices/Appendix-Bootstrapping.pdf>
 - A.C. Davison & D.V. Hinkley (2003) Bootstrap Methods and their
   Application.
   - <https://doi.org/10.1017/CBO9780511802843>
@@ -757,4 +757,4 @@ of the paper
   methods for calculating confidence intervals by bootstrapping. Journal
   of Animal Ecology, 84(4), 892-897.
 
-Built in 34.4887683s
+Built in 36.7291243s
